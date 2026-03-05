@@ -253,6 +253,28 @@ export default function ProfileScreen() {
           </Pressable>
         </Animated.View>
 
+        {/* ── Community ── */}
+        <Animated.View
+          entering={FadeInDown.duration(400).delay(300)}
+          className="px-xl mb-lg"
+        >
+          <Pressable onPress={() => router.push("/community")}>
+            <Card className="flex-row items-center gap-md">
+              <Typography className="text-[32px]">💬</Typography>
+              <View className="flex-1">
+                <Typography variant="body-medium">
+                  Community
+                </Typography>
+                <Typography variant="caption" color="secondary">
+                  Connect with fellow puppy parents
+                </Typography>
+              </View>
+              <Badge label="Preview" variant="accent" size="sm" />
+              <Typography color="tertiary">→</Typography>
+            </Card>
+          </Pressable>
+        </Animated.View>
+
         {/* ── Settings ── */}
         <Animated.View
           entering={FadeInDown.duration(400).delay(330)}
@@ -279,6 +301,23 @@ export default function ProfileScreen() {
             </Card>
           </Pressable>
 
+          {/* Notifications */}
+          <Pressable onPress={() => router.push("/settings/notifications")}>
+            <Card
+              variant="outline"
+              className="flex-row items-center gap-md py-md mb-sm"
+            >
+              <Typography className="text-[20px]">🔔</Typography>
+              <View className="flex-1">
+                <Typography variant="body-medium">Notifications</Typography>
+                <Typography variant="caption" color="secondary">
+                  Training reminders, health alerts
+                </Typography>
+              </View>
+              <Typography color="tertiary">→</Typography>
+            </Card>
+          </Pressable>
+
           {/* Subscription */}
           <Pressable onPress={() => router.push("/settings/subscription")}>
             <Card
@@ -297,7 +336,7 @@ export default function ProfileScreen() {
           </Pressable>
 
           {/* Invite friends */}
-          <Pressable onPress={() => Alert.alert("Coming Soon", "Referral system launches in Phase 6!")}>
+          <Pressable onPress={() => router.push("/referral")}>
             <Card
               variant="outline"
               className="flex-row items-center gap-md py-md mb-sm"

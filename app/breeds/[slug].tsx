@@ -396,12 +396,12 @@ export default function BreedDetailScreen() {
             {
               icon: '🦷',
               label: 'Teething Peak',
-              value: `${breed.teething_peak_weeks.start}–${breed.teething_peak_weeks.end} weeks`,
+              value: `${breed.teething_peak_weeks.min}–${breed.teething_peak_weeks.max} weeks`,
             },
             {
               icon: '🌀',
               label: 'Adolescence',
-              value: `${Math.round(breed.adolescence_weeks.start / 4.3)}–${Math.round(breed.adolescence_weeks.end / 4.3)} months`,
+              value: `${Math.round(breed.adolescence_weeks.min / 4.3)}–${Math.round(breed.adolescence_weeks.max / 4.3)} months`,
             },
             {
               icon: '🎓',

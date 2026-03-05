@@ -6,7 +6,7 @@
 import type { BreedProfile, SizeCategory } from '../types/breed';
 import breedsJson from './breeds.json';
 
-const breeds = breedsJson as BreedProfile[];
+const breeds = breedsJson as unknown as BreedProfile[];
 
 /** All active breed profiles sorted by popularity */
 export const ALL_BREEDS: BreedProfile[] = breeds

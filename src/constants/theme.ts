@@ -87,6 +87,13 @@ export const TYPOGRAPHY = {
 } as const;
 
 export const SHADOWS = {
+  sm: {
+    shadowColor: "#1B2333",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.04,
+    shadowRadius: 4,
+    elevation: 1,
+  },
   card: {
     shadowColor: "#1B2333",
     shadowOffset: { width: 0, height: 2 },
@@ -100,6 +107,13 @@ export const SHADOWS = {
     shadowOpacity: 0.1,
     shadowRadius: 16,
     elevation: 4,
+  },
+  lg: {
+    shadowColor: "#1B2333",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.14,
+    shadowRadius: 24,
+    elevation: 6,
   },
   modal: {
     shadowColor: "#1B2333",
