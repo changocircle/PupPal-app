@@ -10,7 +10,7 @@ import type {
   ScheduledVaccination,
   VaccinationStatus,
 } from "@/types/health";
-import { nanoid } from "nanoid";
+import { nanoid } from "nanoid/non-secure";
 
 // ─── Core vaccine templates ──────────────────────────
 
