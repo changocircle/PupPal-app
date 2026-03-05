@@ -2,17 +2,13 @@ import React, { useState } from "react";
 import { View, Pressable, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { MotiView } from "moti";
+import Animated, { FadeIn } from "react-native-reanimated";
 import { Button, Typography, Card } from "@/components/ui";
 import { useOnboardingStore } from "@/stores/onboardingStore";
 
 /**
  * Screen 5: Challenge Selection
  * PRD-01 Section 3, Screen 5
- *
- * - "What are [Name]'s biggest challenges?"
- * - Multi-select challenge cards (max 5)
- * - Challenges influence training plan generation
  */
 
 const CHALLENGE_OPTIONS = [
@@ -55,7 +51,6 @@ export default function ChallengesScreen() {
   return (
     <SafeAreaView className="flex-1 bg-background">
       <View className="flex-1 px-xl">
-        {/* Buddy + question */}
         <View className="pt-3xl items-center mb-lg">
           <View className="w-[80px] h-[80px] rounded-full bg-primary-light items-center justify-center mb-base">
             <Typography className="text-[40px]">🐕</Typography>
@@ -70,17 +65,14 @@ export default function ChallengesScreen() {
           </Typography>
         </View>
 
-        {/* Challenge grid */}
         <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
           <View className="flex-row flex-wrap gap-md pb-xl">
             {CHALLENGE_OPTIONS.map((challenge, index) => {
               const isSelected = selected.includes(challenge.id);
               return (
-                <MotiView
+                <Animated.View
                   key={challenge.id}
-                  from={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ type: "timing", duration: 250, delay: index * 50 }}
+                  entering={FadeIn.duration(250).delay(index * 50)}
                   className="w-[48%]"
                 >
                   <Pressable onPress={() => toggleChallenge(challenge.id)}>
@@ -101,13 +93,12 @@ export default function ChallengesScreen() {
                       </Typography>
                     </Card>
                   </Pressable>
-                </MotiView>
+                </Animated.View>
               );
             })}
           </View>
         </ScrollView>
 
-        {/* Continue */}
         <View className="pb-3xl pt-base">
           <Button
             label={`Continue (${selected.length} selected)`}

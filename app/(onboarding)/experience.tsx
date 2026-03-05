@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Pressable } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { MotiView } from "moti";
+import Animated, { FadeInLeft } from "react-native-reanimated";
 import { Button, Typography, Card } from "@/components/ui";
 import { useOnboardingStore } from "@/stores/onboardingStore";
 import type { ExperienceOption } from "@/types/models";
@@ -10,9 +10,6 @@ import type { ExperienceOption } from "@/types/models";
 /**
  * Screen 6: Owner Experience Level
  * PRD-01 Section 3, Screen 6
- *
- * - "Have you had a dog before?"
- * - 3 clear options that influence training plan complexity
  */
 
 const EXPERIENCE_OPTIONS: ExperienceOption[] = [
@@ -56,7 +53,6 @@ export default function ExperienceScreen() {
   return (
     <SafeAreaView className="flex-1 bg-background">
       <View className="flex-1 px-xl justify-between">
-        {/* Buddy + question */}
         <View className="pt-3xl">
           <View className="items-center mb-2xl">
             <View className="w-[80px] h-[80px] rounded-full bg-primary-light items-center justify-center mb-base">
@@ -69,14 +65,11 @@ export default function ExperienceScreen() {
             </View>
           </View>
 
-          {/* Experience options */}
           <View className="gap-md">
             {EXPERIENCE_OPTIONS.map((option, index) => (
-              <MotiView
+              <Animated.View
                 key={option.id}
-                from={{ opacity: 0, translateX: -20 }}
-                animate={{ opacity: 1, translateX: 0 }}
-                transition={{ type: "timing", duration: 300, delay: index * 100 }}
+                entering={FadeInLeft.duration(300).delay(index * 100)}
               >
                 <Pressable onPress={() => handleSelect(option)}>
                   <Card
@@ -94,12 +87,11 @@ export default function ExperienceScreen() {
                     </View>
                   </Card>
                 </Pressable>
-              </MotiView>
+              </Animated.View>
             ))}
           </View>
         </View>
 
-        {/* Continue */}
         <View className="pb-3xl">
           <Button
             label="Continue"

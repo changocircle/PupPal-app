@@ -1,6 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View } from "react-native";
-import { MotiView } from "moti";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 
 /**
  * ProgressBar with animated fill matching PupPal Design System.
@@ -21,10 +25,10 @@ interface ProgressBarProps {
   animated?: boolean;
 }
 
-const FILL_CLASSES: Record<string, string> = {
-  primary: "bg-primary",
-  accent: "bg-accent",
-  success: "bg-success",
+const FILL_COLORS: Record<string, string> = {
+  primary: "#FF6B5C",
+  accent: "#FFC857",
+  success: "#4CAF50",
 };
 
 export function ProgressBar({
@@ -34,23 +38,26 @@ export function ProgressBar({
   animated = true,
 }: ProgressBarProps) {
   const clampedProgress = Math.max(0, Math.min(1, progress));
+  const widthPercent = useSharedValue(0);
+
+  useEffect(() => {
+    widthPercent.value = animated
+      ? withTiming(clampedProgress, { duration: 500 })
+      : clampedProgress;
+  }, [clampedProgress, animated]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    width: `${widthPercent.value * 100}%`,
+    backgroundColor: FILL_COLORS[variant] || FILL_COLORS.primary,
+  }));
 
   return (
     <View
       className="w-full bg-border overflow-hidden"
       style={{ height, borderRadius: height / 2 }}
     >
-      <MotiView
-        animate={{
-          width: `${clampedProgress * 100}%` as unknown as number,
-        }}
-        transition={
-          animated
-            ? { type: "timing", duration: 500 }
-            : { type: "timing", duration: 0 }
-        }
-        className={`h-full ${FILL_CLASSES[variant]}`}
-        style={{ borderRadius: height / 2 }}
+      <Animated.View
+        style={[animatedStyle, { height, borderRadius: height / 2 }]}
       />
     </View>
   );

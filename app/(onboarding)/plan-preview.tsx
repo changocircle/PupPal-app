@@ -2,36 +2,26 @@ import React from "react";
 import { View, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { MotiView } from "moti";
+import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
 import { Button, Typography, Card, Badge } from "@/components/ui";
 import { useOnboardingStore } from "@/stores/onboardingStore";
 
 /**
  * Screen 7: Personalized Plan Preview
  * PRD-01 Section 3, Screen 7
- *
- * - "Here's [Name]'s custom plan!"
- * - Shows personalized training plan summary
- * - Creates emotional investment (sunk cost) before paywall
- * - Animated reveal of plan components
  */
 export default function PlanPreviewScreen() {
   const router = useRouter();
   const { data } = useOnboardingStore();
   const puppyName = data.puppyName || "Your Pup";
-
-  // Derive plan preview from collected data
   const challengeCount = data.challenges.length;
   const isFirstTime = data.ownerExperience === "first_time";
 
   return (
     <SafeAreaView className="flex-1 bg-background">
       <ScrollView className="flex-1 px-xl" showsVerticalScrollIndicator={false}>
-        {/* Header */}
-        <MotiView
-          from={{ opacity: 0, translateY: 20 }}
-          animate={{ opacity: 1, translateY: 0 }}
-          transition={{ type: "timing", duration: 500 }}
+        <Animated.View
+          entering={FadeInDown.duration(500)}
           className="pt-3xl items-center mb-2xl"
         >
           <Typography className="text-[48px] mb-sm">🎉</Typography>
@@ -41,15 +31,10 @@ export default function PlanPreviewScreen() {
           <Typography variant="body" color="secondary" className="text-center">
             Built specifically for {puppyName}'s needs
           </Typography>
-        </MotiView>
+        </Animated.View>
 
-        {/* Plan summary cards */}
         <View className="gap-base mb-2xl">
-          <MotiView
-            from={{ opacity: 0, translateY: 15 }}
-            animate={{ opacity: 1, translateY: 0 }}
-            transition={{ type: "timing", duration: 400, delay: 200 }}
-          >
+          <Animated.View entering={FadeInDown.duration(400).delay(200)}>
             <Card className="flex-row items-center gap-base">
               <Typography className="text-[32px]">📋</Typography>
               <View className="flex-1">
@@ -61,13 +46,9 @@ export default function PlanPreviewScreen() {
                 </Typography>
               </View>
             </Card>
-          </MotiView>
+          </Animated.View>
 
-          <MotiView
-            from={{ opacity: 0, translateY: 15 }}
-            animate={{ opacity: 1, translateY: 0 }}
-            transition={{ type: "timing", duration: 400, delay: 350 }}
-          >
+          <Animated.View entering={FadeInDown.duration(400).delay(350)}>
             <Card className="flex-row items-center gap-base">
               <Typography className="text-[32px]">🎯</Typography>
               <View className="flex-1">
@@ -79,13 +60,9 @@ export default function PlanPreviewScreen() {
                 </Typography>
               </View>
             </Card>
-          </MotiView>
+          </Animated.View>
 
-          <MotiView
-            from={{ opacity: 0, translateY: 15 }}
-            animate={{ opacity: 1, translateY: 0 }}
-            transition={{ type: "timing", duration: 400, delay: 500 }}
-          >
+          <Animated.View entering={FadeInDown.duration(400).delay(500)}>
             <Card className="flex-row items-center gap-base">
               <Typography className="text-[32px]">🤖</Typography>
               <View className="flex-1">
@@ -95,13 +72,9 @@ export default function PlanPreviewScreen() {
                 </Typography>
               </View>
             </Card>
-          </MotiView>
+          </Animated.View>
 
-          <MotiView
-            from={{ opacity: 0, translateY: 15 }}
-            animate={{ opacity: 1, translateY: 0 }}
-            transition={{ type: "timing", duration: 400, delay: 650 }}
-          >
+          <Animated.View entering={FadeInDown.duration(400).delay(650)}>
             <Card className="flex-row items-center gap-base">
               <Typography className="text-[32px]">🏥</Typography>
               <View className="flex-1">
@@ -111,14 +84,11 @@ export default function PlanPreviewScreen() {
                 </Typography>
               </View>
             </Card>
-          </MotiView>
+          </Animated.View>
         </View>
 
-        {/* Social proof */}
-        <MotiView
-          from={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ type: "timing", duration: 400, delay: 800 }}
+        <Animated.View
+          entering={FadeIn.duration(400).delay(800)}
           className="items-center mb-2xl"
         >
           <View className="flex-row gap-xs mb-xs">
@@ -129,10 +99,9 @@ export default function PlanPreviewScreen() {
           <Typography variant="body-sm" color="secondary">
             Trusted by thousands of puppy parents
           </Typography>
-        </MotiView>
+        </Animated.View>
       </ScrollView>
 
-      {/* CTA */}
       <View className="px-xl pb-3xl pt-base">
         <Button
           label={`Start ${puppyName}'s Journey`}

@@ -1,6 +1,10 @@
 import React from "react";
 import { Pressable, ActivityIndicator, type PressableProps } from "react-native";
-import { MotiView } from "moti";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 import { Typography } from "./Typography";
 
 /**
@@ -69,10 +73,21 @@ export function Button({
   const variantStyle = VARIANT_STYLES[variant];
   const sizeStyle = SIZE_STYLES[size];
   const isDisabled = disabled || isLoading;
+  const scale = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
 
   return (
     <Pressable
       disabled={isDisabled}
+      onPressIn={() => {
+        scale.value = withTiming(0.97, { duration: 100 });
+      }}
+      onPressOut={() => {
+        scale.value = withTiming(1, { duration: 100 });
+      }}
       className={`
         ${sizeStyle.container}
         ${fullWidth ? "w-full" : ""}
@@ -83,11 +98,8 @@ export function Button({
       {...props}
     >
       {({ pressed }) => (
-        <MotiView
-          animate={{
-            scale: pressed ? 0.97 : 1,
-          }}
-          transition={{ type: "timing", duration: 100 }}
+        <Animated.View
+          style={animatedStyle}
           className={`
             flex-1 flex-row items-center justify-center gap-sm
             rounded-sm
@@ -113,7 +125,7 @@ export function Button({
               {rightIcon}
             </>
           )}
-        </MotiView>
+        </Animated.View>
       )}
     </Pressable>
   );

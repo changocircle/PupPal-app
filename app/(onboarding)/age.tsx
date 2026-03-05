@@ -2,17 +2,13 @@ import React, { useState } from "react";
 import { View, Pressable, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { MotiView } from "moti";
+import Animated, { FadeInDown } from "react-native-reanimated";
 import { Button, Typography, Card } from "@/components/ui";
 import { useOnboardingStore } from "@/stores/onboardingStore";
 
 /**
  * Screen 4: Dog's Age
  * PRD-01 Section 3, Screen 4
- *
- * - "How old is [Name]?"
- * - Age range selector (visual cards, not a boring picker)
- * - Options: <8 weeks, 8-12 weeks, 3-6 months, 6-12 months, 1-2 years, 2+ years
  */
 
 const AGE_OPTIONS = [
@@ -42,7 +38,6 @@ export default function AgeScreen() {
   return (
     <SafeAreaView className="flex-1 bg-background">
       <View className="flex-1 px-xl justify-between">
-        {/* Buddy + question */}
         <View className="pt-3xl">
           <View className="items-center mb-2xl">
             <View className="w-[80px] h-[80px] rounded-full bg-primary-light items-center justify-center mb-base">
@@ -55,15 +50,12 @@ export default function AgeScreen() {
             </View>
           </View>
 
-          {/* Age options grid */}
           <ScrollView showsVerticalScrollIndicator={false}>
             <View className="flex-row flex-wrap gap-md justify-between">
               {AGE_OPTIONS.map((option, index) => (
-                <MotiView
+                <Animated.View
                   key={option.id}
-                  from={{ opacity: 0, translateY: 15 }}
-                  animate={{ opacity: 1, translateY: 0 }}
-                  transition={{ type: "timing", duration: 300, delay: index * 80 }}
+                  entering={FadeInDown.duration(300).delay(index * 80)}
                   className="w-[48%]"
                 >
                   <Pressable onPress={() => handleSelect(option)}>
@@ -84,13 +76,12 @@ export default function AgeScreen() {
                       </Typography>
                     </Card>
                   </Pressable>
-                </MotiView>
+                </Animated.View>
               ))}
             </View>
           </ScrollView>
         </View>
 
-        {/* Continue */}
         <View className="pb-3xl">
           <Button
             label="Continue"

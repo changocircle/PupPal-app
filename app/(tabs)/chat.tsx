@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { MotiView } from "moti";
+import Animated, { FadeIn } from "react-native-reanimated";
 import { Typography, Card, Button } from "@/components/ui";
 
 /**
@@ -14,13 +14,10 @@ export default function ChatScreen() {
   return (
     <SafeAreaView className="flex-1 bg-background">
       <View className="flex-1 px-xl justify-center items-center">
-        <MotiView
-          from={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ type: "timing", duration: 500 }}
+        <Animated.View
+          entering={FadeIn.duration(500)}
           className="items-center"
         >
-          {/* Buddy avatar */}
           <View className="w-[120px] h-[120px] rounded-full bg-primary-light items-center justify-center mb-xl">
             <Typography className="text-[60px]">🐕</Typography>
           </View>
@@ -41,7 +38,7 @@ export default function ChatScreen() {
               Streaming chat with context injection, conversation memory, and safety
             </Typography>
           </Card>
-        </MotiView>
+        </Animated.View>
       </View>
     </SafeAreaView>
   );

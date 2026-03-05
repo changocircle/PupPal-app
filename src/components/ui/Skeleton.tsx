@@ -1,5 +1,12 @@
-import React from "react";
-import { MotiView } from "moti";
+import React, { useEffect } from "react";
+import { View } from "react-native";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withTiming,
+  Easing,
+} from "react-native-reanimated";
 
 /**
  * Skeleton loader per PupPal Design System.
@@ -13,21 +20,24 @@ interface SkeletonProps {
 }
 
 export function Skeleton({ width = "100%", height = 20, radius = 8 }: SkeletonProps) {
+  const opacity = useSharedValue(0.4);
+
+  useEffect(() => {
+    opacity.value = withRepeat(
+      withTiming(1, { duration: 800, easing: Easing.inOut(Easing.ease) }),
+      -1,
+      true,
+    );
+  }, []);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+  }));
+
   return (
-    <MotiView
-      from={{ opacity: 0.4 }}
-      animate={{ opacity: 1 }}
-      transition={{
-        type: "timing",
-        duration: 800,
-        loop: true,
-      }}
+    <Animated.View
+      style={[animatedStyle, { width: width as number, height, borderRadius: radius }]}
       className="bg-border"
-      style={{
-        width: width as number,
-        height,
-        borderRadius: radius,
-      }}
     />
   );
 }
@@ -35,10 +45,10 @@ export function Skeleton({ width = "100%", height = 20, radius = 8 }: SkeletonPr
 /** Pre-built skeleton for a card with title + 2 lines */
 export function CardSkeleton() {
   return (
-    <MotiView className="bg-surface rounded-md p-base gap-md shadow-card">
+    <View className="bg-surface rounded-md p-base gap-md shadow-card">
       <Skeleton width="60%" height={24} />
       <Skeleton width="100%" height={16} />
       <Skeleton width="80%" height={16} />
-    </MotiView>
+    </View>
   );
 }

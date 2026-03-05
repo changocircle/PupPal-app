@@ -1,18 +1,12 @@
 import React from "react";
 import { View, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { MotiView } from "moti";
+import Animated, { FadeInDown } from "react-native-reanimated";
 import { Typography, Card, CardSkeleton } from "@/components/ui";
 
 /**
  * Home Screen — Today's Training
  * PRD-03 Section 5
- *
- * Shows:
- * - Greeting with dog name + streak
- * - Today's exercises (from active training plan)
- * - Good Boy Score widget
- * - Quick actions
  *
  * This is a shell — full implementation in Phase 2.
  */
@@ -20,24 +14,18 @@ export default function HomeScreen() {
   return (
     <SafeAreaView className="flex-1 bg-background">
       <ScrollView className="flex-1 px-xl" showsVerticalScrollIndicator={false}>
-        {/* Header */}
-        <MotiView
-          from={{ opacity: 0, translateY: 10 }}
-          animate={{ opacity: 1, translateY: 0 }}
-          transition={{ type: "timing", duration: 400 }}
+        <Animated.View
+          entering={FadeInDown.duration(400)}
           className="pt-3xl mb-xl"
         >
           <Typography variant="h2" color="secondary">
             Good morning! 👋
           </Typography>
           <Typography variant="h1">Today's Training</Typography>
-        </MotiView>
+        </Animated.View>
 
-        {/* Streak + Score widget placeholder */}
-        <MotiView
-          from={{ opacity: 0, translateY: 15 }}
-          animate={{ opacity: 1, translateY: 0 }}
-          transition={{ type: "timing", duration: 400, delay: 100 }}
+        <Animated.View
+          entering={FadeInDown.duration(400).delay(100)}
           className="mb-xl"
         >
           <Card variant="featured" className="flex-row justify-between items-center">
@@ -54,9 +42,8 @@ export default function HomeScreen() {
               <Typography variant="h2">--</Typography>
             </View>
           </Card>
-        </MotiView>
+        </Animated.View>
 
-        {/* Today's exercises placeholder */}
         <View className="mb-xl">
           <Typography variant="h3" className="mb-base">
             Today's Exercises
@@ -68,11 +55,8 @@ export default function HomeScreen() {
           </View>
         </View>
 
-        {/* Quick tip from Buddy */}
-        <MotiView
-          from={{ opacity: 0, translateY: 15 }}
-          animate={{ opacity: 1, translateY: 0 }}
-          transition={{ type: "timing", duration: 400, delay: 300 }}
+        <Animated.View
+          entering={FadeInDown.duration(400).delay(300)}
           className="mb-4xl"
         >
           <Card className="flex-row items-start gap-md">
@@ -87,7 +71,7 @@ export default function HomeScreen() {
               </Typography>
             </View>
           </Card>
-        </MotiView>
+        </Animated.View>
       </ScrollView>
     </SafeAreaView>
   );
