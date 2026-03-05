@@ -41,6 +41,7 @@ export default function ChatScreen() {
     canSend,
     remainingMessages,
     suggestedPrompts,
+    isLiveAI,
     sendMessage,
     sendSuggestedPrompt,
     setFeedback,
@@ -98,9 +99,9 @@ export default function ChatScreen() {
           <View className="flex-1">
             <Typography variant="body-medium">Buddy</Typography>
             <View className="flex-row items-center gap-xs">
-              <View className="w-[6px] h-[6px] rounded-full bg-success" />
+              <View className={`w-[6px] h-[6px] rounded-full ${isLiveAI ? "bg-success" : "bg-accent"}`} />
               <Typography variant="caption" color="secondary">
-                Online
+                {isLiveAI ? "Online" : "Demo mode"}
               </Typography>
             </View>
           </View>
