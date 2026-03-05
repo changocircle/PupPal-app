@@ -3,7 +3,7 @@ import { View, ScrollView, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown, FadeIn } from "react-native-reanimated";
 import { useRouter } from "expo-router";
-import { Typography, Card, ProgressBar, Badge } from "@/components/ui";
+import { Typography, Card, ProgressBar, Badge, Button } from "@/components/ui";
 import {
   WeekCard,
   ExerciseCard,
@@ -147,7 +147,9 @@ export default function PlanScreen() {
         </Animated.View>
 
         {/* ── Tab content ── */}
-        {activeTab === "this_week" ? (
+        {plan.status === "completed" && activeTab === "this_week" ? (
+          <PostGraduationView dogName={dogName} />
+        ) : activeTab === "this_week" ? (
           <ThisWeekView
             plan={plan}
             currentWeek={currentWeek}
@@ -340,6 +342,115 @@ function FullPlanView({
           />
         );
       })}
+    </View>
+  );
+}
+
+/**
+ * Post-Graduation View — PRD-03 §Post-Graduation Experience
+ *
+ * When the 12-week plan is complete, the "This Week" tab transitions
+ * to show maintenance recommendations and points to the Trick Library.
+ */
+function PostGraduationView({ dogName }: { dogName: string }) {
+  const router = useRouter();
+  const totalTricksCompleted = useTrickStore((s) => s.totalTricksCompleted);
+  const totalTricksMastered = useTrickStore((s) => s.totalTricksMastered);
+
+  return (
+    <View className="gap-lg pb-3xl">
+      {/* Graduation banner */}
+      <Animated.View entering={FadeInDown.duration(400)}>
+        <Card variant="featured" className="items-center">
+          <Typography className="text-[48px] mb-sm">🎓</Typography>
+          <Typography variant="h2" className="text-center mb-xs">
+            Plan Complete!
+          </Typography>
+          <Typography variant="body-sm" color="secondary" className="text-center">
+            {dogName}'s foundation is solid. The 12-week journey is done
+            — keep growing with tricks, practice, and daily consistency.
+          </Typography>
+        </Card>
+      </Animated.View>
+
+      {/* Today's Practice section */}
+      <Animated.View entering={FadeInDown.duration(400).delay(80)}>
+        <Typography variant="h3" className="mb-sm">
+          Today's Practice
+        </Typography>
+        <Card className="bg-accent-light border-accent/20 mb-sm">
+          <View className="flex-row items-start gap-md">
+            <Typography className="text-[28px]">🔄</Typography>
+            <View className="flex-1">
+              <Typography variant="body-medium">Maintenance Review</Typography>
+              <Typography variant="body-sm" color="secondary" className="mt-[2px]">
+                Practise a core skill from {dogName}'s plan — pick one from
+                Sit/Stay, Recall, or Loose-Lead Walking. 5-10 min session.
+              </Typography>
+            </View>
+          </View>
+        </Card>
+
+        <Pressable onPress={() => router.push("/tricks")}>
+          <Card className="bg-primary-light border-primary/20">
+            <View className="flex-row items-start gap-md">
+              <Typography className="text-[28px]">🎪</Typography>
+              <View className="flex-1">
+                <Typography variant="body-medium">Learn a New Trick</Typography>
+                <Typography variant="body-sm" color="secondary" className="mt-[2px]">
+                  {dogName}'s ready for fun! Explore the Trick Library for new
+                  challenges — {totalTricksCompleted > 0
+                    ? `${totalTricksCompleted} trick${totalTricksCompleted !== 1 ? 's' : ''} learned so far.`
+                    : 'start with Shake to warm up.'}
+                </Typography>
+              </View>
+            </View>
+          </Card>
+        </Pressable>
+      </Animated.View>
+
+      {/* Trick progress */}
+      <Animated.View entering={FadeInDown.duration(400).delay(160)}>
+        <Typography variant="h3" className="mb-sm">
+          Trick Progress
+        </Typography>
+        <View className="flex-row gap-md mb-sm">
+          <Card className="flex-1 items-center py-sm">
+            <Typography variant="h3">{totalTricksCompleted}</Typography>
+            <Typography variant="caption" color="secondary">Tricks Learned</Typography>
+          </Card>
+          <Card className="flex-1 items-center py-sm">
+            <Typography variant="h3">{totalTricksMastered}</Typography>
+            <Typography variant="caption" color="secondary">Mastered</Typography>
+          </Card>
+        </View>
+        <Button
+          label="🎪 Browse Trick Library"
+          variant="primary"
+          fullWidth
+          onPress={() => router.push("/tricks")}
+        />
+      </Animated.View>
+
+      {/* Tips */}
+      <Animated.View entering={FadeInDown.duration(400).delay(240)}>
+        <Card className="bg-success-light border-success/20">
+          <View className="flex-row items-start gap-md">
+            <Typography className="text-[28px]">💡</Typography>
+            <View className="flex-1">
+              <Typography variant="body-sm-medium" className="mb-xs">
+                Post-Graduation Tips
+              </Typography>
+              <Typography variant="body-sm" color="secondary">
+                • Keep practising core commands 3-5 min daily{'\n'}
+                • Teach one new trick per week to stay sharp{'\n'}
+                • Log walks and sessions in the Health tracker{'\n'}
+                • Share milestones — it builds consistency!
+              </Typography>
+            </View>
+          </View>
+        </Card>
+      </Animated.View>
     </View>
   );
 }

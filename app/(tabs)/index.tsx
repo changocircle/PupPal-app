@@ -3,7 +3,7 @@ import { View, ScrollView, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown, FadeIn } from "react-native-reanimated";
 import { useRouter } from "expo-router";
-import { Typography, Card, ProgressBar, PremiumGate } from "@/components/ui";
+import { Typography, Card, ProgressBar, PremiumGate, Button } from "@/components/ui";
 import { ExerciseCard, DayProgress } from "@/components/training";
 import {
   GamificationRow,
@@ -132,8 +132,42 @@ export default function HomeScreen() {
           </Animated.View>
         )}
 
+        {/* ── Post-Graduation: Plan Complete ── */}
+        {plan?.status === 'completed' && (
+          <Animated.View
+            entering={FadeInDown.duration(400).delay(160)}
+            className="mb-lg"
+          >
+            <Card variant="featured" className="items-center">
+              <Typography className="text-[48px] mb-sm">🎓</Typography>
+              <Typography variant="h2" className="text-center mb-xs">
+                Good Boy Graduate!
+              </Typography>
+              <Typography variant="body-sm" color="secondary" className="text-center mb-base">
+                {dogName} completed the 12-week training plan! Foundation skills are solid — now let's have some fun with tricks.
+              </Typography>
+              <View className="flex-row gap-md mb-sm">
+                <Card className="flex-1 items-center py-sm bg-accent-light border-accent/20">
+                  <Typography variant="h3">{gam.totalXp}</Typography>
+                  <Typography variant="caption" color="secondary">Total XP</Typography>
+                </Card>
+                <Card className="flex-1 items-center py-sm bg-success-light border-success/20">
+                  <Typography variant="h3">{gam.goodBoyScore}</Typography>
+                  <Typography variant="caption" color="secondary">GBS</Typography>
+                </Card>
+              </View>
+              <Button
+                label="🎪 Explore Trick Library"
+                variant="primary"
+                fullWidth
+                onPress={() => router.push('/tricks')}
+              />
+            </Card>
+          </Animated.View>
+        )}
+
         {/* ── Week/Day context ── */}
-        {currentWeek && plan && (
+        {plan?.status !== 'completed' && currentWeek && plan && (
           <Animated.View
             entering={FadeInDown.duration(400).delay(160)}
             className="mb-lg"
