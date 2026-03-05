@@ -1,7 +1,7 @@
 {
   "name": "puppal",
   "version": "1.0.0",
-  "description": "AI-powered puppy training app — like having a dog trainer on call 24/7",
+  "description": "AI-powered puppy training app \u2014 like having a dog trainer on call 24/7",
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
@@ -53,5 +53,9 @@
     "typescript": "~5.3.0",
     "prettier": "^3.3.0"
   },
-  "private": true
+  "private": true,
+  "overrides": {
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  }
 }
