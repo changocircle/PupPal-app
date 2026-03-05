@@ -66,6 +66,16 @@ export default function RootLayout() {
             animation: "slide_from_bottom",
           }}
         />
+        <Stack.Screen name="journal/index" />
+        <Stack.Screen
+          name="journal/add"
+          options={{
+            presentation: "modal",
+            animation: "slide_from_bottom",
+          }}
+        />
+        <Stack.Screen name="breeds/index" />
+        <Stack.Screen name="breeds/[slug]" />
       </Stack>
     </QueryClientProvider>
   );

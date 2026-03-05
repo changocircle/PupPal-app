@@ -223,9 +223,32 @@ export default function ProfileScreen() {
           </Pressable>
         </Animated.View>
 
+        {/* ── Breed Encyclopedia ── */}
+        <Animated.View
+          entering={FadeInDown.duration(400).delay(270)}
+          className="px-xl mb-lg"
+        >
+          <Pressable onPress={() => router.push("/breeds")}>
+            <Card className="flex-row items-center gap-md">
+              <Typography className="text-[32px]">📚</Typography>
+              <View className="flex-1">
+                <Typography variant="body-medium">
+                  Breed Encyclopedia
+                </Typography>
+                <Typography variant="caption" color="secondary">
+                  {breed !== "Puppy"
+                    ? `Learn about ${breed}s and 50 other breeds`
+                    : "Explore 51 breed profiles"}
+                </Typography>
+              </View>
+              <Typography color="tertiary">→</Typography>
+            </Card>
+          </Pressable>
+        </Animated.View>
+
         {/* ── Settings ── */}
         <Animated.View
-          entering={FadeInDown.duration(400).delay(300)}
+          entering={FadeInDown.duration(400).delay(330)}
           className="px-xl mb-lg"
         >
           <Typography variant="h3" className="mb-sm">
