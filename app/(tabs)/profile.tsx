@@ -413,32 +413,24 @@ export default function ProfileScreen() {
 
           {[
             {
+              icon: "🛡️",
+              label: "Data & Privacy",
+              onPress: () => router.push("/settings/data-privacy"),
+            },
+            {
               icon: "🔒",
               label: "Privacy Policy",
               onPress: () =>
-                Alert.alert("Privacy Policy", "Opens privacy policy page."),
+                Linking.openURL("https://puppal.app/privacy").catch(() =>
+                  Alert.alert("Privacy Policy", "Visit puppal.app/privacy")
+                ),
             },
             {
               icon: "📄",
               label: "Terms of Service",
               onPress: () =>
-                Alert.alert("Terms", "Opens terms of service page."),
-            },
-            {
-              icon: "📦",
-              label: "Export My Data",
-              onPress: () =>
-                Alert.alert(
-                  "Export Data",
-                  "This will export all your data as a JSON file.\n\nGDPR & CCPA compliant.",
-                  [
-                    { text: "Cancel", style: "cancel" },
-                    {
-                      text: "Export",
-                      onPress: () =>
-                        Alert.alert("Exported!", "Data export started."),
-                    },
-                  ]
+                Linking.openURL("https://puppal.app/terms").catch(() =>
+                  Alert.alert("Terms", "Visit puppal.app/terms")
                 ),
             },
           ].map((item) => (
@@ -470,7 +462,7 @@ export default function ProfileScreen() {
               onPress={handleSignOut}
             />
             <Pressable
-              onPress={handleDeleteAccount}
+              onPress={() => router.push("/settings/data-privacy")}
               className="py-md items-center"
             >
               <Typography
