@@ -1,0 +1,116 @@
+[
+  {
+    "id": "pack-starter",
+    "name": "Starter Tricks",
+    "description": "The perfect first tricks for any dog. Fun, easy, and Instagram-ready.",
+    "slug": "starter-tricks",
+    "icon": "\ud83d\udc3e",
+    "unlock_condition": "plan_week",
+    "unlock_value": 4,
+    "sort_order": 1,
+    "exercises": [
+      "trick-starter-001",
+      "trick-starter-002",
+      "trick-starter-003",
+      "trick-starter-004",
+      "trick-starter-005"
+    ],
+    "total_tricks": 5,
+    "active": true
+  },
+  {
+    "id": "pack-classic",
+    "name": "Classic Tricks",
+    "description": "Timeless crowd-pleasers that every good dog should know.",
+    "slug": "classic-tricks",
+    "icon": "\ud83c\udfad",
+    "unlock_condition": "plan_week",
+    "unlock_value": 8,
+    "sort_order": 2,
+    "exercises": [
+      "trick-classic-001",
+      "trick-classic-002",
+      "trick-classic-003",
+      "trick-classic-004",
+      "trick-classic-005"
+    ],
+    "total_tricks": 5,
+    "active": true
+  },
+  {
+    "id": "pack-impressive",
+    "name": "Impressive Tricks",
+    "description": "Turn heads at the park with these show-stopping moves.",
+    "slug": "impressive-tricks",
+    "icon": "\ud83c\udf1f",
+    "unlock_condition": "plan_complete",
+    "unlock_value": null,
+    "sort_order": 3,
+    "exercises": [
+      "trick-impressive-001",
+      "trick-impressive-002",
+      "trick-impressive-003",
+      "trick-impressive-004",
+      "trick-impressive-005"
+    ],
+    "total_tricks": 5,
+    "active": true
+  },
+  {
+    "id": "pack-useful",
+    "name": "Useful Tricks",
+    "description": "Practical skills that make everyday life easier \u2014 and more impressive.",
+    "slug": "useful-tricks",
+    "icon": "\ud83d\udd27",
+    "unlock_condition": "plan_complete",
+    "unlock_value": null,
+    "sort_order": 4,
+    "exercises": [
+      "trick-useful-001",
+      "trick-useful-002",
+      "trick-useful-003",
+      "trick-useful-004",
+      "trick-useful-005"
+    ],
+    "total_tricks": 5,
+    "active": true
+  },
+  {
+    "id": "pack-party",
+    "name": "Party Tricks",
+    "description": "The tricks that steal the show at every gathering.",
+    "slug": "party-tricks",
+    "icon": "\ud83c\udf89",
+    "unlock_condition": "plan_complete",
+    "unlock_value": null,
+    "sort_order": 5,
+    "exercises": [
+      "trick-party-001",
+      "trick-party-002",
+      "trick-party-003",
+      "trick-party-004",
+      "trick-party-005"
+    ],
+    "total_tricks": 5,
+    "active": true
+  },
+  {
+    "id": "pack-advanced",
+    "name": "Advanced Performance",
+    "description": "Elite-level tricks for the truly dedicated team. Freestyle-ready.",
+    "slug": "advanced-performance",
+    "icon": "\ud83c\udfc6",
+    "unlock_condition": "tricks_completed",
+    "unlock_value": 15,
+    "sort_order": 6,
+    "exercises": [
+      "trick-advanced-001",
+      "trick-advanced-002",
+      "trick-advanced-003",
+      "trick-advanced-004",
+      "trick-advanced-005"
+    ],
+    "total_tricks": 5,
+    "active": true
+  }
+]

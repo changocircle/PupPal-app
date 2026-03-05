@@ -1,0 +1,1428 @@
+[
+  {
+    "id": "trick-starter-001",
+    "category": "tricks",
+    "subcategory": "starter",
+    "is_trick": true,
+    "trick_pack_id": "pack-starter",
+    "title": "Shake / Paw",
+    "overview": "Teach {dog_name} to place a paw in your open hand on cue. This classic trick builds on natural pawing behaviour and is the foundation for High Five and Wave. {breed_tip} Most dogs pick this up quickly \u2014 it's the perfect confidence booster to start the trick journey.",
+    "time_minutes": 5,
+    "difficulty": 1,
+    "supplies": [
+      "small soft treats",
+      "clicker (optional)"
+    ],
+    "steps": [
+      "Have {dog_name} sit facing you. Hold a treat in your closed fist at chest level.",
+      "Wait. Most dogs will eventually paw at your fist to get the treat. The moment a paw lifts, mark ('yes!' or click) and reward.",
+      "Once {dog_name} is reliably pawing at your fist, switch to an open palm held at paw height. Mark and reward when the paw touches your palm.",
+      "Add the cue: say 'Shake' or 'Paw' just before offering your hand. Mark and reward on contact.",
+      "Practice 5 reps, then take a break. Aim for 3 short sessions across the day."
+    ],
+    "success_criteria": "{dog_name} places paw in your open hand within 3 seconds of the cue 4 out of 5 times.",
+    "pro_tips": [
+      "If {dog_name} won't paw, gently tickle the back of the leg just above the paw to encourage a lift.",
+      "Keep sessions under 5 minutes \u2014 tricks should always end on a win.",
+      "Switch hands once the trick is solid on one side to build flexibility."
+    ],
+    "common_mistakes": [
+      "Grabbing the paw instead of letting {dog_name} offer it \u2014 this builds dependence on your grab rather than a voluntary behaviour.",
+      "Repeating the cue multiple times. Say it once, wait, then reset if nothing happens."
+    ],
+    "troubleshooting": "If {dog_name} keeps standing up instead of offering a paw, try while they're in a sit against a wall so they're less likely to shift forward. You can also try a lower hand position.",
+    "next_step": "trick-starter-002",
+    "prerequisites": [],
+    "share_moment": "Film {dog_name}'s first handshake! It's the cutest intro trick \u2014 perfect for showing off to friends.",
+    "breed_modifiers": {
+      "brachycephalic": null,
+      "large_breeds": null,
+      "small_breeds": "Small dogs may prefer a lighter touch \u2014 hold your finger out instead of a full palm.",
+      "high_energy": null
+    },
+    "progression_levels": {
+      "level_1": "Performs with lure/guide, treats every time",
+      "level_2": "Performs on verbal cue only, intermittent treats",
+      "level_3": "Performs reliably with verbal or hand signal, any environment"
+    }
+  },
+  {
+    "id": "trick-starter-002",
+    "category": "tricks",
+    "subcategory": "starter",
+    "is_trick": true,
+    "trick_pack_id": "pack-starter",
+    "title": "High Five",
+    "overview": "Build on {dog_name}'s Shake skill by raising the target hand higher. High Five looks impressive but is one of the easiest trick upgrades \u2014 it's just a Shake aimed upward. {breed_tip} Great energy for a fun photo op.",
+    "time_minutes": 5,
+    "difficulty": 1,
+    "supplies": [
+      "small soft treats",
+      "clicker (optional)"
+    ],
+    "steps": [
+      "Start with a successful Shake. Reward to get {dog_name} in the groove.",
+      "Gradually raise your open palm a few centimetres higher than normal Shake position. Mark and reward when {dog_name}'s paw meets your palm.",
+      "Continue raising your hand over several reps until it's held vertically at {dog_name}'s nose height \u2014 a classic high-five position.",
+      "Add the cue: say 'High Five!' just before presenting your vertical palm. Mark and reward on contact.",
+      "Practice transitioning between Shake (horizontal palm) and High Five (vertical palm) so {dog_name} learns the difference."
+    ],
+    "success_criteria": "{dog_name} taps a vertical palm at nose height within 3 seconds of 'High Five' cue, 4 out of 5 times.",
+    "pro_tips": [
+      "If {dog_name} keeps offering a low Shake, hold a treat behind your vertical palm to lure the paw higher.",
+      "Add a fun excited tone when you say 'High Five!' \u2014 the energy helps distinguish it from the calmer Shake cue.",
+      "This trick photographs brilliantly. Practise with your phone hand ready for the shot."
+    ],
+    "common_mistakes": [
+      "Raising the hand too high too fast \u2014 increase height gradually across sessions, not within one session.",
+      "Not differentiating the cue clearly enough from Shake. Use a distinct word and hand position."
+    ],
+    "troubleshooting": "If {dog_name} just stares at the raised hand, go back to Shake position, reward, then inch higher. Don't skip steps. Some dogs need 2-3 sessions to bridge the gap.",
+    "next_step": "trick-party-001",
+    "prerequisites": [
+      "trick-starter-001"
+    ],
+    "share_moment": "High Five is pure Instagram gold! Film {dog_name} giving you a high five \u2014 add a slow-mo replay for extra charm.",
+    "breed_modifiers": {
+      "brachycephalic": null,
+      "large_breeds": "For tall dogs, you may not need to raise your hand much \u2014 their natural paw height is already high-five territory.",
+      "small_breeds": "Keep the target low enough that your small pup doesn't need to strain or stand up.",
+      "high_energy": null
+    },
+    "progression_levels": {
+      "level_1": "Taps vertical palm with lure behind hand",
+      "level_2": "Taps on verbal cue, no lure, intermittent treats",
+      "level_3": "Performs anywhere, distinguishes from Shake reliably"
+    }
+  },
+  {
+    "id": "trick-starter-003",
+    "category": "tricks",
+    "subcategory": "starter",
+    "is_trick": true,
+    "trick_pack_id": "pack-starter",
+    "title": "Spin (Clockwise)",
+    "overview": "Teach {dog_name} to turn in a full circle on cue. Spin is a high-energy, visually fun trick that builds body awareness and coordination. {breed_tip} Dogs of all sizes can learn this one quickly.",
+    "time_minutes": 5,
+    "difficulty": 1,
+    "supplies": [
+      "small soft treats"
+    ],
+    "steps": [
+      "With {dog_name} standing, hold a treat right at nose level.",
+      "Slowly lure {dog_name}'s nose to the right, guiding them in a clockwise circle. Move the treat in a smooth arc \u2014 not too fast.",
+      "The moment {dog_name} completes the full 360-degree turn, mark and reward.",
+      "After 5-6 successful lured spins, begin fading the lure: use just your hand in a circular motion without a visible treat. Reward from the other hand.",
+      "Add the cue: say 'Spin!' just before the hand signal. Gradually reduce the hand circle to a small flick."
+    ],
+    "success_criteria": "{dog_name} completes a full clockwise circle within 3 seconds of the 'Spin' cue 4 out of 5 times.",
+    "pro_tips": [
+      "Keep the lure at nose height \u2014 too high and {dog_name} will sit, too low and they'll lie down.",
+      "If {dog_name} gets dizzy or confused, do half-circles first and build to a full spin over a few sessions.",
+      "Speed comes naturally once the trick is learned. Don't rush the initial learning phase."
+    ],
+    "common_mistakes": [
+      "Moving the lure too quickly so {dog_name} loses track and gives up. Go slow at first.",
+      "Luring in inconsistent directions \u2014 always clockwise for this trick. Counter-clockwise gets its own cue later."
+    ],
+    "troubleshooting": "If {dog_name} only goes halfway, break it into pieces. Reward a quarter turn, then a half, then three-quarters, and finally the full spin. This shaping approach works well for dogs who get confused by the full motion.",
+    "next_step": "trick-classic-003",
+    "prerequisites": [],
+    "share_moment": "Spin is mesmerising on video! Film a few spins in a row \u2014 it looks like {dog_name} is dancing.",
+    "breed_modifiers": {
+      "brachycephalic": "Keep sessions short \u2014 rapid spinning can cause heavy breathing. 3-4 reps max, then rest.",
+      "large_breeds": "Large dogs need more space to spin. Practice in an open area, not a cramped hallway.",
+      "small_breeds": null,
+      "high_energy": "High-energy dogs often love spin \u2014 channel that energy by adding speed once the trick is solid."
+    },
+    "progression_levels": {
+      "level_1": "Follows lure through full circle",
+      "level_2": "Spins on hand signal only, intermittent treats",
+      "level_3": "Spins on verbal cue alone, any location"
+    }
+  },
+  {
+    "id": "trick-starter-004",
+    "category": "tricks",
+    "subcategory": "starter",
+    "is_trick": true,
+    "trick_pack_id": "pack-starter",
+    "title": "Touch / Target",
+    "overview": "Teach {dog_name} to boop their nose to your open palm on cue. Touch is one of the most versatile foundation behaviours \u2014 it's used to guide position, build confidence, and form the basis of dozens of advanced tricks. {breed_tip}",
+    "time_minutes": 5,
+    "difficulty": 1,
+    "supplies": [
+      "small soft treats",
+      "clicker (optional)"
+    ],
+    "steps": [
+      "Hold your open palm about 10 cm from {dog_name}'s nose. Most dogs will naturally investigate and sniff it.",
+      "The instant {dog_name}'s nose contacts your palm, mark ('yes!' or click) and reward with the other hand.",
+      "Repeat 5 times with your hand in the same position. {dog_name} should start deliberately targeting your palm.",
+      "Begin moving your hand to different positions \u2014 left, right, higher, lower. Mark and reward each nose touch.",
+      "Add the cue: say 'Touch!' just before presenting your palm. Gradually increase distance so {dog_name} has to move a step or two to reach your hand."
+    ],
+    "success_criteria": "{dog_name} presses nose to your palm within 3 seconds of 'Touch' cue from at least 1 metre away, 4 out of 5 times.",
+    "pro_tips": [
+      "Don't push your hand towards {dog_name}'s nose \u2014 let them come to you. This builds intentional targeting.",
+      "Touch is a secret weapon for nervous dogs. Use it to redirect attention in stressful situations.",
+      "Once solid with your palm, you can transfer the touch to a target stick or Post-it note for advanced tricks."
+    ],
+    "common_mistakes": [
+      "Rewarding sniffing rather than a deliberate nose press. Wait for a firm boop, not a casual drift-by.",
+      "Moving to distance too quickly. Build a solid touch at close range over 2-3 sessions before adding steps."
+    ],
+    "troubleshooting": "If {dog_name} licks your hand instead of touching with their nose, hold a treat in the same hand initially so there's a scent to target. Gradually remove the treat as the nose-touch habit forms.",
+    "next_step": "trick-starter-005",
+    "prerequisites": [],
+    "share_moment": "Film {dog_name} booping your hand from across the room \u2014 the trot-and-boop combo is adorable!",
+    "breed_modifiers": {
+      "brachycephalic": "Flat-nosed breeds may touch with their whole face. That's perfectly fine \u2014 reward any deliberate contact.",
+      "large_breeds": null,
+      "small_breeds": "Hold your palm low or kneel down so your small pup can reach comfortably.",
+      "high_energy": null
+    },
+    "progression_levels": {
+      "level_1": "Nose touches palm at close range with lure",
+      "level_2": "Touches from 1-2 metres on verbal cue, intermittent treats",
+      "level_3": "Touches from across the room, any environment, transfers to other targets"
+    }
+  },
+  {
+    "id": "trick-starter-005",
+    "category": "tricks",
+    "subcategory": "starter",
+    "is_trick": true,
+    "trick_pack_id": "pack-starter",
+    "title": "Take a Bow",
+    "overview": "Teach {dog_name} to lower their front end into a play bow position \u2014 front legs down, bum up. This adorable trick looks like a theatrical curtain call and is a natural movement for most dogs. {breed_tip} It's the perfect finish to any trick sequence.",
+    "time_minutes": 8,
+    "difficulty": 2,
+    "supplies": [
+      "small soft treats",
+      "clicker (optional)"
+    ],
+    "steps": [
+      "With {dog_name} standing, hold a treat right at their nose, then slowly lower it straight down towards the floor between their front paws.",
+      "As {dog_name} follows the treat down, their front end should lower while the back end stays up. Mark and reward the moment the elbows touch the ground.",
+      "If {dog_name} goes into a full down, slide your free hand gently under their belly to keep the back end up while luring the front down. Mark and reward.",
+      "Once {dog_name} can hold the bow position for 1-2 seconds, add the cue: say 'Bow!' or 'Take a bow!' just before luring.",
+      "Gradually fade the lure by reducing how far your hand moves. The goal is a small hand dip that {dog_name} mirrors with a full bow."
+    ],
+    "success_criteria": "{dog_name} lowers front end into bow position (elbows on ground, hips up) within 3 seconds of cue, holds for 2 seconds, 3 out of 5 times.",
+    "pro_tips": [
+      "Catch natural bows! When {dog_name} stretches after a nap, say 'Bow!' and reward. This links the cue to a movement they already do.",
+      "Practice on a non-slip surface so {dog_name}'s paws don't slide forward into a full down.",
+      "Bow is the perfect 'grand finale' for a trick sequence \u2014 teach it early so you can chain it later."
+    ],
+    "common_mistakes": [
+      "Lowering the treat too far forward so {dog_name} walks forward instead of bowing. Keep the treat between the front paws, straight down.",
+      "Rewarding a full down instead of insisting on the bum-up position. Be precise about what you mark."
+    ],
+    "troubleshooting": "If {dog_name} always collapses into a full down, try teaching this on a slightly raised surface (front paws on a low step) so the angle makes it harder to lie flat. Alternatively, keep one hand under the belly as a physical reminder.",
+    "next_step": "trick-classic-001",
+    "prerequisites": [],
+    "share_moment": "The bow is pure theatre! Film {dog_name} taking a bow after performing another trick \u2014 it's a show-stopping combo.",
+    "breed_modifiers": {
+      "brachycephalic": null,
+      "large_breeds": "Large dogs may find this easier \u2014 their long legs naturally support the bow position.",
+      "small_breeds": "Toy breeds may collapse quickly. Use very small hand movements and reward any front-end dip.",
+      "high_energy": null
+    },
+    "progression_levels": {
+      "level_1": "Bows with full lure to ground, hand under belly support",
+      "level_2": "Bows on cue with minimal hand movement, holds 2 seconds",
+      "level_3": "Bows on verbal cue alone, holds 3+ seconds, any location"
+    }
+  },
+  {
+    "id": "trick-classic-001",
+    "category": "tricks",
+    "subcategory": "classic",
+    "is_trick": true,
+    "trick_pack_id": "pack-classic",
+    "title": "Roll Over",
+    "overview": "Teach {dog_name} to roll from a down position onto their back and all the way over. This crowd-pleaser takes a few sessions to master but always gets a big reaction from onlookers. {breed_tip}",
+    "time_minutes": 10,
+    "difficulty": 2,
+    "supplies": [
+      "small soft treats",
+      "soft surface (carpet, mat, or grass)"
+    ],
+    "steps": [
+      "Start with {dog_name} in a Down. Hold a treat at their nose.",
+      "Slowly move the treat from their nose towards their shoulder, encouraging them to roll onto their side. Mark and reward for lying on their side.",
+      "Once the side-roll is reliable, continue the lure over their shoulder so {dog_name} rolls onto their back. Mark and reward any back exposure.",
+      "Continue the lure arc so {dog_name} completes the full roll to the other side and back to a down or standing position. Jackpot reward!",
+      "Add the cue: say 'Roll Over!' before starting the lure arc. Gradually reduce the lure to a small circular hand gesture."
+    ],
+    "success_criteria": "{dog_name} completes a full 360-degree roll from down position within 5 seconds of cue, 3 out of 5 times.",
+    "pro_tips": [
+      "Always practise on a soft surface. Rolling on hard floors is uncomfortable and dogs will resist.",
+      "Most dogs have a preferred rolling direction. Start with whichever side {dog_name} naturally leans towards.",
+      "Break this into stages over 3-5 sessions: side \u2192 back \u2192 full roll. Don't rush the full motion."
+    ],
+    "common_mistakes": [
+      "Moving the lure too quickly so {dog_name} stands up instead of rolling. Keep it slow and close to the body.",
+      "Practising on a hard or slippery surface. Dogs won't roll if it's uncomfortable."
+    ],
+    "troubleshooting": "If {dog_name} gets stuck on their back, gently guide them through with a hand on the shoulder. Some dogs need 5-6 sessions of back-rolling practice before they commit to the full flip. That's normal.",
+    "next_step": "trick-classic-002",
+    "prerequisites": [],
+    "share_moment": "Roll Over is classic for a reason \u2014 it never gets old! Film {dog_name} rolling on grass in the sunshine.",
+    "breed_modifiers": {
+      "brachycephalic": "Some brachycephalic breeds find rolling uncomfortable due to body shape. If {dog_name} resists, don't force it \u2014 try Crawl instead.",
+      "large_breeds": "Large and barrel-chested breeds may need extra encouragement and a wider space.",
+      "small_breeds": null,
+      "high_energy": null
+    },
+    "progression_levels": {
+      "level_1": "Rolls with full lure arc, treats every time",
+      "level_2": "Rolls on small hand gesture, intermittent treats",
+      "level_3": "Rolls on verbal cue alone, any soft surface"
+    }
+  },
+  {
+    "id": "trick-classic-002",
+    "category": "tricks",
+    "subcategory": "classic",
+    "is_trick": true,
+    "trick_pack_id": "pack-classic",
+    "title": "Play Dead / Bang",
+    "overview": "Teach {dog_name} to flop onto their side and lie still when you say 'Bang!' and point a finger gun. This dramatic trick is a guaranteed crowd-pleaser and builds on Down and relaxation skills. {breed_tip}",
+    "time_minutes": 10,
+    "difficulty": 2,
+    "supplies": [
+      "small soft treats",
+      "soft surface"
+    ],
+    "steps": [
+      "Start with {dog_name} in a Down. Hold a treat at their nose and slowly lure it towards their shoulder to guide them onto their side.",
+      "When {dog_name} is lying on their side, mark and reward. Hold the treat near the ground so they stay in position for 2-3 seconds.",
+      "Once the side-lie is reliable, add the cue: say 'Bang!' while making a finger-gun gesture, then lure into position. Mark and reward.",
+      "Gradually increase the still time before marking \u2014 aim for 3-5 seconds of motionless 'playing dead'.",
+      "Fade the lure so the finger-gun gesture alone triggers the behaviour. Add a dramatic 'release' cue like 'Alive!' to pop back up."
+    ],
+    "success_criteria": "{dog_name} lies on side motionless for 5 seconds after 'Bang!' cue with finger-gun gesture, 3 out of 5 times.",
+    "pro_tips": [
+      "Ham it up! The more dramatic your 'Bang!' and finger-gun, the more entertaining the trick becomes.",
+      "Teach the release cue early \u2014 otherwise {dog_name} will pop up the moment they see the treat.",
+      "For extra drama, teach {dog_name} to close their eyes while playing dead. Gently stroke eyelids during the hold."
+    ],
+    "common_mistakes": [
+      "Rewarding before {dog_name} is fully still. Wait for the motionless moment \u2014 don't mark while they're still shifting.",
+      "Skipping the release cue. Without it, {dog_name} decides when to get up, which undermines the trick."
+    ],
+    "troubleshooting": "If {dog_name} won't lie still, build duration gradually: start with 1 second, then 2, then 3. Also ensure the surface is comfortable \u2014 dogs won't play dead on cold or hard floors.",
+    "next_step": "trick-classic-004",
+    "prerequisites": [],
+    "share_moment": "The 'Bang!' trick is pure viral content. Film it with the finger gun for maximum dramatic effect \u2014 add a slow-motion replay!",
+    "breed_modifiers": {
+      "brachycephalic": null,
+      "large_breeds": null,
+      "small_breeds": null,
+      "high_energy": "High-energy dogs may struggle with the 'stay still' part. Build duration slowly and reward calm."
+    },
+    "progression_levels": {
+      "level_1": "Lies on side with lure, holds for 2 seconds",
+      "level_2": "Drops on finger-gun cue, holds for 5 seconds, intermittent treats",
+      "level_3": "Drops from standing on 'Bang!', holds until released, any location"
+    }
+  },
+  {
+    "id": "trick-classic-003",
+    "category": "tricks",
+    "subcategory": "classic",
+    "is_trick": true,
+    "trick_pack_id": "pack-classic",
+    "title": "Spin (Counter-Clockwise)",
+    "overview": "Now that {dog_name} can spin clockwise, add the reverse direction with a different cue. Having both directions opens up freestyle dance routines and impressive combo chains. {breed_tip}",
+    "time_minutes": 5,
+    "difficulty": 1,
+    "supplies": [
+      "small soft treats"
+    ],
+    "steps": [
+      "With {dog_name} standing, hold a treat at nose level and lure to the LEFT, guiding a counter-clockwise circle.",
+      "Mark and reward the moment {dog_name} completes the full circle. Use a different hand than your clockwise Spin cue.",
+      "Add a distinct cue: use 'Twist!' or 'Other way!' \u2014 something clearly different from your clockwise 'Spin' cue.",
+      "Practise 5 reps of the new direction, then alternate: one Spin (clockwise), one Twist (counter-clockwise). Mark each correctly.",
+      "Fade the lure to a small hand signal. The goal is two distinct spins on two distinct cues."
+    ],
+    "success_criteria": "{dog_name} reliably distinguishes between 'Spin' and 'Twist' cues, performing the correct direction 4 out of 5 times each.",
+    "pro_tips": [
+      "Use a visual cue too \u2014 clockwise with right hand, counter-clockwise with left hand. Dogs read body language better than words.",
+      "If {dog_name} defaults to their preferred direction, do a few extra reps of the new direction to balance it out.",
+      "Once both directions are solid, try alternating: Spin-Twist-Spin-Twist for a dizzy dance combo."
+    ],
+    "common_mistakes": [
+      "Using cues that sound too similar. 'Spin' and 'Spin the other way' will confuse {dog_name}. Use clearly distinct words.",
+      "Not practising the new direction separately before mixing both. Build the new habit before testing discrimination."
+    ],
+    "troubleshooting": "If {dog_name} always defaults to clockwise regardless of cue, go back to basics: only practise counter-clockwise for 2-3 sessions until it's strong on its own, then reintroduce alternating.",
+    "next_step": "trick-advanced-004",
+    "prerequisites": [
+      "trick-starter-003"
+    ],
+    "share_moment": "Film {dog_name} alternating Spin and Twist \u2014 it looks like a choreographed dance routine!",
+    "breed_modifiers": {
+      "brachycephalic": "Keep sessions short \u2014 rapid spinning can cause heavy breathing. 3-4 reps max, then rest.",
+      "large_breeds": "Ensure enough open space for comfortable spinning in both directions.",
+      "small_breeds": null,
+      "high_energy": null
+    },
+    "progression_levels": {
+      "level_1": "Follows lure counter-clockwise through full circle",
+      "level_2": "Performs on distinct verbal cue, can alternate with clockwise",
+      "level_3": "Responds to verbal or hand signal, rapid alternation, any location"
+    }
+  },
+  {
+    "id": "trick-classic-004",
+    "category": "tricks",
+    "subcategory": "classic",
+    "is_trick": true,
+    "trick_pack_id": "pack-classic",
+    "title": "Speak / Bark on Cue",
+    "overview": "Teach {dog_name} to bark once on command. This is a surprisingly useful trick \u2014 it demonstrates impulse control (bark ONLY when asked) and is the foundation for the Whisper trick. {breed_tip} Always pair with a 'Quiet' cue.",
+    "time_minutes": 10,
+    "difficulty": 2,
+    "supplies": [
+      "high-value treats",
+      "favourite toy"
+    ],
+    "steps": [
+      "Find what makes {dog_name} bark naturally \u2014 a knock on a surface, an exciting toy held out of reach, or you barking first. Trigger a bark.",
+      "The instant {dog_name} barks, mark and reward. Repeat 5-6 times so {dog_name} links barking with the reward.",
+      "Start adding the cue: say 'Speak!' just before the trigger. Over many reps, the cue will replace the trigger.",
+      "Gradually remove the original trigger (knock, toy, etc.) and test the verbal cue alone. Reward single barks \u2014 not bark-fests.",
+      "CRITICAL: Immediately teach 'Quiet'. After a Speak, hold a treat near {dog_name}'s nose (stops barking), wait 2 seconds of silence, mark and reward. Always end Speak practice with Quiet practice."
+    ],
+    "success_criteria": "{dog_name} produces a single bark within 3 seconds of 'Speak' cue and stops when given 'Quiet' cue, 3 out of 5 times.",
+    "pro_tips": [
+      "Only reward single barks. If {dog_name} fires off a barrage, wait for silence, then restart.",
+      "Quiet is MORE important than Speak. Spend equal time on the 'off switch'.",
+      "If you live in a flat, practise during reasonable hours and keep sessions short to avoid noise complaints."
+    ],
+    "common_mistakes": [
+      "Teaching Speak without teaching Quiet. This can accidentally reinforce demand barking \u2014 always teach both together.",
+      "Rewarding multiple barks. Be precise: one bark = reward. More barks = wait for silence."
+    ],
+    "troubleshooting": "If {dog_name} is naturally quiet and rarely barks, this trick may not be a good fit. Skip it and move to the next trick \u2014 not every dog needs to learn Speak. Alternatively, try capturing any natural vocalisation over several days.",
+    "next_step": "trick-classic-005",
+    "prerequisites": [],
+    "share_moment": "Film {dog_name} having a 'conversation' with you \u2014 ask a question, cue Speak, and it looks like they're answering!",
+    "breed_modifiers": {
+      "brachycephalic": null,
+      "large_breeds": null,
+      "small_breeds": "Small breeds prone to yapping \u2014 extra emphasis on the Quiet cue to prevent this backfiring.",
+      "high_energy": "Be cautious with breeds prone to excessive barking (huskies, beagles). Ensure Quiet is rock-solid before practising Speak independently."
+    },
+    "progression_levels": {
+      "level_1": "Barks on cue with trigger help, Quiet with treat lure",
+      "level_2": "Single bark on verbal cue alone, Quiet on verbal cue",
+      "level_3": "Speaks and quiets reliably in different environments, no treats needed"
+    }
+  },
+  {
+    "id": "trick-classic-005",
+    "category": "tricks",
+    "subcategory": "classic",
+    "is_trick": true,
+    "trick_pack_id": "pack-classic",
+    "title": "Whisper / Quiet Bark",
+    "overview": "The advanced evolution of Speak \u2014 teach {dog_name} to give a soft, quiet 'woof' instead of a full bark. This adorable trick demonstrates incredible vocal control and always gets a laugh. {breed_tip} Requires solid Speak/Quiet as prerequisites.",
+    "time_minutes": 10,
+    "difficulty": 3,
+    "supplies": [
+      "high-value treats",
+      "clicker (recommended for precision)"
+    ],
+    "steps": [
+      "Start with a Speak. The moment {dog_name} barks, cue Quiet immediately \u2014 you want to catch the transition from bark to silence.",
+      "Watch for any soft vocalisation during the Speak-to-Quiet transition: a soft woof, a grumble, a half-bark. Mark and JACKPOT reward these instantly.",
+      "Start cueing 'Whisper' or 'Shh' specifically when encouraging the soft vocalisation. Be patient \u2014 this requires capturing natural variation.",
+      "When {dog_name} begins to consistently offer a softer sound on the 'Whisper' cue, stop rewarding full barks during Whisper practice.",
+      "Refine over many sessions. The goal is a clear contrast: 'Speak' = full bark, 'Whisper' = soft woof."
+    ],
+    "success_criteria": "{dog_name} produces a noticeably softer vocalisation on 'Whisper' cue that is distinct from their full Speak bark, 3 out of 5 times.",
+    "pro_tips": [
+      "This trick requires patience \u2014 you're shaping a behaviour that dogs don't naturally distinguish. Expect 2-3 weeks of practice.",
+      "A clicker is especially helpful here for capturing the exact moment of a soft sound.",
+      "Some dogs whisper as a grumble, others as a breathy woof. Accept whatever softer version {dog_name} offers."
+    ],
+    "common_mistakes": [
+      "Expecting a perfect whisper immediately. This is a shaping trick \u2014 reward any volume reduction at first, then gradually require softer sounds.",
+      "Practising when {dog_name} is overly excited. Start in calm, low-distraction environments where soft sounds are more likely."
+    ],
+    "troubleshooting": "If {dog_name} only offers full-volume barks, try cueing Speak while holding a treat near their nose. The treat proximity often naturally dampens the bark volume. Mark any quieter attempt.",
+    "next_step": null,
+    "prerequisites": [
+      "trick-classic-004"
+    ],
+    "share_moment": "Film {dog_name} 'whispering' on cue \u2014 it's one of the most unique and hilarious tricks. People always do a double take!",
+    "breed_modifiers": {
+      "brachycephalic": "Brachycephalic breeds often naturally make softer, snortier sounds \u2014 use these to your advantage.",
+      "large_breeds": null,
+      "small_breeds": "Small breeds with yappy tendencies may find volume control challenging. Extra patience needed.",
+      "high_energy": null
+    },
+    "progression_levels": {
+      "level_1": "Produces any softer vocalisation after Speak cue with treat dampening",
+      "level_2": "Whispers on distinct cue, clearly softer than Speak, intermittent treats",
+      "level_3": "Whispers reliably on cue, clear contrast with Speak, any environment"
+    }
+  },
+  {
+    "id": "trick-impressive-001",
+    "category": "tricks",
+    "subcategory": "impressive",
+    "is_trick": true,
+    "trick_pack_id": "pack-impressive",
+    "title": "Crawl",
+    "overview": "Teach {dog_name} to move forward while staying in a down position \u2014 belly on the ground, army-crawl style. This impressive trick builds core strength and body awareness. {breed_tip} A real head-turner at the park.",
+    "time_minutes": 10,
+    "difficulty": 2,
+    "supplies": [
+      "small soft treats",
+      "low barrier or your outstretched leg (optional)"
+    ],
+    "steps": [
+      "Start with {dog_name} in a Down. Hold a treat right at their nose on the ground.",
+      "Slowly drag the treat forward along the ground, just fast enough to keep {dog_name} interested. Mark and reward any forward movement without standing up.",
+      "If {dog_name} stands, reset to Down and try again with the treat lower and slower. Even 10 cm of crawling is a win early on.",
+      "Gradually increase distance: 10 cm \u2192 30 cm \u2192 50 cm \u2192 1 metre across sessions. Add the cue 'Crawl!' before the lure.",
+      "For dogs who keep standing: try luring under your outstretched leg or under a low barrier, so standing isn't an option."
+    ],
+    "success_criteria": "{dog_name} crawls forward at least 1 metre in down position on 'Crawl' cue, 3 out of 5 times.",
+    "pro_tips": [
+      "Keep the treat literally on the floor \u2014 any upward angle encourages standing.",
+      "Reward frequently at first. Treat every 10-20 cm of crawling, then space out rewards as the trick solidifies.",
+      "Practise on carpet or grass. Crawling on hard floors is uncomfortable on elbows."
+    ],
+    "common_mistakes": [
+      "Asking for too much distance too fast. Build 10 cm at a time \u2014 patience is key.",
+      "Holding the treat too high off the ground, causing the bum to pop up."
+    ],
+    "troubleshooting": "If {dog_name} refuses to crawl and always stands, try a narrow space like between a couch and coffee table where standing is physically difficult. This forces the crawl motion naturally.",
+    "next_step": "trick-impressive-002",
+    "prerequisites": [],
+    "share_moment": "Film {dog_name} doing an army crawl towards you \u2014 it's hilarious and impressive in equal measure!",
+    "breed_modifiers": {
+      "brachycephalic": "Short-nosed breeds may find extended crawling tiring. Keep distances short and take breaks.",
+      "large_breeds": "Large dogs may find crawling harder on their joints. Keep sessions short and always on soft surfaces.",
+      "small_breeds": "Small dogs are natural crawlers \u2014 they often pick this up quickly.",
+      "high_energy": null
+    },
+    "progression_levels": {
+      "level_1": "Crawls 30 cm with nose-to-ground lure",
+      "level_2": "Crawls 1 metre on verbal cue, intermittent treats",
+      "level_3": "Crawls 2+ metres on cue, any soft surface, no lure"
+    }
+  },
+  {
+    "id": "trick-impressive-002",
+    "category": "tricks",
+    "subcategory": "impressive",
+    "is_trick": true,
+    "trick_pack_id": "pack-impressive",
+    "title": "Peek-a-Boo (Through Legs)",
+    "overview": "Teach {dog_name} to walk between your legs from behind and peek out front. This adorable positioning trick builds confidence with close body contact and looks incredibly cute. {breed_tip}",
+    "time_minutes": 10,
+    "difficulty": 2,
+    "supplies": [
+      "small soft treats"
+    ],
+    "steps": [
+      "Stand with feet wide apart. Hold a treat behind you between your legs so {dog_name} can see it.",
+      "When {dog_name} walks through your legs to get the treat, mark and reward while they're positioned between your legs, facing forward.",
+      "Repeat until {dog_name} confidently walks through. Start the treat lure from further back each time.",
+      "Add the cue: say 'Peek-a-Boo!' before luring. {dog_name} should walk through and stop with their head peeking out between your legs.",
+      "Hold the position for 2-3 seconds before rewarding. Gradually build duration so {dog_name} stays in the peek-a-boo pose."
+    ],
+    "success_criteria": "{dog_name} walks between legs from behind and holds peek-a-boo position (head out front) for 3 seconds on cue, 3 out of 5 times.",
+    "pro_tips": [
+      "Start with very high-value treats so {dog_name} is motivated to walk into the unusual position.",
+      "If {dog_name} seems nervous about being between your legs, start by rewarding them for just standing near your legs, then between, then through.",
+      "This is an incredible photo pose. Once solid, you'll use it constantly for cute pictures."
+    ],
+    "common_mistakes": [
+      "Standing with legs too close together. Give {dog_name} plenty of room, especially at first.",
+      "Moving or shifting weight while {dog_name} is between your legs \u2014 stay still to build their confidence."
+    ],
+    "troubleshooting": "If {dog_name} goes around your legs instead of through them, practise against a wall so they can only go between. Or use a treat in each hand to create a clear channel.",
+    "next_step": "trick-impressive-003",
+    "prerequisites": [],
+    "share_moment": "Peek-a-Boo is one of the cutest poses! Take a photo looking down at {dog_name} peeking out between your legs.",
+    "breed_modifiers": {
+      "brachycephalic": null,
+      "large_breeds": "Large breeds may not fit comfortably. Widen your stance or skip if your dog is too tall for the position.",
+      "small_breeds": "Small dogs fit perfectly \u2014 this is a great trick for small breeds.",
+      "high_energy": null
+    },
+    "progression_levels": {
+      "level_1": "Walks through legs with lure, holds briefly",
+      "level_2": "Walks through and holds on verbal cue, 3 seconds",
+      "level_3": "Walks through from any starting position, holds until released, any location"
+    }
+  },
+  {
+    "id": "trick-impressive-003",
+    "category": "tricks",
+    "subcategory": "impressive",
+    "is_trick": true,
+    "trick_pack_id": "pack-impressive",
+    "title": "Weave Through Legs",
+    "overview": "Teach {dog_name} to weave in a figure-8 pattern through your legs as you walk. This flowing, dynamic trick builds on Peek-a-Boo and is the basis for the advanced Leg Weave Walk. {breed_tip}",
+    "time_minutes": 10,
+    "difficulty": 3,
+    "supplies": [
+      "small soft treats"
+    ],
+    "steps": [
+      "Stand with feet wide apart. Lure {dog_name} through your legs from right to left. Mark and reward.",
+      "Step forward with your right leg. Lure {dog_name} back through from left to right. Mark and reward.",
+      "Step forward with your left leg. Lure {dog_name} through right to left again. You're building the figure-8 weave pattern.",
+      "Repeat the step-lure-weave pattern for 4-5 steps. Reward after every 2 weaves initially.",
+      "Add the cue 'Weave!' at the start. Fade the lure to just a pointing hand gesture between your legs."
+    ],
+    "success_criteria": "{dog_name} weaves through your legs for 4+ continuous steps on 'Weave' cue, 3 out of 5 times.",
+    "pro_tips": [
+      "Take exaggerated, slow steps at first. Speed up only after the pattern is solid.",
+      "Practise in a hallway so {dog_name} can't drift away \u2014 they'll naturally stay between your legs.",
+      "This trick is MUCH easier if your dog already knows Peek-a-Boo. Teach that first."
+    ],
+    "common_mistakes": [
+      "Walking too fast for {dog_name} to keep up. Slow-motion walking is key during learning.",
+      "Inconsistent stepping pattern. Always alternate feet in a regular rhythm."
+    ],
+    "troubleshooting": "If {dog_name} gets confused mid-weave, go back to stationary figure-8s (no forward walking). Just alternate luring left-right-left-right between your legs while standing still. Add walking once the pattern is solid.",
+    "next_step": "trick-advanced-002",
+    "prerequisites": [
+      "trick-impressive-002"
+    ],
+    "share_moment": "Film a long corridor weave from a side angle \u2014 the flowing motion looks like {dog_name} is doing a dance routine with you!",
+    "breed_modifiers": {
+      "brachycephalic": "Keep weave sequences short \u2014 this is physically demanding for flat-nosed breeds.",
+      "large_breeds": "Very large dogs may not fit between your legs while walking. This trick works best for medium and small breeds.",
+      "small_breeds": "Small dogs excel at this! The size difference makes the weave especially cute.",
+      "high_energy": "High-energy dogs often love the movement of weaving. Channel their energy into longer sequences."
+    },
+    "progression_levels": {
+      "level_1": "Weaves through stationary legs with lure",
+      "level_2": "Weaves while you walk slowly, 4+ steps on cue",
+      "level_3": "Weaves fluidly at walking pace, any location, no treats"
+    }
+  },
+  {
+    "id": "trick-impressive-004",
+    "category": "tricks",
+    "subcategory": "impressive",
+    "is_trick": true,
+    "trick_pack_id": "pack-impressive",
+    "title": "Jump Over Arm / Bar",
+    "overview": "Teach {dog_name} to jump over your outstretched arm or a low bar on cue. This energetic trick builds athleticism and is a stepping stone to agility skills. {breed_tip} Always start low and prioritise safety.",
+    "time_minutes": 10,
+    "difficulty": 2,
+    "supplies": [
+      "small soft treats",
+      "broomstick or PVC pipe (optional)"
+    ],
+    "steps": [
+      "Sit on the floor with one leg outstretched, creating a very low barrier ({dog_name} should be able to step over it easily). Lure {dog_name} over your leg with a treat. Mark and reward.",
+      "Once stepping over is reliable, gradually raise the barrier: bent knee, then your outstretched arm held low between two supports.",
+      "Add the cue: say 'Jump!' or 'Over!' just before luring over the barrier. Mark the jump, not the landing.",
+      "Increase height very gradually across sessions. Never go higher than {dog_name}'s shoulder height for safety.",
+      "Fade the lure. Stand beside the barrier and use a hand gesture to direct {dog_name} over."
+    ],
+    "success_criteria": "{dog_name} jumps over a barrier at knee height on 'Jump' or 'Over' cue, 4 out of 5 times.",
+    "pro_tips": [
+      "Height should NEVER exceed {dog_name}'s shoulder. Jumping too high risks joint injury, especially for growing puppies.",
+      "Wait until {dog_name} is at least 12 months old (18 months for large breeds) before any significant jumping to protect growth plates.",
+      "Make the barrier easy to knock over \u2014 if {dog_name} misjudges, a rigid bar could cause injury."
+    ],
+    "common_mistakes": [
+      "Raising the bar too high too fast. Low jumps practised many times build better form than ambitious heights.",
+      "Practising on slippery surfaces. Dogs need traction for safe takeoff and landing."
+    ],
+    "troubleshooting": "If {dog_name} goes around the barrier instead of over, practise in a doorway or narrow gap where around isn't an option. Start with the barrier barely off the ground so stepping over is easier than going around.",
+    "next_step": "trick-impressive-005",
+    "prerequisites": [],
+    "share_moment": "Film {dog_name} jumping in slow motion \u2014 it's athletic and dramatic! Outdoor settings with green grass make the best backdrop.",
+    "breed_modifiers": {
+      "brachycephalic": "Skip or keep very low. Brachycephalic breeds overheat quickly with jumping exercise and may have spinal issues.",
+      "large_breeds": "Wait until fully grown (18+ months) for any jump training. Keep heights modest to protect joints.",
+      "small_breeds": "Small dogs can be nimble jumpers but keep bars proportional \u2014 don't ask a Chihuahua to clear your knee.",
+      "high_energy": "High-energy, athletic breeds often love this. Channel it safely with proper heights."
+    },
+    "progression_levels": {
+      "level_1": "Steps over very low barrier with lure",
+      "level_2": "Jumps knee-height barrier on verbal cue",
+      "level_3": "Jumps on cue from distance, clears appropriate height, any setting"
+    }
+  },
+  {
+    "id": "trick-impressive-005",
+    "category": "tricks",
+    "subcategory": "impressive",
+    "is_trick": true,
+    "trick_pack_id": "pack-impressive",
+    "title": "Ring a Bell",
+    "overview": "Teach {dog_name} to press a bell or buzzer with their paw or nose on cue. This impressive trick builds on the Touch skill and has practical applications \u2014 many owners use a bell for potty signalling. {breed_tip}",
+    "time_minutes": 10,
+    "difficulty": 2,
+    "supplies": [
+      "small soft treats",
+      "desk bell, jingle bell, or hanging bell"
+    ],
+    "steps": [
+      "Place the bell on the ground near {dog_name}. Any natural investigation (sniffing, pawing) that makes the bell ring gets marked and rewarded.",
+      "Once {dog_name} is deliberately interacting with the bell, shape towards the specific action you want: a paw press for a desk bell, or a nose boop for a hanging bell.",
+      "Reward only the target action (paw or nose) that rings the bell. Ignore other interactions.",
+      "Add the cue: say 'Ring it!' before presenting the bell. Mark and reward when {dog_name} rings it on cue.",
+      "Move the bell to different locations and heights to generalise the behaviour."
+    ],
+    "success_criteria": "{dog_name} rings the bell with the correct action (paw or nose) within 5 seconds of 'Ring it!' cue, 3 out of 5 times.",
+    "pro_tips": [
+      "If {dog_name} knows Touch, use it as a bridge. Present the bell as a Touch target \u2014 the ring becomes a bonus marker.",
+      "Desk bells are easiest for paw-press. Hanging bells work better for nose-boop.",
+      "This trick has real-world utility: hang a bell by the door and teach {dog_name} to ring it when they need to go out."
+    ],
+    "common_mistakes": [
+      "Using a bell that's too quiet. {dog_name} needs to hear the result of their action. A clear, audible bell reinforces the behaviour.",
+      "Accepting any bell interaction instead of the specific target action. Be consistent about paw OR nose."
+    ],
+    "troubleshooting": "If {dog_name} is scared of the bell sound, start with a muffled version (wrap in cloth) and gradually remove the muffling. Desensitise to the sound before asking for deliberate ringing.",
+    "next_step": null,
+    "prerequisites": [],
+    "share_moment": "Film {dog_name} ringing a bell \u2014 especially at a door! It looks like they're politely asking to go outside. So clever!",
+    "breed_modifiers": {
+      "brachycephalic": null,
+      "large_breeds": "Large dogs with big paws may accidentally smash desk bells. Consider a sturdier bell or a hanging option.",
+      "small_breeds": "Small dogs may need a lower bell placement. Floor-level desk bells work perfectly.",
+      "high_energy": null
+    },
+    "progression_levels": {
+      "level_1": "Rings bell with any interaction, close range",
+      "level_2": "Rings with specific action (paw/nose) on cue, intermittent treats",
+      "level_3": "Rings on cue from across the room, generalised to different bells"
+    }
+  },
+  {
+    "id": "trick-useful-001",
+    "category": "tricks",
+    "subcategory": "useful",
+    "is_trick": true,
+    "trick_pack_id": "pack-useful",
+    "title": "Fetch Specific Items by Name",
+    "overview": "Teach {dog_name} to distinguish between named objects and fetch the one you ask for. This cognitively demanding trick demonstrates remarkable intelligence and has practical daily applications. {breed_tip}",
+    "time_minutes": 15,
+    "difficulty": 3,
+    "supplies": [
+      "2-3 distinct objects (ball, toy, shoe)",
+      "high-value treats"
+    ],
+    "steps": [
+      "Start with ONE object. Place it in front of {dog_name}, say its name ('Ball!'), and reward any interaction with it \u2014 nose touch, paw, pickup.",
+      "Once {dog_name} reliably picks up the object when you say its name, add retrieval: toss the named object a short distance, say the name, reward the bring-back.",
+      "Introduce a SECOND object. Place both in front of {dog_name}. Say the first object's name. Reward ONLY when {dog_name} picks the correct one.",
+      "If {dog_name} picks the wrong object, say 'Nope, try again' without frustration. Reward correct choices enthusiastically.",
+      "Once 2-object discrimination is reliable (80%+ correct), add a third object. Build vocabulary one item at a time."
+    ],
+    "success_criteria": "{dog_name} reliably fetches the correct named object from a choice of 2-3 items, 4 out of 5 times per object.",
+    "pro_tips": [
+      "Use objects that look and feel very different (ball vs rope vs stuffed toy). Similar objects make discrimination harder.",
+      "Name objects consistently. Always 'Ball', never sometimes 'Ball' and sometimes 'Round thing'.",
+      "Some breeds (retrievers, poodles, border collies) can learn 10+ object names. Build vocabulary gradually."
+    ],
+    "common_mistakes": [
+      "Introducing too many objects too fast. Master 2 before adding a third, master 3 before adding a fourth.",
+      "Inadvertently cueing with your eyes or body. Look at {dog_name}, not at the target object."
+    ],
+    "troubleshooting": "If {dog_name} always picks the same object regardless of cue, they may be using position (always picks the right-side object) instead of the name. Randomise object positions every trial.",
+    "next_step": "trick-useful-002",
+    "prerequisites": [],
+    "share_moment": "Film {dog_name} choosing the correct toy from a lineup \u2014 it's like a game show and people are always amazed!",
+    "breed_modifiers": {
+      "brachycephalic": null,
+      "large_breeds": null,
+      "small_breeds": "Use appropriately sized objects that small mouths can carry.",
+      "high_energy": "High-energy retrieving breeds often excel at this \u2014 channel their fetch drive into learning names."
+    },
+    "progression_levels": {
+      "level_1": "Fetches 1 named object reliably",
+      "level_2": "Discriminates between 2 named objects, 80%+ accuracy",
+      "level_3": "Fetches correct object from 3+, any room, any arrangement"
+    }
+  },
+  {
+    "id": "trick-useful-002",
+    "category": "tricks",
+    "subcategory": "useful",
+    "is_trick": true,
+    "trick_pack_id": "pack-useful",
+    "title": "Close the Door",
+    "overview": "Teach {dog_name} to push a door shut with their nose or paw. This practical trick is useful around the house and demonstrates that {dog_name} can interact with everyday objects. {breed_tip} Builds on the Touch foundation.",
+    "time_minutes": 10,
+    "difficulty": 3,
+    "supplies": [
+      "small soft treats",
+      "sticky note or target marker",
+      "door with easy swing"
+    ],
+    "steps": [
+      "Place a sticky note on the door at {dog_name}'s nose height. Cue Touch \u2014 {dog_name} should boop the sticky note. Mark and reward.",
+      "Open the door slightly (just a crack). Cue Touch on the sticky note. When {dog_name} pushes it, the door should move. Mark and reward enthusiastically.",
+      "Gradually open the door wider across sessions so {dog_name} needs to push harder. Mark the door CLOSING, not just the touch.",
+      "Add the cue: say 'Close it!' before gesturing to the door. Fade the sticky note target over time.",
+      "Practise on different doors around the house to generalise."
+    ],
+    "success_criteria": "{dog_name} pushes a partially open door shut on 'Close it!' cue, 3 out of 5 times.",
+    "pro_tips": [
+      "Start with lightweight interior doors that swing easily. Heavy doors or doors with strong latches are too hard initially.",
+      "If using paw instead of nose, protect the door surface. Some dogs push hard and can scratch.",
+      "This is a great stepping stone to 'Tidy Up' behaviours like putting toys away."
+    ],
+    "common_mistakes": [
+      "Using a door that's too heavy or stiff. The door should close with minimal force so {dog_name} feels successful.",
+      "Removing the target (sticky note) too early. Keep it until the cue alone reliably triggers the push."
+    ],
+    "troubleshooting": "If {dog_name} keeps touching the sticky note but not pushing hard enough to close the door, try taping the note lower so {dog_name} pushes up-and-forward. Also ensure the door swings freely with almost no resistance.",
+    "next_step": "trick-useful-003",
+    "prerequisites": [],
+    "share_moment": "Film {dog_name} shutting a door behind you as you leave a room \u2014 it looks like they're the most helpful housemate ever!",
+    "breed_modifiers": {
+      "brachycephalic": "Flat noses may make nose-pushing uncomfortable. Teach paw-push instead.",
+      "large_breeds": "Large dogs have an advantage \u2014 they can push harder. Be careful they don't slam doors.",
+      "small_breeds": "Small breeds may struggle with heavy doors. Use very lightweight doors or cupboard doors.",
+      "high_energy": null
+    },
+    "progression_levels": {
+      "level_1": "Touches sticky note on slightly open door",
+      "level_2": "Pushes door shut from half-open on cue, no target",
+      "level_3": "Closes any door in the house on cue, no target needed"
+    }
+  },
+  {
+    "id": "trick-useful-003",
+    "category": "tricks",
+    "subcategory": "useful",
+    "is_trick": true,
+    "trick_pack_id": "pack-useful",
+    "title": "Put Toys Away",
+    "overview": "Teach {dog_name} to pick up toys and drop them into a container. This incredibly practical trick combines retrieve and drop skills into a tidy-up sequence. {breed_tip} The ultimate 'good dog' trick.",
+    "time_minutes": 15,
+    "difficulty": 3,
+    "supplies": [
+      "2-3 toys",
+      "basket or box (low-sided)",
+      "high-value treats"
+    ],
+    "steps": [
+      "Start with {dog_name} knowing a reliable fetch/retrieve. If not, teach basic pick-up and bring-to-hand first.",
+      "Hold the basket in your hands at {dog_name}'s mouth level. Ask {dog_name} to fetch a toy and drop it into the basket you're holding. Mark and reward.",
+      "Gradually lower the basket towards the ground over several sessions. {dog_name} should follow the basket down.",
+      "Place the basket on the ground. Position {dog_name} right next to it with a toy. Cue the drop. Mark when the toy lands in the basket.",
+      "Add distance: toss a toy a short distance from the basket. Say 'Tidy up!' \u2014 {dog_name} should fetch the toy and drop it in the basket."
+    ],
+    "success_criteria": "{dog_name} picks up a toy from 1 metre away and drops it into the basket on 'Tidy up!' cue, 3 out of 5 times.",
+    "pro_tips": [
+      "Use a low-sided box or basket \u2014 if the sides are too high, {dog_name} can't easily see or reach inside.",
+      "Start with toys {dog_name} naturally likes to carry. Introduce less exciting objects later.",
+      "Multiple toys in sequence = jackpot reward. This encourages cleaning up more than one toy."
+    ],
+    "common_mistakes": [
+      "Skipping the held-basket phase. This intermediate step teaches the 'drop in container' concept before adding ground placement.",
+      "Using a container that's too small or too deep. Make it easy for {dog_name} to succeed."
+    ],
+    "troubleshooting": "If {dog_name} drops the toy beside the basket instead of inside, position the basket directly under their mouth during the drop cue. Only reward drops that land inside, even partially. Gradually increase your expectation for accuracy.",
+    "next_step": "trick-useful-004",
+    "prerequisites": [],
+    "share_moment": "Film {dog_name} tidying up their toys \u2014 it's the kind of clip that goes viral. 'This dog cleans up better than my kids!'",
+    "breed_modifiers": {
+      "brachycephalic": "Flat-nosed breeds may find carrying toys harder. Use soft, small toys they can grip easily.",
+      "large_breeds": null,
+      "small_breeds": "Use appropriately sized toys and a shallow container. Small mouths need small toys.",
+      "high_energy": "Retrieving breeds (Labs, Goldens) are naturals at this. Leverage their carry instinct."
+    },
+    "progression_levels": {
+      "level_1": "Drops toy into held basket at mouth level",
+      "level_2": "Drops toy into basket on ground from close range on cue",
+      "level_3": "Fetches multiple toys from around the room and puts them all in the basket"
+    }
+  },
+  {
+    "id": "trick-useful-004",
+    "category": "tricks",
+    "subcategory": "useful",
+    "is_trick": true,
+    "trick_pack_id": "pack-useful",
+    "title": "Bring Leash",
+    "overview": "Teach {dog_name} to fetch their leash when it's time for a walk. This practical trick combines object recognition with retrieve and builds walktime excitement into a useful behaviour. {breed_tip}",
+    "time_minutes": 10,
+    "difficulty": 2,
+    "supplies": [
+      "leash",
+      "high-value treats"
+    ],
+    "steps": [
+      "Place the leash on the ground near {dog_name}. Encourage any interaction \u2014 sniffing, mouthing, picking up. Mark and reward any contact.",
+      "Shape towards a full pick-up. Reward increasingly: touch \u2192 mouth \u2192 hold \u2192 lift. Be patient across sessions.",
+      "Once {dog_name} picks up the leash, add movement: stand 1 metre away and encourage them to bring it to you. Mark the delivery.",
+      "Add the cue: say 'Get your leash!' before pointing at it. {dog_name} should pick it up and bring it to you.",
+      "Move the leash to its usual hanging spot. Practise from there. The real magic is when {dog_name} fetches it from the hook."
+    ],
+    "success_criteria": "{dog_name} picks up leash from its usual spot and brings it to you on 'Get your leash!' cue, 3 out of 5 times.",
+    "pro_tips": [
+      "Use the leash they actually go on walks with \u2014 the familiar scent helps recognition.",
+      "Pair this trick with walk preparation time. It becomes self-reinforcing because the reward is the walk itself.",
+      "If the leash hangs on a hook, you may need to teach a separate 'pull' action to get it down."
+    ],
+    "common_mistakes": [
+      "Using a leash that's too heavy or bulky for {dog_name} to carry comfortably. Start with a light nylon leash.",
+      "Only practising before walks. Also practise at random times with treat rewards to solidify the cue."
+    ],
+    "troubleshooting": "If {dog_name} won't hold the leash, try wrapping a treat inside it initially so there's motivation to mouth it. Some dogs don't naturally carry soft/floppy objects \u2014 practise holding duration separately before adding the retrieve.",
+    "next_step": "trick-useful-005",
+    "prerequisites": [],
+    "share_moment": "Film {dog_name} bringing you the leash when they hear 'walkies' \u2014 it's peak good dog behaviour!",
+    "breed_modifiers": {
+      "brachycephalic": "Flat-nosed breeds may find carrying a leash awkward. Use a lightweight, thin leash.",
+      "large_breeds": null,
+      "small_breeds": "Use a thin, lightweight leash. Heavy hardware clasps may be too much for small mouths.",
+      "high_energy": "Dogs who love walks (most!) will find the walk itself is the biggest reward for this trick."
+    },
+    "progression_levels": {
+      "level_1": "Picks up leash from ground and holds it",
+      "level_2": "Brings leash from ground to hand on cue",
+      "level_3": "Fetches leash from its usual spot across the room on cue"
+    }
+  },
+  {
+    "id": "trick-useful-005",
+    "category": "tricks",
+    "subcategory": "useful",
+    "is_trick": true,
+    "trick_pack_id": "pack-useful",
+    "title": "Find It / Scent Search",
+    "overview": "Teach {dog_name} to use their nose to find a hidden treat or object. This mentally stimulating trick taps into {dog_name}'s incredible natural scent ability and provides excellent mental exercise. {breed_tip} A tired dog is a good dog \u2014 and nose work is exhausting in the best way.",
+    "time_minutes": 10,
+    "difficulty": 2,
+    "supplies": [
+      "high-value smelly treats",
+      "3 cups or boxes",
+      "hidden areas"
+    ],
+    "steps": [
+      "Start easy: let {dog_name} watch you place a treat under one of 3 overturned cups. Say 'Find it!' and let them knock over the correct cup. Mark and reward.",
+      "Increase difficulty: place the treat while {dog_name} isn't watching. They must use scent, not sight. Say 'Find it!' and reward when they identify the right cup.",
+      "Move to room-level hides: hide treats in easy spots around a room (behind a chair leg, on a low shelf). Say 'Find it!' and let {dog_name} search.",
+      "Gradually make hides harder: higher spots, behind closed (but unlatched) doors, inside boxes. Build search complexity across sessions.",
+      "Introduce object searching: scent a specific toy, hide it, and say 'Find [toy name]!' Reward the find enthusiastically."
+    ],
+    "success_criteria": "{dog_name} locates a hidden treat in a room-level search within 2 minutes of 'Find it!' cue, 4 out of 5 times.",
+    "pro_tips": [
+      "Use stinky treats for scent work \u2014 cheese, liver, or dried fish work brilliantly because the scent trail is strong.",
+      "Always let {dog_name} succeed. If they're struggling, help guide them closer. Nose work should be fun, not frustrating.",
+      "Scent work is one of the most mentally tiring activities. A 10-minute search session can equal a 30-minute walk for mental exercise."
+    ],
+    "common_mistakes": [
+      "Making hides too hard too fast. Easy wins build confidence and enthusiasm for the game.",
+      "Rushing {dog_name}. Let them work at their own pace \u2014 sniffing and searching is the fun part."
+    ],
+    "troubleshooting": "If {dog_name} gives up quickly, the hides are too hard. Go back to visible placement and rebuild. Also ensure the treats are smelly enough \u2014 bland treats don't leave enough scent trail.",
+    "next_step": null,
+    "prerequisites": [],
+    "share_moment": "Film {dog_name}'s nose-to-ground search and the moment of discovery \u2014 the tail wag when they find it is priceless!",
+    "breed_modifiers": {
+      "brachycephalic": "Flat-nosed breeds have reduced scent ability but still enjoy nose work. Use extra-smelly treats and easier hides.",
+      "large_breeds": null,
+      "small_breeds": "Hide treats at appropriate heights. Small dogs shouldn't need to climb or stretch dangerously.",
+      "high_energy": "Scent hounds and working breeds are naturals. Increase difficulty faster for breeds with strong scent drives."
+    },
+    "progression_levels": {
+      "level_1": "Finds treat under cup with visual placement",
+      "level_2": "Finds hidden treat in room without seeing placement",
+      "level_3": "Finds specific named objects hidden in complex environments"
+    }
+  },
+  {
+    "id": "trick-party-001",
+    "category": "tricks",
+    "subcategory": "party",
+    "is_trick": true,
+    "trick_pack_id": "pack-party",
+    "title": "Wave Goodbye",
+    "overview": "Teach {dog_name} to lift a paw and wave it in the air \u2014 like waving goodbye. This charming trick builds on Shake and High Five by adding a repeated pawing motion without hand contact. {breed_tip}",
+    "time_minutes": 8,
+    "difficulty": 2,
+    "supplies": [
+      "small soft treats"
+    ],
+    "steps": [
+      "Start with a High Five. Present your palm, but pull it away just before {dog_name}'s paw makes contact. {dog_name}'s paw should swipe at the air.",
+      "Mark and reward the air-swipe immediately. This is the foundation of the wave motion.",
+      "Repeat, gradually increasing the distance between your hand and {dog_name}'s paw. They should be pawing at air consistently.",
+      "Add the cue: say 'Wave!' or 'Bye bye!' while pulling your hand back. {dog_name} should paw at the air on cue.",
+      "For extra charm, capture repeated waves by delaying the mark \u2014 wait for 2-3 paw motions before marking and rewarding."
+    ],
+    "success_criteria": "{dog_name} lifts paw and waves in the air 2-3 times on 'Wave' cue without needing a hand target, 3 out of 5 times.",
+    "pro_tips": [
+      "The pull-away timing is everything. Too early and {dog_name} won't try; too late and they'll just do a High Five.",
+      "Add the wave to departure routines: 'Say bye bye!' when guests leave. It's irresistibly cute.",
+      "A wave from across the room looks incredible. Build distance gradually."
+    ],
+    "common_mistakes": [
+      "Rewarding a single paw lift instead of a wave motion. Wait for the repeated pawing action.",
+      "Not differentiating clearly from High Five. Use a completely different cue word and body position."
+    ],
+    "troubleshooting": "If {dog_name} keeps trying to make contact with your hand (High Five) instead of waving, stand further back and present a smaller hand target. Eventually, remove the hand entirely and just use the verbal cue.",
+    "next_step": null,
+    "prerequisites": [
+      "trick-starter-002"
+    ],
+    "share_moment": "Film {dog_name} waving goodbye to someone leaving \u2014 or waving at the camera. It's guaranteed to melt hearts!",
+    "breed_modifiers": {
+      "brachycephalic": null,
+      "large_breeds": null,
+      "small_breeds": "Small dogs' little paw waves are especially adorable. Capture from a low angle for the best shot.",
+      "high_energy": null
+    },
+    "progression_levels": {
+      "level_1": "Paws at air when hand is pulled away from High Five",
+      "level_2": "Waves on verbal cue, 2-3 paw motions, no hand target",
+      "level_3": "Waves from distance on verbal cue, any context"
+    }
+  },
+  {
+    "id": "trick-party-002",
+    "category": "tricks",
+    "subcategory": "party",
+    "is_trick": true,
+    "trick_pack_id": "pack-party",
+    "title": "Take a Selfie (Look at Camera)",
+    "overview": "Teach {dog_name} to look directly at a camera or phone on cue. This modern trick is pure gold for social media and turns every photo session from a struggle into a one-take wonder. {breed_tip}",
+    "time_minutes": 8,
+    "difficulty": 2,
+    "supplies": [
+      "small soft treats",
+      "phone or camera",
+      "tape or clip to hold treat"
+    ],
+    "steps": [
+      "Tape or clip a treat to the back of your phone case, right next to the camera lens. Hold up the phone.",
+      "When {dog_name} looks at the phone (actually the treat), mark and reward from your other hand. Repeat until {dog_name} stares at the phone reliably.",
+      "Gradually reduce the treat size on the phone. {dog_name} should still look at the phone location out of habit.",
+      "Add the cue: say 'Selfie!' or 'Look!' before holding up the phone. Mark and reward eye contact with the camera.",
+      "Remove the taped treat entirely. The cue + phone gesture should trigger the camera look. Take actual photos during practice \u2014 reward after the snap."
+    ],
+    "success_criteria": "{dog_name} looks at held-up phone camera for 3+ seconds on 'Selfie' cue, 4 out of 5 times.",
+    "pro_tips": [
+      "Use your phone's burst mode during training. You'll get the perfect shot without trying.",
+      "Make the phone cue distinct from regular phone use \u2014 hold it higher than normal and say the cue clearly.",
+      "This trick makes vet visits, grooming appointments, and travel SO much easier for photo documentation."
+    ],
+    "common_mistakes": [
+      "Moving the phone around while {dog_name} is learning to focus. Hold it steady in one position.",
+      "Forgetting to actually take photos during practice. The real reward is the photo \u2014 make it count."
+    ],
+    "troubleshooting": "If {dog_name} keeps looking at your face instead of the phone, make the treat on the phone more visible or use a squeaky sound from the phone's direction just before marking.",
+    "next_step": "trick-party-003",
+    "prerequisites": [],
+    "share_moment": "The whole POINT of this trick is the share moment! Film {dog_name} posing for the camera \u2014 then post the photo they're looking at!",
+    "breed_modifiers": {
+      "brachycephalic": null,
+      "large_breeds": null,
+      "small_breeds": null,
+      "high_energy": "High-energy dogs may struggle to hold still for the photo. Practise after a walk when they're calmer."
+    },
+    "progression_levels": {
+      "level_1": "Looks at phone with treat attached for 2 seconds",
+      "level_2": "Looks at phone on cue, no treat attached, holds 3 seconds",
+      "level_3": "Looks at any camera on verbal cue, holds for photo, any location"
+    }
+  },
+  {
+    "id": "trick-party-003",
+    "category": "tricks",
+    "subcategory": "party",
+    "is_trick": true,
+    "trick_pack_id": "pack-party",
+    "title": "Hug (Paws on Person)",
+    "overview": "Teach {dog_name} to place both front paws on your arm or torso and hold the position \u2014 a proper doggy hug. This heartwarming trick is the ultimate bonding moment and makes for incredible photos. {breed_tip}",
+    "time_minutes": 10,
+    "difficulty": 3,
+    "supplies": [
+      "small soft treats"
+    ],
+    "steps": [
+      "Kneel or sit at {dog_name}'s level. Hold a treat above and behind your shoulder so {dog_name} needs to reach up.",
+      "When {dog_name} places one or both paws on your arm or shoulder to reach the treat, mark and reward. This is the hug position.",
+      "Shape the behaviour: reward only when BOTH paws are on you. Encourage {dog_name} to lean in.",
+      "Add the cue: say 'Hug!' or 'Cuddle!' before luring. Hold the position for 2-3 seconds before marking.",
+      "Gradually increase duration and reduce the lure. The goal is a genuine-looking hug on cue."
+    ],
+    "success_criteria": "{dog_name} places both front paws on your arm/torso and holds for 3 seconds on 'Hug' cue, 3 out of 5 times.",
+    "pro_tips": [
+      "Always teach this on your terms. If {dog_name} starts jumping up uninvited, don't reward \u2014 only reward on cue.",
+      "This trick requires your dog to be comfortable with close body contact. If they're nervous about it, build comfort first with general handling exercises.",
+      "Have someone ready with a camera the first time you get a good hug. The photo is priceless."
+    ],
+    "common_mistakes": [
+      "Accidentally reinforcing jumping up. Be very clear: Hug on cue = reward. Jumping up uninvited = ignored.",
+      "Practising this before Jump Up issues are resolved. If {dog_name} already jumps on people, teach 'Off' first, then add Hug as a cued-only behaviour."
+    ],
+    "troubleshooting": "If {dog_name} won't put paws up, they may have been trained not to jump. This is a conflict \u2014 they need explicit permission. Start by rewarding front paws on a low platform, then transfer to your arm. Build trust that this particular jump is okay.",
+    "next_step": "trick-party-004",
+    "prerequisites": [],
+    "share_moment": "Film the hug from a side angle so both you and {dog_name} are visible \u2014 it looks like a genuine embrace. Instant heartmelter!",
+    "breed_modifiers": {
+      "brachycephalic": null,
+      "large_breeds": "Large dogs hugging can be overwhelming. Teach a gentle version and ensure you're braced for their weight.",
+      "small_breeds": "Kneel or sit on the floor so your small pup can reach you comfortably.",
+      "high_energy": "Be extra careful about the jump-up distinction. Only reward controlled, cued hugs."
+    },
+    "progression_levels": {
+      "level_1": "Places paws on arm with lure, holds briefly",
+      "level_2": "Hugs on verbal cue, holds 3 seconds, no lure",
+      "level_3": "Hugs on cue from any position, holds until released, gentle and controlled"
+    }
+  },
+  {
+    "id": "trick-party-004",
+    "category": "tricks",
+    "subcategory": "party",
+    "is_trick": true,
+    "trick_pack_id": "pack-party",
+    "title": "Kiss on Cue",
+    "overview": "Teach {dog_name} to give a gentle lick on the cheek or hand when asked. Most dogs lick naturally \u2014 this trick puts it on cue so you get kisses when you want them (and not when you don't). {breed_tip}",
+    "time_minutes": 5,
+    "difficulty": 1,
+    "supplies": [
+      "sticky treat (peanut butter, cream cheese)",
+      "small soft treats"
+    ],
+    "steps": [
+      "Dab a tiny amount of peanut butter or cream cheese on the back of your hand. Present your hand to {dog_name}.",
+      "When {dog_name} licks the spot, say 'Kiss!' and reward with a separate treat from the other hand.",
+      "Reduce the amount of peanut butter across reps until there's just a scent. Mark and reward the lick.",
+      "Remove the peanut butter entirely. Say 'Kiss!' and present your hand (or cheek). Mark any lick.",
+      "For a cheek kiss, transfer the behaviour from hand to cheek by holding the peanut-dabbed spot on your cheek initially."
+    ],
+    "success_criteria": "{dog_name} gives a single gentle lick on hand or cheek within 3 seconds of 'Kiss' cue, 4 out of 5 times.",
+    "pro_tips": [
+      "Reward SINGLE licks. If you let {dog_name} lick repeatedly, you'll get a slobber bath instead of a cute kiss.",
+      "Use peanut butter that's xylitol-free. Always check the label \u2014 xylitol is toxic to dogs.",
+      "This is the easiest trick to teach most dogs and a great confidence booster between harder tricks."
+    ],
+    "common_mistakes": [
+      "Using peanut butter that contains xylitol \u2014 CHECK THE LABEL. Xylitol is extremely toxic to dogs.",
+      "Rewarding extended licking sessions. One lick = reward + redirect. Keep it a quick, clean kiss."
+    ],
+    "troubleshooting": "If {dog_name} isn't a natural licker, the sticky treat method usually works. If they still won't lick, try a different flavour (some dogs prefer cream cheese to peanut butter) or try a wet-food smear.",
+    "next_step": "trick-party-005",
+    "prerequisites": [],
+    "share_moment": "Film {dog_name} giving you a kiss on the cheek \u2014 side-angle, slow motion optional. Pure love on camera!",
+    "breed_modifiers": {
+      "brachycephalic": "Flat-nosed breeds may give very enthusiastic, drooly kisses. Embrace it.",
+      "large_breeds": "Large breed kisses can be... wet. Keep a towel handy during practice.",
+      "small_breeds": "Tiny kisses from tiny dogs are especially adorable. Perfect trick for small breeds.",
+      "high_energy": null
+    },
+    "progression_levels": {
+      "level_1": "Licks peanut butter spot on hand on cue",
+      "level_2": "Gives single lick on clean hand or cheek on cue",
+      "level_3": "Kisses on cue anywhere, single gentle lick, any person (with consent)"
+    }
+  },
+  {
+    "id": "trick-party-005",
+    "category": "tricks",
+    "subcategory": "party",
+    "is_trick": true,
+    "trick_pack_id": "pack-party",
+    "title": "Balance Treat on Nose",
+    "overview": "Teach {dog_name} to balance a treat on their nose and wait until released to flip and catch it. This classic trick demonstrates incredible impulse control and always gets gasps from onlookers. {breed_tip}",
+    "time_minutes": 10,
+    "difficulty": 3,
+    "supplies": [
+      "flat, stackable treats (biscuit type)",
+      "soft treats for rewards"
+    ],
+    "steps": [
+      "Hold {dog_name}'s muzzle gently (they should be comfortable with muzzle handling first). Place a treat on top of their nose. Hold your hand nearby as a 'safety net'.",
+      "Hold for just 1 second, then say 'OK!' and let {dog_name} eat the treat (even if it falls). Mark and reward.",
+      "Gradually increase the balance time: 1 second \u2192 2 \u2192 3 \u2192 5. Always release with 'OK!' before {dog_name} shakes it off.",
+      "Remove your supporting hand. {dog_name} should hold the treat on their nose independently for 3+ seconds.",
+      "For the flip-and-catch: say 'OK!' and tap under {dog_name}'s chin. Many dogs naturally toss their head to catch the falling treat. Mark and reward the catch."
+    ],
+    "success_criteria": "{dog_name} balances a treat on nose for 5 seconds and catches it on 'OK!' release cue, 3 out of 5 times.",
+    "pro_tips": [
+      "Use flat, lightweight treats that sit stable on the nose. Round treats roll off.",
+      "Build impulse control first. If {dog_name} can't hold a Stay, they won't hold a treat on their nose.",
+      "Some dogs are nose-flippers, some are floor-catchers. Both are fine \u2014 reward the catch however it happens."
+    ],
+    "common_mistakes": [
+      "Asking for too long before {dog_name} has impulse control. Start at 1 second and build slowly.",
+      "Placing the treat too far forward or back on the nose. The flat area between the eyes and nose tip is the sweet spot."
+    ],
+    "troubleshooting": "If {dog_name} shakes the treat off immediately, go back to muzzle handling comfort. Practise holding the muzzle gently with no treat, reward, then add the treat with very short durations. Also ensure the treat is flat and stable.",
+    "next_step": null,
+    "prerequisites": [],
+    "share_moment": "Film the balance-and-catch in slow motion \u2014 the moment the treat launches off the nose and gets caught mid-air is stunning!",
+    "breed_modifiers": {
+      "brachycephalic": "Flat-nosed breeds have no nose ridge to balance on. Skip this trick \u2014 it's physically not possible for most brachycephalic dogs.",
+      "large_breeds": "Large breeds with long muzzles (retrievers, collies) are ideal for this trick.",
+      "small_breeds": "Small breeds with tiny noses may struggle. Use very small, flat treats.",
+      "high_energy": "Impulse control is key. Practise after exercise when {dog_name} is calmer."
+    },
+    "progression_levels": {
+      "level_1": "Holds treat on nose for 2 seconds with hand support nearby",
+      "level_2": "Balances treat independently for 5 seconds, eats on release",
+      "level_3": "Balances and flips to catch on release cue, any environment"
+    }
+  },
+  {
+    "id": "trick-advanced-001",
+    "category": "tricks",
+    "subcategory": "advanced",
+    "is_trick": true,
+    "trick_pack_id": "pack-advanced",
+    "title": "Skateboard Introduction",
+    "overview": "Teach {dog_name} to place paws on a skateboard and push off \u2014 the beginning of skateboarding! This advanced trick requires patience, confidence building, and gradual shaping. {breed_tip} Not every dog will love this, and that's okay.",
+    "time_minutes": 15,
+    "difficulty": 3,
+    "supplies": [
+      "skateboard (with wheels locked initially)",
+      "high-value treats",
+      "non-slip surface",
+      "tape or wedges to lock wheels"
+    ],
+    "steps": [
+      "Lock the skateboard wheels (tape, wedges, or place on carpet). Place it on the ground. Reward {dog_name} for approaching, sniffing, and touching the board.",
+      "Reward one paw on the board, then two front paws. Take several sessions just for comfortable standing on the locked board.",
+      "Once {dog_name} confidently stands with front paws on the locked board, unlock the wheels on a smooth surface. Hold the board steady with your foot.",
+      "Let the board move slightly under {dog_name}'s weight. Reward calm behaviour. Gradually allow more movement across sessions.",
+      "Lure {dog_name} to push off with a back foot while front paws are on the board. Mark any forward rolling motion. Celebrate enthusiastically."
+    ],
+    "success_criteria": "{dog_name} places front paws on the skateboard and pushes to roll 30+ cm, appearing relaxed, 2 out of 5 times.",
+    "pro_tips": [
+      "This trick can take weeks. Go at {dog_name}'s pace \u2014 rushing creates fear associations with the board.",
+      "Use a wide, stable skateboard (not a narrow trick board). Stability = confidence.",
+      "Practise on flat surfaces only. Even slight slopes can scare a learning dog if the board rolls unexpectedly."
+    ],
+    "common_mistakes": [
+      "Unlocking wheels too early before {dog_name} is confident on the stationary board.",
+      "Using a narrow or wobbly skateboard. Stability is essential for safety and confidence."
+    ],
+    "troubleshooting": "If {dog_name} is scared of the board, back way up. Start by rewarding any approach. Put treats ON the board. Let {dog_name} eat off it. This desensitisation can take days and that's perfectly fine.",
+    "next_step": null,
+    "prerequisites": [],
+    "share_moment": "A skateboarding dog is peak viral content! Film from a low angle to capture the action. Start with short clips and build as {dog_name} progresses.",
+    "breed_modifiers": {
+      "brachycephalic": "Brachycephalic breeds may overheat with the physical effort. Very short sessions, watch for breathing changes.",
+      "large_breeds": "Very large breeds may find standard skateboards too small. Use a longboard for stability.",
+      "small_breeds": "Small breeds can look adorable on a skateboard but ensure it's proportional. A regular board may be too big.",
+      "high_energy": "Confident, athletic breeds (bulldogs are famously good at this, surprisingly!) tend to take to skateboarding well."
+    },
+    "progression_levels": {
+      "level_1": "Front paws on locked board, comfortable standing",
+      "level_2": "Front paws on rolling board, pushes to roll short distance",
+      "level_3": "Rides skateboard independently for 1+ metres, multiple pushes"
+    }
+  },
+  {
+    "id": "trick-advanced-002",
+    "category": "tricks",
+    "subcategory": "advanced",
+    "is_trick": true,
+    "trick_pack_id": "pack-advanced",
+    "title": "Leg Weave Walk",
+    "overview": "Take the Weave Through Legs trick to the next level \u2014 {dog_name} weaves continuously as you walk across a room or down the street. This flowing, rhythmic trick looks like a choreographed dance. {breed_tip}",
+    "time_minutes": 15,
+    "difficulty": 3,
+    "supplies": [
+      "small soft treats"
+    ],
+    "steps": [
+      "Review Weave Through Legs with 4-5 steps. This should be solid before progressing.",
+      "Extend the weave to 8-10 steps. Reward every 4th weave instead of every 2nd.",
+      "Begin walking at a natural pace (not exaggerated slow steps). Lure as needed but aim for verbal cue only.",
+      "Build distance: weave across an entire room, then a hallway, then outside on pavement. Reward at the end of the sequence.",
+      "Add a start cue ('Weave walk!') and an end cue ('Free!' or 'Okay!'). The goal is a continuous weave during walking."
+    ],
+    "success_criteria": "{dog_name} weaves continuously for 10+ steps at walking pace on cue, 3 out of 5 times.",
+    "pro_tips": [
+      "Walk with a slightly wider-than-normal gait. This gives {dog_name} more room to weave comfortably.",
+      "Practice to music! A steady rhythm helps you maintain consistent steps, which helps {dog_name} maintain the pattern.",
+      "This is a foundation for canine freestyle (dog dancing). If {dog_name} loves it, explore freestyle routines."
+    ],
+    "common_mistakes": [
+      "Walking too fast. Even at 'natural pace', slow down slightly compared to your usual walking speed.",
+      "Inconsistent step rhythm. Dogs learn the weave pattern partly by your stepping rhythm \u2014 keep it steady."
+    ],
+    "troubleshooting": "If {dog_name} breaks the weave after 5-6 steps, reward at step 5 consistently until they're confident there, then extend to 7, then 10. Build duration gradually, not all at once.",
+    "next_step": null,
+    "prerequisites": [
+      "trick-impressive-003"
+    ],
+    "share_moment": "Film the leg weave walk from a side angle on a beautiful path \u2014 it looks like a professional dog dancing routine!",
+    "breed_modifiers": {
+      "brachycephalic": "Extended weaving is physically demanding. Limit to shorter sequences and watch for breathing.",
+      "large_breeds": "Very large breeds may not fit between your legs while walking. This trick is best for small to medium dogs.",
+      "small_breeds": "Small dogs excel here! The size difference creates a visually impressive effect.",
+      "high_energy": "High-energy dogs with good focus can build to very long weave sequences."
+    },
+    "progression_levels": {
+      "level_1": "Weaves 5 steps at slow walking pace with occasional lure",
+      "level_2": "Weaves 10+ steps at natural pace on verbal cue",
+      "level_3": "Weaves continuously for extended walking, any environment, on and off cue"
+    }
+  },
+  {
+    "id": "trick-advanced-003",
+    "category": "tricks",
+    "subcategory": "advanced",
+    "is_trick": true,
+    "trick_pack_id": "pack-advanced",
+    "title": "Handstand Against Wall",
+    "overview": "Teach {dog_name} to walk their back legs up a wall and hold a handstand position. This physically impressive trick builds core strength and body awareness. {breed_tip} ONLY for healthy, athletic, adult dogs \u2014 not for puppies, seniors, or dogs with back issues.",
+    "time_minutes": 15,
+    "difficulty": 3,
+    "supplies": [
+      "high-value treats",
+      "wall with good traction",
+      "yoga mat or carpet"
+    ],
+    "steps": [
+      "Start with {dog_name} facing away from the wall, back towards it. Lure them backwards until their back feet touch the wall. Mark and reward.",
+      "Encourage {dog_name} to walk their back feet UP the wall, one step at a time. Mark and reward each step up. Start with just 1-2 steps.",
+      "Gradually build height across many sessions: 2 steps \u2192 4 steps \u2192 back legs at 45 degrees \u2192 higher. Never rush this progression.",
+      "Hold the position for just 1-2 seconds at first. Build duration slowly: 2 seconds \u2192 5 seconds \u2192 10 seconds.",
+      "Add the cue: say 'Handstand!' or 'Paws up!' before luring to the wall. The goal is back feet at or above hip height, held for 5+ seconds."
+    ],
+    "success_criteria": "{dog_name} walks back feet up wall to at least 45-degree angle and holds for 5 seconds, 2 out of 5 times.",
+    "pro_tips": [
+      "This is a STRENGTH exercise as much as a trick. Treat it like gym training \u2014 build gradually, never overdo it.",
+      "Watch for signs of fatigue or discomfort: trembling, panting, trying to come down. Always respect these signals.",
+      "A yoga mat at the base prevents front paw slipping. Safety first."
+    ],
+    "common_mistakes": [
+      "Going too high too fast. Weeks of gradual progression is normal and necessary.",
+      "Practising with puppies or dogs with joint/back issues. This trick is ONLY for healthy adults with vet clearance."
+    ],
+    "troubleshooting": "If {dog_name} won't put feet on the wall, start with a lower surface like a couch cushion against the wall. Build confidence with partial elevation before transitioning to the wall. Some dogs take 2-3 weeks just to get comfortable with the concept.",
+    "next_step": "trick-advanced-004",
+    "prerequisites": [],
+    "share_moment": "Film the handstand from a side angle \u2014 it's genuinely jaw-dropping. Add a celebration at the end when {dog_name} comes down!",
+    "breed_modifiers": {
+      "brachycephalic": "SKIP this trick for brachycephalic breeds. The inverted position combined with breathing difficulty is risky.",
+      "large_breeds": "CAUTION: Large breeds carry significant weight on their front legs in this position. Consult your vet before attempting. Keep heights modest.",
+      "small_breeds": "Small, athletic dogs can be surprisingly good at this. Start low and build gradually.",
+      "high_energy": "Athletic, muscular breeds handle the physical demands well. Still build gradually."
+    },
+    "progression_levels": {
+      "level_1": "Back feet on wall at low height, holds 2 seconds",
+      "level_2": "Feet at 45+ degrees, holds 5 seconds on cue",
+      "level_3": "Full or near-full handstand, holds 10 seconds, cue from distance"
+    }
+  },
+  {
+    "id": "trick-advanced-004",
+    "category": "tricks",
+    "subcategory": "advanced",
+    "is_trick": true,
+    "trick_pack_id": "pack-advanced",
+    "title": "Chain: Spin + Bow Combo",
+    "overview": "Chain two known tricks into a seamless sequence: Spin followed immediately by Take a Bow. This is {dog_name}'s first trick chain \u2014 the foundation of freestyle routines and multi-trick performances. {breed_tip}",
+    "time_minutes": 10,
+    "difficulty": 3,
+    "supplies": [
+      "small soft treats"
+    ],
+    "steps": [
+      "Review Spin and Bow separately. Both should be solid on verbal cue alone before chaining.",
+      "Cue Spin. When {dog_name} completes the spin, immediately cue Bow. Reward ONLY after both tricks are complete \u2014 not after the spin.",
+      "Repeat the Spin \u2192 Bow sequence 5 times. {dog_name} should start anticipating the Bow after the Spin.",
+      "Add a chain cue: say 'Show time!' or 'Combo!' followed by the individual cues. The chain cue signals 'a sequence is coming'.",
+      "Gradually fade the individual cues so the chain cue alone triggers Spin \u2192 Bow. This takes many sessions of consistent practice."
+    ],
+    "success_criteria": "{dog_name} performs Spin then Bow in sequence on chain cue with minimal individual prompting, 3 out of 5 times.",
+    "pro_tips": [
+      "Only reward after the FULL chain. Rewarding mid-chain teaches {dog_name} to stop after the first trick.",
+      "Keep chains short at first (2 tricks). Add a third trick only when the 2-trick chain is rock solid.",
+      "This is the gateway to freestyle routines. If {dog_name} enjoys chaining, explore the Freestyle Sequence Builder."
+    ],
+    "common_mistakes": [
+      "Rewarding after the spin instead of waiting for the full chain. Patience is key \u2014 hold the treat.",
+      "Chaining tricks that aren't individually solid. Each component must be reliable on its own first."
+    ],
+    "troubleshooting": "If {dog_name} does Spin but then stares at you instead of Bowing, give the Bow cue. Over time, increase the pause before cueing Bow. {dog_name} will start offering it proactively. This process can take 1-2 weeks.",
+    "next_step": "trick-advanced-005",
+    "prerequisites": [
+      "trick-starter-003",
+      "trick-starter-005"
+    ],
+    "share_moment": "Film the full combo \u2014 Spin + Bow looks like a theatrical performance! End with applause for {dog_name}.",
+    "breed_modifiers": {
+      "brachycephalic": null,
+      "large_breeds": null,
+      "small_breeds": null,
+      "high_energy": "High-energy dogs often enjoy the rapid sequence. Build speed gradually as the chain solidifies."
+    },
+    "progression_levels": {
+      "level_1": "Performs both tricks with individual cues back-to-back",
+      "level_2": "Performs on chain cue with only one individual cue prompt",
+      "level_3": "Performs full chain on single cue word, smooth transition, any location"
+    }
+  },
+  {
+    "id": "trick-advanced-005",
+    "category": "tricks",
+    "subcategory": "advanced",
+    "is_trick": true,
+    "trick_pack_id": "pack-advanced",
+    "title": "Freestyle Sequence Builder",
+    "overview": "Build a custom trick routine by chaining 3+ tricks {dog_name} already knows into a personalised freestyle sequence. This is the pinnacle of trick training \u2014 a choreographed performance unique to you and {dog_name}. {breed_tip}",
+    "time_minutes": 15,
+    "difficulty": 3,
+    "supplies": [
+      "small soft treats",
+      "music (optional but recommended)"
+    ],
+    "steps": [
+      "Choose 3 tricks {dog_name} knows well. Pick tricks with natural flow: e.g., Spin \u2192 Bow \u2192 Shake or Touch \u2192 Weave \u2192 High Five.",
+      "Practise each transition separately. Cue Trick 1, then immediately Trick 2. Reward only after both. Then Trick 2 \u2192 Trick 3. Then all three.",
+      "Once the 3-trick sequence is smooth, add a routine cue: 'Show time!' or 'Dance!' This signals the full sequence is coming.",
+      "Add music! Pick a song with a steady beat. Time your cues to the rhythm. Dogs respond well to musical structure.",
+      "Perform for an audience \u2014 family, friends, the camera. Celebration and applause after the routine reinforces the whole experience."
+    ],
+    "success_criteria": "{dog_name} performs a 3-trick sequence on routine cue with smooth transitions and minimal individual prompting.",
+    "pro_tips": [
+      "Start with tricks that transition naturally. Spin \u2192 Bow is smoother than Speak \u2192 Crawl because the body positions flow.",
+      "Keep sequences under 30 seconds. Short, impressive routines are better than long, sloppy ones.",
+      "Film from multiple angles across practice sessions. You'll see which transitions need work and which look amazing."
+    ],
+    "common_mistakes": [
+      "Building too long a sequence too fast. Master 3 tricks before adding a 4th.",
+      "Choosing tricks with awkward transitions. Consider body position flow: standing tricks chain with standing tricks, floor tricks chain with floor tricks."
+    ],
+    "troubleshooting": "If {dog_name} breaks the sequence at a specific transition, that's the weakest link. Practise just that 2-trick transition 20+ times before reintegrating into the full sequence. Strengthen the chain link by link.",
+    "next_step": null,
+    "prerequisites": [
+      "trick-advanced-004"
+    ],
+    "share_moment": "Film the full routine with music! This is {dog_name}'s talent show moment. Share it everywhere \u2014 it's the content every dog owner dreams of.",
+    "breed_modifiers": {
+      "brachycephalic": "Keep routines short and low-intensity. No rapid sequences or physically demanding combinations.",
+      "large_breeds": "Large dogs performing choreographed routines are impressively dramatic. Use it.",
+      "small_breeds": "Small dogs doing freestyle routines are incredibly charming. The tiny-but-talented factor is off the charts.",
+      "high_energy": "High-energy breeds thrive in freestyle. Channel that enthusiasm into longer, more complex routines over time."
+    },
+    "progression_levels": {
+      "level_1": "Performs 3-trick sequence with individual cues",
+      "level_2": "Performs 3-trick sequence on single routine cue, smooth transitions",
+      "level_3": "Performs custom 4+ trick routine to music, audience-ready"
+    }
+  }
+]

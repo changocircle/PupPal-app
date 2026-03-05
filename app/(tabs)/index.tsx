@@ -298,6 +298,29 @@ export default function HomeScreen() {
           </Pressable>
         </Animated.View>
 
+        {/* ── Trick Library Shortcut ── */}
+        <Animated.View
+          entering={FadeInDown.duration(400).delay(300)}
+          className="mb-lg"
+        >
+          <Pressable onPress={() => router.push("/tricks")}>
+            <Card className="flex-row items-center justify-between">
+              <View className="flex-row items-center gap-md">
+                <Typography className="text-[24px]">🎪</Typography>
+                <View>
+                  <Typography variant="body-medium">Trick Library</Typography>
+                  <Typography variant="caption" color="secondary">
+                    Teach {dogName} fun tricks
+                  </Typography>
+                </View>
+              </View>
+              <Typography variant="body" color="tertiary">
+                →
+              </Typography>
+            </Card>
+          </Pressable>
+        </Animated.View>
+
         {/* ── Done for the day / Buddy tip ── */}
         {allDoneToday && (
           <Animated.View entering={FadeIn.delay(300)} className="mb-xl">

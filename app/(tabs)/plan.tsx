@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 import { View, ScrollView, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown, FadeIn } from "react-native-reanimated";
+import { useRouter } from "expo-router";
 import { Typography, Card, ProgressBar, Badge } from "@/components/ui";
 import {
   WeekCard,
@@ -12,6 +13,7 @@ import {
 import { useTrainingStore } from "@/stores/trainingStore";
 import { useDogStore } from "@/stores/dogStore";
 import { useSubscription } from "@/hooks/useSubscription";
+import { useTrickStore } from "@/stores/trickStore";
 
 /**
  * Training Plan Tab
@@ -20,12 +22,14 @@ import { useSubscription } from "@/hooks/useSubscription";
  * Tabs: "This Week" | "Full Plan"
  */
 
-type PlanTab = "this_week" | "full_plan";
+type PlanTab = "this_week" | "full_plan" | "tricks";
 
 export default function PlanScreen() {
   const [activeTab, setActiveTab] = useState<PlanTab>("this_week");
+  const router = useRouter();
   const dog = useDogStore((s) => s.activeDog());
   const { isPremium } = useSubscription();
+  const totalTricksCompleted = useTrickStore((s) => s.totalTricksCompleted);
 
   const plan = useTrainingStore((s) => s.plan);
   const totalXp = useTrainingStore((s) => s.totalXp);
@@ -114,10 +118,16 @@ export default function PlanScreen() {
           entering={FadeInDown.duration(400).delay(120)}
           className="flex-row bg-surface rounded-xl p-[3px] mb-lg border border-border"
         >
-          {(["this_week", "full_plan"] as const).map((tab) => (
+          {(["this_week", "full_plan", "tricks"] as const).map((tab) => (
             <Pressable
               key={tab}
-              onPress={() => setActiveTab(tab)}
+              onPress={() => {
+                if (tab === "tricks") {
+                  router.push("/tricks");
+                } else {
+                  setActiveTab(tab);
+                }
+              }}
               className={`flex-1 py-sm rounded-lg items-center ${
                 activeTab === tab ? "bg-primary" : ""
               }`}
@@ -126,7 +136,11 @@ export default function PlanScreen() {
                 variant="body-sm-medium"
                 color={activeTab === tab ? "inverse" : "secondary"}
               >
-                {tab === "this_week" ? "This Week" : "Full Plan"}
+                {tab === "this_week"
+                  ? "This Week"
+                  : tab === "full_plan"
+                  ? "Full Plan"
+                  : `Tricks${totalTricksCompleted > 0 ? ` (${totalTricksCompleted})` : ""}`}
               </Typography>
             </Pressable>
           ))}
