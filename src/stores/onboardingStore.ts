@@ -1,0 +1,45 @@
+import { create } from "zustand";
+import type { OnboardingData } from "@/types/models";
+
+interface OnboardingState {
+  /** Current step index (0-7) */
+  currentStep: number;
+  /** Collected onboarding data */
+  data: OnboardingData;
+  /** Whether onboarding is in progress */
+  isActive: boolean;
+
+  // Actions
+  setStep: (step: number) => void;
+  nextStep: () => void;
+  prevStep: () => void;
+  updateData: (partial: Partial<OnboardingData>) => void;
+  reset: () => void;
+}
+
+const INITIAL_DATA: OnboardingData = {
+  puppyName: "",
+  photoUri: null,
+  breed: null,
+  breedConfidence: null,
+  breedDetected: false,
+  dateOfBirth: null,
+  ageMonths: null,
+  challenges: [],
+  ownerExperience: null,
+};
+
+export const useOnboardingStore = create<OnboardingState>((set) => ({
+  currentStep: 0,
+  data: { ...INITIAL_DATA },
+  isActive: false,
+
+  setStep: (step) => set({ currentStep: step }),
+  nextStep: () => set((state) => ({ currentStep: state.currentStep + 1 })),
+  prevStep: () => set((state) => ({ currentStep: Math.max(0, state.currentStep - 1) })),
+  updateData: (partial) =>
+    set((state) => ({
+      data: { ...state.data, ...partial },
+    })),
+  reset: () => set({ currentStep: 0, data: { ...INITIAL_DATA }, isActive: false }),
+}));

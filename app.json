@@ -1,0 +1,54 @@
+{
+  "expo": {
+    "name": "PupPal",
+    "slug": "puppal",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "puppal",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#FFFAF7"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.puppal.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "PupPal uses your camera to take photos of your puppy for breed detection and your growth journal.",
+        "NSPhotoLibraryUsageDescription": "PupPal needs access to your photos to upload puppy pictures for breed detection and your growth journal."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FF6B5C"
+      },
+      "package": "com.puppal.app"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-secure-store",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "PupPal needs access to your photos to upload puppy pictures.",
+          "cameraPermission": "PupPal uses your camera to take photos of your puppy."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#FF6B5C"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
