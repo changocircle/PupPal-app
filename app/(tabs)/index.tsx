@@ -15,6 +15,7 @@ import { useTrainingStore } from "@/stores/trainingStore";
 import { useDogStore } from "@/stores/dogStore";
 import { useOnboardingStore } from "@/stores/onboardingStore";
 import { useGamification } from "@/hooks/useGamification";
+import { DogSwitcherButton } from "@/components/dog";
 
 /**
  * Home Screen — "Today's Training" + Gamification
@@ -87,9 +88,12 @@ export default function HomeScreen() {
           entering={FadeInDown.duration(400)}
           className="pt-3xl mb-lg"
         >
-          <Typography variant="h2" color="secondary">
-            {getGreeting()} 👋
-          </Typography>
+          <View className="flex-row items-center justify-between mb-xs">
+            <Typography variant="h2" color="secondary">
+              {getGreeting()} 👋
+            </Typography>
+            <DogSwitcherButton />
+          </View>
           <Typography variant="h1">{dogName}'s Training</Typography>
         </Animated.View>
 

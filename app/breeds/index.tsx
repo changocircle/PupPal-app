@@ -22,7 +22,7 @@ import { COLORS, RADIUS, SHADOWS } from '../../src/constants/theme';
 
 export default function BreedBrowserScreen() {
   const router = useRouter();
-  const dog = useDogStore((s) => s.dog);
+  const dog = useDogStore((s) => s.activeDog());
   const [searchQuery, setSearchQuery] = useState('');
   const [sizeFilter, setSizeFilter] = useState<SizeCategory | null>(null);
 

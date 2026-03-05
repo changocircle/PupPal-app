@@ -28,6 +28,15 @@ export function useSubscription() {
       "profile",
     ];
 
+    // Premium-only features (PRD-07 + PRD-11)
+    const PREMIUM_FEATURES = [
+      "multi_dog",
+      "unlimited_chat",
+      "full_training",
+      "full_health",
+      "breed_encyclopedia_full",
+    ];
+
     if (FREE_FEATURES.includes(feature)) return true;
     return isPremium;
   };

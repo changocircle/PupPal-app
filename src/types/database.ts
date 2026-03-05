@@ -55,6 +55,7 @@ export interface Database {
           breed_confidence: number | null;
           photo_url: string | null;
           date_of_birth: string | null;
+          gotcha_date: string | null;
           age_months_at_creation: number | null;
           gender: "male" | "female" | "unknown" | null;
           weight_kg: number | null;
@@ -62,8 +63,10 @@ export interface Database {
           challenges: string[];
           owner_experience: "first_time" | "some_experience" | "experienced";
           is_active: boolean;
+          onboarding_completed: boolean;
           created_at: string;
           updated_at: string;
+          archived_at: string | null;
         };
         Insert: {
           id?: string;
@@ -74,6 +77,7 @@ export interface Database {
           breed_confidence?: number | null;
           photo_url?: string | null;
           date_of_birth?: string | null;
+          gotcha_date?: string | null;
           age_months_at_creation?: number | null;
           gender?: "male" | "female" | "unknown" | null;
           weight_kg?: number | null;
@@ -81,8 +85,10 @@ export interface Database {
           challenges?: string[];
           owner_experience?: "first_time" | "some_experience" | "experienced";
           is_active?: boolean;
+          onboarding_completed?: boolean;
           created_at?: string;
           updated_at?: string;
+          archived_at?: string | null;
         };
         Update: Partial<Database["public"]["Tables"]["dogs"]["Insert"]>;
       };

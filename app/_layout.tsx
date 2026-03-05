@@ -76,6 +76,14 @@ export default function RootLayout() {
         />
         <Stack.Screen name="breeds/index" />
         <Stack.Screen name="breeds/[slug]" />
+        <Stack.Screen
+          name="add-dog/index"
+          options={{
+            presentation: "modal",
+            animation: "slide_from_bottom",
+          }}
+        />
+        <Stack.Screen name="dog/[id]/manage" />
       </Stack>
     </QueryClientProvider>
   );

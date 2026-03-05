@@ -11,6 +11,7 @@ import { useOnboardingStore } from "@/stores/onboardingStore";
 import { useSettingsStore } from "@/stores/settingsStore";
 import { useSubscription } from "@/hooks/useSubscription";
 import { LEVEL_DEFINITIONS } from "@/types/gamification";
+import { DogAvatar } from "@/components/dog";
 
 /**
  * Profile & Settings Tab — PRD-04 (gamification) + PRD-14 (settings)
@@ -143,20 +144,26 @@ export default function ProfileScreen() {
           entering={FadeInDown.duration(400).delay(120)}
           className="px-xl mb-lg"
         >
-          <Card className="flex-row items-center gap-base">
-            <View className="w-[56px] h-[56px] rounded-full bg-accent-light items-center justify-center">
-              <Typography className="text-[28px]">🐕</Typography>
-            </View>
-            <View className="flex-1">
-              <Typography variant="h3">{dogName}</Typography>
-              <Typography variant="body-sm" color="secondary">
-                {breed}
-                {ageMonths
-                  ? ` · ~${ageMonths} months`
-                  : ""}
-              </Typography>
-            </View>
-          </Card>
+          <Pressable onPress={() => dog?.id ? router.push(`/dog/${dog.id}/manage`) : undefined}>
+            <Card className="flex-row items-center gap-base">
+              <DogAvatar
+                name={dogName}
+                photoUrl={dog?.photo_url}
+                size={56}
+                showBorder
+              />
+              <View className="flex-1">
+                <Typography variant="h3">{dogName}</Typography>
+                <Typography variant="body-sm" color="secondary">
+                  {breed}
+                  {ageMonths
+                    ? ` · ~${ageMonths} months`
+                    : ""}
+                </Typography>
+              </View>
+              <Typography color="tertiary">→</Typography>
+            </Card>
+          </Pressable>
         </Animated.View>
 
         {/* ── Gamification Summary ── */}
