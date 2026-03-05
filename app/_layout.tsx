@@ -59,6 +59,13 @@ export default function RootLayout() {
       >
         <Stack.Screen name="(onboarding)" />
         <Stack.Screen name="(tabs)" />
+        <Stack.Screen
+          name="exercise/[id]"
+          options={{
+            presentation: "modal",
+            animation: "slide_from_bottom",
+          }}
+        />
       </Stack>
     </QueryClientProvider>
   );
