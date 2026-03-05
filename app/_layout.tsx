@@ -108,8 +108,27 @@ export default function RootLayout() {
             animation: "slide_from_bottom",
           }}
         />
+        <Stack.Screen name="achievements/index" />
+        <Stack.Screen name="health/vaccinations" />
+        <Stack.Screen name="health/medications" />
+        <Stack.Screen name="health/weight" />
+        <Stack.Screen name="health/vet-visits" />
+        <Stack.Screen name="health/milestones" />
+        <Stack.Screen name="health/notes" />
+        <Stack.Screen name="tricks/index" />
+        <Stack.Screen name="tricks/[slug]" />
+        <Stack.Screen
+          name="tricks/detail/[id]"
+          options={{
+            presentation: "modal",
+            animation: "slide_from_bottom",
+          }}
+        />
         <Stack.Screen name="settings/subscription" />
         <Stack.Screen name="settings/notifications" />
+        <Stack.Screen name="settings/data-privacy" />
+        <Stack.Screen name="settings/edit-profile" />
+        <Stack.Screen name="settings/preferences" />
         <Stack.Screen name="referral/index" />
         <Stack.Screen name="community/index" />
       </Stack>
