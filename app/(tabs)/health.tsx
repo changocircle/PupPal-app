@@ -1,62 +1,402 @@
-import React from "react";
-import { View, ScrollView } from "react-native";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { View, ScrollView, Pressable, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Typography, Card, Badge, CardSkeleton } from "@/components/ui";
+import Animated, { FadeInDown } from "react-native-reanimated";
+import { useRouter } from "expo-router";
+import { Typography, Card, Badge, Button } from "@/components/ui";
+import {
+  StatusBadge,
+  UpcomingEventCard,
+  QuickAction,
+  MedicationCard,
+} from "@/components/health";
+import { useHealthStore } from "@/stores/healthStore";
+import { useDogStore } from "@/stores/dogStore";
+import { useTrainingStore } from "@/stores/trainingStore";
+import { useOnboardingStore } from "@/stores/onboardingStore";
 
 /**
- * Health Dashboard Tab
- * PRD-05
+ * Health Dashboard — PRD-05 §3
  *
- * Shell screen — full health tracker in Phase 5.
+ * Centralises all health tracking: vaccinations, medications,
+ * weight, vet visits, milestones, and health notes.
  */
+
 export default function HealthScreen() {
+  const router = useRouter();
+  const dog = useDogStore((s) => s.activeDog());
+  const plan = useTrainingStore((s) => s.plan);
+  const onboardingData = useOnboardingStore((s) => s.data);
+  const dogName = dog?.name ?? plan?.dogName ?? (onboardingData.puppyName || "Your Pup");
+  const breed = dog?.breed ?? plan?.breed ?? onboardingData.breed ?? null;
+  const ageMonths = onboardingData.ageMonths ?? 3;
+  const ageWeeks = ageMonths * 4;
+
+  // Health store
+  const {
+    vaccinationsInitialized,
+    milestonesInitialized,
+    initVaccinations,
+    initMilestones,
+    getHealthSummary,
+    getUpcomingEvents,
+    getActiveMedications,
+    getWeightHistory,
+    getHealthNotesForDog,
+    logMedicationDose,
+  } = useHealthStore();
+
+  // Derive a dogId (use plan dogName as key for now)
+  const dogId = dog?.id ?? plan?.dogName ?? "default-dog";
+
+  // Auto-init vaccinations & milestones if not done
+  useEffect(() => {
+    if (!vaccinationsInitialized) {
+      const dob = new Date();
+      dob.setDate(dob.getDate() - ageWeeks * 7);
+      initVaccinations({
+        dogId,
+        dateOfBirth: dob,
+        ageWeeks,
+        breed,
+      });
+    }
+  }, [vaccinationsInitialized, dogId, breed, ageWeeks]);
+
+  useEffect(() => {
+    if (!milestonesInitialized) {
+      const dob = new Date();
+      dob.setDate(dob.getDate() - ageWeeks * 7);
+      initMilestones(dogId, dob);
+    }
+  }, [milestonesInitialized, dogId, ageWeeks]);
+
+  // Data
+  const summary = useMemo(() => getHealthSummary(dogId), [dogId, getHealthSummary]);
+  const upcomingEvents = useMemo(
+    () => getUpcomingEvents(dogId, 3),
+    [dogId, getUpcomingEvents]
+  );
+  const activeMeds = useMemo(
+    () => getActiveMedications(dogId),
+    [dogId, getActiveMedications]
+  );
+  const weights = useMemo(
+    () => getWeightHistory(dogId),
+    [dogId, getWeightHistory]
+  );
+  const notes = useMemo(
+    () => getHealthNotesForDog(dogId),
+    [dogId, getHealthNotesForDog]
+  );
+  const unresolvedNotes = notes.filter((n) => !n.resolved);
+
+  // Status labels
+  const vacStatusLabel: Record<string, string> = {
+    up_to_date: "Up to date",
+    due_soon: "Due soon",
+    overdue: "Overdue!",
+    not_set_up: "Not set up",
+  };
+
+  // Handlers
+  const handleLogDose = useCallback(
+    (med: { id: string }) => {
+      logMedicationDose(med.id, dogId);
+      Alert.alert("Logged!", "Dose recorded successfully. +3 XP 🎉");
+    },
+    [logMedicationDose, dogId]
+  );
+
   return (
     <SafeAreaView className="flex-1 bg-background">
-      <ScrollView className="flex-1 px-xl" showsVerticalScrollIndicator={false}>
-        <View className="pt-3xl mb-xl">
-          <Typography variant="h1">Health</Typography>
+      <ScrollView
+        className="flex-1"
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 100 }}
+      >
+        {/* ── Header ── */}
+        <Animated.View
+          entering={FadeInDown.duration(400)}
+          className="px-xl pt-3xl mb-lg"
+        >
+          <Typography variant="h1">{dogName}'s Health</Typography>
           <Typography variant="body" color="secondary">
             Vaccinations, meds, weight & more
           </Typography>
-        </View>
+        </Animated.View>
 
-        {/* Quick status cards */}
-        <View className="flex-row gap-md mb-xl">
-          <Card className="flex-1 items-center">
-            <Typography className="text-[28px] mb-xs">💉</Typography>
-            <Typography variant="body-sm-medium">Vaccinations</Typography>
-            <Badge variant="neutral" label="Not set up" size="sm" />
-          </Card>
-          <Card className="flex-1 items-center">
-            <Typography className="text-[28px] mb-xs">💊</Typography>
-            <Typography variant="body-sm-medium">Medications</Typography>
-            <Badge variant="neutral" label="Not set up" size="sm" />
-          </Card>
-        </View>
+        {/* ── Status Badges ── */}
+        <Animated.View
+          entering={FadeInDown.duration(400).delay(60)}
+          className="px-xl mb-lg"
+        >
+          <View className="flex-row flex-wrap gap-sm">
+            <StatusBadge
+              status={summary.vaccinationStatus}
+              label={`💉 ${vacStatusLabel[summary.vaccinationStatus]}`}
+            />
+            {summary.latestWeight && (
+              <StatusBadge
+                status="up_to_date"
+                label={`⚖️ ${summary.latestWeight.weightValue} ${summary.latestWeight.weightUnit}`}
+              />
+            )}
+            {summary.activeMedCount > 0 && (
+              <StatusBadge
+                status="up_to_date"
+                label={`💊 ${summary.activeMedCount} active`}
+              />
+            )}
+            {summary.unresolvedNotes > 0 && (
+              <StatusBadge
+                status="due_soon"
+                label={`📝 ${summary.unresolvedNotes} note${summary.unresolvedNotes !== 1 ? "s" : ""}`}
+              />
+            )}
+          </View>
+        </Animated.View>
 
-        <View className="flex-row gap-md mb-xl">
-          <Card className="flex-1 items-center">
-            <Typography className="text-[28px] mb-xs">⚖️</Typography>
-            <Typography variant="body-sm-medium">Weight</Typography>
-            <Badge variant="neutral" label="No entries" size="sm" />
+        {/* ── Upcoming Events ── */}
+        <Animated.View
+          entering={FadeInDown.duration(400).delay(120)}
+          className="px-xl mb-lg"
+        >
+          <Card>
+            <Typography variant="h3" className="mb-sm">
+              📅 Upcoming
+            </Typography>
+            {upcomingEvents.length > 0 ? (
+              upcomingEvents.map((event, i) => (
+                <UpcomingEventCard
+                  key={i}
+                  icon={event.icon}
+                  title={event.title}
+                  dueDate={event.dueDate}
+                  daysUntil={event.daysUntil}
+                />
+              ))
+            ) : (
+              <Typography variant="body-sm" color="secondary">
+                No upcoming health events — all clear! ✨
+              </Typography>
+            )}
           </Card>
-          <Card className="flex-1 items-center">
-            <Typography className="text-[28px] mb-xs">🏥</Typography>
-            <Typography variant="body-sm-medium">Vet Visits</Typography>
-            <Badge variant="neutral" label="None logged" size="sm" />
-          </Card>
-        </View>
+        </Animated.View>
 
-        {/* Coming soon note */}
-        <Card variant="featured" className="mb-4xl">
-          <Typography variant="body-sm" color="secondary" className="text-center">
-            🏥 Full health tracker coming in Phase 5
+        {/* ── Quick Actions ── */}
+        <Animated.View
+          entering={FadeInDown.duration(400).delay(180)}
+          className="px-xl mb-lg"
+        >
+          <View className="flex-row gap-sm">
+            <QuickAction
+              icon="💉"
+              label="Vaccinations"
+              onPress={() => router.push("/health/vaccinations")}
+            />
+            <QuickAction
+              icon="⚖️"
+              label="Weigh In"
+              onPress={() => router.push("/health/weight")}
+            />
+          </View>
+          <View className="flex-row gap-sm mt-sm">
+            <QuickAction
+              icon="💊"
+              label="Medications"
+              onPress={() => router.push("/health/medications")}
+            />
+            <QuickAction
+              icon="🏥"
+              label="Vet Visits"
+              onPress={() => router.push("/health/vet-visits")}
+            />
+          </View>
+        </Animated.View>
+
+        {/* ── Active Medications ── */}
+        {activeMeds.length > 0 && (
+          <Animated.View
+            entering={FadeInDown.duration(400).delay(240)}
+            className="px-xl mb-lg"
+          >
+            <View className="flex-row items-center justify-between mb-sm">
+              <Typography variant="h3">💊 Active Medications</Typography>
+              <Pressable
+                onPress={() => router.push("/health/medications")}
+              >
+                <Typography
+                  variant="body-sm-medium"
+                  style={{ color: "#FF6B5C" }}
+                >
+                  See All
+                </Typography>
+              </Pressable>
+            </View>
+            {activeMeds.slice(0, 3).map((med) => (
+              <MedicationCard
+                key={med.id}
+                medication={med}
+                onLogDose={handleLogDose}
+                onPress={() => router.push("/health/medications")}
+              />
+            ))}
+          </Animated.View>
+        )}
+
+        {/* ── Weight Snapshot ── */}
+        <Animated.View
+          entering={FadeInDown.duration(400).delay(300)}
+          className="px-xl mb-lg"
+        >
+          <Pressable onPress={() => router.push("/health/weight")}>
+            <Card>
+              <View className="flex-row items-center justify-between mb-sm">
+                <Typography variant="h3">⚖️ Weight</Typography>
+                <Typography
+                  variant="body-sm-medium"
+                  style={{ color: "#FF6B5C" }}
+                >
+                  {weights.length > 0 ? "View Chart →" : "Add Entry →"}
+                </Typography>
+              </View>
+              {weights.length > 0 ? (
+                <View className="flex-row items-end gap-md">
+                  <View>
+                    <Typography
+                      variant="h1"
+                      style={{ fontSize: 36, lineHeight: 42 }}
+                    >
+                      {weights[weights.length - 1]!.weightValue}
+                    </Typography>
+                    <Typography variant="caption" color="secondary">
+                      {weights[weights.length - 1]!.weightUnit} · last weighed{" "}
+                      {new Date(
+                        weights[weights.length - 1]!.measuredAt
+                      ).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                      })}
+                    </Typography>
+                  </View>
+                  {weights.length >= 2 && (
+                    <View className="items-end">
+                      {(() => {
+                        const prev =
+                          weights[weights.length - 2]!.weightValue;
+                        const curr =
+                          weights[weights.length - 1]!.weightValue;
+                        const diff = curr - prev;
+                        const sign = diff >= 0 ? "+" : "";
+                        return (
+                          <Badge
+                            variant={diff >= 0 ? "success" : "warning"}
+                            label={`${sign}${diff.toFixed(1)} ${weights[0]!.weightUnit}`}
+                            size="sm"
+                          />
+                        );
+                      })()}
+                    </View>
+                  )}
+                </View>
+              ) : (
+                <Typography variant="body-sm" color="secondary">
+                  Tap to log {dogName}'s first weigh-in
+                </Typography>
+              )}
+            </Card>
+          </Pressable>
+        </Animated.View>
+
+        {/* ── Health Notes ── */}
+        <Animated.View
+          entering={FadeInDown.duration(400).delay(360)}
+          className="px-xl mb-lg"
+        >
+          <Pressable onPress={() => router.push("/health/notes")}>
+            <Card>
+              <View className="flex-row items-center justify-between mb-sm">
+                <Typography variant="h3">📝 Health Notes</Typography>
+                <Typography
+                  variant="body-sm-medium"
+                  style={{ color: "#FF6B5C" }}
+                >
+                  {unresolvedNotes.length > 0
+                    ? `${unresolvedNotes.length} active →`
+                    : "Add Note →"}
+                </Typography>
+              </View>
+              {unresolvedNotes.length > 0 ? (
+                unresolvedNotes.slice(0, 2).map((note) => (
+                  <View
+                    key={note.id}
+                    className="flex-row items-center gap-sm py-xs"
+                  >
+                    <View
+                      className="w-[6px] h-[6px] rounded-full"
+                      style={{
+                        backgroundColor:
+                          note.severity === "urgent"
+                            ? "#DC2626"
+                            : note.severity === "concern"
+                              ? "#EF6461"
+                              : note.severity === "monitor"
+                                ? "#F5A623"
+                                : "#5B9BD5",
+                      }}
+                    />
+                    <Typography
+                      variant="body-sm"
+                      color="secondary"
+                      numberOfLines={1}
+                      className="flex-1"
+                    >
+                      {note.content}
+                    </Typography>
+                  </View>
+                ))
+              ) : (
+                <Typography variant="body-sm" color="secondary">
+                  No active notes — jot down health observations here
+                </Typography>
+              )}
+            </Card>
+          </Pressable>
+        </Animated.View>
+
+        {/* ── Milestones Link ── */}
+        <Animated.View
+          entering={FadeInDown.duration(400).delay(420)}
+          className="px-xl mb-xl"
+        >
+          <Pressable onPress={() => router.push("/health/milestones")}>
+            <Card className="flex-row items-center gap-md">
+              <Typography className="text-[28px]">🌱</Typography>
+              <View className="flex-1">
+                <Typography variant="body-medium">
+                  Developmental Milestones
+                </Typography>
+                <Typography variant="caption" color="secondary">
+                  Track {dogName}'s growth stages
+                </Typography>
+              </View>
+              <Typography color="tertiary">→</Typography>
+            </Card>
+          </Pressable>
+        </Animated.View>
+
+        {/* ── Medical Disclaimer ── */}
+        <View className="px-xl mb-4xl">
+          <Typography
+            variant="caption"
+            color="tertiary"
+            className="text-center"
+          >
+            ⚕️ PupPal is not a substitute for veterinary care. Always consult
+            your vet for medical advice.
           </Typography>
-          <Typography variant="caption" color="tertiary" className="text-center mt-xs">
-            Vaccination schedules, medication reminders, weight tracking with
-            breed growth curves, vet visit logs, and developmental milestones
-          </Typography>
-        </Card>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
