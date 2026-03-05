@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { Stack, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ErrorBoundary } from "@/components/ui";
 import { setupNotifications, addNotificationResponseListener } from "@/services/notifications";
 import { analytics } from "@/services/analytics";
 import {
@@ -65,6 +66,7 @@ export default function RootLayout() {
   }
 
   return (
+    <ErrorBoundary screen="root">
     <QueryClientProvider client={queryClient}>
       <StatusBar style="dark" />
       <Stack
@@ -133,5 +135,6 @@ export default function RootLayout() {
         <Stack.Screen name="community/index" />
       </Stack>
     </QueryClientProvider>
+    </ErrorBoundary>
   );
 }

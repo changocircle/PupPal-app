@@ -13,3 +13,4 @@ export { ProgressBar } from "./ProgressBar";
 export { Input } from "./Input";
 export { Skeleton, CardSkeleton } from "./Skeleton";
 export { PremiumGate } from "./PremiumGate";
+export { ErrorBoundary } from "./ErrorBoundary";
