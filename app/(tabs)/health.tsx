@@ -3,7 +3,7 @@ import { View, ScrollView, Pressable, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { useRouter } from "expo-router";
-import { Typography, Card, Badge, Button } from "@/components/ui";
+import { Typography, Card, Badge, Button, PremiumGate } from "@/components/ui";
 import {
   StatusBadge,
   UpcomingEventCard,
@@ -14,6 +14,7 @@ import { useHealthStore } from "@/stores/healthStore";
 import { useDogStore } from "@/stores/dogStore";
 import { useTrainingStore } from "@/stores/trainingStore";
 import { useOnboardingStore } from "@/stores/onboardingStore";
+import { useSubscription } from "@/hooks/useSubscription";
 
 /**
  * Health Dashboard — PRD-05 §3
@@ -24,6 +25,7 @@ import { useOnboardingStore } from "@/stores/onboardingStore";
 
 export default function HealthScreen() {
   const router = useRouter();
+  const { isPremium } = useSubscription();
   const dog = useDogStore((s) => s.activeDog());
   const plan = useTrainingStore((s) => s.plan);
   const onboardingData = useOnboardingStore((s) => s.data);
@@ -73,9 +75,10 @@ export default function HealthScreen() {
 
   // Data
   const summary = useMemo(() => getHealthSummary(dogId), [dogId, getHealthSummary]);
+  // PRD-07 §3: free users see max 2 upcoming events
   const upcomingEvents = useMemo(
-    () => getUpcomingEvents(dogId, 3),
-    [dogId, getUpcomingEvents]
+    () => getUpcomingEvents(dogId, isPremium ? 5 : 2),
+    [dogId, getUpcomingEvents, isPremium]
   );
   const activeMeds = useMemo(
     () => getActiveMedications(dogId),
@@ -193,7 +196,12 @@ export default function HealthScreen() {
             <QuickAction
               icon="💉"
               label="Vaccinations"
-              onPress={() => router.push("/health/vaccinations")}
+              onPress={() =>
+                isPremium
+                  ? router.push("/health/vaccinations")
+                  : router.push({ pathname: "/paywall", params: { trigger: "feature_gate_health", source: "health_vaccinations" } })
+              }
+              locked={!isPremium}
             />
             <QuickAction
               icon="⚖️"
@@ -205,18 +213,28 @@ export default function HealthScreen() {
             <QuickAction
               icon="💊"
               label="Medications"
-              onPress={() => router.push("/health/medications")}
+              onPress={() =>
+                isPremium
+                  ? router.push("/health/medications")
+                  : router.push({ pathname: "/paywall", params: { trigger: "feature_gate_health", source: "health_medications" } })
+              }
+              locked={!isPremium}
             />
             <QuickAction
               icon="🏥"
               label="Vet Visits"
-              onPress={() => router.push("/health/vet-visits")}
+              onPress={() =>
+                isPremium
+                  ? router.push("/health/vet-visits")
+                  : router.push({ pathname: "/paywall", params: { trigger: "feature_gate_health", source: "health_vet_visits" } })
+              }
+              locked={!isPremium}
             />
           </View>
         </Animated.View>
 
-        {/* ── Active Medications ── */}
-        {activeMeds.length > 0 && (
+        {/* ── Active Medications (Premium only) ── */}
+        {isPremium && activeMeds.length > 0 && (
           <Animated.View
             entering={FadeInDown.duration(400).delay(240)}
             className="px-xl mb-lg"
@@ -258,7 +276,11 @@ export default function HealthScreen() {
                   variant="body-sm-medium"
                   style={{ color: "#FF6B5C" }}
                 >
-                  {weights.length > 0 ? "View Chart →" : "Add Entry →"}
+                  {weights.length > 0
+                    ? isPremium
+                      ? "View Chart →"
+                      : "Add Entry →"
+                    : "Add Entry →"}
                 </Typography>
               </View>
               {weights.length > 0 ? (
@@ -314,10 +336,15 @@ export default function HealthScreen() {
           entering={FadeInDown.duration(400).delay(360)}
           className="px-xl mb-lg"
         >
-          <Pressable onPress={() => router.push("/health/notes")}>
+          <Pressable onPress={() =>
+            isPremium
+              ? router.push("/health/notes")
+              : router.push({ pathname: "/paywall", params: { trigger: "feature_gate_health", source: "health_notes" } })
+          }>
             <Card>
               <View className="flex-row items-center justify-between mb-sm">
                 <Typography variant="h3">📝 Health Notes</Typography>
+                {!isPremium && <Typography style={{ fontSize: 12 }}>🔒</Typography>}
                 <Typography
                   variant="body-sm-medium"
                   style={{ color: "#FF6B5C" }}
@@ -370,7 +397,11 @@ export default function HealthScreen() {
           entering={FadeInDown.duration(400).delay(420)}
           className="px-xl mb-xl"
         >
-          <Pressable onPress={() => router.push("/health/milestones")}>
+          <Pressable onPress={() =>
+            isPremium
+              ? router.push("/health/milestones")
+              : router.push({ pathname: "/paywall", params: { trigger: "feature_gate_health", source: "health_milestones" } })
+          }>
             <Card className="flex-row items-center gap-md">
               <Typography className="text-[28px]">🌱</Typography>
               <View className="flex-1">
@@ -381,6 +412,7 @@ export default function HealthScreen() {
                   Track {dogName}'s growth stages
                 </Typography>
               </View>
+              {!isPremium && <Typography style={{ fontSize: 12 }}>🔒</Typography>}
               <Typography color="tertiary">→</Typography>
             </Card>
           </Pressable>

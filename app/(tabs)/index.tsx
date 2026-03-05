@@ -3,7 +3,7 @@ import { View, ScrollView, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown, FadeIn } from "react-native-reanimated";
 import { useRouter } from "expo-router";
-import { Typography, Card, ProgressBar } from "@/components/ui";
+import { Typography, Card, ProgressBar, PremiumGate } from "@/components/ui";
 import { ExerciseCard, DayProgress } from "@/components/training";
 import {
   GamificationRow,
@@ -15,6 +15,7 @@ import { useTrainingStore } from "@/stores/trainingStore";
 import { useDogStore } from "@/stores/dogStore";
 import { useOnboardingStore } from "@/stores/onboardingStore";
 import { useGamification } from "@/hooks/useGamification";
+import { useSubscription } from "@/hooks/useSubscription";
 import { DogSwitcherButton } from "@/components/dog";
 
 /**
@@ -32,6 +33,7 @@ function getGreeting(): string {
 
 export default function HomeScreen() {
   const router = useRouter();
+  const { isPremium } = useSubscription();
   const dog = useDogStore((s) => s.activeDog());
   const onboardingData = useOnboardingStore((s) => s.data);
 
@@ -173,6 +175,34 @@ export default function HomeScreen() {
           </Animated.View>
         )}
 
+        {/* ── GBS Plateau (PRD-07 §3) ── */}
+        {!isPremium && plan && plan.currentWeek > 1 && (
+          <Animated.View
+            entering={FadeInDown.duration(400).delay(200)}
+            className="mb-lg"
+          >
+            <Card className="flex-row items-start gap-md bg-warning-light border-warning/20">
+              <Typography className="text-[28px]">📊</Typography>
+              <View className="flex-1">
+                <Typography variant="body-sm-medium">
+                  {dogName}'s Good Boy Score has plateaued
+                </Typography>
+                <Typography variant="body-sm" color="secondary" className="mt-[2px]">
+                  Unlock Week {plan.currentWeek} training to keep {dogName}'s progress growing!
+                </Typography>
+                <Pressable
+                  onPress={() => router.push({ pathname: "/paywall", params: { trigger: "feature_gate_week2", source: "home_gbs_plateau" } })}
+                  className="mt-sm self-start bg-primary px-lg py-xs rounded-full"
+                >
+                  <Typography variant="caption" color="inverse">
+                    Continue Training →
+                  </Typography>
+                </Pressable>
+              </View>
+            </Card>
+          </Animated.View>
+        )}
+
         {/* ── Today's Exercises ── */}
         <Animated.View
           entering={FadeInDown.duration(400).delay(220)}
@@ -206,6 +236,30 @@ export default function HomeScreen() {
                 Complete onboarding to generate your personalised training plan!
               </Typography>
             </Card>
+          ) : !isPremium && plan && plan.currentWeek > 1 ? (
+            /* PRD-07: Week 2+ exercises gated on home */
+            <View className="gap-md">
+              <PremiumGate
+                feature="feature_gate_week2"
+                headline={`${dogName}'s Week ${plan.currentWeek} is ready!`}
+                subtitle="Unlock to continue your training journey"
+                cta="Unlock Full Plan"
+                lockIcon="🏋️"
+                preview={
+                  <View className="gap-md" style={{ opacity: 0.4 }}>
+                    {todayExercises.slice(0, 2).map((planEx, idx) => (
+                      <ExerciseCard
+                        key={planEx.id}
+                        planExercise={planEx}
+                        index={idx}
+                      />
+                    ))}
+                  </View>
+                }
+              >
+                <View />
+              </PremiumGate>
+            </View>
           ) : (
             <View className="gap-md">
               {todayExercises.map((planEx, idx) => (

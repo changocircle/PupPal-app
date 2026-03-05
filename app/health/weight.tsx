@@ -3,12 +3,13 @@ import { View, ScrollView, Pressable, TextInput, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { useRouter } from "expo-router";
-import { Typography, Card, Button } from "@/components/ui";
+import { Typography, Card, Button, PremiumGate } from "@/components/ui";
 import { WeightChart } from "@/components/health";
 import { useHealthStore } from "@/stores/healthStore";
 import { useDogStore } from "@/stores/dogStore";
 import { useTrainingStore } from "@/stores/trainingStore";
 import { useOnboardingStore } from "@/stores/onboardingStore";
+import { useSubscription } from "@/hooks/useSubscription";
 import type { WeightUnit } from "@/types/health";
 
 /**
@@ -17,6 +18,7 @@ import type { WeightUnit } from "@/types/health";
 
 export default function WeightScreen() {
   const router = useRouter();
+  const { isPremium } = useSubscription();
   const dog = useDogStore((s) => s.activeDog());
   const plan = useTrainingStore((s) => s.plan);
   const onboardingData = useOnboardingStore((s) => s.data);
@@ -109,12 +111,22 @@ export default function WeightScreen() {
                     {weights[weights.length - 1]!.ageAtMeasurementWeeks}
                   </Typography>
                 </View>
-                <Button
-                  label="+ Weigh In"
-                  variant="primary"
-                  size="sm"
-                  onPress={() => setShowForm(true)}
-                />
+                {/* PRD-07: Free users get 1 entry, premium unlimited */}
+                {isPremium || weights.length === 0 ? (
+                  <Button
+                    label="+ Weigh In"
+                    variant="primary"
+                    size="sm"
+                    onPress={() => setShowForm(true)}
+                  />
+                ) : (
+                  <Button
+                    label="🔒 Track More"
+                    variant="secondary"
+                    size="sm"
+                    onPress={() => router.push({ pathname: "/paywall", params: { trigger: "feature_gate_health", source: "weight_chart" } })}
+                  />
+                )}
               </View>
             ) : (
               <View className="items-center py-base">
@@ -216,18 +228,35 @@ export default function WeightScreen() {
           </Animated.View>
         )}
 
-        {/* Chart */}
+        {/* Chart — PRD-07: blurred for free users */}
         {weights.length > 0 && (
           <Animated.View
             entering={FadeInDown.duration(400).delay(120)}
             className="px-xl mb-lg"
           >
-            <Card>
-              <Typography variant="h3" className="mb-base">
-                📈 Growth Chart
-              </Typography>
-              <WeightChart entries={weights} unit={preferredUnit} />
-            </Card>
+            <PremiumGate
+              feature="feature_gate_health"
+              headline={`${dogName}'s Growth Curve`}
+              subtitle="Track weight over time with breed-specific growth charts"
+              cta="Unlock Weight Charts"
+              lockIcon="📈"
+              blurred
+              preview={
+                <Card>
+                  <Typography variant="h3" className="mb-base">
+                    📈 Growth Chart
+                  </Typography>
+                  <WeightChart entries={weights} unit={preferredUnit} />
+                </Card>
+              }
+            >
+              <Card>
+                <Typography variant="h3" className="mb-base">
+                  📈 Growth Chart
+                </Typography>
+                <WeightChart entries={weights} unit={preferredUnit} />
+              </Card>
+            </PremiumGate>
           </Animated.View>
         )}
 
@@ -240,7 +269,7 @@ export default function WeightScreen() {
             <Typography variant="h3" className="mb-sm">
               History
             </Typography>
-            {[...weights].reverse().map((w) => (
+            {[...weights].reverse().slice(0, isPremium ? undefined : 1).map((w) => (
               <View
                 key={w.id}
                 className="flex-row items-center py-md border-b border-border"

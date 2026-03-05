@@ -17,6 +17,7 @@ import { useJournalStore } from "@/stores/journalStore";
 import { useDogStore } from "@/stores/dogStore";
 import { useTrainingStore } from "@/stores/trainingStore";
 import { useOnboardingStore } from "@/stores/onboardingStore";
+import { useSubscription } from "@/hooks/useSubscription";
 import { useGamificationStore } from "@/stores/gamificationStore";
 import { resolveDateOfBirth, calculateDogAgeLabel } from "@/types/journal";
 
@@ -32,6 +33,14 @@ const MAX_PHOTOS = 5;
 
 export default function AddEntryScreen() {
   const router = useRouter();
+  const { isPremium } = useSubscription();
+
+  // PRD-07: Redirect free users to paywall
+  React.useEffect(() => {
+    if (!isPremium) {
+      router.replace({ pathname: "/paywall", params: { trigger: "feature_gate_journal", source: "journal_add" } });
+    }
+  }, [isPremium]);
 
   // Dog context
   const dog = useDogStore((s) => s.activeDog());

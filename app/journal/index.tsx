@@ -14,6 +14,7 @@ import { useJournalStore } from "@/stores/journalStore";
 import { useDogStore } from "@/stores/dogStore";
 import { useTrainingStore } from "@/stores/trainingStore";
 import { useOnboardingStore } from "@/stores/onboardingStore";
+import { useSubscription } from "@/hooks/useSubscription";
 import type { JournalFilter, JournalEntry } from "@/types/journal";
 
 /**
@@ -23,6 +24,7 @@ import type { JournalFilter, JournalEntry } from "@/types/journal";
 
 export default function JournalScreen() {
   const router = useRouter();
+  const { isPremium } = useSubscription();
   const [filter, setFilter] = useState<JournalFilter>("all");
 
   // Dog context
@@ -156,11 +158,15 @@ export default function JournalScreen() {
                 milestones and achievements will appear here automatically!
               </Typography>
               <Pressable
-                onPress={() => router.push("/journal/add")}
+                onPress={() =>
+                  isPremium
+                    ? router.push("/journal/add")
+                    : router.push({ pathname: "/paywall", params: { trigger: "feature_gate_journal", source: "journal_add" } })
+                }
                 className="bg-primary px-xl py-md rounded-full"
               >
                 <Typography variant="body-medium" color="inverse" className="text-text-inverse">
-                  + Add First Memory
+                  {isPremium ? "+ Add First Memory" : "🔒 Unlock Journal"}
                 </Typography>
               </Pressable>
             </Card>
@@ -200,7 +206,11 @@ export default function JournalScreen() {
       </ScrollView>
 
       {/* ── FAB ── */}
-      <AddEntryFAB onPress={() => router.push("/journal/add")} />
+      <AddEntryFAB onPress={() =>
+        isPremium
+          ? router.push("/journal/add")
+          : router.push({ pathname: "/paywall", params: { trigger: "feature_gate_journal", source: "journal_fab" } })
+      } />
     </SafeAreaView>
   );
 }

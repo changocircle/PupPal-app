@@ -12,11 +12,12 @@ import Animated, {
   Easing,
 } from "react-native-reanimated";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { Typography, Card, Button, Badge } from "@/components/ui";
+import { Typography, Card, Button, Badge, PremiumGate } from "@/components/ui";
 import { CompletionModal } from "@/components/training";
 import { AchievementUnlock, LevelUpOverlay } from "@/components/gamification";
 import { useTrainingStore } from "@/stores/trainingStore";
 import { useDogStore } from "@/stores/dogStore";
+import { useSubscription } from "@/hooks/useSubscription";
 import { useGamification } from "@/hooks/useGamification";
 import {
   getExerciseById,
@@ -33,6 +34,9 @@ import {
  *
  * Full step-by-step instructions, timer, supplies, tips.
  * Bottom actions: Mark Complete, Need More Practice, Skip.
+ *
+ * PRD-07 §3 gating: Week 2+ exercises show header (title, difficulty, time)
+ * but lock steps, timer, supplies, and action bar for free users.
  */
 
 export default function ExerciseDetailScreen() {
@@ -46,7 +50,8 @@ export default function ExerciseDetailScreen() {
   const advanceDay = useTrainingStore((s) => s.advanceDay);
   const streak = useTrainingStore((s) => s.streak);
 
-  // Gamification hook
+  // Subscription & gamification
+  const { isPremium } = useSubscription();
   const gam = useGamification();
 
   const [showCompletion, setShowCompletion] = useState(false);
@@ -55,17 +60,21 @@ export default function ExerciseDetailScreen() {
   const [timerSeconds, setTimerSeconds] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Find the plan exercise across all weeks/days
-  const planExercise = useMemo(() => {
-    if (!plan || !id) return null;
+  // Find the plan exercise across all weeks/days and track its week number
+  const { planExercise, exerciseWeek } = useMemo(() => {
+    if (!plan || !id) return { planExercise: null, exerciseWeek: 1 };
     for (const week of plan.weeks) {
       for (const day of week.days) {
         const found = day.exercises.find((e) => e.id === id);
-        if (found) return found;
+        if (found) return { planExercise: found, exerciseWeek: week.weekNumber };
       }
     }
-    return null;
+    return { planExercise: null, exerciseWeek: 1 };
   }, [plan, id]);
+
+  // PRD-07 §3: Week 2+ exercises are locked for free users
+  const isLockedByGate = !isPremium && exerciseWeek > 1;
+  const dogName = dog?.name ?? plan?.dogName ?? "Your Pup";
 
   const exercise = useMemo(() => {
     if (!planExercise) return null;
@@ -76,7 +85,7 @@ export default function ExerciseDetailScreen() {
     if (!exercise) return null;
     return personaliseExercise(
       exercise,
-      dog?.name ?? plan?.dogName ?? "Your Pup",
+      dogName,
       dog?.breed ?? plan?.breed
     );
   }, [exercise, dog, plan]);
@@ -192,7 +201,7 @@ export default function ExerciseDetailScreen() {
           </Typography>
         </Pressable>
 
-        {/* ── Header ── */}
+        {/* ── Header (always visible — PRD-07: show title/time/difficulty) ── */}
         <Animated.View
           entering={FadeInDown.duration(400)}
           className="px-xl mb-lg"
@@ -210,6 +219,9 @@ export default function ExerciseDetailScreen() {
               label={`${exercise.time_minutes} min`}
               size="sm"
             />
+            {isLockedByGate && (
+              <Badge variant="warning" label="🔒 Premium" size="sm" />
+            )}
           </View>
 
           <Typography variant="h1" className="mb-sm">
@@ -221,159 +233,191 @@ export default function ExerciseDetailScreen() {
           </Typography>
         </Animated.View>
 
-        {/* ── Supplies ── */}
-        {exercise.supplies.length > 0 && (
+        {/* ── PRD-07: Week 2+ Premium Gate (replaces all content below) ── */}
+        {isLockedByGate ? (
           <Animated.View
             entering={FadeInDown.duration(400).delay(80)}
             className="px-xl mb-lg"
           >
-            <Card className="bg-accent-light border-accent/20">
-              <Typography variant="body-sm-medium" className="mb-sm">
-                🧺 What you'll need
-              </Typography>
-              <View className="flex-row flex-wrap gap-sm">
-                {exercise.supplies.map((supply, i) => (
-                  <View
-                    key={i}
-                    className="bg-surface px-md py-xs rounded-full"
+            <PremiumGate
+              feature="feature_gate_week2"
+              headline={`Unlock ${dogName}'s Week ${exerciseWeek}`}
+              subtitle={`See full instructions for "${personalised.title}" and all Week ${exerciseWeek}+ exercises.`}
+              cta="Unlock Full Plan"
+              lockIcon="📖"
+              preview={
+                <Card>
+                  <View style={{ gap: 8 }}>
+                    {[1, 2, 3].map((i) => (
+                      <View key={i} style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
+                        <View style={{ width: 28, height: 28, borderRadius: 14, backgroundColor: "#E5E7EB" }} />
+                        <View style={{ flex: 1, height: 12, borderRadius: 6, backgroundColor: "#E5E7EB" }} />
+                      </View>
+                    ))}
+                  </View>
+                </Card>
+              }
+            >
+              <View />
+            </PremiumGate>
+          </Animated.View>
+        ) : (
+          <>
+            {/* ── Supplies ── */}
+            {exercise.supplies.length > 0 && (
+              <Animated.View
+                entering={FadeInDown.duration(400).delay(80)}
+                className="px-xl mb-lg"
+              >
+                <Card className="bg-accent-light border-accent/20">
+                  <Typography variant="body-sm-medium" className="mb-sm">
+                    🧺 What you'll need
+                  </Typography>
+                  <View className="flex-row flex-wrap gap-sm">
+                    {exercise.supplies.map((supply, i) => (
+                      <View
+                        key={i}
+                        className="bg-surface px-md py-xs rounded-full"
+                      >
+                        <Typography variant="body-sm">{supply}</Typography>
+                      </View>
+                    ))}
+                  </View>
+                </Card>
+              </Animated.View>
+            )}
+
+            {/* ── Timer ── */}
+            <Animated.View
+              entering={FadeInDown.duration(400).delay(120)}
+              className="px-xl mb-lg"
+            >
+              <Animated.View style={timerAnimStyle}>
+                <Card
+                  className={`items-center py-lg ${
+                    timerActive
+                      ? "bg-primary-extralight border-primary/20"
+                      : "bg-surface"
+                  }`}
+                >
+                  <Typography
+                    variant="h1"
+                    style={{
+                      fontSize: 36,
+                      fontVariant: ["tabular-nums"],
+                      color: timerActive ? "#FF6B5C" : "#1B2333",
+                    }}
                   >
-                    <Typography variant="body-sm">{supply}</Typography>
+                    {formatTime(timerSeconds)}
+                  </Typography>
+                  <Pressable
+                    onPress={() => setTimerActive(!timerActive)}
+                    className={`mt-sm px-xl py-sm rounded-full ${
+                      timerActive ? "bg-primary" : "bg-primary-light"
+                    }`}
+                  >
+                    <Typography
+                      variant="body-sm-medium"
+                      color={timerActive ? "inverse" : undefined}
+                      style={timerActive ? undefined : { color: "#FF6B5C" }}
+                    >
+                      {timerActive ? "⏸ Pause" : "▶ Start Timer"}
+                    </Typography>
+                  </Pressable>
+                </Card>
+              </Animated.View>
+            </Animated.View>
+
+            {/* ── Steps ── */}
+            <Animated.View
+              entering={FadeInDown.duration(400).delay(160)}
+              className="px-xl mb-lg"
+            >
+              <Typography variant="h3" className="mb-base">
+                Step-by-Step
+              </Typography>
+              {personalised.steps.map((step, idx) => (
+                <Animated.View
+                  key={idx}
+                  entering={FadeInLeft.delay(200 + idx * 60).springify()}
+                  className="flex-row gap-md mb-md"
+                >
+                  <View className="w-[28px] h-[28px] rounded-full bg-primary items-center justify-center mt-[2px]">
+                    <Typography variant="caption" color="inverse" style={{ fontSize: 12 }}>
+                      {idx + 1}
+                    </Typography>
+                  </View>
+                  <View className="flex-1">
+                    <Typography variant="body">{step}</Typography>
+                  </View>
+                </Animated.View>
+              ))}
+            </Animated.View>
+
+            {/* ── Success criteria ── */}
+            <Animated.View
+              entering={FadeInDown.duration(400).delay(220)}
+              className="px-xl mb-lg"
+            >
+              <Card className="bg-success-light border-success/20">
+                <Typography variant="body-sm-medium" className="mb-xs">
+                  ✅ Success looks like
+                </Typography>
+                <Typography variant="body-sm">
+                  {personalised.success_criteria}
+                </Typography>
+              </Card>
+            </Animated.View>
+
+            {/* ── Pro Tips ── */}
+            {personalised.pro_tips.length > 0 && (
+              <Animated.View
+                entering={FadeInDown.duration(400).delay(260)}
+                className="px-xl mb-lg"
+              >
+                <Typography variant="h3" className="mb-sm">
+                  💡 Pro Tips
+                </Typography>
+                {personalised.pro_tips.map((tip, idx) => (
+                  <View key={idx} className="flex-row gap-sm mb-sm">
+                    <Typography variant="body-sm" color="secondary">
+                      •
+                    </Typography>
+                    <Typography variant="body-sm" color="secondary" className="flex-1">
+                      {tip}
+                    </Typography>
                   </View>
                 ))}
-              </View>
-            </Card>
-          </Animated.View>
-        )}
+              </Animated.View>
+            )}
 
-        {/* ── Timer ── */}
-        <Animated.View
-          entering={FadeInDown.duration(400).delay(120)}
-          className="px-xl mb-lg"
-        >
-          <Animated.View style={timerAnimStyle}>
-            <Card
-              className={`items-center py-lg ${
-                timerActive
-                  ? "bg-primary-extralight border-primary/20"
-                  : "bg-surface"
-              }`}
-            >
-              <Typography
-                variant="h1"
-                style={{
-                  fontSize: 36,
-                  fontVariant: ["tabular-nums"],
-                  color: timerActive ? "#FF6B5C" : "#1B2333",
-                }}
+            {/* ── Common Mistakes ── */}
+            {personalised.common_mistakes.length > 0 && (
+              <Animated.View
+                entering={FadeInDown.duration(400).delay(300)}
+                className="px-xl mb-lg"
               >
-                {formatTime(timerSeconds)}
-              </Typography>
-              <Pressable
-                onPress={() => setTimerActive(!timerActive)}
-                className={`mt-sm px-xl py-sm rounded-full ${
-                  timerActive ? "bg-primary" : "bg-primary-light"
-                }`}
-              >
-                <Typography
-                  variant="body-sm-medium"
-                  color={timerActive ? "inverse" : undefined}
-                  style={timerActive ? undefined : { color: "#FF6B5C" }}
-                >
-                  {timerActive ? "⏸ Pause" : "▶ Start Timer"}
+                <Typography variant="h3" className="mb-sm">
+                  ⚠️ Common Mistakes
                 </Typography>
-              </Pressable>
-            </Card>
-          </Animated.View>
-        </Animated.View>
-
-        {/* ── Steps ── */}
-        <Animated.View
-          entering={FadeInDown.duration(400).delay(160)}
-          className="px-xl mb-lg"
-        >
-          <Typography variant="h3" className="mb-base">
-            Step-by-Step
-          </Typography>
-          {personalised.steps.map((step, idx) => (
-            <Animated.View
-              key={idx}
-              entering={FadeInLeft.delay(200 + idx * 60).springify()}
-              className="flex-row gap-md mb-md"
-            >
-              <View className="w-[28px] h-[28px] rounded-full bg-primary items-center justify-center mt-[2px]">
-                <Typography variant="caption" color="inverse" style={{ fontSize: 12 }}>
-                  {idx + 1}
-                </Typography>
-              </View>
-              <View className="flex-1">
-                <Typography variant="body">{step}</Typography>
-              </View>
-            </Animated.View>
-          ))}
-        </Animated.View>
-
-        {/* ── Success criteria ── */}
-        <Animated.View
-          entering={FadeInDown.duration(400).delay(220)}
-          className="px-xl mb-lg"
-        >
-          <Card className="bg-success-light border-success/20">
-            <Typography variant="body-sm-medium" className="mb-xs">
-              ✅ Success looks like
-            </Typography>
-            <Typography variant="body-sm">
-              {personalised.success_criteria}
-            </Typography>
-          </Card>
-        </Animated.View>
-
-        {/* ── Pro Tips ── */}
-        {personalised.pro_tips.length > 0 && (
-          <Animated.View
-            entering={FadeInDown.duration(400).delay(260)}
-            className="px-xl mb-lg"
-          >
-            <Typography variant="h3" className="mb-sm">
-              💡 Pro Tips
-            </Typography>
-            {personalised.pro_tips.map((tip, idx) => (
-              <View key={idx} className="flex-row gap-sm mb-sm">
-                <Typography variant="body-sm" color="secondary">
-                  •
-                </Typography>
-                <Typography variant="body-sm" color="secondary" className="flex-1">
-                  {tip}
-                </Typography>
-              </View>
-            ))}
-          </Animated.View>
-        )}
-
-        {/* ── Common Mistakes ── */}
-        {personalised.common_mistakes.length > 0 && (
-          <Animated.View
-            entering={FadeInDown.duration(400).delay(300)}
-            className="px-xl mb-lg"
-          >
-            <Typography variant="h3" className="mb-sm">
-              ⚠️ Common Mistakes
-            </Typography>
-            {personalised.common_mistakes.map((mistake, idx) => (
-              <View key={idx} className="flex-row gap-sm mb-sm">
-                <Typography variant="body-sm" style={{ color: "#EF6461" }}>
-                  ✗
-                </Typography>
-                <Typography variant="body-sm" color="secondary" className="flex-1">
-                  {mistake}
-                </Typography>
-              </View>
-            ))}
-          </Animated.View>
+                {personalised.common_mistakes.map((mistake, idx) => (
+                  <View key={idx} className="flex-row gap-sm mb-sm">
+                    <Typography variant="body-sm" style={{ color: "#EF6461" }}>
+                      ✗
+                    </Typography>
+                    <Typography variant="body-sm" color="secondary" className="flex-1">
+                      {mistake}
+                    </Typography>
+                  </View>
+                ))}
+              </Animated.View>
+            )}
+          </>
         )}
       </ScrollView>
 
-      {/* ── Bottom action bar ── */}
-      {!isCompleted && (
+      {/* ── Bottom action bar (hidden when locked) ── */}
+      {!isCompleted && !isLockedByGate && (
         <Animated.View
           entering={FadeIn.delay(400)}
           className="absolute bottom-0 left-0 right-0 bg-surface border-t border-border px-xl pb-[34px] pt-base"
@@ -410,7 +454,7 @@ export default function ExerciseDetailScreen() {
         visible={showCompletion}
         exerciseTitle={personalised.title}
         xpEarned={xpEarned}
-        dogName={dog?.name ?? plan?.dogName ?? "Your Pup"}
+        dogName={dogName}
         streak={streak}
         onRate={(rating) => {
           // Rating saved via completeExercise already

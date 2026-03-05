@@ -9,6 +9,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { useRouter } from "expo-router";
+import { useSubscription } from "@/hooks/useSubscription";
 import { Typography, Card, Button, Badge } from "@/components/ui";
 import { useHealthStore } from "@/stores/healthStore";
 import { useDogStore } from "@/stores/dogStore";
@@ -27,6 +28,14 @@ import {
 
 export default function HealthNotesScreen() {
   const router = useRouter();
+  const { isPremium } = useSubscription();
+
+  // PRD-07: Redirect free users to paywall
+  React.useEffect(() => {
+    if (!isPremium) {
+      router.replace({ pathname: "/paywall", params: { trigger: "feature_gate_health", source: "health_notes" } });
+    }
+  }, [isPremium]);
   const dog = useDogStore((s) => s.activeDog());
   const plan = useTrainingStore((s) => s.plan);
   const dogName = dog?.name ?? plan?.dogName ?? "Your Pup";
