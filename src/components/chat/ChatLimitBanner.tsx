@@ -7,6 +7,7 @@
 
 import React from "react";
 import { View } from "react-native";
+import { useRouter } from "expo-router";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { Typography, Button, Card } from "@/components/ui";
 
@@ -21,6 +22,8 @@ export function ChatLimitBanner({
   isLimitHit,
   dogName,
 }: ChatLimitBannerProps) {
+  const router = useRouter();
+
   if (isLimitHit) {
     // Full inline paywall
     return (
@@ -46,7 +49,10 @@ export function ChatLimitBanner({
           </Typography>
           <Button
             onPress={() => {
-              // TODO: trigger Superwall paywall
+              router.push({
+                pathname: "/paywall",
+                params: { trigger: "feature_gate_chat", source: "chat_limit" },
+              });
             }}
             variant="primary"
             size="md"

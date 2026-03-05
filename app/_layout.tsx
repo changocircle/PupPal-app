@@ -84,6 +84,14 @@ export default function RootLayout() {
           }}
         />
         <Stack.Screen name="dog/[id]/manage" />
+        <Stack.Screen
+          name="paywall"
+          options={{
+            presentation: "modal",
+            animation: "slide_from_bottom",
+          }}
+        />
+        <Stack.Screen name="settings/subscription" />
       </Stack>
     </QueryClientProvider>
   );

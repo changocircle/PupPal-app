@@ -56,10 +56,13 @@ export function DogSwitcher({ visible, onClose }: DogSwitcherProps) {
         [
           { text: 'Maybe Later', style: 'cancel' },
           {
-            text: 'Learn More',
+            text: 'Upgrade',
             onPress: () => {
               onClose();
-              // Will route to paywall when implemented
+              router.push({
+                pathname: '/paywall',
+                params: { trigger: 'feature_gate_multi_dog', source: 'dog_switcher' },
+              } as any);
             },
           },
         ]
