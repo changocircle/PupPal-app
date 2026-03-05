@@ -34,8 +34,8 @@ function getProviderConfig(): AIProviderConfig | null {
   const apiKey = process.env.EXPO_PUBLIC_KIMI_API_KEY ?? "";
   const baseUrl =
     process.env.EXPO_PUBLIC_KIMI_BASE_URL ??
-    "https://api.moonshot.cn/v1";
-  const model = process.env.EXPO_PUBLIC_KIMI_MODEL ?? "moonshot-v1-8k";
+    "https://api.moonshot.ai/v1";
+  const model = process.env.EXPO_PUBLIC_KIMI_MODEL ?? "kimi-k2.5";
 
   if (!apiKey) return null;
 
