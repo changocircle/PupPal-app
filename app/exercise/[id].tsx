@@ -14,8 +14,10 @@ import Animated, {
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Typography, Card, Button, Badge } from "@/components/ui";
 import { CompletionModal } from "@/components/training";
+import { AchievementUnlock, LevelUpOverlay } from "@/components/gamification";
 import { useTrainingStore } from "@/stores/trainingStore";
 import { useDogStore } from "@/stores/dogStore";
+import { useGamification } from "@/hooks/useGamification";
 import {
   getExerciseById,
   personaliseExercise,
@@ -43,6 +45,9 @@ export default function ExerciseDetailScreen() {
   const skipExercise = useTrainingStore((s) => s.skipExercise);
   const advanceDay = useTrainingStore((s) => s.advanceDay);
   const streak = useTrainingStore((s) => s.streak);
+
+  // Gamification hook
+  const gam = useGamification();
 
   const [showCompletion, setShowCompletion] = useState(false);
   const [xpEarned, setXpEarned] = useState(0);
@@ -119,8 +124,12 @@ export default function ExerciseDetailScreen() {
     const xp = completeExercise(planExercise.id);
     setXpEarned(xp);
     setTimerActive(false);
+
+    // Wire into gamification: earn XP, check achievements, update GBS
+    gam.onExerciseCompleted(planExercise.exerciseId, planExercise.id, xp);
+
     setShowCompletion(true);
-  }, [planExercise, completeExercise]);
+  }, [planExercise, completeExercise, gam.onExerciseCompleted]);
 
   const handleNeedsPractice = useCallback(() => {
     if (!planExercise) return;
@@ -408,6 +417,20 @@ export default function ExerciseDetailScreen() {
         }}
         onDismiss={handleCompletionDismiss}
       />
+
+      {/* ── Gamification celebrations (shown after completion modal) ── */}
+      {!showCompletion && (
+        <>
+          <AchievementUnlock
+            achievement={gam.pendingCelebration}
+            onDismiss={gam.dismissCelebration}
+          />
+          <LevelUpOverlay
+            levelDef={gam.pendingLevelUp}
+            onDismiss={gam.dismissLevelUp}
+          />
+        </>
+      )}
     </SafeAreaView>
   );
 }

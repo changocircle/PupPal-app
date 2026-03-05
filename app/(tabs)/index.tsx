@@ -5,13 +5,21 @@ import Animated, { FadeInDown, FadeIn } from "react-native-reanimated";
 import { useRouter } from "expo-router";
 import { Typography, Card, ProgressBar } from "@/components/ui";
 import { ExerciseCard, DayProgress } from "@/components/training";
+import {
+  GamificationRow,
+  WeeklyChallengeCard,
+  AchievementUnlock,
+  LevelUpOverlay,
+} from "@/components/gamification";
 import { useTrainingStore } from "@/stores/trainingStore";
 import { useDogStore } from "@/stores/dogStore";
 import { useOnboardingStore } from "@/stores/onboardingStore";
+import { useGamification } from "@/hooks/useGamification";
 
 /**
- * Home Screen — "Today's Training"
- * PRD-03 §7: dog name, streak, GBS, today's exercises, week/day progress
+ * Home Screen — "Today's Training" + Gamification
+ * PRD-03 §7 + PRD-04: dog name, gamification row, today's exercises,
+ * weekly challenge, achievement/level-up celebrations
  */
 
 function getGreeting(): string {
@@ -27,20 +35,21 @@ export default function HomeScreen() {
   const onboardingData = useOnboardingStore((s) => s.data);
 
   const plan = useTrainingStore((s) => s.plan);
-  const streak = useTrainingStore((s) => s.streak);
-  const totalXp = useTrainingStore((s) => s.totalXp);
   const generatePlan = useTrainingStore((s) => s.generatePlan);
   const getTodayExercises = useTrainingStore((s) => s.getTodayExercises);
   const getCurrentWeek = useTrainingStore((s) => s.getCurrentWeek);
   const getCurrentDay = useTrainingStore((s) => s.getCurrentDay);
   const getWeekProgress = useTrainingStore((s) => s.getWeekProgress);
 
+  // Gamification hook — XP, level, GBS, streak, achievements
+  const gam = useGamification();
+
   // Auto-generate plan if not yet created and we have onboarding data
   useEffect(() => {
     if (!plan && onboardingData.puppyName) {
       const ageWeeks = onboardingData.ageMonths
         ? onboardingData.ageMonths * 4.3
-        : 12; // default 12 weeks if unknown
+        : 12;
       generatePlan({
         dogName: onboardingData.puppyName,
         breed: onboardingData.breed,
@@ -67,7 +76,6 @@ export default function HomeScreen() {
   const allDoneToday = totalToday > 0 && completedToday === totalToday;
 
   const totalMinutes = todayExercises.reduce((sum, e) => {
-    // Quick estimate from exercise data
     return sum + (e.status !== "completed" ? 5 : 0);
   }, 0);
 
@@ -85,40 +93,43 @@ export default function HomeScreen() {
           <Typography variant="h1">{dogName}'s Training</Typography>
         </Animated.View>
 
-        {/* ── Stats row ── */}
+        {/* ── Gamification Row (replaces old stats row) ── */}
         <Animated.View
           entering={FadeInDown.duration(400).delay(80)}
-          className="flex-row gap-md mb-lg"
+          className="mb-lg"
         >
-          <Card className="flex-1 items-center py-base">
-            <Typography className="text-[20px] mb-[2px]">🔥</Typography>
-            <Typography variant="h3">{streak}</Typography>
-            <Typography variant="caption" color="secondary">
-              Day streak
-            </Typography>
-          </Card>
-          <Card className="flex-1 items-center py-base">
-            <Typography className="text-[20px] mb-[2px]">⭐</Typography>
-            <Typography variant="h3">{totalXp}</Typography>
-            <Typography variant="caption" color="secondary">
-              Total XP
-            </Typography>
-          </Card>
-          <Card className="flex-1 items-center py-base">
-            <Typography className="text-[20px] mb-[2px]">✅</Typography>
-            <Typography variant="h3">
-              {completedToday}/{totalToday}
-            </Typography>
-            <Typography variant="caption" color="secondary">
-              Today
-            </Typography>
-          </Card>
+          <GamificationRow
+            streak={gam.currentStreak}
+            dailyXp={gam.dailyXp}
+            dailyXpTarget={gam.dailyXpTarget}
+            goodBoyScore={gam.goodBoyScore}
+            level={gam.level}
+            levelTitle={gam.levelTitle}
+            totalXp={gam.totalXp}
+          />
         </Animated.View>
+
+        {/* ── Weekly Challenge ── */}
+        {gam.activeChallenge && !gam.activeChallenge.completed && (
+          <Animated.View
+            entering={FadeInDown.duration(400).delay(120)}
+            className="mb-lg"
+          >
+            <WeeklyChallengeCard
+              title={gam.activeChallenge.title}
+              description={gam.activeChallenge.description}
+              progress={gam.activeChallenge.progress}
+              target={gam.activeChallenge.target}
+              xpReward={gam.activeChallenge.xpReward}
+              completed={gam.activeChallenge.completed}
+            />
+          </Animated.View>
+        )}
 
         {/* ── Week/Day context ── */}
         {currentWeek && plan && (
           <Animated.View
-            entering={FadeInDown.duration(400).delay(140)}
+            entering={FadeInDown.duration(400).delay(160)}
             className="mb-lg"
           >
             <Card variant="featured">
@@ -160,7 +171,7 @@ export default function HomeScreen() {
 
         {/* ── Today's Exercises ── */}
         <Animated.View
-          entering={FadeInDown.duration(400).delay(200)}
+          entering={FadeInDown.duration(400).delay(220)}
           className="mb-xl"
         >
           <View className="flex-row items-center justify-between mb-base">
@@ -204,12 +215,34 @@ export default function HomeScreen() {
           )}
         </Animated.View>
 
+        {/* ── Achievements Shortcut ── */}
+        <Animated.View
+          entering={FadeInDown.duration(400).delay(280)}
+          className="mb-lg"
+        >
+          <Pressable
+            onPress={() => router.push("/achievements")}
+          >
+            <Card className="flex-row items-center justify-between">
+              <View className="flex-row items-center gap-md">
+                <Typography className="text-[24px]">🏅</Typography>
+                <View>
+                  <Typography variant="body-medium">Achievements</Typography>
+                  <Typography variant="caption" color="secondary">
+                    {gam.unlockedCount} of {gam.totalAchievements} unlocked
+                  </Typography>
+                </View>
+              </View>
+              <Typography variant="body" color="tertiary">
+                →
+              </Typography>
+            </Card>
+          </Pressable>
+        </Animated.View>
+
         {/* ── Done for the day / Buddy tip ── */}
         {allDoneToday && (
-          <Animated.View
-            entering={FadeIn.delay(300)}
-            className="mb-xl"
-          >
+          <Animated.View entering={FadeIn.delay(300)} className="mb-xl">
             <Card className="flex-row items-start gap-md bg-success-light border-success/20">
               <Typography className="text-[32px]">🐕</Typography>
               <View className="flex-1">
@@ -248,6 +281,16 @@ export default function HomeScreen() {
         {/* Bottom spacer */}
         <View className="h-[40px]" />
       </ScrollView>
+
+      {/* ── Celebration Overlays ── */}
+      <AchievementUnlock
+        achievement={gam.pendingCelebration}
+        onDismiss={gam.dismissCelebration}
+      />
+      <LevelUpOverlay
+        levelDef={gam.pendingLevelUp}
+        onDismiss={gam.dismissLevelUp}
+      />
     </SafeAreaView>
   );
 }

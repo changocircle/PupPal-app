@@ -1,0 +1,1024 @@
+[
+  {
+    "slug": "first-steps",
+    "name": "First Steps",
+    "description": "Complete your very first training exercise. Every journey starts with a single sit!",
+    "category": "training",
+    "icon_name": "paw-print",
+    "xp_bonus": 25,
+    "trigger_type": "exercise_complete",
+    "trigger_config": {
+      "exercise_count": 1
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 1,
+    "buddy_message": "You did it! Your first exercise is done and {dog_name}'s training journey has officially begun! This is going to be amazing.",
+    "share_text": "{dog_name} just completed their first training exercise with PupPal! \ud83d\udc3e",
+    "rarity": "common",
+    "progress_label": "{current}/{target} exercises"
+  },
+  {
+    "slug": "sit-happens",
+    "name": "Sit Happens",
+    "description": "Master the 'Sit' command \u2014 complete all sit exercises with a 4+ average rating.",
+    "category": "training",
+    "icon_name": "target",
+    "xp_bonus": 50,
+    "trigger_type": "skill_mastery",
+    "trigger_config": {
+      "skill": "sit",
+      "category": "basic_commands",
+      "keyword": "sit",
+      "min_avg_rating": 4
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 2,
+    "buddy_message": "Sit Happens \u2014 and {dog_name} NAILED it! That's a rock-solid sit. You two are a great team.",
+    "share_text": "{dog_name} has mastered 'Sit'! \ud83c\udfaf #PupPalTrained",
+    "rarity": "common",
+    "progress_label": "Mastering Sit"
+  },
+  {
+    "slug": "down-to-earth",
+    "name": "Down to Earth",
+    "description": "Master the 'Down' command \u2014 complete all down exercises with a 4+ average rating.",
+    "category": "training",
+    "icon_name": "arrow-down-circle",
+    "xp_bonus": 50,
+    "trigger_type": "skill_mastery",
+    "trigger_config": {
+      "skill": "down",
+      "category": "basic_commands",
+      "keyword": "down",
+      "min_avg_rating": 4
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 3,
+    "buddy_message": "Down to Earth! {dog_name} has officially mastered 'Down.' That's a big deal \u2014 it's one of the hardest basics to teach.",
+    "share_text": "{dog_name} has mastered 'Down'! Getting better every day \ud83d\udcaa #PupPalTrained",
+    "rarity": "common",
+    "progress_label": "Mastering Down"
+  },
+  {
+    "slug": "come-here",
+    "name": "Come Here!",
+    "description": "Master 'Come/Recall' \u2014 the most important safety command your dog will ever learn.",
+    "category": "training",
+    "icon_name": "navigation",
+    "xp_bonus": 50,
+    "trigger_type": "skill_mastery",
+    "trigger_config": {
+      "skill": "recall",
+      "category": "basic_commands",
+      "keyword": "come",
+      "min_avg_rating": 4
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 4,
+    "buddy_message": "Come Here! {dog_name} is coming when called \u2014 that's not just an achievement, it's a potential lifesaver. Seriously impressive.",
+    "share_text": "{dog_name} has mastered Recall! The most important command nailed \u2705 #PupPalTrained",
+    "rarity": "uncommon",
+    "progress_label": "Mastering Recall"
+  },
+  {
+    "slug": "stay-gold",
+    "name": "Stay Gold",
+    "description": "Master 'Stay' with both duration and distance \u2014 patience is a superpower.",
+    "category": "training",
+    "icon_name": "clock",
+    "xp_bonus": 75,
+    "trigger_type": "skill_mastery",
+    "trigger_config": {
+      "skill": "stay",
+      "category": "basic_commands",
+      "keyword": "stay",
+      "min_avg_rating": 4
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 5,
+    "buddy_message": "Stay Gold, {dog_name}! Mastering 'Stay' takes real patience \u2014 from BOTH of you. That's a mark of a well-trained team.",
+    "share_text": "{dog_name} has mastered 'Stay'! Patience pays off \ud83c\udf1f #PupPalTrained",
+    "rarity": "uncommon",
+    "progress_label": "Mastering Stay"
+  },
+  {
+    "slug": "leave-it-legend",
+    "name": "Leave It Legend",
+    "description": "Master 'Leave It' \u2014 your dog can resist temptation like a champion.",
+    "category": "training",
+    "icon_name": "shield",
+    "xp_bonus": 50,
+    "trigger_type": "skill_mastery",
+    "trigger_config": {
+      "skill": "leave_it",
+      "category": "basic_commands",
+      "keyword": "leave",
+      "min_avg_rating": 4
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 6,
+    "buddy_message": "Leave It Legend! {dog_name} can resist temptation now. Do you know how many socks you just saved? Countless.",
+    "share_text": "{dog_name} has mastered 'Leave It'! No more stolen socks \ud83e\udde6 #PupPalTrained",
+    "rarity": "uncommon",
+    "progress_label": "Mastering Leave It"
+  },
+  {
+    "slug": "potty-pro",
+    "name": "Potty Pro",
+    "description": "Complete all potty training exercises. Accidents are officially a thing of the past!",
+    "category": "training",
+    "icon_name": "home",
+    "xp_bonus": 75,
+    "trigger_type": "category_complete",
+    "trigger_config": {
+      "category": "potty_training"
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 7,
+    "buddy_message": "Potty Pro! {dog_name} has graduated from potty training! Your carpets are safe. This is a HUGE milestone.",
+    "share_text": "{dog_name} is officially potty trained! \ud83c\udf89\ud83c\udfe0 #PottyPro #PupPalTrained",
+    "rarity": "uncommon",
+    "progress_label": "{current}/{target} potty exercises"
+  },
+  {
+    "slug": "gentle-mouth",
+    "name": "Gentle Mouth",
+    "description": "Complete the bite inhibition programme. Those shark teeth are under control!",
+    "category": "training",
+    "icon_name": "heart",
+    "xp_bonus": 75,
+    "trigger_type": "category_complete",
+    "trigger_config": {
+      "category": "bite_inhibition"
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 8,
+    "buddy_message": "Gentle Mouth achieved! {dog_name}'s land shark phase is officially over. Your hands and ankles thank you.",
+    "share_text": "{dog_name} has graduated from the land shark phase! Gentle mouth achieved \ud83e\uddb7 #PupPalTrained",
+    "rarity": "uncommon",
+    "progress_label": "{current}/{target} bite inhibition exercises"
+  },
+  {
+    "slug": "leash-boss",
+    "name": "Leash Boss",
+    "description": "Complete the leash skills programme. Walks just got a whole lot more enjoyable.",
+    "category": "training",
+    "icon_name": "link",
+    "xp_bonus": 75,
+    "trigger_type": "category_complete",
+    "trigger_config": {
+      "category": "leash_skills"
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 9,
+    "buddy_message": "Leash Boss! {dog_name} walks like a dream now. No more arm-wrestling on every walk. You two look great out there!",
+    "share_text": "{dog_name} is a Leash Boss! Walks are a joy now \ud83d\udc15\u200d\ud83e\uddba #PupPalTrained",
+    "rarity": "uncommon",
+    "progress_label": "{current}/{target} leash exercises"
+  },
+  {
+    "slug": "crate-escape",
+    "name": "Crate Escape",
+    "description": "Complete the crate training programme. The crate is now a happy place!",
+    "category": "training",
+    "icon_name": "box",
+    "xp_bonus": 75,
+    "trigger_type": "category_complete",
+    "trigger_config": {
+      "category": "crate_training"
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 10,
+    "buddy_message": "Crate Escape! Ironic name, because {dog_name} actually LIKES the crate now. That's the goal \u2014 a happy, safe space.",
+    "share_text": "{dog_name} loves their crate now! Crate training complete \ud83c\udfe0 #PupPalTrained",
+    "rarity": "uncommon",
+    "progress_label": "{current}/{target} crate exercises"
+  },
+  {
+    "slug": "social-butterfly",
+    "name": "Social Butterfly",
+    "description": "Complete the socialisation programme. Your pup is confident and friendly with the world!",
+    "category": "training",
+    "icon_name": "users",
+    "xp_bonus": 100,
+    "trigger_type": "category_complete",
+    "trigger_config": {
+      "category": "socialization"
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 11,
+    "buddy_message": "Social Butterfly! {dog_name} is confident, friendly, and ready for anything the world throws at them. This is one of the most important things you've done.",
+    "share_text": "{dog_name} is a Social Butterfly! Confident and friendly everywhere \ud83e\udd8b #PupPalTrained",
+    "rarity": "rare",
+    "progress_label": "{current}/{target} socialisation exercises"
+  },
+  {
+    "slug": "real-world-ready",
+    "name": "Real World Ready",
+    "description": "Complete all real-world exercises. Your pup can handle caf\u00e9s, vets, and beyond!",
+    "category": "training",
+    "icon_name": "globe",
+    "xp_bonus": 100,
+    "trigger_type": "category_complete",
+    "trigger_config": {
+      "category": "real_world"
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 12,
+    "buddy_message": "Real World Ready! {dog_name} can handle the real world \u2014 vet visits, caf\u00e9s, crowds, you name it. You've built a truly well-rounded companion.",
+    "share_text": "{dog_name} is Real World Ready! From vet visits to caf\u00e9 vibes \ud83c\udf0d #PupPalTrained",
+    "rarity": "rare",
+    "progress_label": "{current}/{target} real-world exercises"
+  },
+  {
+    "slug": "good-boy-graduate",
+    "name": "Good Boy Graduate",
+    "description": "Complete the full 12-week training plan. This is the big one!",
+    "category": "training",
+    "icon_name": "award",
+    "xp_bonus": 500,
+    "trigger_type": "plan_complete",
+    "trigger_config": {
+      "plan_completion": true
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 13,
+    "buddy_message": "GOOD BOY GRADUATE! \ud83c\udf93 {dog_name} has completed the entire 12-week training plan! I'm so proud of both of you. This is an incredible achievement \u2014 you've built a foundation that will last a lifetime.",
+    "share_text": "\ud83c\udf93 {dog_name} just GRADUATED from PupPal's 12-week training plan! So proud! #GoodBoyGraduate #PupPalTrained",
+    "rarity": "epic",
+    "progress_label": "Week {current}/{target}"
+  },
+  {
+    "slug": "getting-started",
+    "name": "Getting Started",
+    "description": "Train 3 days in a row. Consistency is the secret to great training!",
+    "category": "streak",
+    "icon_name": "flame",
+    "xp_bonus": 25,
+    "trigger_type": "streak_length",
+    "trigger_config": {
+      "streak_days": 3
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 14,
+    "buddy_message": "3 days in a row! Getting Started \u2014 you're building a habit! {dog_name} can feel the consistency already.",
+    "share_text": "3-day training streak with {dog_name}! Just getting started \ud83d\udd25 #PupPalStreak",
+    "rarity": "common",
+    "progress_label": "{current}/3 days"
+  },
+  {
+    "slug": "one-week-wonder",
+    "name": "One Week Wonder",
+    "description": "Maintain a 7-day training streak. A full week of dedication!",
+    "category": "streak",
+    "icon_name": "flame",
+    "xp_bonus": 50,
+    "trigger_type": "streak_length",
+    "trigger_config": {
+      "streak_days": 7
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 15,
+    "buddy_message": "One Week Wonder! 7 days straight! Did you know it takes about 21 days to form a habit? You're a third of the way there!",
+    "share_text": "7-day training streak! One Week Wonder \ud83d\udd25 {dog_name} and I are on a roll! #PupPalStreak",
+    "rarity": "common",
+    "progress_label": "{current}/7 days"
+  },
+  {
+    "slug": "two-week-warrior",
+    "name": "Two Week Warrior",
+    "description": "14 days of consecutive training. You're building a real habit now!",
+    "category": "streak",
+    "icon_name": "flame",
+    "xp_bonus": 75,
+    "trigger_type": "streak_length",
+    "trigger_config": {
+      "streak_days": 14
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 16,
+    "buddy_message": "Two Week Warrior! 14 days! {dog_name} is learning that training time is the BEST time. This consistency is paying off big time.",
+    "share_text": "14-day training streak! Two Week Warrior \ud83d\udd25\ud83d\udd25 #PupPalStreak",
+    "rarity": "uncommon",
+    "progress_label": "{current}/14 days"
+  },
+  {
+    "slug": "monthly-master",
+    "name": "Monthly Master",
+    "description": "30 days of consecutive training. A full month of dedication \u2014 incredible!",
+    "category": "streak",
+    "icon_name": "flame",
+    "xp_bonus": 150,
+    "trigger_type": "streak_length",
+    "trigger_config": {
+      "streak_days": 30
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 17,
+    "buddy_message": "Monthly Master! 30 DAYS! You and {dog_name} have trained every single day for a month. That's not just impressive \u2014 that's transformative.",
+    "share_text": "\ud83d\udd25 30-day training streak! Monthly Master! {dog_name} and I haven't missed a day! #PupPalStreak",
+    "rarity": "rare",
+    "progress_label": "{current}/30 days"
+  },
+  {
+    "slug": "unstoppable",
+    "name": "Unstoppable",
+    "description": "60 days of consecutive training. You're in rare company!",
+    "category": "streak",
+    "icon_name": "zap",
+    "xp_bonus": 300,
+    "trigger_type": "streak_length",
+    "trigger_config": {
+      "streak_days": 60
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 18,
+    "buddy_message": "UNSTOPPABLE! 60 days! Fewer than 10% of PupPal users reach this. {dog_name} is one of the best-trained pups in the pack.",
+    "share_text": "\ud83d\udd25\ud83d\udd25 60-day streak! UNSTOPPABLE! {dog_name} and I are in the top 10% of PupPal trainers! #PupPalStreak",
+    "rarity": "rare",
+    "progress_label": "{current}/60 days"
+  },
+  {
+    "slug": "legend",
+    "name": "Legend",
+    "description": "90 days of consecutive training. You are a legend. Full stop.",
+    "category": "streak",
+    "icon_name": "star",
+    "xp_bonus": 500,
+    "trigger_type": "streak_length",
+    "trigger_config": {
+      "streak_days": 90
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 19,
+    "buddy_message": "LEGEND! 90 days! Three months without missing a day. I'm genuinely in awe. {dog_name} is living their best, most well-trained life because of you.",
+    "share_text": "\ud83c\udfc6 90-day streak! LEGEND status! {dog_name} and I haven't missed a day in 3 months! #PupPalLegend",
+    "rarity": "epic",
+    "progress_label": "{current}/90 days"
+  },
+  {
+    "slug": "dedicated",
+    "name": "Dedicated",
+    "description": "180 days of consecutive training. Half a year of daily dedication.",
+    "category": "streak",
+    "icon_name": "trophy",
+    "xp_bonus": 750,
+    "trigger_type": "streak_length",
+    "trigger_config": {
+      "streak_days": 180
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 20,
+    "buddy_message": "DEDICATED! 180 days \u2014 half a year! You've trained {dog_name} every single day for six months. This is extraordinary commitment.",
+    "share_text": "\ud83c\udfc6\ud83d\udd25 180-day streak! SIX MONTHS of daily training with {dog_name}! #PupPalDedicated",
+    "rarity": "legendary",
+    "progress_label": "{current}/180 days"
+  },
+  {
+    "slug": "puppal-for-life",
+    "name": "PupPal for Life",
+    "description": "365 days of consecutive training. A full year. You're a PupPal legend forever.",
+    "category": "streak",
+    "icon_name": "crown",
+    "xp_bonus": 1000,
+    "trigger_type": "streak_length",
+    "trigger_config": {
+      "streak_days": 365
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 21,
+    "buddy_message": "PUPPAL FOR LIFE! 365 DAYS! One full year of daily training. I honestly don't have words big enough. You and {dog_name} have achieved something truly rare and beautiful.",
+    "share_text": "\ud83d\udc51 365-DAY STREAK! A FULL YEAR of daily training with {dog_name}! PupPal for Life! #PupPalForLife",
+    "rarity": "legendary",
+    "progress_label": "{current}/365 days"
+  },
+  {
+    "slug": "first-points",
+    "name": "First Points",
+    "description": "Good Boy Score reaches 10. The journey to 100 has begun!",
+    "category": "score",
+    "icon_name": "trending-up",
+    "xp_bonus": 25,
+    "trigger_type": "score_threshold",
+    "trigger_config": {
+      "min_score": 10
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 22,
+    "buddy_message": "First Points! {dog_name}'s Good Boy Score just hit 10! We're on our way up!",
+    "share_text": "{dog_name}'s Good Boy Score just hit 10! The journey begins \ud83d\udcc8 #GoodBoyScore",
+    "rarity": "common",
+    "progress_label": "GBS: {current}/10"
+  },
+  {
+    "slug": "making-progress",
+    "name": "Making Progress",
+    "description": "Good Boy Score reaches 25. Real, visible progress!",
+    "category": "score",
+    "icon_name": "trending-up",
+    "xp_bonus": 50,
+    "trigger_type": "score_threshold",
+    "trigger_config": {
+      "min_score": 25
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 23,
+    "buddy_message": "Making Progress! {dog_name}'s GBS is 25. If you can see the difference at home, imagine where you'll be at 50!",
+    "share_text": "{dog_name}'s Good Boy Score is 25! Making real progress \ud83d\udcc8 #GoodBoyScore",
+    "rarity": "common",
+    "progress_label": "GBS: {current}/25"
+  },
+  {
+    "slug": "halfway-there",
+    "name": "Halfway There",
+    "description": "Good Boy Score reaches 50. You're halfway to a perfect pup!",
+    "category": "score",
+    "icon_name": "bar-chart-2",
+    "xp_bonus": 100,
+    "trigger_type": "score_threshold",
+    "trigger_config": {
+      "min_score": 50
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 24,
+    "buddy_message": "Halfway There! {dog_name}'s GBS just hit 50! Half the journey done, and the best is yet to come.",
+    "share_text": "{dog_name}'s Good Boy Score is 50! Halfway to perfection \ud83c\udfaf #GoodBoyScore",
+    "rarity": "uncommon",
+    "progress_label": "GBS: {current}/50"
+  },
+  {
+    "slug": "honor-roll",
+    "name": "Honor Roll",
+    "description": "Good Boy Score reaches 75. Your dog is in the top tier!",
+    "category": "score",
+    "icon_name": "award",
+    "xp_bonus": 200,
+    "trigger_type": "score_threshold",
+    "trigger_config": {
+      "min_score": 75
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 25,
+    "buddy_message": "Honor Roll! {dog_name}'s GBS is 75! That's seriously impressive. You're in elite territory now.",
+    "share_text": "{dog_name} made the Honor Roll! Good Boy Score: 75! \ud83c\udfc5 #GoodBoyScore",
+    "rarity": "rare",
+    "progress_label": "GBS: {current}/75"
+  },
+  {
+    "slug": "perfect-pup",
+    "name": "Perfect Pup",
+    "description": "Good Boy Score reaches 90. Near-perfection \u2014 extraordinary work!",
+    "category": "score",
+    "icon_name": "star",
+    "xp_bonus": 500,
+    "trigger_type": "score_threshold",
+    "trigger_config": {
+      "min_score": 90
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 26,
+    "buddy_message": "Perfect Pup! {dog_name}'s GBS is 90! This is the top 1% territory. You've built something truly special together.",
+    "share_text": "\ud83c\udf1f {dog_name} is a Perfect Pup! Good Boy Score: 90! #PerfectPup #GoodBoyScore",
+    "rarity": "epic",
+    "progress_label": "GBS: {current}/90"
+  },
+  {
+    "slug": "good-boy-champion",
+    "name": "Good Boy Champion",
+    "description": "Good Boy Score reaches 100. The absolute pinnacle. Perfection achieved.",
+    "category": "score",
+    "icon_name": "crown",
+    "xp_bonus": 1000,
+    "trigger_type": "score_threshold",
+    "trigger_config": {
+      "min_score": 100
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 27,
+    "buddy_message": "GOOD BOY CHAMPION! {dog_name}'s GBS is 100! PERFECT SCORE! This is the rarest achievement in PupPal. You are, without question, an extraordinary dog trainer.",
+    "share_text": "\ud83d\udc51 PERFECT 100 Good Boy Score! {dog_name} is a GOOD BOY CHAMPION! #GoodBoyChampion",
+    "rarity": "legendary",
+    "progress_label": "GBS: {current}/100"
+  },
+  {
+    "slug": "chat-with-buddy",
+    "name": "Chat with Buddy",
+    "description": "Send your first message to Buddy. He's been waiting to meet you!",
+    "category": "engagement",
+    "icon_name": "message-circle",
+    "xp_bonus": 10,
+    "trigger_type": "count_threshold",
+    "trigger_config": {
+      "action": "chat_message",
+      "count": 1
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 28,
+    "buddy_message": "You talked to me! I've been looking forward to this. Ask me anything about {dog_name}'s training \u2014 I'm here 24/7!",
+    "share_text": "Just started chatting with Buddy, my AI training mentor on PupPal! \ud83d\udcac #PupPal",
+    "rarity": "common",
+    "progress_label": "{current}/1 message"
+  },
+  {
+    "slug": "shutterbug",
+    "name": "Shutterbug",
+    "description": "Upload 10 progress photos. Your pup's growth journal is filling up!",
+    "category": "engagement",
+    "icon_name": "camera",
+    "xp_bonus": 25,
+    "trigger_type": "count_threshold",
+    "trigger_config": {
+      "action": "photo_upload",
+      "count": 10
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 29,
+    "buddy_message": "Shutterbug! 10 photos captured! {dog_name}'s growth journal is looking beautiful. You'll love looking back at these.",
+    "share_text": "10 progress photos of {dog_name} in the PupPal growth journal! \ud83d\udcf8 #PupPalJournal",
+    "rarity": "common",
+    "progress_label": "{current}/10 photos"
+  },
+  {
+    "slug": "journaler",
+    "name": "Journaler",
+    "description": "Add notes to 10 exercises. Your future self will thank you for these details!",
+    "category": "engagement",
+    "icon_name": "edit-3",
+    "xp_bonus": 25,
+    "trigger_type": "count_threshold",
+    "trigger_config": {
+      "action": "exercise_note",
+      "count": 10
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 30,
+    "buddy_message": "Journaler! 10 training notes logged. These details help me give you better advice AND they're a wonderful record of {dog_name}'s progress.",
+    "share_text": "Keeping detailed training notes for {dog_name} on PupPal! \ud83d\udcdd #PupPalJournal",
+    "rarity": "common",
+    "progress_label": "{current}/10 notes"
+  },
+  {
+    "slug": "feedback-friend",
+    "name": "Feedback Friend",
+    "description": "Rate 20 exercises. Your feedback makes {dog_name}'s plan smarter!",
+    "category": "engagement",
+    "icon_name": "thumbs-up",
+    "xp_bonus": 25,
+    "trigger_type": "count_threshold",
+    "trigger_config": {
+      "action": "exercise_rating",
+      "count": 20
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 31,
+    "buddy_message": "Feedback Friend! 20 exercises rated. This data helps me adapt {dog_name}'s plan to be even more effective. Keep it coming!",
+    "share_text": "Helping PupPal learn what works best for {dog_name}! 20 exercises rated \ud83d\udc4d #PupPal",
+    "rarity": "common",
+    "progress_label": "{current}/20 ratings"
+  },
+  {
+    "slug": "sharing-is-caring",
+    "name": "Sharing is Caring",
+    "description": "Share a milestone or achievement on social media for the first time.",
+    "category": "engagement",
+    "icon_name": "share-2",
+    "xp_bonus": 25,
+    "trigger_type": "count_threshold",
+    "trigger_config": {
+      "action": "social_share",
+      "count": 1
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 32,
+    "buddy_message": "Sharing is Caring! You shared {dog_name}'s progress with the world. Your friends are going to be SO impressed.",
+    "share_text": "Sharing {dog_name}'s training journey with PupPal! \ud83d\udc3e #PupPal",
+    "rarity": "common",
+    "progress_label": "{current}/1 share"
+  },
+  {
+    "slug": "refer-a-friend",
+    "name": "Refer a Friend",
+    "description": "Your first friend signed up using your referral link!",
+    "category": "engagement",
+    "icon_name": "user-plus",
+    "xp_bonus": 100,
+    "trigger_type": "referral",
+    "trigger_config": {
+      "referral_count": 1
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 33,
+    "buddy_message": "Refer a Friend! Someone signed up because of you! You're helping another pup get the best start in life. That's awesome.",
+    "share_text": "Just referred a friend to PupPal! Spreading the puppy training love \ud83d\udc3e #PupPalReferral",
+    "rarity": "uncommon",
+    "progress_label": "{current}/1 referral"
+  },
+  {
+    "slug": "pack-leader",
+    "name": "Pack Leader",
+    "description": "Refer 5 friends to PupPal. You're building a pack!",
+    "category": "engagement",
+    "icon_name": "users",
+    "xp_bonus": 250,
+    "trigger_type": "referral",
+    "trigger_config": {
+      "referral_count": 5
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 34,
+    "buddy_message": "Pack Leader! 5 friends have joined PupPal because of you! You're not just training {dog_name} \u2014 you're building a community.",
+    "share_text": "Pack Leader! 5 friends joined PupPal through my referral! \ud83d\udc3a #PupPalPackLeader",
+    "rarity": "rare",
+    "progress_label": "{current}/5 referrals"
+  },
+  {
+    "slug": "challenger",
+    "name": "Challenger",
+    "description": "Complete your first weekly challenge. Bonus missions accepted!",
+    "category": "challenge",
+    "icon_name": "flag",
+    "xp_bonus": 25,
+    "trigger_type": "count_threshold",
+    "trigger_config": {
+      "action": "challenge_complete",
+      "count": 1
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 35,
+    "buddy_message": "Challenger! First weekly challenge DONE! These bonus challenges keep training fresh and fun for {dog_name}.",
+    "share_text": "First weekly challenge completed with {dog_name}! \ud83c\udfc1 #PupPalChallenge",
+    "rarity": "common",
+    "progress_label": "{current}/1 challenge"
+  },
+  {
+    "slug": "challenge-streak",
+    "name": "Challenge Streak",
+    "description": "Complete 4 weekly challenges in a row. A full month of bonus missions!",
+    "category": "challenge",
+    "icon_name": "repeat",
+    "xp_bonus": 100,
+    "trigger_type": "count_threshold",
+    "trigger_config": {
+      "action": "challenge_streak",
+      "count": 4
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 36,
+    "buddy_message": "Challenge Streak! 4 weekly challenges in a row! You never miss a bonus mission. {dog_name} is getting extra-well-rounded training.",
+    "share_text": "4 weekly challenges in a row! Challenge Streak with {dog_name}! \ud83d\udd04\ud83c\udfc1 #PupPalChallenge",
+    "rarity": "uncommon",
+    "progress_label": "{current}/4 consecutive"
+  },
+  {
+    "slug": "challenge-champion",
+    "name": "Challenge Champion",
+    "description": "Complete 12 weekly challenges. Three months of bonus mastery!",
+    "category": "challenge",
+    "icon_name": "trophy",
+    "xp_bonus": 250,
+    "trigger_type": "count_threshold",
+    "trigger_config": {
+      "action": "challenge_complete",
+      "count": 12
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 37,
+    "buddy_message": "Challenge Champion! 12 weekly challenges conquered! That's 3 months of going above and beyond. {dog_name} is one of the best-trained pups in PupPal.",
+    "share_text": "\ud83c\udfc6 Challenge Champion! 12 weekly challenges completed with {dog_name}! #PupPalChampion",
+    "rarity": "rare",
+    "progress_label": "{current}/12 challenges"
+  },
+  {
+    "slug": "first-trick",
+    "name": "First Trick",
+    "description": "Teach your dog their first trick. The fun stuff begins!",
+    "category": "tricks",
+    "icon_name": "star",
+    "xp_bonus": 25,
+    "trigger_type": "count_threshold",
+    "trigger_config": {
+      "action": "trick_complete",
+      "count": 1
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 38,
+    "buddy_message": "First Trick! {dog_name} just learned their first trick! The fun side of training has officially begun. What should we learn next?",
+    "share_text": "{dog_name} just learned their first trick! \ud83c\udf1f #PupPalTricks",
+    "rarity": "common",
+    "progress_label": "{current}/1 trick"
+  },
+  {
+    "slug": "trick-master",
+    "name": "Trick Master",
+    "description": "Master 10 tricks. Your dog is the life of the party!",
+    "category": "tricks",
+    "icon_name": "award",
+    "xp_bonus": 150,
+    "trigger_type": "count_threshold",
+    "trigger_config": {
+      "action": "trick_mastered",
+      "count": 10
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 39,
+    "buddy_message": "Trick Master! {dog_name} knows 10 tricks! You two must be amazing at parties. Seriously impressive repertoire!",
+    "share_text": "{dog_name} knows 10 tricks! Trick Master unlocked! \ud83c\udfaa #PupPalTricks",
+    "rarity": "rare",
+    "progress_label": "{current}/10 tricks"
+  },
+  {
+    "slug": "trick-pack-complete",
+    "name": "Pack Complete",
+    "description": "Complete all tricks in a single trick pack.",
+    "category": "tricks",
+    "icon_name": "package",
+    "xp_bonus": 75,
+    "trigger_type": "count_threshold",
+    "trigger_config": {
+      "action": "trick_pack_complete",
+      "count": 1
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 40,
+    "buddy_message": "Pack Complete! {dog_name} has mastered an entire trick pack! That's dedication. Ready for the next one?",
+    "share_text": "{dog_name} completed a full trick pack on PupPal! \ud83d\udce6\ud83c\udf1f #PupPalTricks",
+    "rarity": "uncommon",
+    "progress_label": "{current}/1 pack"
+  },
+  {
+    "slug": "all-packs-complete",
+    "name": "Trick Legend",
+    "description": "Complete ALL trick packs. Your dog knows every trick in the book!",
+    "category": "tricks",
+    "icon_name": "crown",
+    "xp_bonus": 500,
+    "trigger_type": "count_threshold",
+    "trigger_config": {
+      "action": "trick_pack_complete",
+      "count": 6
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 41,
+    "buddy_message": "TRICK LEGEND! {dog_name} has completed EVERY trick pack! All of them! You two are the most impressive duo I've ever worked with.",
+    "share_text": "\ud83d\udc51 {dog_name} has mastered ALL trick packs on PupPal! TRICK LEGEND! #TrickLegend",
+    "rarity": "legendary",
+    "progress_label": "{current}/6 packs"
+  },
+  {
+    "slug": "breed-whisperer",
+    "name": "{breed} Whisperer",
+    "description": "Complete 50% of {dog_name}'s training plan. You're really getting the hang of training a {breed}!",
+    "category": "breed",
+    "icon_name": "book-open",
+    "xp_bonus": 100,
+    "trigger_type": "plan_progress",
+    "trigger_config": {
+      "plan_percent": 50
+    },
+    "is_breed_specific": true,
+    "breed_template": "{breed} Whisperer",
+    "sort_order": 42,
+    "buddy_message": "{breed} Whisperer! You're halfway through {dog_name}'s plan. You really understand what makes a {breed} tick.",
+    "share_text": "Halfway through {dog_name}'s plan! I'm officially a {breed} Whisperer \ud83d\udc3e #PupPalTrained",
+    "rarity": "uncommon",
+    "progress_label": "{current}% complete"
+  },
+  {
+    "slug": "breed-expert",
+    "name": "{breed} Expert",
+    "description": "Complete {dog_name}'s full training plan. You're a certified {breed} expert!",
+    "category": "breed",
+    "icon_name": "award",
+    "xp_bonus": 200,
+    "trigger_type": "plan_complete",
+    "trigger_config": {
+      "plan_completion": true
+    },
+    "is_breed_specific": true,
+    "breed_template": "{breed} Expert",
+    "sort_order": 43,
+    "buddy_message": "{breed} Expert! You've completed {dog_name}'s entire training plan. You know {breed}s inside and out now.",
+    "share_text": "\ud83c\udf93 Certified {breed} Expert! Completed {dog_name}'s full PupPal training plan! #PupPalExpert",
+    "rarity": "epic",
+    "progress_label": "{current}% complete"
+  },
+  {
+    "slug": "top-breed",
+    "name": "Top {breed}",
+    "description": "Your Good Boy Score is in the top 25% of all {breed}s on PupPal!",
+    "category": "breed",
+    "icon_name": "trending-up",
+    "xp_bonus": 150,
+    "trigger_type": "breed_percentile",
+    "trigger_config": {
+      "percentile": 75
+    },
+    "is_breed_specific": true,
+    "breed_template": "Top {breed}",
+    "sort_order": 44,
+    "buddy_message": "Top {breed}! {dog_name}'s Good Boy Score is in the top 25% of ALL {breed}s on PupPal! You two are outstanding.",
+    "share_text": "\ud83c\udfc6 {dog_name} is in the top 25% of {breed}s on PupPal! Top {breed}! #PupPalTopBreed",
+    "rarity": "rare",
+    "progress_label": "Top {current}%"
+  },
+  {
+    "slug": "first-checkup",
+    "name": "First Checkup",
+    "description": "Log your first vet visit. Keeping {dog_name} healthy!",
+    "category": "health",
+    "icon_name": "activity",
+    "xp_bonus": 25,
+    "trigger_type": "count_threshold",
+    "trigger_config": {
+      "action": "vet_visit",
+      "count": 1
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 45,
+    "buddy_message": "First vet visit logged! Keeping track of {dog_name}'s health is just as important as training. Great job!",
+    "share_text": "{dog_name} unlocked 'First Checkup'! Healthy pup, happy life \ud83e\ude7a #PupPal",
+    "rarity": "common",
+    "progress_label": "{current}/1"
+  },
+  {
+    "slug": "healthy-start",
+    "name": "Healthy Start",
+    "description": "Log your first health event \u2014 vaccination, vet visit, or weight entry.",
+    "category": "health",
+    "icon_name": "heart",
+    "xp_bonus": 10,
+    "trigger_type": "count_threshold",
+    "trigger_config": {
+      "action": "health_event",
+      "count": 1
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 46,
+    "buddy_message": "Healthy Start! You logged {dog_name}'s first health event. Tracking health is just as important as training. Great job!",
+    "share_text": "Tracking {dog_name}'s health journey with PupPal! \ud83d\udc9a #PupPalHealth",
+    "rarity": "common",
+    "progress_label": "{current}/1 event"
+  },
+  {
+    "slug": "vaccination-hero",
+    "name": "Vaccination Hero",
+    "description": "Complete all core puppy vaccinations on schedule.",
+    "category": "health",
+    "icon_name": "shield",
+    "xp_bonus": 100,
+    "trigger_type": "count_threshold",
+    "trigger_config": {
+      "action": "core_vaccinations_complete",
+      "count": 1
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 47,
+    "buddy_message": "Vaccination Hero! {dog_name} is fully vaccinated! That's one of the most important things you can do as a pet parent. {dog_name} is protected!",
+    "share_text": "{dog_name} is fully vaccinated! Vaccination Hero \ud83d\udc89\ud83d\udee1\ufe0f #PupPalHealth",
+    "rarity": "uncommon",
+    "progress_label": "Core vaccinations"
+  },
+  {
+    "slug": "health-champion",
+    "name": "Health Champion",
+    "description": "Maintain all vaccinations, 3+ vet visits, and regular weight tracking for 6 months.",
+    "category": "health",
+    "icon_name": "heart",
+    "xp_bonus": 200,
+    "trigger_type": "health_compliance",
+    "trigger_config": {
+      "months": 6,
+      "vaccinations_current": true,
+      "min_vet_visits": 3,
+      "min_weight_entries": 6
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 48,
+    "buddy_message": "Health Champion! 6 months of outstanding health care for {dog_name}. Vaccines current, regular vet visits, weight tracked. You're a model pet parent!",
+    "share_text": "{dog_name} unlocked 'Health Champion'! Healthy pup, happy life \ud83e\ude7a #PupPal",
+    "rarity": "rare",
+    "progress_label": "{current}/6 months"
+  },
+  {
+    "slug": "growth-tracker",
+    "name": "Growth Tracker",
+    "description": "Log 10 weight entries. You're monitoring {dog_name}'s growth beautifully!",
+    "category": "health",
+    "icon_name": "activity",
+    "xp_bonus": 25,
+    "trigger_type": "count_threshold",
+    "trigger_config": {
+      "action": "weight_entry",
+      "count": 10
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 49,
+    "buddy_message": "Growth Tracker! 10 weight entries logged. {dog_name}'s growth chart is looking great. Consistent monitoring catches problems early!",
+    "share_text": "Tracking {dog_name}'s growth journey on PupPal! \ud83d\udcca #PupPalHealth",
+    "rarity": "common",
+    "progress_label": "{current}/10 entries"
+  },
+  {
+    "slug": "night-owl",
+    "name": "Night Owl",
+    "description": "Complete a training exercise after 11 PM. Dedication knows no bedtime!",
+    "category": "secret",
+    "icon_name": "moon",
+    "xp_bonus": 25,
+    "trigger_type": "time_based",
+    "trigger_config": {
+      "after_hour": 23
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 50,
+    "buddy_message": "Night Owl! Training at this hour? {dog_name} is lucky to have such a dedicated human. Now go get some sleep! \ud83c\udf19",
+    "share_text": "Night Owl! Complete a training exercise after 11 PM. Dedication knows no bedtime! #PupPal",
+    "rarity": "common",
+    "progress_label": null
+  },
+  {
+    "slug": "early-bird",
+    "name": "Early Bird",
+    "description": "Complete a training exercise before 6 AM. The early trainer gets the treats!",
+    "category": "secret",
+    "icon_name": "sun",
+    "xp_bonus": 25,
+    "trigger_type": "time_based",
+    "trigger_config": {
+      "before_hour": 6
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 51,
+    "buddy_message": "Early Bird! Training before sunrise? You and {dog_name} are getting a head start on the day! \ud83c\udf05",
+    "share_text": "Early Bird! Complete a training exercise before 6 AM. The early trainer gets the treats! #PupPal",
+    "rarity": "common",
+    "progress_label": null
+  },
+  {
+    "slug": "overachiever",
+    "name": "Overachiever",
+    "description": "Complete 5 exercises in a single day. Above and beyond!",
+    "category": "secret",
+    "icon_name": "zap",
+    "xp_bonus": 50,
+    "trigger_type": "daily_count",
+    "trigger_config": {
+      "exercises_in_day": 5
+    },
+    "is_breed_specific": false,
+    "breed_template": null,
+    "sort_order": 52,
+    "buddy_message": "Overachiever! 5 exercises in one day?! {dog_name} must be tired but happy. What a power session!",
+    "share_text": "Overachiever! Complete 5 exercises in a single day. Above and beyond! #PupPal",
+    "rarity": "uncommon",
+    "progress_label": "{current}/5 today"
+  }
+]
