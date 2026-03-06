@@ -12,6 +12,7 @@
  */
 
 import { useAuthStore } from '@/stores/authStore';
+import { useSettingsStore } from '@/stores/settingsStore';
 import type { SubscriptionStatus } from '@/types/database';
 
 /** Subscription product IDs (PRD-06 §2) */
@@ -54,6 +55,7 @@ export type PremiumFeature = (typeof PREMIUM_FEATURES)[number];
 
 export function useSubscription() {
   const user = useAuthStore((s) => s.user);
+  const devPremiumOverride = useSettingsStore((s) => s.devPremiumOverride);
   const status: SubscriptionStatus = user?.subscription_status ?? 'free';
 
   // Primary check: subscription status
@@ -63,7 +65,8 @@ export function useSubscription() {
   const isCancelled = status === 'cancelled';
 
   // Combined premium check (PRD-07 §2)
-  const isPremium = isActive || isTrial;
+  // devPremiumOverride: local toggle for testing without Supabase/RevenueCat
+  const isPremium = devPremiumOverride || isActive || isTrial;
 
   // Trial dates
   const trialStartDate = user?.trial_start_date ?? null;

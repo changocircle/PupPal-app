@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import { View, ScrollView, Pressable, Alert, Linking } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
@@ -82,6 +82,30 @@ function ProfileScreenContent() {
 
   // Subscription
   const { isPremium } = useSubscription();
+
+  // Dev premium toggle: 5 taps on version text
+  const devPremiumOverride = useSettingsStore((s) => s.devPremiumOverride);
+  const toggleDevPremium = useSettingsStore((s) => s.toggleDevPremium);
+  const tapCountRef = useRef(0);
+  const tapTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const handleVersionTap = useCallback(() => {
+    tapCountRef.current += 1;
+    if (tapTimerRef.current) clearTimeout(tapTimerRef.current);
+    if (tapCountRef.current >= 5) {
+      tapCountRef.current = 0;
+      toggleDevPremium();
+      Alert.alert(
+        "Dev Mode",
+        devPremiumOverride
+          ? "Premium override OFF. You are now a free user."
+          : "Premium override ON. All premium features unlocked.",
+      );
+    } else {
+      tapTimerRef.current = setTimeout(() => {
+        tapCountRef.current = 0;
+      }, 1500);
+    }
+  }, [devPremiumOverride, toggleDevPremium]);
 
   // Settings
   const userName = useSettingsStore((s) => s.userName);
@@ -503,12 +527,23 @@ function ProfileScreenContent() {
           </View>
         </Animated.View>
 
-        {/* Version */}
-        <View className="px-xl mb-4xl items-center">
+        {/* Version — 5 taps to toggle dev premium */}
+        <Pressable
+          onPress={handleVersionTap}
+          className="px-xl mb-4xl items-center"
+        >
           <Typography variant="caption" color="tertiary">
             PupPal v1.0.0 · Made with 🐾
           </Typography>
-        </View>
+          {devPremiumOverride ? (
+            <Typography
+              variant="caption"
+              style={{ color: "#FF6B5C", marginTop: 4 }}
+            >
+              ⚡ Premium Override Active
+            </Typography>
+          ) : null}
+        </Pressable>
       </ScrollView>
     </SafeAreaView>
   );
