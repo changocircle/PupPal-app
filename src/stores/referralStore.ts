@@ -44,6 +44,9 @@ export interface ReferralState {
   incrementShareCount: () => void;
   getReferralLink: () => string;
   getShareMessage: (dogName: string) => string;
+
+  /** Reset all referral data (call on sign-out) */
+  resetReferral: () => void;
 }
 
 export const useReferralStore = create<ReferralState>()(
@@ -123,6 +126,18 @@ export const useReferralStore = create<ReferralState>()(
       getShareMessage: (dogName: string) => {
         const link = get().getReferralLink();
         return `🐾 I've been training ${dogName} with PupPal and it's amazing! Join us — ${link}`;
+      },
+
+      resetReferral: () => {
+        set({
+          referralCode: '',
+          customCode: null,
+          referredByCode: null,
+          referrals: [],
+          totalReferrals: 0,
+          totalXpFromReferrals: 0,
+          totalSharesSent: 0,
+        });
       },
     }),
     {
