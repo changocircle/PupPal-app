@@ -67,7 +67,7 @@ export default function ReferralScreen() {
         });
       }
     } catch (error) {
-      console.error('Share failed:', error);
+      if (__DEV__) console.error('Share failed:', error);
     }
   }, [dogName, getShareMessage, incrementShareCount]);
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { View, Alert } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
@@ -51,7 +51,11 @@ export default function WelcomeScreen() {
             label="Already have an account? Sign in"
             size="sm"
             onPress={() => {
-              // TODO: Navigate to auth sign-in flow
+              Alert.alert(
+                "Sign In",
+                "Sign in is coming soon! For now, start fresh and we'll get your pup set up in no time.",
+                [{ text: "OK" }]
+              );
             }}
           />
         </Animated.View>

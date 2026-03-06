@@ -117,7 +117,7 @@ export const useReferralStore = create<ReferralState>()(
       getReferralLink: () => {
         const { customCode, referralCode } = get();
         const code = customCode ?? referralCode;
-        return `https://puppal.app/r/${code}`;
+        return `https://puppal.dog/r/${code}`;
       },
 
       getShareMessage: (dogName: string) => {

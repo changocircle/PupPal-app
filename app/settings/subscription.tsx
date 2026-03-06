@@ -54,7 +54,7 @@ export default function SubscriptionScreen() {
     // In production: await Purchases.restorePurchases()
     Alert.alert(
       'Restore Purchases',
-      'No previous purchases found. If you believe this is an error, please contact support@puppal.app.',
+      'No previous purchases found. If you believe this is an error, please contact support@puppal.dog.',
       [{ text: 'OK' }]
     );
   };

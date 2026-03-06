@@ -107,12 +107,18 @@ export function useFeatureGate() {
         }
 
         case 'exercise_access': {
-          // Check if the exercise belongs to Week 1
-          // Caller should pass weekNumber in options if known
+          // Allow Week 1 exercises for free users; gate Week 2+
+          const weekNumber = (options as any)?.weekNumber
+            ?? useTrainingStore.getState().plan?.currentWeek
+            ?? 1;
+          if (weekNumber <= 1) {
+            return { allowed: true };
+          }
           return {
             allowed: false,
             reason: 'premium_required',
             trigger: 'feature_gate_week2',
+            context: { weekNumber },
           };
         }
 

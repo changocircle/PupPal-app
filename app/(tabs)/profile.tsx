@@ -404,7 +404,7 @@ function ProfileScreenContent() {
             {
               icon: "💬",
               label: "Contact Support",
-              onPress: () => Linking.openURL("mailto:support@puppal.app"),
+              onPress: () => Linking.openURL("mailto:support@puppal.dog"),
             },
             {
               icon: "⭐",
@@ -415,7 +415,7 @@ function ProfileScreenContent() {
             {
               icon: "💡",
               label: "Share Feedback",
-              onPress: () => Linking.openURL("mailto:feedback@puppal.app"),
+              onPress: () => Linking.openURL("mailto:feedback@puppal.dog"),
             },
           ].map((item) => (
             <Pressable key={item.label} onPress={item.onPress}>
@@ -452,16 +452,16 @@ function ProfileScreenContent() {
               icon: "🔒",
               label: "Privacy Policy",
               onPress: () =>
-                Linking.openURL("https://puppal.app/privacy").catch(() =>
-                  Alert.alert("Privacy Policy", "Visit puppal.app/privacy")
+                Linking.openURL("https://puppal.dog/privacy").catch(() =>
+                  Alert.alert("Privacy Policy", "Visit puppal.dog/privacy")
                 ),
             },
             {
               icon: "📄",
               label: "Terms of Service",
               onPress: () =>
-                Linking.openURL("https://puppal.app/terms").catch(() =>
-                  Alert.alert("Terms", "Visit puppal.app/terms")
+                Linking.openURL("https://puppal.dog/terms").catch(() =>
+                  Alert.alert("Terms", "Visit puppal.dog/terms")
                 ),
             },
           ].map((item) => (
