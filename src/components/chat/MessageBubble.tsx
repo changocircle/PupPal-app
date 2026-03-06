@@ -9,6 +9,7 @@ import React from "react";
 import { View, Text, Pressable } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { Typography } from "@/components/ui";
+import { MarkdownText } from "./MarkdownText";
 import type { ChatMessage } from "@/types/chat";
 
 interface MessageBubbleProps {
@@ -61,13 +62,21 @@ export function MessageBubble({
             : undefined
         }
       >
-        <Typography
-          variant={isAssistant ? "body-lg" : "body"}
-          color={isUser ? "inverse" : "primary"}
-          style={isUser ? { color: "#FFFFFF" } : undefined}
-        >
-          {message.content}
-        </Typography>
+        {isAssistant ? (
+          <MarkdownText
+            style={{ fontSize: 18, lineHeight: 26 }}
+          >
+            {message.content}
+          </MarkdownText>
+        ) : (
+          <Typography
+            variant="body"
+            color="inverse"
+            style={{ color: "#FFFFFF" }}
+          >
+            {message.content}
+          </Typography>
+        )}
 
         {/* Streaming cursor, use pipe char (▊ doesn't render on all devices) */}
         {message.isStreaming && message.content.length > 0 && (
