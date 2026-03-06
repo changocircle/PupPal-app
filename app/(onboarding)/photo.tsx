@@ -126,7 +126,7 @@ export default function PhotoScreen() {
               {data.photoUri ? (
                 <Image
                   source={{ uri: data.photoUri }}
-                  className="w-full h-full"
+                  style={{ width: 200, height: 200 }}
                   contentFit="cover"
                 />
               ) : (

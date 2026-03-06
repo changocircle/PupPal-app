@@ -239,20 +239,30 @@ async function sendToRealAI(
     content: m.content,
   }));
 
+  console.log("[Chat] Sending to AI provider, history length:", messages.length);
+
   return new Promise<void>((resolve, reject) => {
+    // Must handle the returned promise to catch async errors
     streamChatCompletion(systemPrompt, messages, {
       onToken: (fullText) => {
         updateStreamingContent(messageId, fullText);
       },
       onDone: (fullText) => {
+        console.log("[Chat] AI response complete, length:", fullText.length);
         updateStreamingContent(messageId, fullText);
         finishStreaming(messageId);
         resolve();
       },
       onError: (error) => {
+        console.error("[Chat] AI error:", error.message);
         finishStreaming(messageId);
         reject(error);
       },
+    }).catch((err) => {
+      // Catch unhandled async errors from streamChatCompletion itself
+      console.error("[Chat] Unhandled AI error:", err);
+      finishStreaming(messageId);
+      reject(err instanceof Error ? err : new Error(String(err)));
     });
   });
 }

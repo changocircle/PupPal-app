@@ -48,10 +48,25 @@ export async function detectBreed(
       return null;
     }
 
+    console.log("[BreedDetect] Starting detection for URI:", imageUri.substring(0, 80));
+    console.log("[BreedDetect] Endpoint:", `${SUPABASE_URL}/functions/v1/breed-detect`);
+
     // Read image as base64
-    const base64 = await FileSystem.readAsStringAsync(imageUri, {
-      encoding: FileSystem.EncodingType.Base64,
-    });
+    let base64: string;
+    try {
+      base64 = await FileSystem.readAsStringAsync(imageUri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+      console.log("[BreedDetect] Base64 length:", base64.length);
+    } catch (readErr: any) {
+      console.error("[BreedDetect] Failed to read image file:", readErr?.message);
+      return null;
+    }
+
+    if (!base64 || base64.length < 100) {
+      console.warn("[BreedDetect] Base64 too short or empty:", base64?.length);
+      return null;
+    }
 
     // Race the fetch against a timeout
     const controller = new AbortController();
@@ -82,9 +97,13 @@ export async function detectBreed(
     }
 
     const data = await res.json();
+    console.log("[BreedDetect] Response data:", JSON.stringify(data).substring(0, 300));
     const breeds: BreedPrediction[] = data.breeds ?? [];
 
-    if (breeds.length === 0) return null;
+    if (breeds.length === 0) {
+      console.log("[BreedDetect] No breeds returned");
+      return null;
+    }
 
     return {
       topBreed: breeds[0]!.name,
@@ -93,9 +112,10 @@ export async function detectBreed(
     };
   } catch (err: any) {
     // AbortError = timeout, anything else = network/parse error
-    // All cases: silent fallback per PRD-01
-    if (err?.name !== "AbortError") {
-      console.warn("Breed detection failed:", err?.message ?? err);
+    if (err?.name === "AbortError") {
+      console.warn("[BreedDetect] Timed out after", DETECT_TIMEOUT_MS, "ms");
+    } else {
+      console.error("[BreedDetect] Error:", err?.message ?? err);
     }
     return null;
   }

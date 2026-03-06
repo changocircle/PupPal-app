@@ -68,6 +68,15 @@ export function useSubscription() {
   // devPremiumOverride: 5-tap easter egg on profile, persisted in settingsStore
   const isPremium = devPremiumOverride || isActive || isTrial;
 
+  // Debug: log every time isPremium is computed (remove before prod)
+  console.log(
+    "[Subscription] isPremium:", isPremium,
+    "| devOverride:", devPremiumOverride,
+    "| status:", status,
+    "| isActive:", isActive,
+    "| isTrial:", isTrial,
+  );
+
   // Trial dates
   const trialStartDate = user?.trial_start_date ?? null;
   const trialEndDate = user?.trial_end_date ?? null;
