@@ -5,9 +5,9 @@
  * Plots weight entries over time with age on x-axis.
  */
 
-import React, { useMemo } from "react";
-import { View, Dimensions } from "react-native";
-import Svg, { Path, Circle, Line, Text as SvgText } from "react-native-svg";
+import React, { useMemo, useState } from "react";
+import { View } from "react-native";
+import Svg, { Path, Circle, Line, Text as SvgText, Rect } from "react-native-svg";
 import { Typography } from "@/components/ui";
 import type { WeightEntry, WeightUnit } from "@/types/health";
 import { COLORS } from "@/constants/theme";
@@ -21,27 +21,34 @@ interface WeightChartProps {
 export function WeightChart({
   entries,
   unit,
-  height = 200,
+  height = 220,
 }: WeightChartProps) {
-  const width = Dimensions.get("window").width - 72; // account for padding
+  // Use onLayout for accurate container width (not Dimensions which ignores padding)
+  const [containerWidth, setContainerWidth] = useState(0);
+  const width = containerWidth || 300; // fallback until measured
 
   const chartData = useMemo(() => {
-    if (entries.length === 0) return null;
+    if (entries.length === 0 || width <= 0) return null;
 
     const points = entries.map((e) => ({
       x: e.ageAtMeasurementWeeks,
       y: unit === "kg" ? e.weightKg : e.weightValue,
     }));
 
-    const minX = Math.min(...points.map((p) => p.x));
-    const maxX = Math.max(...points.map((p) => p.x));
+    const isSinglePoint = points.length === 1;
+    const minX = isSinglePoint
+      ? points[0]!.x - 2
+      : Math.min(...points.map((p) => p.x));
+    const maxX = isSinglePoint
+      ? points[0]!.x + 2
+      : Math.max(...points.map((p) => p.x));
     const minY = 0;
-    const maxY = Math.max(...points.map((p) => p.y)) * 1.15;
+    const maxY = Math.max(...points.map((p) => p.y)) * 1.2;
 
-    const rangeX = maxX - minX || 1;
+    const rangeX = maxX - minX || 4;
     const rangeY = maxY - minY || 1;
 
-    const padding = { top: 20, bottom: 30, left: 40, right: 16 };
+    const padding = { top: 24, bottom: 34, left: 44, right: 20 };
     const chartW = width - padding.left - padding.right;
     const chartH = height - padding.top - padding.bottom;
 
@@ -90,8 +97,11 @@ export function WeightChart({
   }
 
   return (
-    <View>
+    <View onLayout={(e) => setContainerWidth(e.nativeEvent.layout.width)}>
       <Svg width={width} height={height}>
+        {/* Background */}
+        <Rect x={0} y={0} width={width} height={height} fill="#FAFAF8" rx={8} />
+
         {/* Grid lines */}
         {chartData.yTicks.map((tick, i) => (
           <React.Fragment key={`y-${i}`}>
@@ -141,15 +151,29 @@ export function WeightChart({
 
         {/* Data points */}
         {chartData.scaledPoints.map((pt, i) => (
-          <Circle
-            key={i}
-            cx={pt.sx}
-            cy={pt.sy}
-            r={4}
-            fill={COLORS.primary.DEFAULT}
-            stroke="#FFFFFF"
-            strokeWidth={2}
-          />
+          <React.Fragment key={i}>
+            <Circle
+              cx={pt.sx}
+              cy={pt.sy}
+              r={entries.length === 1 ? 7 : 4}
+              fill={COLORS.primary.DEFAULT}
+              stroke="#FFFFFF"
+              strokeWidth={2.5}
+            />
+            {/* Show value label on single point or last point */}
+            {(entries.length === 1 || i === chartData.scaledPoints.length - 1) && (
+              <SvgText
+                x={pt.sx}
+                y={pt.sy - (entries.length === 1 ? 14 : 10)}
+                textAnchor="middle"
+                fontSize={12}
+                fontWeight="600"
+                fill={COLORS.primary.DEFAULT}
+              >
+                {pt.raw.y} {unit}
+              </SvgText>
+            )}
+          </React.Fragment>
         ))}
       </Svg>
 

@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import { View, ScrollView, Pressable, Alert, Linking } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
@@ -82,6 +82,30 @@ function ProfileScreenContent() {
 
   // Subscription
   const { isPremium } = useSubscription();
+
+  // Dev premium toggle — 5-tap easter egg on version text
+  const devPremiumOverride = useSettingsStore((s) => s.devPremiumOverride);
+  const toggleDevPremium = useSettingsStore((s) => s.toggleDevPremium);
+  const tapCountRef = useRef(0);
+  const tapTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const handleVersionTap = useCallback(() => {
+    tapCountRef.current += 1;
+    if (tapTimerRef.current) clearTimeout(tapTimerRef.current);
+    if (tapCountRef.current >= 5) {
+      tapCountRef.current = 0;
+      toggleDevPremium();
+      Alert.alert(
+        devPremiumOverride ? "Premium Disabled" : "⚡ Premium Enabled",
+        devPremiumOverride
+          ? "Dev override OFF — back to free tier."
+          : "Dev override ON — all premium features unlocked.",
+      );
+    } else {
+      tapTimerRef.current = setTimeout(() => {
+        tapCountRef.current = 0;
+      }, 2000);
+    }
+  }, [devPremiumOverride, toggleDevPremium]);
 
   // Settings
   const userName = useSettingsStore((s) => s.userName);
@@ -503,12 +527,35 @@ function ProfileScreenContent() {
           </View>
         </Animated.View>
 
+        {/* Dev premium indicator */}
+        {devPremiumOverride && (
+          <Animated.View
+            entering={FadeInDown.duration(300)}
+            className="mx-xl mb-sm"
+          >
+            <Pressable
+              onPress={handleVersionTap}
+              className="bg-warning/10 border border-warning/30 rounded-xl py-sm px-base items-center"
+            >
+              <Typography variant="body-sm-medium" style={{ color: "#F59E0B" }}>
+                ⚡ Premium Override Active
+              </Typography>
+              <Typography variant="caption" color="tertiary">
+                Tap version text 5× to disable
+              </Typography>
+            </Pressable>
+          </Animated.View>
+        )}
+
         {/* Version */}
-        <View className="px-xl mb-4xl items-center">
+        <Pressable
+          onPress={handleVersionTap}
+          className="px-xl mb-4xl items-center"
+        >
           <Typography variant="caption" color="tertiary">
             PupPal v1.0.0 · Made with 🐾
           </Typography>
-        </View>
+        </Pressable>
       </ScrollView>
     </SafeAreaView>
   );

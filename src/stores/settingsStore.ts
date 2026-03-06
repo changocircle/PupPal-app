@@ -25,6 +25,9 @@ interface SettingsState {
   healthRemindersEnabled: boolean;
   dailyTipEnabled: boolean;
 
+  /** Dev-only: force premium ON for testing (persisted) */
+  devPremiumOverride: boolean;
+
   // Actions
   setUserName: (name: string) => void;
   setUserEmail: (email: string) => void;
@@ -36,6 +39,9 @@ interface SettingsState {
   setTrainingReminderTime: (time: string) => void;
   setHealthRemindersEnabled: (enabled: boolean) => void;
   setDailyTipEnabled: (enabled: boolean) => void;
+
+  /** Toggle dev premium override (5-tap easter egg on profile) */
+  toggleDevPremium: () => void;
 
   /** Reset all settings to defaults (call on sign-out) */
   resetSettings: () => void;
@@ -55,6 +61,7 @@ export const useSettingsStore = create<SettingsState>()(
       trainingReminderTime: "09:00",
       healthRemindersEnabled: true,
       dailyTipEnabled: true,
+      devPremiumOverride: false,
 
       setUserName: (name) => set({ userName: name }),
       setUserEmail: (email) => set({ userEmail: email }),
@@ -71,6 +78,9 @@ export const useSettingsStore = create<SettingsState>()(
         set({ healthRemindersEnabled: enabled }),
       setDailyTipEnabled: (enabled) => set({ dailyTipEnabled: enabled }),
 
+      toggleDevPremium: () =>
+        set((state) => ({ devPremiumOverride: !state.devPremiumOverride })),
+
       resetSettings: () => {
         set({
           userName: "",
@@ -83,6 +93,7 @@ export const useSettingsStore = create<SettingsState>()(
           trainingReminderTime: "09:00",
           healthRemindersEnabled: true,
           dailyTipEnabled: true,
+          devPremiumOverride: false,
         });
       },
     }),

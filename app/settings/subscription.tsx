@@ -5,7 +5,7 @@
  * Free: Current limits card, upgrade button, restore.
  */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, ScrollView, Pressable, Alert, Linking, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';

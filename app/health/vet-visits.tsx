@@ -29,12 +29,7 @@ export default function VetVisitsScreen() {
   const router = useRouter();
   const { isPremium } = useSubscription();
 
-  // PRD-07: Redirect free users to paywall
-  React.useEffect(() => {
-    if (!isPremium) {
-      router.replace({ pathname: "/paywall", params: { trigger: "feature_gate_health", source: "health_vet_visits" } });
-    }
-  }, [isPremium]);
+  // PRD-07: Gate premium content (inline, no redirect — prevents render loops)
   // Individual selectors → stable refs, prevents render loops
   const activeDogId = useDogStore((s) => s.activeDogId);
   const dogs = useDogStore((s) => s.dogs);

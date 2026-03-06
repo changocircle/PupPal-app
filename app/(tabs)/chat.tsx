@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useEffect } from "react";
+import React, { useRef, useCallback, useEffect, useMemo } from "react";
 import { View, FlatList, KeyboardAvoidingView, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
@@ -248,7 +248,7 @@ function EmptyState({
         <View className="w-full gap-sm">
           {suggestedPrompts.map((prompt, idx) => (
             <Animated.View
-              key={prompt}
+              key={`${prompt}-${idx}`}
               entering={FadeInDown.delay(300 + idx * 80).springify()}
             >
               <View
