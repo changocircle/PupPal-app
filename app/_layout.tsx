@@ -134,7 +134,6 @@ export default function RootLayout() {
         <Stack.Screen name="settings/edit-profile" />
         <Stack.Screen name="settings/preferences" />
         <Stack.Screen name="referral/index" />
-        <Stack.Screen name="community/index" />
       </Stack>
     </QueryClientProvider>
     </ErrorBoundary>
