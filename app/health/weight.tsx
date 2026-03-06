@@ -19,14 +19,33 @@ import type { WeightUnit } from "@/types/health";
 export default function WeightScreen() {
   const router = useRouter();
   const { isPremium } = useSubscription();
-  const dog = useDogStore((s) => s.activeDog());
+
+  // Individual selectors → stable refs, prevents render loops
+  const activeDogId = useDogStore((s) => s.activeDogId);
+  const dogs = useDogStore((s) => s.dogs);
+  const dog = useMemo(
+    () => dogs.find((d) => d.id === activeDogId) ?? null,
+    [dogs, activeDogId]
+  );
+
   const plan = useTrainingStore((s) => s.plan);
   const onboardingData = useOnboardingStore((s) => s.data);
   const dogName = dog?.name ?? plan?.dogName ?? (onboardingData.puppyName || "Your Pup");
   const dogId = dog?.id ?? plan?.dogName ?? "default-dog";
   const ageWeeks = (onboardingData.ageMonths ?? 3) * 4;
 
-  const weights = useHealthStore((s) => s.getWeightHistory(dogId));
+  // Stable weight history: select raw entries + memoize filter/sort
+  const weightEntries = useHealthStore((s) => s.weightEntries);
+  const weights = useMemo(
+    () =>
+      weightEntries
+        .filter((w) => w.dogId === dogId)
+        .sort(
+          (a, b) =>
+            new Date(a.measuredAt).getTime() - new Date(b.measuredAt).getTime()
+        ),
+    [weightEntries, dogId]
+  );
   const addWeightEntry = useHealthStore((s) => s.addWeightEntry);
   const preferredUnit = useHealthStore((s) => s.preferredWeightUnit);
   const setPreferredUnit = useHealthStore((s) => s.setPreferredWeightUnit);
