@@ -39,7 +39,7 @@ export default function PlanPreviewScreen() {
               <Typography className="text-[32px]">📋</Typography>
               <View className="flex-1">
                 <Typography variant="h3">
-                  {isFirstTime ? "8-Week" : "6-Week"} Training Plan
+                  12-Week Training Plan
                 </Typography>
                 <Typography variant="body-sm" color="secondary">
                   Customized daily exercises for {puppyName}

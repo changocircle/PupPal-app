@@ -54,7 +54,7 @@ export default function SubscriptionScreen() {
     // In production: await Purchases.restorePurchases()
     Alert.alert(
       'Restore Purchases',
-      'Purchase restoration will work once RevenueCat is configured.',
+      'No previous purchases found. If you believe this is an error, please contact support@puppal.app.',
       [{ text: 'OK' }]
     );
   };
