@@ -409,7 +409,7 @@ export default function PhotoScreen() {
             )}
 
             {/* HIGH confidence — confirmed breed */}
-            {detection.status === "high" && !isMixedBreed && (
+            {detection.status === "high" && !isMixedBreed && !showManualSelector && (
               <Animated.View
                 entering={FadeInDown.duration(300)}
                 className="mt-lg items-center"
@@ -439,19 +439,23 @@ export default function PhotoScreen() {
                 entering={FadeInDown.duration(300)}
                 className="mt-lg items-center gap-sm w-full"
               >
-                <View className="flex-row gap-sm">
-                  <Button
-                    label="Yes!"
-                    variant="primary"
-                    size="sm"
-                    onPress={() => confirmBreed(detection.breed)}
-                  />
-                  <Button
-                    label="Actually, they're a..."
-                    variant="secondary"
-                    size="sm"
-                    onPress={showSelectorSection}
-                  />
+                <View className="flex-row gap-sm w-full px-lg">
+                  <View className="flex-1">
+                    <Button
+                      label="Yes!"
+                      variant="primary"
+                      size="sm"
+                      onPress={() => confirmBreed(detection.breed)}
+                    />
+                  </View>
+                  <View className="flex-1">
+                    <Button
+                      label="Actually, they're a..."
+                      variant="secondary"
+                      size="sm"
+                      onPress={showSelectorSection}
+                    />
+                  </View>
                 </View>
                 {detection.suggestions.length > 1 && (
                   <View className="mt-xs items-center">
