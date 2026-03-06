@@ -1,5 +1,5 @@
 import React from "react";
-import { View, ScrollView } from "react-native";
+import { View, ScrollView, Alert } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeIn, FadeInDown, FadeInLeft } from "react-native-reanimated";
@@ -16,7 +16,21 @@ export default function PaywallScreen() {
   const puppyName = data.puppyName || "Your Pup";
 
   const handleStartTrial = () => {
-    router.replace("/(tabs)");
+    try {
+      // In production: RevenueCat purchase flow
+      // For now: show placeholder and continue
+      Alert.alert(
+        "Subscriptions coming soon! 🐾",
+        "Premium subscriptions are launching very soon. Enjoy free access for now!",
+        [{ text: "Got it", onPress: () => router.replace("/(tabs)") }],
+      );
+    } catch {
+      Alert.alert(
+        "Subscriptions coming soon! 🐾",
+        "Premium subscriptions are launching very soon. Enjoy free access for now!",
+        [{ text: "Got it", onPress: () => router.replace("/(tabs)") }],
+      );
+    }
   };
 
   const handleSkip = () => {
