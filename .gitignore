@@ -18,6 +18,9 @@ expo-env.d.ts
 # Metro
 .metro-health-check*
 
+# Prevent Expo Router route conflicts (directory vs file)
+app/(tabs)/community/
+
 # Debug
 npm-debug.*
 yarn-debug.*
