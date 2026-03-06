@@ -141,7 +141,13 @@ export default function PaywallScreen() {
   const params = useLocalSearchParams<{ trigger?: string; source?: string }>();
   const trigger = params.trigger ?? 'settings_upgrade';
 
-  const dog = useDogStore((s) => s.activeDog());
+  // Individual selectors → stable refs, prevents render loops
+  const activeDogId = useDogStore((s) => s.activeDogId);
+  const dogs = useDogStore((s) => s.dogs);
+  const dog = useMemo(
+    () => dogs.find((d) => d.id === activeDogId) ?? null,
+    [dogs, activeDogId]
+  );
   const onboardingData = useOnboardingStore((s) => s.data);
   const dogName = dog?.name ?? onboardingData.puppyName ?? 'your pup';
 

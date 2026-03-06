@@ -28,23 +28,56 @@ export default function JournalScreen() {
   const [filter, setFilter] = useState<JournalFilter>("all");
 
   // Dog context
-  const dog = useDogStore((s) => s.activeDog());
+  // Individual selectors → stable refs, prevents render loops
+  const activeDogId = useDogStore((s) => s.activeDogId);
+  const dogs = useDogStore((s) => s.dogs);
+  const dog = useMemo(
+    () => dogs.find((d) => d.id === activeDogId) ?? null,
+    [dogs, activeDogId]
+  );
   const plan = useTrainingStore((s) => s.plan);
   const onboardingData = useOnboardingStore((s) => s.data);
   const dogName = dog?.name ?? plan?.dogName ?? (onboardingData.puppyName || "Your Pup");
 
   // Journal data
-  const monthGroups = useJournalStore((s) => s.getMonthGroups(filter));
-  const entryCount = useJournalStore((s) => s.getEntryCount());
-  const photoCount = useJournalStore((s) => s.getPhotoCount());
+  // Stable: select raw entries + memoize grouping
+  const journalEntries = useJournalStore((s) => s.entries);
+  const monthGroups = useMemo(() => {
+    const filtered = filter === "all"
+      ? journalEntries
+      : filter === "photos"
+        ? journalEntries.filter((e) => e.photos && e.photos.length > 0)
+        : journalEntries.filter((e) => e.type === filter);
+    const groups: Record<string, typeof filtered> = {};
+    for (const entry of filtered) {
+      const key = entry.date.slice(0, 7); // "YYYY-MM"
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(entry);
+    }
+    return Object.entries(groups)
+      .map(([month, entries]) => ({ month, entries }))
+      .sort((a, b) => b.month.localeCompare(a.month));
+  }, [journalEntries, filter]);
+  const entryCount = useJournalStore((s) => s.entries.length);
+  const allEntries = useJournalStore((s) => s.entries);
+  const photoCount = useMemo(
+    () => allEntries.filter((e) => e.photos && e.photos.length > 0).length,
+    [allEntries]
+  );
   const togglePin = useJournalStore((s) => s.togglePin);
   const deleteEntry = useJournalStore((s) => s.deleteEntry);
   const hideEntry = useJournalStore((s) => s.hideEntry);
 
   // Filter counts
-  const allCount = useJournalStore((s) => s.getFilteredEntries("all").length);
-  const photosCount = useJournalStore((s) => s.getFilteredEntries("photos").length);
-  const milestonesCount = useJournalStore((s) => s.getFilteredEntries("milestones").length);
+  const allCount = useJournalStore((s) => s.entries.length);
+  const photosCount = useMemo(
+    () => allEntries.filter((e) => e.photos && e.photos.length > 0).length,
+    [allEntries]
+  );
+  const milestonesCount = useMemo(
+    () => allEntries.filter((e) => e.type === "milestones").length,
+    [allEntries]
+  );
 
   const handleEntryPress = useCallback(
     (entry: JournalEntry) => {

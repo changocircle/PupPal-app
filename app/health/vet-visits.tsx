@@ -35,12 +35,25 @@ export default function VetVisitsScreen() {
       router.replace({ pathname: "/paywall", params: { trigger: "feature_gate_health", source: "health_vet_visits" } });
     }
   }, [isPremium]);
-  const dog = useDogStore((s) => s.activeDog());
+  // Individual selectors → stable refs, prevents render loops
+  const activeDogId = useDogStore((s) => s.activeDogId);
+  const dogs = useDogStore((s) => s.dogs);
+  const dog = useMemo(
+    () => dogs.find((d) => d.id === activeDogId) ?? null,
+    [dogs, activeDogId]
+  );
   const plan = useTrainingStore((s) => s.plan);
   const dogName = dog?.name ?? plan?.dogName ?? "Your Pup";
   const dogId = dog?.id ?? plan?.dogName ?? "default-dog";
 
-  const visits = useHealthStore((s) => s.getVetVisitsForDog(dogId));
+  // Stable: select raw data + memoize filter/sort
+  const vetVisitEntries = useHealthStore((s) => s.vetVisits);
+  const visits = useMemo(
+    () => vetVisitEntries
+      .filter((v) => v.dogId === dogId)
+      .sort((a, b) => new Date(b.visitDate).getTime() - new Date(a.visitDate).getTime()),
+    [vetVisitEntries, dogId]
+  );
   const addVetVisit = useHealthStore((s) => s.addVetVisit);
 
   const [showForm, setShowForm] = useState(false);

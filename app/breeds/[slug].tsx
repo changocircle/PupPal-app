@@ -24,7 +24,13 @@ import { COLORS, RADIUS, SHADOWS } from '../../src/constants/theme';
 export default function BreedDetailScreen() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const router = useRouter();
-  const dog = useDogStore((s) => s.activeDog());
+  // Individual selectors → stable refs, prevents render loops
+  const activeDogId = useDogStore((s) => s.activeDogId);
+  const dogs = useDogStore((s) => s.dogs);
+  const dog = useMemo(
+    () => dogs.find((d) => d.id === activeDogId) ?? null,
+    [dogs, activeDogId]
+  );
 
   const breed = useMemo(() => getBreedBySlug(slug || ''), [slug]);
 

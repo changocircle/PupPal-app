@@ -5,7 +5,7 @@
  * Rendered as a modal overlay (no @gorhom/bottom-sheet dependency needed).
  */
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   View,
   Pressable,
@@ -30,8 +30,10 @@ interface DogSwitcherProps {
 export function DogSwitcher({ visible, onClose }: DogSwitcherProps) {
   const router = useRouter();
   const activeDogId = useDogStore((s) => s.activeDogId);
-  const activeDogs = useDogStore((s) => s.activeDogs());
-  const archivedDogs = useDogStore((s) => s.archivedDogs());
+  const dogs = useDogStore((s) => s.dogs);
+  // Stable: raw dogs array + memoized filter (prevents render loops)
+  const activeDogs = useMemo(() => dogs.filter((d) => !d.archived_at), [dogs]);
+  const archivedDogs = useMemo(() => dogs.filter((d) => d.archived_at != null), [dogs]);
   const switchDog = useDogStore((s) => s.switchDog);
   const isSwitching = useDogStore((s) => s.isSwitching);
   const { isPremium } = useSubscription();

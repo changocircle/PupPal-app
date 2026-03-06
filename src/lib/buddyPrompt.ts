@@ -232,7 +232,7 @@ export function generateSuggestedPrompts(
     return [
       `${dogName}'s biggest challenge right now`,
       "Walk me through today's training",
-      breed ? `Tell me more about ${breed}s` : "I have a quick question",
+      breed ? `Tell me more about ${breed}s` : `What should ${dogName} learn first?`,
       "I have a quick question",
     ];
   }

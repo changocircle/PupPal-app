@@ -40,7 +40,13 @@ export default function ReferralScreen() {
     setCustomCode,
   } = useReferralStore();
 
-  const dog = useDogStore((s) => s.activeDog());
+  // Individual selectors → stable refs, prevents render loops
+  const activeDogId = useDogStore((s) => s.activeDogId);
+  const dogs = useDogStore((s) => s.dogs);
+  const dog = useMemo(
+    () => dogs.find((d) => d.id === activeDogId) ?? null,
+    [dogs, activeDogId]
+  );
   const dogName = dog?.name ?? useOnboardingStore.getState().data.puppyName ?? 'your pup';
 
   // Ensure code is initialized

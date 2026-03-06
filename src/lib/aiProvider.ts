@@ -79,8 +79,24 @@ export async function streamChatCompletion(
   ];
 
   try {
-    // Try streaming first
-    await streamWithSSE(config, allMessages, callbacks);
+    // Skip SSE on React Native — ReadableStream is unreliable or hangs
+    const hasReadableStream =
+      typeof ReadableStream !== "undefined" &&
+      typeof globalThis.document !== "undefined"; // Web only
+
+    if (hasReadableStream) {
+      // Race streaming against a 15s timeout to prevent hanging
+      const timeoutPromise = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("SSE streaming timeout")), 15000)
+      );
+      await Promise.race([
+        streamWithSSE(config, allMessages, callbacks),
+        timeoutPromise,
+      ]);
+    } else {
+      // React Native / environments without ReadableStream: non-streaming
+      await nonStreamingFallback(config, allMessages, callbacks);
+    }
   } catch (streamError) {
     // Fall back to non-streaming
     console.warn(
@@ -184,6 +200,10 @@ async function nonStreamingFallback(
 ): Promise<void> {
   const url = `${config.baseUrl}/chat/completions`;
 
+  // 30-second timeout for non-streaming requests
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 30000);
+
   const response = await fetch(url, {
     method: "POST",
     headers: {
@@ -197,7 +217,10 @@ async function nonStreamingFallback(
       temperature: config.temperature,
       stream: false,
     }),
+    signal: controller.signal,
   });
+
+  clearTimeout(timeout);
 
   if (!response.ok) {
     const errorBody = await response.text();

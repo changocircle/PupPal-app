@@ -42,7 +42,13 @@ import {
 export default function ExerciseDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
-  const dog = useDogStore((s) => s.activeDog());
+  // Individual selectors → stable refs, prevents render loops
+  const activeDogId = useDogStore((s) => s.activeDogId);
+  const dogs = useDogStore((s) => s.dogs);
+  const dog = useMemo(
+    () => dogs.find((d) => d.id === activeDogId) ?? null,
+    [dogs, activeDogId]
+  );
   const plan = useTrainingStore((s) => s.plan);
   const completeExercise = useTrainingStore((s) => s.completeExercise);
   const markNeedsPractice = useTrainingStore((s) => s.markNeedsPractice);

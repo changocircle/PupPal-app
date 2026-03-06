@@ -3,7 +3,7 @@
  * PRD-11 §3: Active dog photo + name + dropdown arrow in home header
  */
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { View, Pressable } from 'react-native';
 import { Typography } from '../ui';
 import { DogAvatar } from './DogAvatar';
@@ -13,7 +13,13 @@ import { COLORS, RADIUS } from '@/constants/theme';
 
 export function DogSwitcherButton() {
   const [showSwitcher, setShowSwitcher] = useState(false);
-  const activeDog = useDogStore((s) => s.activeDog());
+  // Individual selectors → stable refs, prevents render loops
+  const activeDogId = useDogStore((s) => s.activeDogId);
+  const dogs = useDogStore((s) => s.dogs);
+  const activeDog = useMemo(
+    () => dogs.find((d) => d.id === activeDogId) ?? null,
+    [dogs, activeDogId]
+  );
   const dogCount = useDogStore((s) => s.dogCount());
 
   if (!activeDog) return null;

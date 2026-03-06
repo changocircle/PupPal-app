@@ -5,7 +5,7 @@
  * Bridges trainingStore completions → gamification effects.
  */
 
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useGamificationStore } from "@/stores/gamificationStore";
 import { useTrainingStore } from "@/stores/trainingStore";
 import { useChatStore } from "@/stores/chatStore";
@@ -89,7 +89,13 @@ interface UseGamificationReturn {
 }
 
 export function useGamification(): UseGamificationReturn {
-  const dog = useDogStore((s) => s.activeDog());
+  // Individual selectors → stable refs, prevents render loops
+  const activeDogId = useDogStore((s) => s.activeDogId);
+  const dogs = useDogStore((s) => s.dogs);
+  const dog = useMemo(
+    () => dogs.find((d) => d.id === activeDogId) ?? null,
+    [dogs, activeDogId]
+  );
   const onboarding = useOnboardingStore((s) => s.data);
 
   // Training store
