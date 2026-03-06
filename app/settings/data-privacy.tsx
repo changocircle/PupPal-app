@@ -5,7 +5,7 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useRouter } from 'expo-router';
 import { Typography, Card, Button } from '@/components/ui';
 import { useSettingsStore } from '@/stores/settingsStore';
-import { useOnboardingStore } from '@/stores/onboardingStore';
+import { resetAllStores } from '@/lib/resetStores';
 
 /**
  * Data & Privacy Screen — PRD-14 §6
@@ -17,7 +17,7 @@ import { useOnboardingStore } from '@/stores/onboardingStore';
 export default function DataPrivacyScreen() {
   const router = useRouter();
   const settings = useSettingsStore();
-  const resetOnboarding = useOnboardingStore((s) => s.reset);
+
 
   // Privacy toggles
   const [analyticsEnabled, setAnalyticsEnabled] = useState(true);
@@ -71,8 +71,8 @@ export default function DataPrivacyScreen() {
           style: 'destructive',
           onPress: () => {
             // In production: calls Edge Function to queue deletion
-            // Clear local state
-            resetOnboarding();
+            // Clear all local state
+            resetAllStores();
             Alert.alert(
               'Account Deleted',
               'Your account and all data have been queued for permanent deletion.',
@@ -87,7 +87,7 @@ export default function DataPrivacyScreen() {
         },
       ]
     );
-  }, [deleteText, resetOnboarding, router]);
+  }, [deleteText, router]);
 
   return (
     <SafeAreaView className="flex-1 bg-background">

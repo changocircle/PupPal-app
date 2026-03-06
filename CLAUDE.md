@@ -1,41 +1,42 @@
-# PupPal — AI Puppy Training App
+# PupPal --- AI Puppy Training App
 
 > "Like having a dog trainer on call 24/7"
 
-PupPal is an AI-powered puppy training app that solves new puppy parent anxiety. Not a content library — a personalized mentor that knows your dog's breed, age, temperament, and training history. Available 24/7, costs less per year than a single training session.
+PupPal is an AI-powered puppy training app that solves new puppy parent anxiety. Not a content library --- a personalized mentor that knows your dog's breed, age, temperament, and training history. Available 24/7, costs less per year than a single training session.
 
 ## Target User
 
-"Anxious First-Time Puppy Mom" — Female, 25-38, millennial/older Gen Z, city/suburbs, just got or planning to get a puppy. Treats dog as family. Researches everything. Currently Googling at 2am, watching conflicting YouTube videos, feeling overwhelmed and guilty. Wants to feel confident, in control, like a good dog parent.
+"Anxious First-Time Puppy Mom" --- Female, 25-38, millennial/older Gen Z, city/suburbs, just got or planning to get a puppy. Treats dog as family. Researches everything. Currently Googling at 2am, watching conflicting YouTube videos, feeling overwhelmed and guilty. Wants to feel confident, in control, like a good dog parent.
 
 ## Business Model
 
-Freemium subscription via App Store/Google Play. 3-day free trial → $39.99/year (primary) or $9.99/month. Free tier: Week 1 training, 3 Buddy messages/day, limited health tracking. Revenue target: $100K MRR by month 6.
+Freemium subscription via App Store/Google Play. 3-day free trial -> $39.99/year (primary) or $9.99/month. Free tier: Week 1 training, 3 Buddy messages/day, limited health tracking. Revenue target: $100K MRR by month 6.
 
 ---
 
 ## Tech Stack
 
 ### Mobile App
-- **Framework**: React Native + Expo SDK 52+ (managed workflow)
-- **Routing**: Expo Router v4 (file-based routing)
+- **Framework**: React Native + Expo SDK 54 (managed workflow)
+- **Routing**: Expo Router v6 (file-based routing)
 - **Language**: TypeScript (strict mode)
 - **Styling**: NativeWind v4 (Tailwind CSS for React Native)
-- **State**: Zustand (client state) + TanStack Query v5 (server state/caching)
+- **State**: Zustand v5 (client state with AsyncStorage persistence) + TanStack Query v5 (server state/caching)
 - **Forms**: React Hook Form + Zod validation
-- **Animations**: React Native Reanimated 3 + Moti
+- **Animations**: React Native Reanimated 4 + Moti
 
 ### Backend
 - **Platform**: Supabase (hosted Postgres + Auth + Storage + Edge Functions + Realtime)
 - **Database**: PostgreSQL via Supabase
 - **Auth**: Supabase Auth (Apple Sign-In, Google Sign-In)
 - **Storage**: Supabase Storage (dog photos, vet records, journal photos)
-- **Edge Functions**: Deno/TypeScript (AI proxy, plan generation, scheduled jobs, share card generation)
+- **Edge Functions**: Deno/TypeScript (breed detection, future: AI proxy, plan generation, cron jobs)
 
 ### AI
-- **Chat Provider**: Kimi K2.5 (primary — cost efficiency)
+- **Chat Provider**: Kimi K2.5 (primary --- cost efficiency)
+  - **IMPORTANT**: Kimi K2.5 only accepts `temperature: 1`. Any other value returns 400.
 - **Streaming**: Vercel AI SDK (provider-agnostic, swap with config change)
-- **Breed Detection**: Google Cloud Vision API (fallback: manual breed selector)
+- **Breed Detection**: Google Cloud Vision API via Supabase Edge Function (fallback: manual breed selector)
 
 ### Payments & Monetization
 - **Subscriptions**: RevenueCat (Apple/Google IAP)
@@ -57,133 +58,155 @@ Freemium subscription via App Store/Google Play. 3-day free trial → $39.99/yea
 
 ---
 
-## Project Structure
+## Project Structure (Actual)
 
 ```
 puppal/
-├── CLAUDE.md                          ← You are here
-├── docs/
-│   ├── PRD-01-Onboarding.md          ← Onboarding flow (8 screens)
-│   ├── PRD-02-AI-Chat.md             ← Buddy AI mentor chat
-│   ├── PRD-03-Training-Plan.md       ← Training plan + Trick Library
-│   ├── PRD-04-Gamification.md        ← XP, streaks, GBS, achievements
-│   ├── PRD-05-Health-Tracker.md      ← Health & vaccination tracker
-│   ├── PRD-06-Paywall.md             ← Paywall & subscription system
-│   ├── PRD-07-Gating.md              ← Free vs premium gating logic
-│   ├── PRD-08-Referral.md            ← Referral & viral growth
-│   ├── PRD-09-Notifications.md       ← Push notification sequences
-│   ├── PRD-10-Growth-Journal.md      ← Growth journal & timeline
-│   ├── PRD-11-Multi-Dog.md           ← Multi-dog management
-│   ├── PRD-12-Breed-Encyclopedia.md  ← Breed content library
-│   ├── PRD-13-Analytics.md           ← Analytics & A/B testing
-│   ├── PRD-14-Settings.md            ← Settings & preferences
-│   ├── PRD-15-Community.md           ← Community feed (post-launch)
-│   ├── TECH-STACK.md                 ← Detailed tech decisions
-│   └── DESIGN-SYSTEM.md             ← Visual design, components, wireframes
-├── app/                               ← Expo Router file-based routes
-│   ├── (onboarding)/                  ← Onboarding flow screens
-│   │   ├── index.tsx                  ← Screen 1: Meet Buddy
-│   │   ├── name.tsx                   ← Screen 2: Dog name
-│   │   ├── photo.tsx                  ← Screen 3: Photo + breed detection
-│   │   ├── age.tsx                    ← Screen 4: Dog age
-│   │   ├── challenges.tsx             ← Screen 5: Challenge selection
-│   │   ├── experience.tsx             ← Screen 6: Owner experience
-│   │   ├── plan-preview.tsx           ← Screen 7: Personalized plan
-│   │   └── paywall.tsx                ← Screen 8: Paywall
-│   ├── (tabs)/                        ← Main app tab navigation
-│   │   ├── index.tsx                  ← Home / Today's Training
-│   │   ├── chat.tsx                   ← Buddy AI Chat
-│   │   ├── plan.tsx                   ← Training Plan + Tricks
-│   │   ├── health.tsx                 ← Health dashboard
-│   │   └── profile.tsx                ← Profile, settings, achievements
-│   ├── exercise/[id].tsx              ← Exercise / trick detail
-│   ├── achievement/[id].tsx           ← Achievement detail
-│   ├── journal/                       ← Growth journal screens
-│   ├── breed/[slug].tsx               ← Breed encyclopedia detail
-│   ├── community/                     ← Community feed (post-launch)
-│   └── _layout.tsx                    ← Root layout
-├── src/
-│   ├── components/
-│   │   ├── ui/                        ← Design system primitives
-│   │   ├── onboarding/                ← Onboarding components
-│   │   ├── chat/                      ← Chat UI components
-│   │   ├── training/                  ← Training plan components
-│   │   ├── health/                    ← Health tracker components
-│   │   ├── gamification/              ← XP, achievements, streaks
-│   │   ├── journal/                   ← Growth journal components
-│   │   └── community/                 ← Community feed components
-│   ├── hooks/                         ← Custom React hooks
-│   │   ├── useAuth.ts
-│   │   ├── useDog.ts
-│   │   ├── useSubscription.ts
-│   │   ├── usePlan.ts
-│   │   ├── useChat.ts
-│   │   ├── useGamification.ts
-│   │   ├── useHealth.ts
-│   │   ├── useJournal.ts
-│   │   └── useFeatureGate.ts
-│   ├── stores/                        ← Zustand stores
-│   │   ├── authStore.ts
-│   │   ├── dogStore.ts
-│   │   ├── onboardingStore.ts
-│   │   ├── chatStore.ts
-│   │   └── uiStore.ts
-│   ├── services/                      ← API clients & external services
-│   │   ├── supabase.ts
-│   │   ├── ai.ts
-│   │   ├── revenueCat.ts
-│   │   ├── superwall.ts
-│   │   ├── oneSignal.ts
-│   │   ├── posthog.ts
-│   │   └── breedDetection.ts
-│   ├── lib/                           ← Utility functions
-│   │   ├── planGenerator.ts
-│   │   ├── scoreCalculator.ts
-│   │   ├── streakManager.ts
-│   │   ├── achievementChecker.ts
-│   │   ├── breedProfiles.ts
-│   │   ├── exerciseLibrary.ts
-│   │   ├── vaccinationSchedule.ts
-│   │   └── gateThrottle.ts
-│   ├── types/
-│   │   ├── database.ts               ← Supabase generated types
-│   │   ├── models.ts
-│   │   └── api.ts
-│   └── constants/
-│       ├── theme.ts                   ← Design tokens
-│       ├── achievements.ts
-│       ├── exercises.ts
-│       └── breeds.ts
-├── supabase/
-│   ├── migrations/                    ← Database migrations (sequential)
-│   ├── functions/                     ← Edge Functions
-│   │   ├── chat/
-│   │   ├── generate-plan/
-│   │   ├── calculate-score/
-│   │   ├── check-achievements/
-│   │   ├── breed-detect/
-│   │   ├── generate-summary/
-│   │   ├── streak-cron/
-│   │   ├── export-health/
-│   │   ├── generate-recap/
-│   │   ├── generate-share-card/
-│   │   ├── revenuecat-webhook/
-│   │   ├── send-notification/
-│   │   └── moderate-content/
-│   └── seed/
-│       ├── breeds.sql
-│       ├── exercises.sql
-│       ├── achievements.sql
-│       ├── milestones.sql
-│       ├── vaccinations.sql
-│       └── trick-packs.sql
-└── assets/
-    ├── buddy/
-    ├── icons/
-    ├── achievements/
-    ├── onboarding/
-    └── splash/
++-- CLAUDE.md                          <- You are here
++-- docs/
+|   +-- PupPal-Build-Playbook.md       <- Step-by-step dev guide
+|   +-- PRD-01 through PRD-15          <- Feature specs (see PRD Reference)
+|   +-- TECH-STACK.md                  <- Tech decisions
+|   +-- DESIGN-SYSTEM.md              <- Visual design, components, wireframes
++-- app/                               <- Expo Router file-based routes
+|   +-- (onboarding)/                  <- 8-screen onboarding flow
+|   |   +-- _layout.tsx
+|   |   +-- index.tsx                  <- Screen 1: Meet Buddy
+|   |   +-- name.tsx                   <- Screen 2: Dog name
+|   |   +-- photo.tsx                  <- Screen 3: Photo + breed detection
+|   |   +-- age.tsx                    <- Screen 4: Dog age
+|   |   +-- challenges.tsx             <- Screen 5: Challenge selection
+|   |   +-- experience.tsx             <- Screen 6: Owner experience
+|   |   +-- plan-preview.tsx           <- Screen 7: Personalized plan (12 weeks)
+|   |   +-- paywall.tsx                <- Screen 8: Paywall
+|   +-- (tabs)/                        <- Main app tab navigation
+|   |   +-- _layout.tsx
+|   |   +-- index.tsx                  <- Home / Today's Training
+|   |   +-- chat.tsx                   <- Buddy AI Chat
+|   |   +-- plan.tsx                   <- Training Plan + Tricks
+|   |   +-- health.tsx                 <- Health dashboard (5 sub-tabs)
+|   |   +-- profile.tsx               <- Profile, settings, achievements
+|   +-- exercise/[id].tsx              <- Exercise detail + completion
+|   +-- achievements/index.tsx         <- Full achievements grid
+|   +-- add-dog/index.tsx              <- Multi-dog: add new dog (629 lines)
+|   +-- dog/[id]/manage.tsx            <- Multi-dog: manage/edit dog (485 lines)
+|   +-- breeds/
+|   |   +-- index.tsx                  <- Breed encyclopedia browser
+|   |   +-- [slug].tsx                 <- Breed detail page
+|   +-- tricks/
+|   |   +-- index.tsx                  <- Trick library browser
+|   |   +-- [slug].tsx                 <- Trick pack detail
+|   |   +-- detail/[id].tsx            <- Individual trick detail
+|   +-- health/                        <- Health sub-screens
+|   |   +-- medications.tsx
+|   |   +-- milestones.tsx
+|   |   +-- notes.tsx
+|   |   +-- vaccinations.tsx
+|   |   +-- vet-visits.tsx
+|   |   +-- weight.tsx                 <- Weight tracking + breed growth chart
+|   +-- journal/
+|   |   +-- index.tsx                  <- Growth journal timeline
+|   |   +-- add.tsx                    <- Add journal entry (photo/note)
+|   +-- community/index.tsx            <- Community feed (demo posts, compose gated)
+|   +-- referral/index.tsx             <- Referral code + share
+|   +-- settings/
+|   |   +-- data-privacy.tsx           <- Data export + account deletion
+|   |   +-- edit-profile.tsx
+|   |   +-- notifications.tsx
+|   |   +-- preferences.tsx            <- Units, reminders, tips
+|   |   +-- subscription.tsx
+|   +-- paywall.tsx                    <- In-app paywall (feature gates)
+|   +-- _layout.tsx                    <- Root layout + ErrorBoundary
++-- src/
+|   +-- components/
+|   |   +-- ui/                        <- Design system (Button, Card, Typography, etc.)
+|   |   |   +-- skeletons/             <- Skeleton loaders for all 5 tabs
+|   |   +-- breed/                     <- Breed cards, grid, detail
+|   |   +-- chat/                      <- Chat bubbles, input, typing indicator
+|   |   +-- community/                 <- Post cards, feed
+|   |   +-- dog/                       <- DogSwitcher (premium-gated)
+|   |   +-- gamification/              <- XP, achievements, streaks, GBS gauge
+|   |   +-- health/                    <- Health cards, charts
+|   |   +-- journal/                   <- Journal entries, timeline
+|   |   +-- notifications/             <- Notification cards
+|   |   +-- onboarding/                <- Onboarding-specific components
+|   |   +-- training/                  <- Exercise cards, plan view
+|   +-- hooks/
+|   |   +-- useAuth.ts                 <- Supabase auth listener + route protection
+|   |   +-- useChat.ts
+|   |   +-- useDog.ts
+|   |   +-- useFeatureGate.ts          <- Premium gate with paywall triggers
+|   |   +-- useGamification.ts
+|   |   +-- useHydration.ts            <- Zustand hydration status for skeletons
+|   |   +-- useSubscription.ts         <- THE way to check premium status
+|   +-- stores/                        <- Zustand v5 with AsyncStorage persistence
+|   |   +-- authStore.ts              <- NOT persisted (plain create())
+|   |   +-- chatStore.ts              <- Persisted: puppal-chat
+|   |   +-- dogStore.ts               <- Persisted: puppal-dogs (+ per-dog AsyncStorage)
+|   |   +-- gamificationStore.ts      <- Persisted: puppal-gamification
+|   |   +-- healthStore.ts            <- Persisted: puppal-health
+|   |   +-- journalStore.ts           <- Persisted: puppal-journal
+|   |   +-- onboardingStore.ts        <- Persisted: puppal-onboarding
+|   |   +-- referralStore.ts          <- Persisted: puppal-referral
+|   |   +-- settingsStore.ts          <- Persisted: puppal-settings
+|   |   +-- trainingStore.ts          <- Persisted: puppal-training
+|   |   +-- trickStore.ts             <- Persisted: puppal-tricks
+|   |   +-- uiStore.ts
+|   +-- services/
+|   |   +-- analytics.ts              <- PostHog + Sentry wrappers
+|   |   +-- notifications.ts          <- OneSignal + Expo push
+|   |   +-- posthogService.ts         <- PostHog events/properties
+|   |   +-- supabase.ts               <- Supabase client (AsyncStorage session)
+|   +-- lib/
+|   |   +-- achievementChecker.ts      <- Achievement trigger evaluation
+|   |   +-- aiProvider.ts             <- Kimi K2.5 chat (temperature: 1)
+|   |   +-- breedDetect.ts            <- Client-side breed detection service
+|   |   +-- buddyPrompt.ts            <- Buddy system prompt builder
+|   |   +-- gateThrottle.ts           <- Paywall frequency limiter
+|   |   +-- gbsCalculator.ts          <- Good Boy Score (5 dimensions)
+|   |   +-- planGenerator.ts          <- 12-week training plan generation
+|   |   +-- resetStores.ts            <- Centralized store reset (sign-out/re-onboard)
+|   |   +-- sharing.ts                <- Share card generation
+|   +-- data/
+|   |   +-- breeds.json               <- 51 breed profiles with growth curves
+|   |   +-- breedData.ts              <- Breed lookup helpers
+|   |   +-- exercises.json            <- 164 exercises across 12 categories
+|   |   +-- exerciseData.ts           <- Exercise lookup + personalization
+|   |   +-- tricks.json               <- 30 tricks across 6 packs
+|   |   +-- achievements.json         <- 52 achievement definitions
+|   +-- types/
+|   |   +-- api.ts, breed.ts, chat.ts, community.ts, database.ts
+|   |   +-- gamification.ts, health.ts, journal.ts, models.ts
+|   |   +-- training.ts, tricks.ts
+|   +-- constants/
+|   |   +-- theme.ts                  <- Design tokens
++-- supabase/
+|   +-- migrations/
+|   |   +-- 001_users_and_dogs.sql
+|   +-- functions/
+|       +-- breed-detect/index.ts      <- Google Vision breed detection
++-- assets/                            <- buddy/, icons/, achievements/, splash/
 ```
+
+---
+
+## Content Inventory
+
+| Content | Count | Source |
+|---------|-------|--------|
+| Breed profiles | 51 | `src/data/breeds.json` |
+| Exercises | 164 | `src/data/exercises.json` (12 categories) |
+| Tricks | 30 | `src/data/tricks.json` (6 packs x 5) |
+| Achievements | 52 | `src/data/achievements.json` |
+| Growth curves | 51 | Embedded in breed profiles |
+
+### Trick Packs
+1. `pack-starter` (5): Shake, High Five, Spin, Touch, Take a Bow
+2. `pack-classic` (5): Sit Pretty, Wave, Army Crawl, Peekaboo, Kiss
+3. `pack-impressive` (5): Weave, Jump, Balance, Ring Bell, Play Dead
+4. `pack-useful` (5): Find It, Clean Up, Hold, Bring Leash, Open/Close Door
+5. `pack-party` (5): Dance, Moonwalk, Sneeze, Speak, Whisper
+6. `pack-advanced` (5): Backflip Prep, Skateboard, Shell Game, Basketball, Paint
 
 ---
 
@@ -201,7 +224,7 @@ puppal/
 - NativeWind for ALL styling
 - Reanimated for all animations
 - Custom hooks wrap all data fetching (TanStack Query)
-- Zustand stores are thin — logic in hooks and lib/
+- Zustand stores are thin --- logic in hooks and lib/
 
 ### Naming
 - Files: `kebab-case.tsx` for routes, `PascalCase.tsx` for components
@@ -214,7 +237,7 @@ puppal/
 
 ### Data Flow
 ```
-UI Component → Custom Hook → TanStack Query / Zustand → Supabase / Edge Function
+UI Component -> Custom Hook -> TanStack Query / Zustand -> Supabase / Edge Function
 ```
 
 ### Performance Rules
@@ -223,6 +246,97 @@ UI Component → Custom Hook → TanStack Query / Zustand → Supabase / Edge Fu
 - React.memo when profiler shows need
 - Skeleton loaders for all async content
 - Never empty white screens
+
+---
+
+## Critical Patterns & Gotchas
+
+### 1. Zustand Selector Stability (RENDER LOOP RISK)
+
+**The #1 source of crashes in PupPal.** Zustand selectors that return new references
+on every call cause infinite re-renders when combined with `useSubscription()` and
+`useRouter()`.
+
+**BAD** (creates new reference every render):
+```ts
+// activeDog() calls dogs.find() -> new ref each time
+const dog = useDogStore((s) => s.activeDog());
+
+// Computed selectors with filter/sort/map -> new array each time
+const weights = useHealthStore((s) => s.getWeightHistory(dogId));
+const milestones = useHealthStore((s) => s.getMilestonesForDog(dogId));
+const progress = useTrickStore((s) => s.getPackProgress(packId));
+```
+
+**GOOD** (stable primitives + useMemo):
+```ts
+const activeDogId = useDogStore((s) => s.activeDogId);
+const dogs = useDogStore((s) => s.dogs);
+const dog = useMemo(() => dogs.find((d) => d.id === activeDogId), [dogs, activeDogId]);
+
+// For computed values, select the raw data and derive in useMemo
+const allWeights = useHealthStore((s) => s.weightEntries);
+const weights = useMemo(
+  () => allWeights.filter((w) => w.dogId === dogId).sort(...),
+  [allWeights, dogId]
+);
+```
+
+This pattern has been applied to all 20+ screens that used `activeDog()`.
+Health sub-screens still use computed selectors (getMilestonesForDog, etc.)
+that create unstable arrays --- not crashing yet but causing unnecessary re-renders.
+
+### 2. Store Reset on Sign-out / Re-onboard
+
+All 10 persisted Zustand stores must be cleared together. Use `resetAllStores()`
+from `src/lib/resetStores.ts`. It's already wired into:
+- `authStore.signOut()`
+- Onboarding welcome "Let's Go!" button
+- Data privacy account deletion
+
+### 3. Auth Store is NOT Persisted
+
+`authStore` uses plain `create()` (no AsyncStorage). State may be unstable
+during app mount. Don't rely on `useAuthStore` being populated before
+`onAuthStateChange` fires.
+
+### 4. Kimi K2.5 Temperature
+
+The only valid temperature value is `1`. Set in `src/lib/aiProvider.ts:47`.
+Any other value causes a 400 error from the API.
+
+### 5. `trickStore.packProgress` is a Record, Not Array
+
+```ts
+// It's Record<string, PackProgress>, not PackProgress[]
+const packProgress = useTrickStore((s) => s.packProgress);
+const progress = useMemo(() => packProgress[packId], [packProgress, packId]);
+```
+
+### 6. Per-Dog AsyncStorage Data
+
+`dogStore` saves per-dog data to separate AsyncStorage keys. When resetting,
+`resetDogs()` cleans up these keys. When deleting a dog, `deletePerDogData()`
+is called. See `dogStore.ts` helper functions.
+
+### 7. Premium Gating
+
+`useSubscription()` in `src/hooks/useSubscription.ts` is the ONLY way to check premium.
+- Reads `useAuthStore((s) => s.user)`, derives `isPremium`/`isTrial`
+- `isPremium = isActive || isTrial`
+- DB column: `public.users.subscription_status` (enum: `free`, `trial`, `active`, `expired`, `cancelled`)
+- To test premium locally: update `subscription_status` to `'active'` in Supabase Dashboard
+
+### 8. Button.tsx Text Nodes
+
+The Button component uses `array.join(' ')` for className assembly (not template literals).
+Template literals leak whitespace as text nodes, causing "Text strings must be rendered
+within a <Text> component" crashes. `leftIcon`/`rightIcon` props are guarded with `?? null`.
+
+### 9. URL References
+
+All URLs use `puppal.dog` (not `puppal.app`). Terms, privacy, support: `https://puppal.dog/{page}`.
+Support email: `support@puppal.dog`.
 
 ---
 
@@ -258,8 +372,8 @@ Display: 36/ExtraBold, h1: 30/Bold, h2: 24/Bold, h3: 20/SemiBold, body: 16/Regul
 |---|---------|-----|-----------------|
 | 01 | Onboarding | PRD-01 | 8 screens, breed detection, Apple Sign-In |
 | 02 | AI Chat (Buddy) | PRD-02 | Streaming chat, context injection, memory, safety |
-| 03 | Training Plan + Tricks | PRD-03 | Plan generation, 160+ exercises, 6 trick packs, adaptation engine |
-| 04 | Gamification | PRD-04 | XP, streaks, GBS, ~45 achievements, 10 levels, challenges |
+| 03 | Training Plan + Tricks | PRD-03 | Plan generation, 164 exercises, 6 trick packs, adaptation engine |
+| 04 | Gamification | PRD-04 | XP, streaks, GBS, 52 achievements, 10 levels, challenges |
 | 05 | Health Tracker | PRD-05 | Vaccinations, medications, weight/growth, vet visits, milestones |
 
 ### Monetization & Infrastructure (v1 Launch)
@@ -277,89 +391,109 @@ Display: 36/ExtraBold, h1: 30/Bold, h2: 24/Bold, h3: 20/SemiBold, body: 16/Regul
 |---|---------|-----|-----------------|
 | 10 | Growth Journal | PRD-10 | Photo timeline, backdating, auto milestones, monthly recaps |
 | 11 | Multi-Dog | PRD-11 | Dog switcher, mini-onboarding, per-dog isolation |
-| 12 | Breed Encyclopedia | PRD-12 | 50 breed profiles, browser, content linking |
+| 12 | Breed Encyclopedia | PRD-12 | 51 breed profiles, browser, content linking |
 | 15 | Community | PRD-15 | Feed, posts, comments, moderation (post-launch) |
+
+---
+
+## Feature Status
+
+### Built & Working (Free Tier)
+- Onboarding flow (8 screens with breed detection via Google Vision)
+- Home screen with today's training plan
+- Exercise detail + completion with XP/animations
+- Buddy AI Chat (Kimi K2.5 streaming, 3 msg/day free limit)
+- Training Plan view (Week 1 free, Week 2-12 gated)
+- Gamification (XP, streaks, levels, 52 achievements, GBS gauge)
+- Health dashboard with 5 sub-screens (vaccinations, weight, medications, milestones, vet visits, notes)
+- Breed Encyclopedia (51 breeds with growth curves)
+- Growth Journal (timeline, photo/note entries, backdating)
+- Community (read-only feed with demo posts)
+- Profile + all settings screens
+- Skeleton loaders on all 5 tabs
+- ErrorBoundary at app root
+
+### Built & Premium-Gated
+- Full training (Weeks 2-12)
+- Unlimited chat
+- Full health features
+- Full tricks library (6 packs, 30 tricks, 3-level progression)
+- Multi-dog (DogSwitcher, add-dog, manage --- fully built)
+- Full journal (photos, notes, backdating)
+- Community posting (compose button gated)
+- Full gamification (streak freezes, weekly challenges)
+- Weight chart unlock
+- Exercise detail access (beyond Week 1)
+
+### Not Built Yet
+- Language/i18n --- no i18n framework, English only
+- Adaptive training engine --- plan is generated once, no adaptation logic
+- Breed comparison (breed vs breed) --- no comparison UI
+- Health PDF export --- no PDF generation
+- Real-time community backend --- currently hardcoded demo posts
+- Push notification delivery --- OneSignal not connected to actual delivery
+- RevenueCat IAP --- subscription management is placeholder
+- Deep linking / share cards --- sharing service exists but not wired
+- Supabase backend integration --- most data is local-only via Zustand persistence.
+  Supabase client exists but only auth + breed detection Edge Function are live.
+
+---
+
+## Free vs Premium Feature Matrix
+
+```
+FREE_FEATURES:
+  onboarding, week1_training, basic_chat (3/day),
+  basic_health, profile, basic_gamification,
+  free_trick_shake, community_read, basic_journal
+
+PREMIUM_FEATURES:
+  full_training, unlimited_chat, full_health,
+  full_tricks, multi_dog, full_journal,
+  community_post, full_gamification,
+  plan_adaptation, breed_comparison, health_pdf_export
+```
 
 ---
 
 ## Build Order
 
-### Phase 1: Foundation (Week 1-2)
-1. Expo project scaffold with all dependencies
-2. Supabase project + initial migrations (users, dogs)
-3. Design system primitives (Button, Card, Typography, theme)
-4. Onboarding flow (PRD-01)
-5. Apple Sign-In via Supabase Auth
-6. RevenueCat + Superwall integration (PRD-06)
-7. Basic home screen shell
+### Phase 1-5: COMPLETE
+Foundation, onboarding, training plan engine, AI chat, gamification,
+health tracker, settings, premium gating, analytics stubs, notifications stubs.
+All core UI and data stores built. See git history for details.
 
-### Phase 2: Training Core (Week 3-4)
-1. Database: exercises, plans, breed profiles + seed data
-2. Plan generation algorithm (PRD-03)
-3. Today's Training home screen
-4. Exercise detail + completion flow
-5. Free/premium gating foundation (PRD-07)
-6. Seed 60-80 core exercises
+### Phase 6: In Progress (Post-Launch Features)
+- [x] Growth Journal (PRD-10)
+- [x] Trick Library (PRD-03 Section 6) --- 30 tricks, 6 packs
+- [x] Multi-Dog (PRD-11) --- full UI, premium-gated
+- [x] Breed Encyclopedia (PRD-12) --- 51 breeds with growth curves
+- [x] Referral system (PRD-08) --- UI built, sharing service stub
+- [x] Community feed (PRD-15) --- read-only with demo data
+- [x] Breed detection (Edge Function + client service)
+- [x] Store reset on sign-out/re-onboard
 
-### Phase 3: AI Chat (Week 5-6)
-1. Chat UI with streaming (PRD-02)
-2. Edge Function: AI proxy + context injection
-3. Conversation memory
-4. Free/premium message gating
-5. Safety escalation
-
-### Phase 4: Gamification (Week 7-8)
-1. XP system wired to completions (PRD-04)
-2. Streak tracking with midnight cron
-3. Good Boy Score calculation
-4. Achievement system (20-25 initial)
-5. Home screen integration
-
-### Phase 5: Health + Polish (Week 9-10)
-1. Vaccination schedule + timeline (PRD-05)
-2. Weight tracking + breed growth chart
-3. Medication tracking with reminders
-4. Push notifications (PRD-09) + OneSignal
-5. PostHog analytics instrumentation (PRD-13)
-6. Settings screen (PRD-14)
-7. Performance + bug fixes
-8. TestFlight submission
-
-### Phase 6: Post-Launch (Week 11+)
-1. Growth Journal (PRD-10)
-2. Trick Library full build (PRD-03 Section 6)
-3. Multi-Dog (PRD-11)
-4. Breed Encyclopedia (PRD-12)
-5. Referral system (PRD-08)
-6. Community feed (PRD-15) — when user base supports it
+### Remaining Work (Pre-Launch)
+- [ ] Connect RevenueCat for real IAP
+- [ ] Connect OneSignal for real push delivery
+- [ ] Wire remaining Supabase Edge Functions (chat proxy, plan generation, etc.)
+- [ ] Connect community to Supabase Realtime
+- [ ] Add plan adaptation engine
+- [ ] Add health PDF export
+- [ ] Add i18n framework
+- [ ] Add breed comparison feature
+- [ ] Full end-to-end testing on device
+- [ ] EAS Build + TestFlight submission
 
 ---
 
 ## Current Sprint
 
-> **Update this section as you progress.**
+> **Pre-TestFlight QA + Device Testing**
 
-**Building**: Project Scaffold + Design System
-**PRD Reference**: DESIGN-SYSTEM.md, PRD-01
-**Status**: Not started
-**Next**: Expo init, Supabase setup, design tokens, first onboarding screen
-
----
-
-## Key Decisions Log
-
-| Decision | Choice | Why |
-|----------|--------|-----|
-| Mobile framework | React Native + Expo | Claude Code best at TS/React, Expo SDK 52 mature, all SDKs supported |
-| Backend | Supabase | Auth, DB, storage, edge functions, realtime on Day 1 |
-| State | Zustand + TanStack Query | Client vs server state separation, offline persistence |
-| Styling | NativeWind v4 | Tailwind for RN, Claude Code knows it deeply |
-| AI chat | Vercel AI SDK + Kimi K2.5 | Provider-agnostic streaming, cost efficient |
-| Analytics | PostHog | Feature flags built-in, session replay, modern |
-| Routing | Expo Router v4 | File-based, type-safe, deep links built-in |
-| Push | OneSignal | Segmentation, automation, in-app messaging |
-| Animations | Reanimated 3 + Moti | Native thread 60fps, declarative API |
-| Payments | RevenueCat + Superwall | IAP abstraction + remote paywall A/B testing |
+**Status**: QA audit complete, 4 PRs merged, breed detection + store reset built
+**Active branch**: `fix/device-test-blockers` (PR #4 open)
+**Next**: Commit breed detection + store reset + doc updates, then TestFlight
 
 ---
 
@@ -369,33 +503,55 @@ Display: 36/ExtraBold, h1: 30/Bold, h2: 24/Bold, h3: 20/SemiBold, body: 16/Regul
 EXPO_PUBLIC_SUPABASE_URL=
 EXPO_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=          # Edge Functions only
-KIMI_API_KEY=                       # Edge Functions only
+KIMI_API_KEY=                       # Edge Functions only (aiProvider.ts)
 REVENUECAT_APPLE_API_KEY=
 REVENUECAT_GOOGLE_API_KEY=
 SUPERWALL_API_KEY=
 ONESIGNAL_APP_ID=
 EXPO_PUBLIC_POSTHOG_API_KEY=
 EXPO_PUBLIC_POSTHOG_HOST=
-GOOGLE_CLOUD_VISION_KEY=            # Edge Functions only
+GOOGLE_CLOUD_VISION_KEY=            # Edge Functions only (breed-detect)
 SENTRY_DSN=
 ```
 
 ---
 
-## Important Notes for Claude Code
+## Key Decisions Log
+
+| Decision | Choice | Why |
+|----------|--------|-----|
+| Mobile framework | React Native + Expo | TS/React ecosystem, Expo SDK 54 mature |
+| Backend | Supabase | Auth, DB, storage, edge functions, realtime on Day 1 |
+| State | Zustand + TanStack Query | Client vs server state separation, offline persistence |
+| Styling | NativeWind v4 | Tailwind for RN |
+| AI chat | Vercel AI SDK + Kimi K2.5 | Provider-agnostic streaming, cost efficient |
+| Analytics | PostHog | Feature flags built-in, session replay |
+| Routing | Expo Router v6 | File-based, type-safe, deep links built-in |
+| Push | OneSignal | Segmentation, automation, in-app messaging |
+| Animations | Reanimated 4 | Native thread 60fps, declarative API |
+| Payments | RevenueCat + Superwall | IAP abstraction + remote paywall A/B testing |
+| Breed detection | Google Cloud Vision | LABEL_DETECTION + WEB_DETECTION, 3s timeout, silent fallback |
+
+---
+
+## Important Notes
 
 1. **Always read the relevant PRD** before building a feature.
-2. **Design system is in DESIGN-SYSTEM.md** — follow it for all UI.
-3. **Supabase types are generated** — run `supabase gen types typescript` after migrations.
-4. **Never hardcode strings** — all user-facing text in constants.
+2. **Design system is in DESIGN-SYSTEM.md** --- follow it for all UI.
+3. **Supabase types are generated** --- run `supabase gen types typescript` after migrations.
+4. **Never hardcode strings** --- all user-facing text in constants.
 5. **Buddy's personality** defined in PRD-02. System prompt template in PRD-02 Section 4.
 6. **Free vs Premium gating** defined per-feature in PRD-07. `useSubscription()` is the ONLY way to check.
-7. **All data is per-dog** — every query filters by `dog_id`.
-8. **Offline first** — TanStack Query persistence. Queue mutations offline.
-9. **Animations matter** — specified in PRDs and DESIGN-SYSTEM.md. Don't skip them.
+7. **All data is per-dog** --- every query filters by `dog_id`.
+8. **Offline first** --- TanStack Query persistence. Queue mutations offline.
+9. **Animations matter** --- specified in PRDs and DESIGN-SYSTEM.md. Don't skip them.
 10. **Every XP-earning action** goes through gamification service for achievement checks.
 11. **Analytics events** defined in PRD-13. Instrument as you build each feature.
-12. **Push notifications** — permission asked after first exercise, not on launch (PRD-09).
-13. **Paywall triggers** — 9 trigger events defined in PRD-06. Wire Superwall at each gate point.
+12. **Push notifications** --- permission asked after first exercise, not on launch (PRD-09).
+13. **Paywall triggers** --- 9 trigger events defined in PRD-06. Wire Superwall at each gate point.
 14. **Share cards** include referral link (PRD-08). Every shareable moment is marketing.
-15. **Community (PRD-15) is post-launch** — do not build until user base supports it. Feature-flagged.
+15. **Community (PRD-15) is post-launch** --- do not build until user base supports it. Feature-flagged.
+16. **Zustand selectors must return stable references** --- see Critical Patterns #1 above.
+17. **Kimi K2.5 temperature must be 1** --- see Critical Patterns #4 above.
+18. **Use resetAllStores() for any sign-out or fresh start** --- never reset stores individually.
+19. **URLs are puppal.dog** --- not puppal.app. Support: support@puppal.dog.

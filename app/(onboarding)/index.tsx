@@ -4,6 +4,7 @@ import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { Button, Typography } from "@/components/ui";
+import { resetAllStores } from "@/lib/resetStores";
 
 /**
  * Screen 1: Welcome / Meet Buddy
@@ -43,7 +44,10 @@ export default function WelcomeScreen() {
         >
           <Button
             label="Let's Go!"
-            onPress={() => router.push("/(onboarding)/name")}
+            onPress={() => {
+              resetAllStores();
+              router.push("/(onboarding)/name");
+            }}
           />
 
           <Button
