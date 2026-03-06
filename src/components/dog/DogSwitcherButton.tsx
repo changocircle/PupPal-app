@@ -1,5 +1,5 @@
 /**
- * Dog Switcher Button — Compact header button
+ * Dog Switcher Button, Compact header button
  * PRD-11 §3: Active dog photo + name + dropdown arrow in home header
  */
 

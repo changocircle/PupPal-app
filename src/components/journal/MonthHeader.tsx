@@ -3,7 +3,7 @@ import { View } from "react-native";
 import { Typography } from "@/components/ui";
 
 /**
- * MonthHeader — Month/year divider with entry count.
+ * MonthHeader, Month/year divider with entry count.
  * Visually separates timeline sections.
  */
 

@@ -57,7 +57,7 @@ export class ErrorBoundary extends Component<Props, State> {
             {this.props.screen
               ? `There was an issue loading this screen.`
               : "Something unexpected happened."}
-            {"\n"}Don't worry — your data is safe.
+            {"\n"}Don't worry. Your data is safe.
           </Typography>
           <Pressable
             onPress={this.handleRetry}

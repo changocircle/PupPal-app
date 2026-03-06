@@ -5,9 +5,9 @@ import { View, type ViewProps } from "react-native";
  * Card component matching PupPal Design System.
  *
  * Variants:
- * - default: White surface with subtle shadow — standard card
- * - featured: Coral-tinted background with emphasis — highlighted content
- * - outline: White with border, no shadow — subtle grouping
+ * - default: White surface with subtle shadow, standard card
+ * - featured: Coral-tinted background with emphasis, highlighted content
+ * - outline: White with border, no shadow, subtle grouping
  */
 
 type CardVariant = "default" | "featured" | "outline";

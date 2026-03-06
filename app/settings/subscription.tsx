@@ -1,5 +1,5 @@
 /**
- * Subscription Management Screen — PRD-06 §11
+ * Subscription Management Screen, PRD-06 §11
  *
  * Premium: Status card, plan details, manage link, restore.
  * Free: Current limits card, upgrade button, restore.
@@ -300,7 +300,7 @@ export default function SubscriptionScreen() {
               },
               {
                 q: 'Can I switch between plans?',
-                a: 'Yes — manage your plan through your device\'s subscription settings. Changes take effect at your next billing date.',
+                a: 'Yes, manage your plan through your device\'s subscription settings. Changes take effect at your next billing date.',
               },
             ].map((faq, i) => (
               <View

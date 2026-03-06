@@ -1,5 +1,5 @@
 /**
- * StreakFlame — animated streak display with visual escalation
+ * StreakFlame, animated streak display with visual escalation
  * PRD-04 §4, DESIGN-SYSTEM.md Gamification section
  *
  * Visual escalation by streak length:

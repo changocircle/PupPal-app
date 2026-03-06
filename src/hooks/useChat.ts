@@ -1,5 +1,5 @@
 /**
- * useChat Hook — PRD-02 §10
+ * useChat Hook, PRD-02 §10
  *
  * Handles sending messages, streaming responses, context injection.
  *
@@ -224,7 +224,7 @@ export function useChat(): UseChatReturn {
 }
 
 // ──────────────────────────────────────────────
-// Real AI — Kimi K2.5 via aiProvider
+// Real AI, Kimi K2.5 via aiProvider
 // ──────────────────────────────────────────────
 
 async function sendToRealAI(
@@ -268,7 +268,7 @@ async function sendToRealAI(
 }
 
 // ──────────────────────────────────────────────
-// Mock AI — Fallback when no API key
+// Mock AI, Fallback when no API key
 // ──────────────────────────────────────────────
 
 async function sendToMockAI(
@@ -309,7 +309,7 @@ function generateMockResponse(dogName: string, userMessage: string): string {
     lower.includes("pee") ||
     lower.includes("poop")
   ) {
-    return `Oh no, accidents happen — don't stress about it! At this age, ${dogName}'s bladder is still developing, and it takes time for them to build that muscle control.\n\nHere's the key: take ${dogName} outside every 1-2 hours, and *always* right after waking up, eating, and playing. When ${dogName} goes in the right spot, throw a little party — treats, praise, the works! 🎉\n\nIf you catch an accident in progress, calmly pick ${dogName} up and carry them outside. No scolding — they won't connect it to the accident.\n\nTry this today: Set a phone timer for every 90 minutes as a potty reminder. Consistency is everything here.`;
+    return `Oh no, accidents happen, don't stress about it! At this age, ${dogName}'s bladder is still developing, and it takes time for them to build that muscle control.\n\nHere's the key: take ${dogName} outside every 1-2 hours, and *always* right after waking up, eating, and playing. When ${dogName} goes in the right spot, throw a little party, treats, praise, the works! 🎉\n\nIf you catch an accident in progress, calmly pick ${dogName} up and carry them outside. No scolding. They won't connect it to the accident.\n\nTry this today: Set a phone timer for every 90 minutes as a potty reminder. Consistency is everything here.`;
   }
 
   if (
@@ -318,7 +318,7 @@ function generateMockResponse(dogName: string, userMessage: string): string {
     lower.includes("chew") ||
     lower.includes("mouth")
   ) {
-    return `I hear you — puppy biting is one of the most frustrating phases, but it IS a phase. ${dogName} isn't being bad; this is literally how puppies explore the world.\n\nThe magic technique: When ${dogName} bites, say "ouch" calmly and immediately redirect to a toy. If ${dogName} keeps going, stand up and turn away for 10 seconds. This teaches that biting = play stops.\n\nMake sure ${dogName} has plenty of appropriate chew toys around. Frozen wet washcloths are amazing for teething pups! 🧊\n\nTry this today: Keep a toy within arm's reach at all times. The instant you feel teeth, swap your hand for the toy and praise ${dogName} for chewing it.`;
+    return `I hear you, puppy biting is one of the most frustrating phases, but it IS a phase. ${dogName} isn't being bad; this is literally how puppies explore the world.\n\nThe magic technique: When ${dogName} bites, say "ouch" calmly and immediately redirect to a toy. If ${dogName} keeps going, stand up and turn away for 10 seconds. This teaches that biting = play stops.\n\nMake sure ${dogName} has plenty of appropriate chew toys around. Frozen wet washcloths are amazing for teething pups! 🧊\n\nTry this today: Keep a toy within arm's reach at all times. The instant you feel teeth, swap your hand for the toy and praise ${dogName} for chewing it.`;
   }
 
   if (
@@ -326,7 +326,7 @@ function generateMockResponse(dogName: string, userMessage: string): string {
     lower.includes("guest") ||
     lower.includes("visitor")
   ) {
-    return `Jumping is one of those behaviours that's actually really easy to fix — it just takes consistency from everyone in ${dogName}'s life.\n\nThe rule is simple: ${dogName} only gets attention when all four paws are on the floor. When ${dogName} jumps, turn your back completely and ignore. The SECOND all four paws are down, turn around and give calm praise.\n\nFor guests, have them follow the same rule. You can also keep ${dogName} on a leash when people arrive so you can manage the situation.\n\nTry this today: Practice at the front door. Have someone ring the bell, and reward ${dogName} for sitting instead of jumping. Start with just you before adding real guests.`;
+    return `Jumping is one of those behaviours that's actually really easy to fix, it just takes consistency from everyone in ${dogName}'s life.\n\nThe rule is simple: ${dogName} only gets attention when all four paws are on the floor. When ${dogName} jumps, turn your back completely and ignore. The SECOND all four paws are down, turn around and give calm praise.\n\nFor guests, have them follow the same rule. You can also keep ${dogName} on a leash when people arrive so you can manage the situation.\n\nTry this today: Practice at the front door. Have someone ring the bell, and reward ${dogName} for sitting instead of jumping. Start with just you before adding real guests.`;
   }
 
   if (
@@ -335,7 +335,7 @@ function generateMockResponse(dogName: string, userMessage: string): string {
     lower.includes("whining") ||
     lower.includes("cry")
   ) {
-    return `Crate training takes patience, but once ${dogName} loves the crate, it becomes their safe haven — like a cozy bedroom.\n\nThe #1 rule: never use the crate as punishment. We want ${dogName} to think "crate = good things happen."\n\nStart by feeding meals inside the crate with the door open. Then try closing the door just during meals. Gradually increase the time with the door closed.\n\nIf ${dogName} whines, wait for even 2 seconds of quiet before opening. This teaches that quiet = door opens, not whining.\n\nTry this today: Toss a few treats into the crate and let ${dogName} go in and out freely. No closing the door yet — just building that positive association.`;
+    return `Crate training takes patience, but once ${dogName} loves the crate, it becomes their safe haven, like a cozy bedroom.\n\nThe #1 rule: never use the crate as punishment. We want ${dogName} to think "crate = good things happen."\n\nStart by feeding meals inside the crate with the door open. Then try closing the door just during meals. Gradually increase the time with the door closed.\n\nIf ${dogName} whines, wait for even 2 seconds of quiet before opening. This teaches that quiet = door opens, not whining.\n\nTry this today: Toss a few treats into the crate and let ${dogName} go in and out freely. No closing the door yet, just building that positive association.`;
   }
 
   if (
@@ -343,7 +343,7 @@ function generateMockResponse(dogName: string, userMessage: string): string {
     lower.includes("pull") ||
     lower.includes("walk")
   ) {
-    return `Leash walking is honestly one of the trickiest skills to teach, so don't feel bad if ${dogName} isn't getting it right away!\n\nThe technique that works best: When ${dogName} pulls, stop walking completely. Stand still like a tree. 🌳 The moment ${dogName} looks back at you or the leash goes slack, mark it ("yes!") and continue walking.\n\nConsistency is everything here — if you sometimes let ${dogName} pull to get somewhere, it teaches that pulling works sometimes, which makes it way harder to fix.\n\nTry this today: Start with just 5-minute practice walks in a low-distraction area (like your garden or a quiet street). Save the longer adventure walks for when ${dogName}'s leash skills improve.`;
+    return `Leash walking is honestly one of the trickiest skills to teach, so don't feel bad if ${dogName} isn't getting it right away!\n\nThe technique that works best: When ${dogName} pulls, stop walking completely. Stand still like a tree. 🌳 The moment ${dogName} looks back at you or the leash goes slack, mark it ("yes!") and continue walking.\n\nConsistency is everything here. If you sometimes let ${dogName} pull to get somewhere, it teaches that pulling works sometimes, which makes it way harder to fix.\n\nTry this today: Start with just 5-minute practice walks in a low-distraction area (like your garden or a quiet street). Save the longer adventure walks for when ${dogName}'s leash skills improve.`;
   }
 
   if (
@@ -353,11 +353,11 @@ function generateMockResponse(dogName: string, userMessage: string): string {
     lower.includes("great day") ||
     lower.includes("good")
   ) {
-    return `Wait — that's AMAZING! 🎉 I'm so proud of ${dogName}! That kind of progress doesn't happen by accident — it's because you've been putting in the work consistently.\n\nMake sure you celebrate this win with ${dogName} too. A special treat, extra playtime, or just loads of praise. Dogs pick up on our excitement and it reinforces that they did something awesome.\n\nKeep this momentum going — what should we work on next?`;
+    return `Wait, that's AMAZING! 🎉 I'm so proud of ${dogName}! That kind of progress doesn't happen by accident, it's because you've been putting in the work consistently!\n\nMake sure you celebrate this win with ${dogName} too. A special treat, extra playtime, or just loads of praise. Dogs pick up on our excitement and it reinforces that they did something awesome.\n\nKeep this momentum going! What should we work on next?`;
   }
 
   if (lower.includes("breed") || lower.includes("normal for")) {
-    return `Great question! Every breed has their own personality quirks and tendencies. What ${dogName}'s doing sounds completely within the range of normal puppy behaviour — but there might be some breed-specific things we can use to our advantage.\n\nFor instance, some breeds are more food-motivated (which makes training easier!), while others respond better to play rewards. Understanding what makes ${dogName} tick is the key to faster progress.\n\nWhat specifically about ${dogName}'s behaviour are you wondering about? I can give you more targeted advice.`;
+    return `Great question! Every breed has their own personality quirks and tendencies. What ${dogName}'s doing sounds completely within the range of normal puppy behaviour, but there might be some breed-specific things we can use to our advantage.\n\nFor instance, some breeds are more food-motivated (which makes training easier!), while others respond better to play rewards. Understanding what makes ${dogName} tick is the key to faster progress.\n\nWhat specifically about ${dogName}'s behaviour are you wondering about? I can give you more targeted advice.`;
   }
 
   if (
@@ -368,7 +368,7 @@ function generateMockResponse(dogName: string, userMessage: string): string {
     lower.includes("chocolate") ||
     lower.includes("sick")
   ) {
-    return `I want to make sure ${dogName} is okay — this is something I'd recommend checking with your vet about.\n\nIf ${dogName} seems to be in distress, is lethargic, or the symptoms are getting worse, please contact your vet or emergency animal hospital right away. For potential poisoning, you can also call ASPCA Poison Control: (888) 426-4435.\n\nOnce the vet gives the all-clear, I'm here to help adjust ${dogName}'s training if needed. ${dogName}'s health always comes first. 💛`;
+    return `I want to make sure ${dogName} is okay. This is something I'd recommend checking with your vet about.\n\nIf ${dogName} seems to be in distress, is lethargic, or the symptoms are getting worse, please contact your vet or emergency animal hospital right away. For potential poisoning, you can also call ASPCA Poison Control: (888) 426-4435.\n\nOnce the vet gives the all-clear, I'm here to help adjust ${dogName}'s training if needed. ${dogName}'s health always comes first. 💛`;
   }
 
   if (
@@ -376,7 +376,7 @@ function generateMockResponse(dogName: string, userMessage: string): string {
     lower.includes("today's training") ||
     lower.includes("what should")
   ) {
-    return `Let's check in on ${dogName}'s training plan! Based on where you are, I'd suggest focusing on a short, fun session today.\n\nHere's what I'd recommend:\n\n1. Start with a 2-minute warm-up of a skill ${dogName} already knows (like sit or name response) — this builds confidence\n2. Spend 5 minutes on your current exercise from the plan\n3. End with play or a high-value treat so ${dogName} associates training with good times\n\nThe whole thing should take about 10 minutes. Short sessions are actually more effective than long ones — ${dogName}'s attention span is still developing!\n\nHead over to the Plan tab to see your specific exercises for today. 📋`;
+    return `Let's check in on ${dogName}'s training plan! Based on where you are, I'd suggest focusing on a short, fun session today.\n\nHere's what I'd recommend:\n\n1. Start with a 2-minute warm-up of a skill ${dogName} already knows (like sit or name response). This builds confidence.\n2. Spend 5 minutes on your current exercise from the plan\n3. End with play or a high-value treat so ${dogName} associates training with good times\n\nThe whole thing should take about 10 minutes. Short sessions are actually more effective than long ones. ${dogName}'s attention span is still developing!\n\nHead over to the Plan tab to see your specific exercises for today. 📋`;
   }
 
   return `That's a great question about ${dogName}! Let me think about this...\n\nAt this stage in ${dogName}'s development, the most important thing is consistency and patience. Every puppy learns at their own pace, and what feels like slow progress now is actually building a really strong foundation.\n\nHere's what I'd suggest: focus on one thing at a time, keep sessions short (5-10 minutes), and always end on a positive note. ${dogName} should feel like training is the best part of the day!\n\nWhat specific aspect of this would you like me to dig deeper into?`;

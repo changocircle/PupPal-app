@@ -1,5 +1,5 @@
 /**
- * ChatLimitBanner — PRD-02 §6 / PRD-07
+ * ChatLimitBanner, PRD-02 §6 / PRD-07
  *
  * Inline paywall shown when free user hits daily message limit.
  * Also shows remaining message count subtly.
@@ -44,7 +44,7 @@ export function ChatLimitBanner({
             color="secondary"
             className="text-center mb-lg max-w-[260px]"
           >
-            Upgrade for unlimited Buddy access — {dogName}'s training shouldn't
+            Upgrade for unlimited Buddy access. {dogName}'s training shouldn't
             have limits!
           </Typography>
           <Button

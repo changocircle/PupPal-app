@@ -1,5 +1,5 @@
 /**
- * Achievement data access helpers — PRD-04 §6
+ * Achievement data access helpers, PRD-04 §6
  * Loads 52 achievement definitions and provides lookup functions.
  */
 

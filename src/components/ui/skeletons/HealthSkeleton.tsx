@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Skeleton } from "../Skeleton";
 
 /**
- * Health screen skeleton — header, status badges, upcoming events,
+ * Health screen skeleton, header, status badges, upcoming events,
  * quick actions grid, weight card, health notes.
  */
 export function HealthSkeleton() {

@@ -1,5 +1,5 @@
 import React, { useRef, useCallback, useEffect, useMemo } from "react";
-import { View, FlatList, KeyboardAvoidingView, Platform } from "react-native";
+import { View, Text, FlatList, KeyboardAvoidingView, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
 import { Typography, ErrorBoundary, ChatSkeleton } from "@/components/ui";
@@ -18,7 +18,7 @@ import { useHydration } from "@/hooks/useHydration";
 import type { ChatMessage } from "@/types/chat";
 
 /**
- * Buddy AI Chat Screen — PRD-02
+ * Buddy AI Chat Screen, PRD-02
  *
  * Full chat interface with:
  * - Message bubbles (Buddy left, user right)
@@ -83,6 +83,9 @@ function ChatScreenContent() {
   // Message renderer
   const renderMessage = useCallback(
     ({ item, index }: { item: ChatMessage; index: number }) => {
+      // Hide empty streaming messages (TypingIndicator handles the visual)
+      if (item.isStreaming && !item.content) return null;
+
       // Show avatar only for first message or when switching speakers
       const prev = index > 0 ? messages[index - 1] : undefined;
       const showAvatar =
@@ -115,7 +118,7 @@ function ChatScreenContent() {
           className="flex-row items-center px-xl py-sm border-b border-border bg-surface"
         >
           <View className="w-[36px] h-[36px] rounded-full bg-primary-light items-center justify-center mr-sm">
-            <Typography style={{ fontSize: 20 }}>🐕</Typography>
+            <Text style={{ fontSize: 20, lineHeight: 28 }}>🐶</Text>
           </View>
           <View className="flex-1">
             <Typography variant="body-medium">Buddy</Typography>
@@ -207,7 +210,7 @@ function ChatScreenContent() {
 }
 
 // ──────────────────────────────────────────────
-// Empty state — first time or cleared conversation
+// Empty state, first time or cleared conversation
 // ──────────────────────────────────────────────
 
 function EmptyState({
@@ -229,7 +232,7 @@ function EmptyState({
       >
         {/* Buddy avatar */}
         <View className="w-[100px] h-[100px] rounded-full bg-primary-light items-center justify-center mb-lg">
-          <Typography style={{ fontSize: 52 }}>🐕</Typography>
+          <Text style={{ fontSize: 52, lineHeight: 64 }}>🐶</Text>
         </View>
 
         <Typography variant="h2" className="text-center mb-sm">

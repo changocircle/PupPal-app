@@ -4,9 +4,9 @@ import { Stack } from "expo-router";
 /**
  * Onboarding Layout
  *
- * No tab bar, no header — clean full-screen flow.
+ * No tab bar, no header, clean full-screen flow.
  * Custom back navigation handled per-screen.
- * No progress bar (Lemonade principle — branching logic makes progress bars misleading).
+ * No progress bar (Lemonade principle, branching logic makes progress bars misleading).
  */
 export default function OnboardingLayout() {
   return (

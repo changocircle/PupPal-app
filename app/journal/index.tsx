@@ -18,7 +18,7 @@ import { useSubscription } from "@/hooks/useSubscription";
 import type { JournalFilter, JournalEntry } from "@/types/journal";
 
 /**
- * Journal Timeline Screen — PRD-10 §3
+ * Journal Timeline Screen, PRD-10 §3
  * Chronological feed grouped by month. Filter tabs at top. FAB for adding.
  */
 

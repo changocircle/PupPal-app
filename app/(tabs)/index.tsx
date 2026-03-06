@@ -20,7 +20,7 @@ import { useHydration } from "@/hooks/useHydration";
 import { DogSwitcherButton } from "@/components/dog";
 
 /**
- * Home Screen — "Today's Training" + Gamification
+ * Home Screen, "Today's Training" + Gamification
  * PRD-03 §7 + PRD-04: dog name, gamification row, today's exercises,
  * weekly challenge, achievement/level-up celebrations
  */
@@ -65,7 +65,7 @@ function HomeScreenContent() {
   const getCurrentDay = useTrainingStore((s) => s.getCurrentDay);
   const getWeekProgress = useTrainingStore((s) => s.getWeekProgress);
 
-  // Gamification hook — XP, level, GBS, streak, achievements
+  // Gamification hook, XP, level, GBS, streak, achievements
   const gam = useGamification();
 
   // Auto-generate plan if not yet created and we have onboarding data
@@ -165,7 +165,7 @@ function HomeScreenContent() {
                 Good Boy Graduate!
               </Typography>
               <Typography variant="body-sm" color="secondary" className="text-center mb-base">
-                {dogName} completed the 12-week training plan! Foundation skills are solid — now let's have some fun with tricks.
+                {dogName} completed the 12-week training plan! Foundation skills are solid, now let's have some fun with tricks.
               </Typography>
               <View className="flex-row gap-md mb-sm">
                 <Card className="flex-1 items-center py-sm bg-accent-light border-accent/20">
@@ -407,7 +407,7 @@ function HomeScreenContent() {
                 </Typography>
                 <Typography variant="body-sm">
                   Tap any exercise to see step-by-step instructions. Short,
-                  focused sessions work best — even 5 minutes counts!
+                  focused sessions work best, even 5 minutes counts!
                 </Typography>
               </View>
             </Card>

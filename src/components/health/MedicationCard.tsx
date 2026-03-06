@@ -1,5 +1,5 @@
 /**
- * Medication Card — PRD-05 §5
+ * Medication Card, PRD-05 §5
  *
  * Card for an active medication with quick "Log Dose" action.
  */

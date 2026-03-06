@@ -14,10 +14,10 @@ import { detectBreed, type BreedPrediction } from "@/lib/breedDetect";
  * PRD-01 Section 3, Screen 3
  *
  * Confidence thresholds:
- *   >70%  — auto-fill breed with Buddy reaction
- *   40-70 — show as suggestion with confirm/change
- *   <40%  — show top options or fall back to manual
- *   fail  — silently show manual selector
+ *   >70% , auto-fill breed with Buddy reaction
+ *   40-70, show as suggestion with confirm/change
+ *   <40% , show top options or fall back to manual
+ *   fail , silently show manual selector
  */
 
 type DetectionState =

@@ -1,5 +1,5 @@
 /**
- * Developmental Milestone Templates — PRD-05 §8
+ * Developmental Milestone Templates, PRD-05 §8
  *
  * Breed and age-specific milestones for physical,
  * behavioural, and health development stages.
@@ -54,13 +54,13 @@ export const MILESTONE_TEMPLATES: DevelopmentalMilestone[] = [
     typicalAgeWeeksStart: 12,
     typicalAgeWeeksEnd: 32,
     tips: [
-      "Ears may flop during teething — this is normal",
+      "Ears may flop during teething, this is normal",
       "Don't tape or manipulate ears without vet guidance",
       "If one ear is up and one down, give it time",
       "Most ears are fully erect by 6-8 months",
     ],
     buddyMessage:
-      "Watching those ears is like watching a fun little show! They may go up, down, sideways — all totally normal during teething. 😄",
+      "Watching those ears is like watching a fun little show! They may go up, down, sideways. All totally normal during teething. 😄",
     isTrackable: true,
   },
   {
@@ -74,7 +74,7 @@ export const MILESTONE_TEMPLATES: DevelopmentalMilestone[] = [
     tips: [
       "Increase brushing during coat transition",
       "A good quality brush suited to coat type helps",
-      "Nutrition affects coat quality — ensure balanced diet",
+      "Nutrition affects coat quality, ensure balanced diet",
       "Some breeds' coat colour changes during this time",
     ],
     buddyMessage:
@@ -96,7 +96,7 @@ export const MILESTONE_TEMPLATES: DevelopmentalMilestone[] = [
       "Don't over-exercise growing joints",
     ],
     buddyMessage:
-      "Your pup is reaching full height! They might look a bit lanky — they'll fill out with time. 📏",
+      "Your pup is reaching full height! They might look a bit lanky, they'll fill out with time. 📏",
     isTrackable: true,
   },
 
@@ -112,12 +112,12 @@ export const MILESTONE_TEMPLATES: DevelopmentalMilestone[] = [
     tips: [
       "Keep all new experiences positive and gentle",
       "Don't force your pup into scary situations",
-      "If something scares them, calmly redirect — don't over-comfort",
+      "If something scares them, calmly redirect, don't over-comfort",
       "This is a normal developmental phase, not a training failure",
       "Avoid traumatic experiences (loud events, aggressive dogs)",
     ],
     buddyMessage:
-      "Heads up — your pup is in the first fear period. If they seem extra cautious, that's completely normal! Keep things positive and let them explore at their own pace. 💛",
+      "Heads up! Your pup is in the first fear period. If they seem extra cautious, that's completely normal! Keep things positive and let them explore at their own pace. 💛",
     isTrackable: false,
   },
   {
@@ -125,14 +125,14 @@ export const MILESTONE_TEMPLATES: DevelopmentalMilestone[] = [
     name: "Fear Period #2",
     category: "behavioral",
     description:
-      "The second fear period often catches owners off guard — a previously confident puppy may suddenly become wary. This is normal adolescent development.",
+      "The second fear period often catches owners off guard, a previously confident puppy may suddenly become wary. This is normal adolescent development.",
     typicalAgeWeeksStart: 26,
     typicalAgeWeeksEnd: 60,
     tips: [
       "Don't punish fearful behaviour",
       "Continue positive exposure at their pace",
       "It may come and go over several weeks",
-      "Confidence will return — be patient",
+      "Confidence will return, be patient",
       "Counter-condition with treats near 'scary' things",
     ],
     buddyMessage:
@@ -149,13 +149,13 @@ export const MILESTONE_TEMPLATES: DevelopmentalMilestone[] = [
     typicalAgeWeeksEnd: 78,
     tips: [
       "Stay consistent with rules and routines",
-      "Increase mental stimulation — puzzle toys, training games",
-      "Don't take defiance personally — it's developmental",
+      "Increase mental stimulation, puzzle toys, training games",
+      "Don't take defiance personally. It's developmental",
       "Re-proof known commands in new environments",
       "Exercise helps channel adolescent energy",
     ],
     buddyMessage:
-      "Welcome to the teenage phase! 🎸 Your pup might 'forget' things they used to know. They haven't — they're just testing boundaries. Stay patient and consistent!",
+      "Welcome to the teenage phase! 🎸 Your pup might 'forget' things they used to know. They haven't! They're just testing boundaries. Stay patient and consistent!",
     isTrackable: false,
   },
   {
@@ -170,7 +170,7 @@ export const MILESTONE_TEMPLATES: DevelopmentalMilestone[] = [
       "It's normal for dogs to become more selective about playmates",
       "Watch for any signs of dog reactivity developing",
       "Continue positive social experiences",
-      "Personality is more settled — this is the 'real' them",
+      "Personality is more settled, this is the 'real' them",
     ],
     buddyMessage:
       "Your pup is becoming a fully-fledged adult dog! Their personality is really shining through now. 🌟",
@@ -190,7 +190,7 @@ export const MILESTONE_TEMPLATES: DevelopmentalMilestone[] = [
       "Talk to your vet about the best timing for your breed",
       "Large breeds may benefit from waiting longer",
       "Discuss health implications with your vet",
-      "This is a personal decision — no one-size-fits-all answer",
+      "This is a personal decision, no one-size-fits-all answer",
     ],
     buddyMessage:
       "Time to chat with your vet about spay/neuter timing! Every dog is different, so your vet can give the best advice for your specific pup. 🩺",
@@ -220,7 +220,7 @@ export const MILESTONE_TEMPLATES: DevelopmentalMilestone[] = [
     name: "First Annual Wellness Exam",
     category: "health",
     description:
-      "Schedule your dog's first annual wellness exam. This is different from puppy vaccine visits — it's a comprehensive health check.",
+      "Schedule your dog's first annual wellness exam. This is different from puppy vaccine visits, it's a comprehensive health check.",
     typicalAgeWeeksStart: 52,
     typicalAgeWeeksEnd: 60,
     tips: [

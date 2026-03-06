@@ -1,5 +1,5 @@
 /**
- * Health Store — Zustand + AsyncStorage
+ * Health Store, Zustand + AsyncStorage
  * PRD-05: vaccinations, medications, weight, vet visits, milestones, notes.
  *
  * Local-first: Supabase sync deferred.

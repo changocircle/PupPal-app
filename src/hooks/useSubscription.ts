@@ -1,5 +1,5 @@
 /**
- * useSubscription — THE ONLY WAY to check premium access (PRD-06 §2, PRD-07 §2)
+ * useSubscription, THE ONLY WAY to check premium access (PRD-06 §2, PRD-07 §2)
  *
  * Single entitlement model: `premium`. No tiers, no feature-level entitlements.
  * In production: integrates with RevenueCat for IAP source of truth.
@@ -11,6 +11,7 @@
  * 3. Admin override (testing, press, influencer comps)
  */
 
+import { useEffect, useRef } from 'react';
 import { useAuthStore } from '@/stores/authStore';
 import { useSettingsStore } from '@/stores/settingsStore';
 import type { SubscriptionStatus } from '@/types/database';
@@ -68,14 +69,21 @@ export function useSubscription() {
   // devPremiumOverride: 5-tap easter egg on profile, persisted in settingsStore
   const isPremium = devPremiumOverride || isActive || isTrial;
 
-  // Debug: log every time isPremium is computed (remove before prod)
-  console.log(
-    "[Subscription] isPremium:", isPremium,
-    "| devOverride:", devPremiumOverride,
-    "| status:", status,
-    "| isActive:", isActive,
-    "| isTrial:", isTrial,
-  );
+  // Debug: log only when isPremium actually changes (not on every render)
+  const prevRef = useRef<boolean | null>(null);
+  useEffect(() => {
+    if (prevRef.current !== isPremium) {
+      console.log(
+        "[Subscription] isPremium changed:",
+        isPremium,
+        "| devOverride:",
+        devPremiumOverride,
+        "| status:",
+        status,
+      );
+      prevRef.current = isPremium;
+    }
+  }, [isPremium, devPremiumOverride, status]);
 
   // Trial dates
   const trialStartDate = user?.trial_start_date ?? null;

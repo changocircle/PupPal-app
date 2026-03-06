@@ -1,5 +1,5 @@
 /**
- * Community Types — PRD-15
+ * Community Types, PRD-15
  *
  * P3 post-launch feature. Types defined now for screen scaffolding.
  * Full implementation requires Supabase tables + moderation pipeline.

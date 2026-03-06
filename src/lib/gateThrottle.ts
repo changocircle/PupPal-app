@@ -1,5 +1,5 @@
 /**
- * Gate Frequency Limiting — PRD-07 §4
+ * Gate Frequency Limiting, PRD-07 §4
  *
  * Rules:
  * - Maximum 1 paywall per session (app open → close)

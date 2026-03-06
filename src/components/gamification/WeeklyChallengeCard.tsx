@@ -1,5 +1,5 @@
 /**
- * WeeklyChallengeCard — weekly challenge progress card
+ * WeeklyChallengeCard, weekly challenge progress card
  * PRD-04 §8: title, description, progress bar, XP reward, days remaining
  */
 

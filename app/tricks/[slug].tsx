@@ -14,7 +14,7 @@ import type { TrickProgress } from '@/types/tricks';
 import { Button } from '@/components/ui';
 
 /**
- * Pack Detail Screen — PRD-03 §6
+ * Pack Detail Screen, PRD-03 §6
  *
  * Shows all tricks in a pack with lock/unlock status, 3-star ratings,
  * prerequisite info, and pack progress bar.

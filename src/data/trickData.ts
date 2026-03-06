@@ -1,5 +1,5 @@
 /**
- * Trick Library Data Access — PRD-03 §6
+ * Trick Library Data Access, PRD-03 §6
  *
  * Loads trick and pack data from JSON, provides lookup helpers,
  * and handles personalisation (dog name / breed substitution).

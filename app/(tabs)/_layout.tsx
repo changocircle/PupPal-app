@@ -84,9 +84,6 @@ export default function TabLayout() {
         }}
       />
 
-      {/* Hide community sub-routes from tab bar */}
-      <Tabs.Screen name="community/[id]" options={{ href: null }} />
-      <Tabs.Screen name="community/create" options={{ href: null }} />
     </Tabs>
   );
 }

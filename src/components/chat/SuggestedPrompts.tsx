@@ -1,5 +1,5 @@
 /**
- * SuggestedPrompts — PRD-02 §5/§11
+ * SuggestedPrompts, PRD-02 §5/§11
  *
  * Horizontally scrollable pill buttons above the input bar.
  * Tap sends as message immediately.

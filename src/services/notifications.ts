@@ -1,5 +1,5 @@
 /**
- * Push Notification Service — PRD-09
+ * Push Notification Service, PRD-09
  *
  * Handles notification permissions, scheduling, and deep link routing.
  * Uses Expo Notifications locally. In production: OneSignal for
@@ -301,7 +301,7 @@ export async function scheduleHealthReminder(
   const id = await Notifications.scheduleNotificationAsync({
     content: {
       title: `${dogName}'s ${eventName} coming up 💉`,
-      body: `Due in ${daysBefore} days — schedule a vet appointment`,
+      body: `Due in ${daysBefore} days. Schedule a vet appointment`,
       data: { type: 'health_reminder', screen: '/(tabs)/health' },
       sound: 'default',
     },

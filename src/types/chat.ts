@@ -1,5 +1,5 @@
 /**
- * Chat Types — PRD-02
+ * Chat Types, PRD-02
  *
  * Data models for AI Mentor Chat (Buddy).
  * Mirrors the PRD-02 §9 data model for when Supabase is wired up.
@@ -111,10 +111,10 @@ export const SESSION_TIMEOUT_MINUTES = 30;
 
 // Developmental stage lookup
 export function getDevelopmentalStage(ageWeeks: number): string {
-  if (ageWeeks < 8) return "Early Puppy — critical socialization window opening";
-  if (ageWeeks < 12) return "Prime Puppy — peak socialization, foundation skills";
-  if (ageWeeks < 16) return "Late Puppy — first fear period possible";
-  if (ageWeeks < 26) return "Adolescent — testing boundaries, regression normal";
-  if (ageWeeks < 52) return "Young Adult — second fear period possible";
-  return "Adult — mature learning, focus on refinement";
+  if (ageWeeks < 8) return "Early Puppy: critical socialization window opening";
+  if (ageWeeks < 12) return "Prime Puppy: peak socialization, foundation skills";
+  if (ageWeeks < 16) return "Late Puppy: first fear period possible";
+  if (ageWeeks < 26) return "Adolescent: testing boundaries, regression normal";
+  if (ageWeeks < 52) return "Young Adult: second fear period possible";
+  return "Adult: mature learning, focus on refinement";
 }

@@ -5,17 +5,17 @@ import { Text, type TextProps } from "react-native";
  * Typography component matching PupPal Design System.
  *
  * Variants:
- * - display: 36px ExtraBold — onboarding headlines, celebration screens
- * - h1: 30px Bold — screen titles
- * - h2: 24px Bold — section headers
- * - h3: 20px SemiBold — card titles, feature names
- * - body-lg: 18px Regular — Buddy chat, primary content
- * - body: 16px Regular — default body text
- * - body-medium: 16px Medium — emphasized body, labels
- * - body-sm: 14px Regular — secondary text, captions
- * - body-sm-medium: 14px Medium — badges, tags
- * - caption: 12px Medium — timestamps, fine print
- * - overline: 11px SemiBold — category labels (uppercase)
+ * - display: 36px ExtraBold, onboarding headlines, celebration screens
+ * - h1: 30px Bold, screen titles
+ * - h2: 24px Bold, section headers
+ * - h3: 20px SemiBold, card titles, feature names
+ * - body-lg: 18px Regular, Buddy chat, primary content
+ * - body: 16px Regular, default body text
+ * - body-medium: 16px Medium, emphasized body, labels
+ * - body-sm: 14px Regular, secondary text, captions
+ * - body-sm-medium: 14px Medium, badges, tags
+ * - caption: 12px Medium, timestamps, fine print
+ * - overline: 11px SemiBold, category labels (uppercase)
  */
 
 type TypographyVariant =

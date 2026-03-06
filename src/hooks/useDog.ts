@@ -5,7 +5,7 @@ import { useAuthStore } from "@/stores/authStore";
 import type { Dog, InsertDog, UpdateDog } from "@/types/database";
 
 /**
- * Dog data hook — all dog CRUD via TanStack Query.
+ * Dog data hook, all dog CRUD via TanStack Query.
  * Per TECH-STACK.md: server state through TanStack Query,
  * client state (active selection) through Zustand.
  */

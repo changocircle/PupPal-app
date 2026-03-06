@@ -1,5 +1,5 @@
 /**
- * Fallback Native Paywall — PRD-06 §4 + §15 Edge Cases
+ * Fallback Native Paywall, PRD-06 §4 + §15 Edge Cases
  *
  * In production, Superwall handles paywall presentation with A/B testing.
  * This is the native fallback if Superwall fails or isn't configured yet.
@@ -96,7 +96,7 @@ function getHeadline(trigger: string, dogName: string): { title: string; subtitl
     case 'feature_gate_chat':
       return {
         title: `Unlimited Buddy access for ${dogName}`,
-        subtitle: 'Ask anything, anytime — no daily limits',
+        subtitle: 'Ask anything, anytime, no daily limits',
       };
     case 'feature_gate_health':
       return {
@@ -121,7 +121,7 @@ function getHeadline(trigger: string, dogName: string): { title: string; subtitl
     case 'streak_milestone_7':
       return {
         title: `${dogName}'s on a 7-day streak! 🔥`,
-        subtitle: "Don't lose momentum — keep training",
+        subtitle: "Don't lose momentum, keep training",
       };
     case 'plan_week1_complete':
       return {
@@ -246,7 +246,7 @@ export default function PaywallScreen() {
                   Today
                 </Typography>
                 <Typography variant="caption" color="secondary">
-                  Full access starts — $0.00
+                  Full access starts, $0.00
                 </Typography>
               </View>
             </View>

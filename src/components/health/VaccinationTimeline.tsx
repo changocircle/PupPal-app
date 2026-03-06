@@ -1,5 +1,5 @@
 /**
- * Vaccination Timeline Item — PRD-05 §4
+ * Vaccination Timeline Item, PRD-05 §4
  *
  * A single row in the vertical vaccination timeline.
  */

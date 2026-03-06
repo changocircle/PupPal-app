@@ -4,7 +4,7 @@ import { Typography, Card } from "@/components/ui";
 import type { JournalEntry } from "@/types/journal";
 
 /**
- * ThrowbackCard — "On This Day" card for the home screen.
+ * ThrowbackCard, "On This Day" card for the home screen.
  *
  * Shows an old entry (preferably a photo) from 1/3/6/12 months ago.
  */

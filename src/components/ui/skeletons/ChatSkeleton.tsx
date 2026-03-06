@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Skeleton } from "../Skeleton";
 
 /**
- * Chat/Buddy screen skeleton — header bar + message bubbles
+ * Chat/Buddy screen skeleton, header bar + message bubbles
  * Alternates between left (assistant) and right (user) bubbles.
  */
 export function ChatSkeleton() {

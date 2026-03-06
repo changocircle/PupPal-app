@@ -15,7 +15,7 @@ import { TRICK_LEVEL_META, FREE_TRICK_ID } from '@/types/tricks';
 import type { TrickLevel } from '@/types/tricks';
 
 /**
- * Trick Detail Screen — PRD-03 §6
+ * Trick Detail Screen, PRD-03 §6
  *
  * Full instructions for a single trick with 3-level progression tabs
  * (Learning → Fluent → Mastered), supplies, steps, tips, breed notes.
@@ -453,7 +453,7 @@ export default function TrickDetailScreen() {
           {showSharePrompt ? (
             <View>
               <Typography variant="body-medium" className="text-center mb-sm">
-                🎉 {personalised?.title} — {TRICK_LEVEL_META[activeLevel].label} complete!
+                🎉 {personalised?.title}, {TRICK_LEVEL_META[activeLevel].label} complete!
               </Typography>
               <View className="flex-row gap-sm">
                 <Button

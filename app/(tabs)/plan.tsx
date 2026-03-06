@@ -282,7 +282,7 @@ function ThisWeekView({
               </View>
               <Typography variant="body-medium">
                 Day {day.dayNumber}
-                {isCurrentDay ? " — Today" : ""}
+                {isCurrentDay ? " (Today)" : ""}
               </Typography>
               <Typography variant="caption" color="tertiary">
                 ~{day.estimatedMinutes} min
@@ -376,7 +376,7 @@ function FullPlanView({
 }
 
 /**
- * Post-Graduation View — PRD-03 §Post-Graduation Experience
+ * Post-Graduation View, PRD-03 §Post-Graduation Experience
  *
  * When the 12-week plan is complete, the "This Week" tab transitions
  * to show maintenance recommendations and points to the Trick Library.
@@ -397,7 +397,7 @@ function PostGraduationView({ dogName }: { dogName: string }) {
           </Typography>
           <Typography variant="body-sm" color="secondary" className="text-center">
             {dogName}'s foundation is solid. The 12-week journey is done
-            — keep growing with tricks, practice, and daily consistency.
+           , keep growing with tricks, practice, and daily consistency.
           </Typography>
         </Card>
       </Animated.View>
@@ -413,7 +413,7 @@ function PostGraduationView({ dogName }: { dogName: string }) {
             <View className="flex-1">
               <Typography variant="body-medium">Maintenance Review</Typography>
               <Typography variant="body-sm" color="secondary" className="mt-[2px]">
-                Practise a core skill from {dogName}'s plan — pick one from
+                Practise a core skill from {dogName}'s plan, pick one from
                 Sit/Stay, Recall, or Loose-Lead Walking. 5-10 min session.
               </Typography>
             </View>
@@ -428,7 +428,7 @@ function PostGraduationView({ dogName }: { dogName: string }) {
                 <Typography variant="body-medium">Learn a New Trick</Typography>
                 <Typography variant="body-sm" color="secondary" className="mt-[2px]">
                   {dogName}'s ready for fun! Explore the Trick Library for new
-                  challenges — {totalTricksCompleted > 0
+                  challenges, {totalTricksCompleted > 0
                     ? `${totalTricksCompleted} trick${totalTricksCompleted !== 1 ? 's' : ''} learned so far.`
                     : 'start with Shake to warm up.'}
                 </Typography>
@@ -474,7 +474,7 @@ function PostGraduationView({ dogName }: { dogName: string }) {
                 • Keep practising core commands 3-5 min daily{'\n'}
                 • Teach one new trick per week to stay sharp{'\n'}
                 • Log walks and sessions in the Health tracker{'\n'}
-                • Share milestones — it builds consistency!
+                • Share milestones, it builds consistency!
               </Typography>
             </View>
           </View>

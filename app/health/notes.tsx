@@ -23,14 +23,14 @@ import {
 } from "@/types/health";
 
 /**
- * Health Notes Screen — PRD-05 §9
+ * Health Notes Screen, PRD-05 §9
  */
 
 export default function HealthNotesScreen() {
   const router = useRouter();
   const { isPremium } = useSubscription();
 
-  // PRD-07: Gate premium content (inline, no redirect — prevents render loops)
+  // PRD-07: Gate premium content (inline, no redirect, prevents render loops)
   // Individual selectors → stable refs, prevents render loops
   const activeDogId = useDogStore((s) => s.activeDogId);
   const dogs = useDogStore((s) => s.dogs);
@@ -383,7 +383,7 @@ export default function HealthNotesScreen() {
                   color="secondary"
                   className="text-center mb-base"
                 >
-                  Jot down anything — behavior changes, diet notes, skin
+                  Jot down anything, behavior changes, diet notes, skin
                   observations, etc.
                 </Typography>
                 <Button

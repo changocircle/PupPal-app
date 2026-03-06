@@ -13,7 +13,7 @@ import { useSubscription } from "@/hooks/useSubscription";
 import type { WeightUnit } from "@/types/health";
 
 /**
- * Weight Tracking Screen — PRD-05 §6
+ * Weight Tracking Screen, PRD-05 §6
  */
 
 export default function WeightScreen() {
@@ -247,7 +247,7 @@ export default function WeightScreen() {
           </Animated.View>
         )}
 
-        {/* Chart — PRD-07: blurred for free users */}
+        {/* Chart, PRD-07: blurred for free users */}
         {weights.length > 0 && (
           <Animated.View
             entering={FadeInDown.duration(400).delay(120)}

@@ -1,5 +1,5 @@
 /**
- * Dog Switcher — Bottom sheet for switching between dogs
+ * Dog Switcher, Bottom sheet for switching between dogs
  * PRD-11 §3: Shows all active dogs, checkmark on current, "+ Add Another Dog"
  *
  * Rendered as a modal overlay (no @gorhom/bottom-sheet dependency needed).

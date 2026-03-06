@@ -22,14 +22,14 @@ import {
 } from "@/types/health";
 
 /**
- * Vet Visit Tracker — PRD-05 §7
+ * Vet Visit Tracker, PRD-05 §7
  */
 
 export default function VetVisitsScreen() {
   const router = useRouter();
   const { isPremium } = useSubscription();
 
-  // PRD-07: Gate premium content (inline, no redirect — prevents render loops)
+  // PRD-07: Gate premium content (inline, no redirect, prevents render loops)
   // Individual selectors → stable refs, prevents render loops
   const activeDogId = useDogStore((s) => s.activeDogId);
   const dogs = useDogStore((s) => s.dogs);

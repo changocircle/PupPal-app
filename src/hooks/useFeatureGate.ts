@@ -1,5 +1,5 @@
 /**
- * useFeatureGate — PRD-07 §4
+ * useFeatureGate, PRD-07 §4
  *
  * Programmatic gating hook for checking feature access and
  * triggering paywalls. Handles chat limits, week access,

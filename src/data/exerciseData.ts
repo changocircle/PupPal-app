@@ -1,5 +1,5 @@
 /**
- * Exercise data layer — loads & provides typed access to exercises.
+ * Exercise data layer, loads & provides typed access to exercises.
  * Source: exercises.json (164 exercises, 12 categories)
  *
  * Personalises content by substituting {dog_name}, {breed_tip}, etc.
@@ -48,7 +48,7 @@ export function getAgeAppropriateExercises(ageWeeks: number): Exercise[] {
 }
 
 /**
- * Personalise exercise text — replaces template tokens with real values.
+ * Personalise exercise text, replaces template tokens with real values.
  * Per PRD-03 section 5: {dog_name}, {breed}, {breed_tip}
  */
 export function personaliseExercise(

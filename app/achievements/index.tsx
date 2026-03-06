@@ -1,5 +1,5 @@
 /**
- * Achievements Grid Screen — PRD-04 §6
+ * Achievements Grid Screen, PRD-04 §6
  * Full-screen grid of all achievements, grouped by category.
  * Unlocked badges show emoji + name; locked show "?" with optional progress.
  *
@@ -101,7 +101,7 @@ export default function AchievementsScreen() {
         </View>
       </View>
 
-      {/* FIX-05: Category filter pills — constrained height container */}
+      {/* FIX-05: Category filter pills, constrained height container */}
       <View style={styles.filterContainer}>
         <ScrollView
           horizontal

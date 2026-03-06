@@ -1,5 +1,5 @@
 /**
- * DailyXpBar — animated daily XP progress toward goal
+ * DailyXpBar, animated daily XP progress toward goal
  * PRD-04 §3, DESIGN-SYSTEM.md Gamification section
  *
  * Bar animates fill on XP update.

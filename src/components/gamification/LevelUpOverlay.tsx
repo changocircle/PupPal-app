@@ -1,5 +1,5 @@
 /**
- * LevelUpOverlay — full-screen level-up celebration
+ * LevelUpOverlay, full-screen level-up celebration
  * PRD-04 §7: number transition, particles, shareable card
  */
 
@@ -100,7 +100,7 @@ export function LevelUpOverlay({
             <Typography className="text-[24px]">🐕</Typography>
             <Typography variant="body-sm" className="flex-1">
               You're officially a {levelDef.title}! Your training skills
-              are seriously impressive. Keep going — the next level awaits!
+              are seriously impressive. Keep going! The next level awaits!
             </Typography>
           </Animated.View>
 

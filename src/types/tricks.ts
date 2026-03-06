@@ -1,5 +1,5 @@
 /**
- * Trick Library Types — PRD-03 §6
+ * Trick Library Types, PRD-03 §6
  *
  * Types for trick packs, individual tricks, and user progress.
  */
@@ -90,5 +90,5 @@ export interface PackProgress {
   tricksMastered: number;   // tricks at level 3
 }
 
-/** FREE_TRICK_ID — the one trick available to free users (PRD-07 §3) */
+/** FREE_TRICK_ID, the one trick available to free users (PRD-07 §3) */
 export const FREE_TRICK_ID = 'trick-starter-001'; // Shake / Paw

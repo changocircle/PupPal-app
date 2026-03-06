@@ -16,7 +16,7 @@ export default function WelcomeScreen() {
   return (
     <SafeAreaView className="flex-1 bg-background">
       <View className="flex-1 px-xl justify-between">
-        {/* Top section — Buddy character placeholder */}
+        {/* Top section, Buddy character placeholder */}
         <View className="flex-1 items-center justify-center">
           <Animated.View
             entering={FadeInDown.duration(600)}
@@ -37,7 +37,7 @@ export default function WelcomeScreen() {
           </Animated.View>
         </View>
 
-        {/* Bottom section — CTA */}
+        {/* Bottom section, CTA */}
         <Animated.View
           entering={FadeInDown.duration(600).delay(400)}
           className="pb-3xl gap-base"

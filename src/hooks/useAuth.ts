@@ -5,7 +5,7 @@ import { useAuthStore } from "@/stores/authStore";
 import type { User } from "@/types/database";
 
 /**
- * Auth hook — manages session state and routing protection.
+ * Auth hook, manages session state and routing protection.
  *
  * Uses Supabase auth state listener to keep store in sync.
  * Handles redirect logic:

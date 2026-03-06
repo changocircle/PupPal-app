@@ -1,5 +1,5 @@
 /**
- * Training system types — PRD-03
+ * Training system types, PRD-03
  * Covers exercises, training plans, weeks, days, and completion tracking.
  */
 

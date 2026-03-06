@@ -1,5 +1,5 @@
 /**
- * Sharing Utilities — PRD-08 §3
+ * Sharing Utilities, PRD-08 §3
  *
  * Generate shareable content for achievements, milestones, streaks,
  * and trick completions. Every share is a branded PupPal moment.

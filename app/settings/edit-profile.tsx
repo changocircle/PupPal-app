@@ -7,7 +7,7 @@ import { Typography, Card, Button } from "@/components/ui";
 import { useSettingsStore } from "@/stores/settingsStore";
 
 /**
- * Edit Profile Screen — PRD-14 §3
+ * Edit Profile Screen, PRD-14 §3
  */
 
 export default function EditProfileScreen() {

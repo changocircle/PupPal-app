@@ -1,5 +1,5 @@
 /**
- * Training Plan Store — Zustand
+ * Training Plan Store, Zustand
  * PRD-03: manages plan state, exercise completion, day/week progression.
  *
  * Local-first: all state in Zustand + AsyncStorage.

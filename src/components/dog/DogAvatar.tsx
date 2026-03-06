@@ -1,5 +1,5 @@
 /**
- * Dog Avatar — Reusable avatar component for dog profiles
+ * Dog Avatar, Reusable avatar component for dog profiles
  * Shows photo if available, otherwise shows first letter + dog emoji
  */
 

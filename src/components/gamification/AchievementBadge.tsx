@@ -1,5 +1,5 @@
 /**
- * AchievementBadge — single achievement display (for grid/list)
+ * AchievementBadge, single achievement display (for grid/list)
  * PRD-04 §6: locked/unlocked states, rarity border, progress indicator
  */
 

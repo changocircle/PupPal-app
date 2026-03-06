@@ -1,5 +1,5 @@
 /**
- * Settings Store — Zustand + AsyncStorage
+ * Settings Store, Zustand + AsyncStorage
  * PRD-14: user preferences, units, and notification settings.
  */
 

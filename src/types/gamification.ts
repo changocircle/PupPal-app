@@ -1,5 +1,5 @@
 /**
- * Gamification system types — PRD-04
+ * Gamification system types, PRD-04
  * XP, streaks, GBS, achievements, levels, weekly challenges.
  */
 

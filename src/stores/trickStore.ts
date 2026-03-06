@@ -1,5 +1,5 @@
 /**
- * Trick Library Store — PRD-03 §6
+ * Trick Library Store, PRD-03 §6
  *
  * Manages trick progress (per-trick 3-level system) and pack unlock state.
  * Persists to AsyncStorage under 'puppal-tricks'.

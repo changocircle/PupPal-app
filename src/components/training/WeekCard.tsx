@@ -1,5 +1,5 @@
 /**
- * WeekCard — compact week overview for plan screen
+ * WeekCard, compact week overview for plan screen
  * PRD-03 §9: Shows week number, title, phase badge, progress, status
  */
 

@@ -12,14 +12,14 @@ import { MILESTONE_CATEGORY_META } from "@/types/health";
 import { MILESTONE_TEMPLATES } from "@/data/milestones";
 
 /**
- * Developmental Milestones Screen — PRD-05 §8
+ * Developmental Milestones Screen, PRD-05 §8
  */
 
 export default function MilestonesScreen() {
   const router = useRouter();
   const { isPremium } = useSubscription();
 
-  // PRD-07: Gate premium content (inline, no redirect — prevents render loops)
+  // PRD-07: Gate premium content (inline, no redirect, prevents render loops)
   // Individual selectors → stable refs, prevents render loops
   const activeDogId = useDogStore((s) => s.activeDogId);
   const dogs = useDogStore((s) => s.dogs);
@@ -90,7 +90,7 @@ export default function MilestonesScreen() {
       // upcoming
       Alert.alert(
         m.name,
-        `${m.description}\n\nExpected: ${new Date(m.expectedDateStart).toLocaleDateString("en-US", { month: "short", day: "numeric" })} — ${new Date(m.expectedDateEnd).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}\n\n${m.tips.map((t) => `• ${t}`).join("\n")}`
+        `${m.description}\n\nExpected: ${new Date(m.expectedDateStart).toLocaleDateString("en-US", { month: "short", day: "numeric" })}, ${new Date(m.expectedDateEnd).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}\n\n${m.tips.map((t) => `• ${t}`).join("\n")}`
       );
     },
     [completeMilestone]
@@ -205,7 +205,7 @@ export default function MilestonesScreen() {
                             "en-US",
                             { month: "short", day: "numeric" }
                           )}{" "}
-                          —{" "}
+                          , {" "}
                           {new Date(m.expectedDateEnd).toLocaleDateString(
                             "en-US",
                             { month: "short", day: "numeric" }
@@ -266,7 +266,7 @@ export default function MilestonesScreen() {
                               month: "short",
                               day: "numeric",
                             })
-                          : `${new Date(m.expectedDateStart).toLocaleDateString("en-US", { month: "short" })} — ${new Date(m.expectedDateEnd).toLocaleDateString("en-US", { month: "short", year: "numeric" })}`}
+                          : `${new Date(m.expectedDateStart).toLocaleDateString("en-US", { month: "short" })}, ${new Date(m.expectedDateEnd).toLocaleDateString("en-US", { month: "short", year: "numeric" })}`}
                       </Typography>
                     </View>
                   </Pressable>

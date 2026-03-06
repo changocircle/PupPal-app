@@ -1,5 +1,5 @@
 /**
- * Buddy System Prompt Builder — PRD-02 §3-4
+ * Buddy System Prompt Builder, PRD-02 §3-4
  *
  * Constructs the full system prompt with dynamic dog/conversation context.
  * Based on buddy-system-prompt.md.
@@ -32,22 +32,26 @@ Your training approach:
 - Build skills gradually through small, achievable steps
 - Understand that puppies are learning, not being "bad"`;
 
-const RESPONSE_RULES = `1. ALWAYS use the dog's name — minimum once per response, ideally twice.
-2. Reference breed when relevant — "[breed]s are known for [trait], so this is completely typical."
-3. Reference age when relevant — "At [age], puppies are in their [developmental stage], which means..."
-4. Lead with empathy BEFORE advice — acknowledge the feeling first, then offer the solution.
-5. Keep responses CONCISE — 2-4 short paragraphs maximum. This is a mobile chat, not an essay.
-6. Use line breaks generously — each thought gets its own line for mobile readability.
-7. End with a clear action step — "Try this today: [specific, actionable thing]."
-8. Ask follow-up questions when the situation is ambiguous.
-9. Emoji usage: Occasional and purposeful. Maximum 1-2 per response. Never use emoji in serious medical or safety contexts.
-10. Celebrate wins enthusiastically.
+const RESPONSE_RULES = `HARD RULES:
+- Keep ALL responses under 150 words. Mobile users read on small screens.
+- Never use em dashes. Use commas, periods, or line breaks instead.
+- ALWAYS use the dog's name at least once.
+
+Response style:
+1. Lead with empathy BEFORE advice. Acknowledge the feeling first.
+2. Reference breed when relevant: "[breed]s are known for [trait], so this is typical."
+3. Reference age when relevant: "At [age], puppies are in their [stage]..."
+4. Use short paragraphs, 1-3 sentences each. Line breaks between thoughts.
+5. End with ONE clear action step: "Try this today: [specific thing]."
+6. Ask follow-up questions when the situation is unclear.
+7. Emoji: max 1-2 per response. None for medical or safety topics.
+8. Celebrate wins enthusiastically but briefly.
 
 Response length:
 - Simple question: 2-3 sentences
-- Training technique: 3-4 short paragraphs with steps
-- Behavioral deep-dive: 4-5 paragraphs with context + steps + timeline
-- Celebration: 1-2 sentences, genuinely enthusiastic
+- Training technique: 2-3 short paragraphs with steps
+- Behavioral issue: 3-4 short paragraphs max
+- Celebration: 1-2 sentences
 - Medical redirect: 2-3 sentences, clear and direct`;
 
 const SAFETY_BOUNDARIES = `MEDICAL ESCALATION:
@@ -113,7 +117,7 @@ function buildConversationContextBlock(summaries?: string[]): string {
   return `Previous conversation summaries:
 ${summaries.map((s, i) => `Session ${i + 1}: ${s}`).join("\n")}
 
-Reference previous conversations naturally when relevant. Don't force references — only when they add value.`;
+Reference previous conversations naturally when relevant. Don't force references. Only reference them when they add value.`;
 }
 
 // ── Main prompt builder ──
@@ -273,7 +277,7 @@ export function buildFirstTimeGreeting(
   primaryChallenge?: string
 ): string {
   const challengeText = primaryChallenge
-    ? `I've set up ${dogName}'s personalised training plan based on everything you told me — we're starting with ${primaryChallenge} since that's the biggest priority right now.`
+    ? `I've set up ${dogName}'s personalised training plan based on everything you told me, we're starting with ${primaryChallenge} since that's the biggest priority right now.`
     : `I've set up ${dogName}'s personalised training plan based on everything you told me.`;
 
   return `Hey there! 👋 I'm so excited to work with you and ${dogName}.\n\n${challengeText}\n\nWhat would you like to tackle first?`;
@@ -290,5 +294,5 @@ export function buildReengagementGreeting(
   if (daysSinceLastChat <= 7) {
     return `Welcome back! ${dogName}'s been missing the training sessions. Even 5 minutes today would help maintain what you've built. 💪`;
   }
-  return `Hey — no judgment, life happens! The great thing is, ${dogName} hasn't forgotten everything. Let's ease back in. What's going on with ${dogName} right now?`;
+  return `Hey, no judgment. Life happens! The great thing is, ${dogName} hasn't forgotten everything. Let's ease back in. What's going on with ${dogName} right now?`;
 }
