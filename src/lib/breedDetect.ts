@@ -12,8 +12,8 @@ import * as FileSystem from "expo-file-system";
 const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL ?? "";
 const SUPABASE_ANON_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? "";
 
-/** 3-second timeout per PRD-01: silent fallback to manual selector */
-const DETECT_TIMEOUT_MS = 3000;
+/** Timeout for breed detection API call (generous to handle cold starts) */
+const DETECT_TIMEOUT_MS = 12000;
 
 export interface BreedPrediction {
   name: string;
@@ -39,7 +39,12 @@ export async function detectBreed(
 ): Promise<BreedDetectResult | null> {
   try {
     if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-      console.warn("Supabase credentials not configured for breed detection");
+      console.warn(
+        "[BreedDetect] Missing credentials. SUPABASE_URL:",
+        SUPABASE_URL ? "set" : "EMPTY",
+        "ANON_KEY:",
+        SUPABASE_ANON_KEY ? `set (${SUPABASE_ANON_KEY.substring(0, 10)}...)` : "EMPTY",
+      );
       return null;
     }
 
@@ -68,7 +73,13 @@ export async function detectBreed(
 
     clearTimeout(timeout);
 
-    if (!res.ok) return null;
+    if (!res.ok) {
+      const errBody = await res.text().catch(() => "");
+      console.warn(
+        `[BreedDetect] HTTP ${res.status}: ${errBody.substring(0, 200)}`,
+      );
+      return null;
+    }
 
     const data = await res.json();
     const breeds: BreedPrediction[] = data.breeds ?? [];

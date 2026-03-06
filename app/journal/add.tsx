@@ -35,12 +35,7 @@ export default function AddEntryScreen() {
   const router = useRouter();
   const { isPremium } = useSubscription();
 
-  // PRD-07: Redirect free users to paywall
-  React.useEffect(() => {
-    if (!isPremium) {
-      router.replace({ pathname: "/paywall", params: { trigger: "feature_gate_journal", source: "journal_add" } });
-    }
-  }, [isPremium]);
+  // PRD-07: Gate premium content (inline, no redirect — prevents render loops)
 
   // Dog context
   // Individual selectors → stable refs, prevents render loops
