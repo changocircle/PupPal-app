@@ -18,31 +18,42 @@ import { DogAvatar } from "@/components/dog";
  *
  * Full implementation: user profile, dog info, gamification summary,
  * settings sections with navigation to sub-screens.
+ *
+ * FIX-04: Resolved "Maximum update depth exceeded" render loop.
+ * Root cause: useGamificationStore with an inline object selector
+ * creates a new reference on every render → Zustand (v5) sees a
+ * "change" → re-render → infinite loop.
+ * Solution: Individual scalar selectors instead of object selector.
  */
 
 export default function ProfileScreen() {
   const router = useRouter();
-  const dog = useDogStore((s) => s.activeDog());
+
+  // FIX-04: Individual selectors instead of object destructure.
+  // Each returns a primitive or stable ref → no spurious re-renders.
+  const activeDogId = useDogStore((s) => s.activeDogId);
+  const dogs = useDogStore((s) => s.dogs);
+  const dog = useMemo(
+    () => dogs.find((d) => d.id === activeDogId) ?? null,
+    [dogs, activeDogId]
+  );
+
   const plan = useTrainingStore((s) => s.plan);
   const onboardingData = useOnboardingStore((s) => s.data);
-  const dogName = dog?.name ?? plan?.dogName ?? (onboardingData.puppyName || "Your Pup");
+  const dogName =
+    dog?.name ?? plan?.dogName ?? (onboardingData.puppyName || "Your Pup");
   const breed = dog?.breed ?? plan?.breed ?? onboardingData.breed ?? "Puppy";
   const ageMonths = onboardingData.ageMonths;
 
-  // Gamification
-  const { totalXp, currentLevel, currentLevelTitle, achievements } =
-    useGamificationStore((s) => ({
-      totalXp: s.totalXp,
-      currentLevel: s.currentLevel,
-      currentLevelTitle: s.currentLevelTitle,
-      achievements: s.unlockedAchievements,
-    }));
+  // FIX-04: Separate scalar selectors (no inline object creation)
+  const totalXp = useGamificationStore((s) => s.totalXp);
+  const currentLevel = useGamificationStore((s) => s.currentLevel);
+  const currentLevelTitle = useGamificationStore((s) => s.currentLevelTitle);
+  const achievements = useGamificationStore((s) => s.unlockedAchievements);
 
   const levelDef = LEVEL_DEFINITIONS[currentLevel - 1];
   const nextLevelDef = LEVEL_DEFINITIONS[currentLevel]; // may be undefined at max
-  const currentLevelXp = levelDef
-    ? totalXp - levelDef.cumulativeXp
-    : 0;
+  const currentLevelXp = levelDef ? totalXp - levelDef.cumulativeXp : 0;
   const currentLevelMax = nextLevelDef
     ? nextLevelDef.cumulativeXp - (levelDef?.cumulativeXp ?? 0)
     : 1;
@@ -144,7 +155,11 @@ export default function ProfileScreen() {
           entering={FadeInDown.duration(400).delay(120)}
           className="px-xl mb-lg"
         >
-          <Pressable onPress={() => dog?.id ? router.push(`/dog/${dog.id}/manage`) : undefined}>
+          <Pressable
+            onPress={() =>
+              dog?.id ? router.push(`/dog/${dog.id}/manage`) : undefined
+            }
+          >
             <Card className="flex-row items-center gap-base">
               <DogAvatar
                 name={dogName}
@@ -156,9 +171,7 @@ export default function ProfileScreen() {
                 <Typography variant="h3">{dogName}</Typography>
                 <Typography variant="body-sm" color="secondary">
                   {breed}
-                  {ageMonths
-                    ? ` · ~${ageMonths} months`
-                    : ""}
+                  {ageMonths ? ` · ~${ageMonths} months` : ""}
                 </Typography>
               </View>
               <Typography color="tertiary">→</Typography>
@@ -200,7 +213,8 @@ export default function ProfileScreen() {
               color="tertiary"
               className="mt-xs text-center"
             >
-              {currentLevelXp} / {currentLevelMax} XP to Level {currentLevel + 1}
+              {currentLevelXp} / {currentLevelMax} XP to Level{" "}
+              {currentLevel + 1}
             </Typography>
           </Card>
         </Animated.View>
@@ -262,9 +276,7 @@ export default function ProfileScreen() {
             <Card className="flex-row items-center gap-md">
               <Typography className="text-[32px]">💬</Typography>
               <View className="flex-1">
-                <Typography variant="body-medium">
-                  Community
-                </Typography>
+                <Typography variant="body-medium">Community</Typography>
                 <Typography variant="caption" color="secondary">
                   Connect with fellow puppy parents
                 </Typography>
@@ -383,8 +395,7 @@ export default function ProfileScreen() {
             {
               icon: "💡",
               label: "Share Feedback",
-              onPress: () =>
-                Linking.openURL("mailto:feedback@puppal.app"),
+              onPress: () => Linking.openURL("mailto:feedback@puppal.app"),
             },
           ].map((item) => (
             <Pressable key={item.label} onPress={item.onPress}>
@@ -465,10 +476,7 @@ export default function ProfileScreen() {
               onPress={() => router.push("/settings/data-privacy")}
               className="py-md items-center"
             >
-              <Typography
-                variant="body-sm"
-                style={{ color: "#EF6461" }}
-              >
+              <Typography variant="body-sm" style={{ color: "#EF6461" }}>
                 Delete Account
               </Typography>
             </Pressable>

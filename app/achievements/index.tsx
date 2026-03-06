@@ -2,10 +2,17 @@
  * Achievements Grid Screen — PRD-04 §6
  * Full-screen grid of all achievements, grouped by category.
  * Unlocked badges show emoji + name; locked show "?" with optional progress.
+ *
+ * FIX-05: Category filter pills were stretching vertically to fill the screen.
+ * Root cause: NativeWind `className` on ScrollView + Pressable don't reliably
+ * constrain height in RN. The outer ScrollView had no explicit height, and the
+ * `rounded-full` + `px-md py-xs` pills expanded to fill available flex space.
+ * Fix: Explicit inline styles on the filter container with `height`, `flexGrow: 0`,
+ * `alignItems: 'center'` and consistent pill sizing.
  */
 
 import React, { useState, useMemo } from "react";
-import { View, ScrollView, Pressable, SafeAreaView } from "react-native";
+import { View, ScrollView, Pressable, SafeAreaView, StyleSheet } from "react-native";
 import { router } from "expo-router";
 import { Typography, Badge } from "@/components/ui";
 import { AchievementBadge } from "@/components/gamification";
@@ -50,13 +57,13 @@ export default function AchievementsScreen() {
   }, [selectedCategory]);
 
   return (
-    <SafeAreaView className="flex-1 bg-background">
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }}>
       {/* Header */}
-      <View className="flex-row items-center px-base pt-base pb-sm">
-        <Pressable onPress={() => router.back()} className="mr-md p-xs">
+      <View style={styles.header}>
+        <Pressable onPress={() => router.back()} style={styles.backButton}>
           <Typography variant="body-lg">←</Typography>
         </Pressable>
-        <Typography variant="h2" className="flex-1">
+        <Typography variant="h2" style={{ flex: 1 }}>
           Achievements
         </Typography>
         <Typography variant="body-sm" color="secondary">
@@ -65,105 +72,105 @@ export default function AchievementsScreen() {
       </View>
 
       {/* Stats row */}
-      <View className="flex-row items-center justify-around px-base py-md bg-surface mx-base rounded-2xl mb-base" style={{
-        shadowColor: "#1B2333",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.06,
-        shadowRadius: 8,
-        elevation: 2,
-      }}>
-        <View className="items-center">
+      <View style={styles.statsRow}>
+        <View style={styles.statItem}>
           <ScoreGauge score={goodBoyScore} size={52} strokeWidth={4} showLabel={false} />
-          <Typography variant="caption" color="secondary" className="mt-[2px]">
+          <Typography variant="caption" color="secondary" style={{ marginTop: 2 }}>
             GBS
           </Typography>
         </View>
-        <View className="items-center">
+        <View style={styles.statItem}>
           <StreakFlame streak={streakData.currentStreak} size="sm" showLabel={false} />
-          <Typography variant="caption" color="secondary" className="mt-[2px]">
+          <Typography variant="caption" color="secondary" style={{ marginTop: 2 }}>
             Streak
           </Typography>
         </View>
-        <View className="items-center">
+        <View style={styles.statItem}>
           <Typography variant="h3" style={{ color: COLORS.accent.dark }}>
             {totalXp.toLocaleString()}
           </Typography>
-          <Typography variant="caption" color="secondary" className="mt-[2px]">
+          <Typography variant="caption" color="secondary" style={{ marginTop: 2 }}>
             Total XP
           </Typography>
         </View>
-        <View className="items-center">
+        <View style={styles.statItem}>
           <Typography variant="h3">Lv.{levelInfo.level}</Typography>
-          <Typography variant="caption" color="secondary" className="mt-[2px]">
+          <Typography variant="caption" color="secondary" style={{ marginTop: 2 }}>
             {levelInfo.title}
           </Typography>
         </View>
       </View>
 
-      {/* Category filters */}
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 16, gap: 8, paddingBottom: 8 }}
-      >
-        <Pressable
-          onPress={() => setSelectedCategory("all")}
-          className="px-md py-xs rounded-full"
-          style={{
-            backgroundColor:
-              selectedCategory === "all"
-                ? COLORS.primary.DEFAULT
-                : COLORS.primary.light,
-          }}
+      {/* FIX-05: Category filter pills — constrained height container */}
+      <View style={styles.filterContainer}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.filterContent}
         >
-          <Typography
-            variant="body-sm-medium"
-            style={{
-              color:
-                selectedCategory === "all" ? "#FFFFFF" : COLORS.primary.DEFAULT,
-            }}
+          <Pressable
+            onPress={() => setSelectedCategory("all")}
+            style={[
+              styles.filterPill,
+              {
+                backgroundColor:
+                  selectedCategory === "all"
+                    ? COLORS.primary.DEFAULT
+                    : COLORS.primary.light,
+              },
+            ]}
           >
-            All ({totalCount})
-          </Typography>
-        </Pressable>
-
-        {ACHIEVEMENT_CATEGORIES.map((cat) => {
-          const catAchievements = getAchievementsByCategory(cat.key);
-          const catUnlocked = catAchievements.filter((a) =>
-            unlockedSlugs.has(a.slug)
-          ).length;
-          const isSelected = selectedCategory === cat.key;
-
-          return (
-            <Pressable
-              key={cat.key}
-              onPress={() => setSelectedCategory(cat.key)}
-              className="px-md py-xs rounded-full"
+            <Typography
+              variant="body-sm-medium"
               style={{
-                backgroundColor: isSelected
-                  ? COLORS.primary.DEFAULT
-                  : COLORS.primary.light,
+                color:
+                  selectedCategory === "all" ? "#FFFFFF" : COLORS.primary.DEFAULT,
               }}
             >
-              <Typography
-                variant="body-sm-medium"
-                style={{
-                  color: isSelected ? "#FFFFFF" : COLORS.primary.DEFAULT,
-                }}
+              All ({totalCount})
+            </Typography>
+          </Pressable>
+
+          {ACHIEVEMENT_CATEGORIES.map((cat) => {
+            const catAchievements = getAchievementsByCategory(cat.key);
+            const catUnlocked = catAchievements.filter((a) =>
+              unlockedSlugs.has(a.slug)
+            ).length;
+            const isSelected = selectedCategory === cat.key;
+
+            return (
+              <Pressable
+                key={cat.key}
+                onPress={() => setSelectedCategory(cat.key)}
+                style={[
+                  styles.filterPill,
+                  {
+                    backgroundColor: isSelected
+                      ? COLORS.primary.DEFAULT
+                      : COLORS.primary.light,
+                  },
+                ]}
               >
-                {cat.emoji} {cat.label} ({catUnlocked}/{catAchievements.length})
-              </Typography>
-            </Pressable>
-          );
-        })}
-      </ScrollView>
+                <Typography
+                  variant="body-sm-medium"
+                  style={{
+                    color: isSelected ? "#FFFFFF" : COLORS.primary.DEFAULT,
+                  }}
+                >
+                  {cat.emoji} {cat.label} ({catUnlocked}/{catAchievements.length})
+                </Typography>
+              </Pressable>
+            );
+          })}
+        </ScrollView>
+      </View>
 
       {/* Achievement grid */}
       <ScrollView
-        className="flex-1"
+        style={{ flex: 1 }}
         contentContainerStyle={{ padding: 16, paddingBottom: 40 }}
       >
-        <View className="flex-row flex-wrap" style={{ gap: 12 }}>
+        <View style={styles.grid}>
           {filteredAchievements.map((achievement) => {
             const isUnlocked = unlockedSlugs.has(achievement.slug);
             const progress = achievementProgress.find(
@@ -182,8 +189,8 @@ export default function AchievementsScreen() {
         </View>
 
         {filteredAchievements.length === 0 && (
-          <View className="items-center py-3xl">
-            <Typography className="text-[40px] mb-md">🏅</Typography>
+          <View style={{ alignItems: "center", paddingVertical: 40 }}>
+            <Typography style={{ fontSize: 40, marginBottom: 12 }}>🏅</Typography>
             <Typography variant="body" color="secondary">
               No achievements in this category yet
             </Typography>
@@ -193,3 +200,62 @@ export default function AchievementsScreen() {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 8,
+  },
+  backButton: {
+    marginRight: 12,
+    padding: 4,
+  },
+  statsRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: COLORS.surface,
+    marginHorizontal: 16,
+    borderRadius: 16,
+    marginBottom: 12,
+    shadowColor: "#1B2333",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  statItem: {
+    alignItems: "center",
+  },
+  // FIX-05: Constrained filter container
+  filterContainer: {
+    height: 48,               // Fixed height prevents vertical expansion
+    flexGrow: 0,              // Don't grow to fill flex space
+    flexShrink: 0,            // Don't shrink either
+    marginBottom: 4,
+  },
+  filterContent: {
+    paddingHorizontal: 16,
+    gap: 8,
+    alignItems: "center",     // Vertically center pills in the row
+    height: 48,               // Match container height
+  },
+  filterPill: {
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    borderRadius: 999,        // Fully rounded
+    height: 34,               // Explicit pill height
+    justifyContent: "center", // Center text vertically
+    alignItems: "center",     // Center text horizontally
+  },
+  grid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 12,
+  },
+});

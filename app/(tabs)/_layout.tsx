@@ -6,9 +6,9 @@ import { COLORS } from "@/constants/theme";
 
 /**
  * Main Tab Navigation Layout
- * PRD-01 + DESIGN-SYSTEM.md
+ * PRD-01 + DESIGN-SYSTEM.md + PRD-15 Community
  *
- * 5 tabs: Home, Chat, Plan, Health, Profile
+ * 6 tabs: Home, Chat, Plan, Health, Community, Profile
  * Bottom tab bar with coral active state.
  */
 
@@ -70,12 +70,23 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="community"
+        options={{
+          title: "Community",
+          tabBarIcon: ({ focused }) => <TabIcon emoji="👥" focused={focused} />,
+        }}
+      />
+      <Tabs.Screen
         name="profile"
         options={{
           title: "Profile",
           tabBarIcon: ({ focused }) => <TabIcon emoji="👤" focused={focused} />,
         }}
       />
+
+      {/* Hide community sub-routes from tab bar */}
+      <Tabs.Screen name="community/[id]" options={{ href: null }} />
+      <Tabs.Screen name="community/create" options={{ href: null }} />
     </Tabs>
   );
 }

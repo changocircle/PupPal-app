@@ -1,3 +1,5 @@
+// Polyfill crypto.getRandomValues for Hermes (must be first import)
+import "react-native-get-random-values";
 import "../global.css";
 import React, { useEffect } from "react";
 import { Stack, useRouter } from "expo-router";

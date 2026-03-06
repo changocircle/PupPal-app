@@ -164,8 +164,8 @@ export default function PaywallScreen() {
     setTimeout(() => {
       setIsProcessing(false);
       Alert.alert(
-        'RevenueCat Not Configured',
-        'In-app purchases will work once RevenueCat SDK is configured with your App Store / Play Store products.\n\nThe subscription infrastructure is ready — just add your API keys!',
+        'Coming Soon! 🐾',
+        "Premium subscriptions are launching very soon! We'll notify you the moment they're available.",
         [{ text: 'Got it', onPress: () => router.back() }]
       );
     }, 1000);
@@ -175,7 +175,7 @@ export default function PaywallScreen() {
     // In production: Purchases.restorePurchases()
     Alert.alert(
       'Restore Purchases',
-      'Purchase restoration will work once RevenueCat is configured.',
+      'No previous purchases found. If you believe this is an error, please contact support@puppal.app.',
       [{ text: 'OK' }]
     );
   };
