@@ -43,7 +43,7 @@ function getProviderConfig(): AIProviderConfig | null {
     apiKey,
     baseUrl,
     model,
-    maxTokens: 300,
+    maxTokens: 500,
     temperature: 1, // Kimi K2.5 only accepts temperature=1
   };
 }

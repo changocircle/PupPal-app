@@ -149,6 +149,7 @@ function HomeScreenContent() {
               target={gam.activeChallenge.target}
               xpReward={gam.activeChallenge.xpReward}
               completed={gam.activeChallenge.completed}
+              onPress={() => router.push("/(tabs)/plan")}
             />
           </Animated.View>
         )}

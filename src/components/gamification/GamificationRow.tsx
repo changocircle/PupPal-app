@@ -1,6 +1,12 @@
 /**
  * GamificationRow, horizontal stats row for Home screen
  * PRD-04: shows streak, daily XP, GBS, level in a compact horizontal layout
+ *
+ * All stats are tappable and navigate to relevant screens:
+ * - Streak → Training plan tab
+ * - Level badge → Achievements screen
+ * - GBS → Achievements screen
+ * - XP → Achievements screen
  */
 
 import React from "react";
@@ -41,8 +47,12 @@ export function GamificationRow({
     }}>
       {/* Top: Streak + Level */}
       <View className="flex-row items-center justify-between mb-md">
-        {/* Streak */}
-        <View className="flex-row items-center gap-sm">
+        {/* Streak → Plan tab (train today to keep it) */}
+        <Pressable
+          className="flex-row items-center gap-sm"
+          onPress={() => router.push("/(tabs)/plan")}
+          style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+        >
           <StreakFlame streak={streak} size="sm" showLabel={false} />
           <View>
             <Typography variant="body-sm-medium">
@@ -52,10 +62,14 @@ export function GamificationRow({
               Train today to keep it going
             </Typography>
           </View>
-        </View>
+        </Pressable>
 
-        {/* Level badge */}
-        <View className="items-end">
+        {/* Level badge → Achievements */}
+        <Pressable
+          className="items-end"
+          onPress={() => router.push("/achievements")}
+          style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+        >
           <View
             className="px-md py-[3px] rounded-full flex-row items-center gap-[4px]"
             style={{ backgroundColor: COLORS.accent.light }}
@@ -67,7 +81,7 @@ export function GamificationRow({
           <Typography variant="caption" color="tertiary" className="mt-[1px]">
             {levelTitle}
           </Typography>
-        </View>
+        </Pressable>
       </View>
 
       {/* Middle: Daily XP bar */}
@@ -75,11 +89,11 @@ export function GamificationRow({
 
       {/* Bottom: GBS + XP total */}
       <View className="flex-row items-center justify-between mt-md">
+        {/* GBS → Achievements */}
         <Pressable
           className="flex-row items-center gap-sm"
-          onPress={() => {
-            // Navigate to profile/achievements tab
-          }}
+          onPress={() => router.push("/achievements")}
+          style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
         >
           <ScoreGauge score={goodBoyScore} size={44} strokeWidth={4} showLabel={false} />
           <View>
@@ -92,14 +106,19 @@ export function GamificationRow({
           </View>
         </Pressable>
 
-        <View className="items-end">
+        {/* XP total → Achievements */}
+        <Pressable
+          className="items-end"
+          onPress={() => router.push("/achievements")}
+          style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+        >
           <Typography variant="body-sm-medium" style={{ color: COLORS.accent.dark }}>
             {totalXp.toLocaleString()} XP
           </Typography>
           <Typography variant="caption" color="tertiary">
             Total earned
           </Typography>
-        </View>
+        </Pressable>
       </View>
     </View>
   );

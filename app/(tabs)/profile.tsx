@@ -288,6 +288,27 @@ function ProfileScreenContent() {
           </Pressable>
         </Animated.View>
 
+        {/* ── Growth Journal ── */}
+        <Animated.View
+          entering={FadeInDown.duration(400).delay(255)}
+          className="px-xl mb-lg"
+        >
+          <Pressable onPress={() => router.push("/journal")}>
+            <Card className="flex-row items-center gap-md">
+              <Typography className="text-[32px]">📓</Typography>
+              <View className="flex-1">
+                <Typography variant="body-medium">
+                  Growth Journal
+                </Typography>
+                <Typography variant="caption" color="secondary">
+                  {dogName}'s timeline, milestones & photos
+                </Typography>
+              </View>
+              <Typography color="tertiary">→</Typography>
+            </Card>
+          </Pressable>
+        </Animated.View>
+
         {/* ── Breed Encyclopedia ── */}
         <Animated.View
           entering={FadeInDown.duration(400).delay(270)}
@@ -316,7 +337,7 @@ function ProfileScreenContent() {
           entering={FadeInDown.duration(400).delay(300)}
           className="px-xl mb-lg"
         >
-          <Pressable onPress={() => router.push("/community")}>
+          <Pressable onPress={() => router.push("/(tabs)/community")}>
             <Card className="flex-row items-center gap-md">
               <Typography className="text-[32px]">💬</Typography>
               <View className="flex-1">

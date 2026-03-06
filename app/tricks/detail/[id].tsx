@@ -183,6 +183,16 @@ export default function TrickDetailScreen() {
             {personalised.overview}
           </Typography>
 
+          {/* Breed-specific learning time estimate */}
+          {personalised.breedLearningTime && (
+            <View className="flex-row items-center gap-xs mt-sm" style={{ opacity: 0.85 }}>
+              <Typography style={{ fontSize: 14 }}>⏱️</Typography>
+              <Typography variant="body-sm" color="secondary" style={{ fontStyle: 'italic' }}>
+                {personalised.breedLearningTime}
+              </Typography>
+            </View>
+          )}
+
           {/* Breed tip */}
           {personalised.breedTip && (
             <Card className="bg-accent-light border-accent/20 mt-sm">

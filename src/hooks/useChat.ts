@@ -145,10 +145,15 @@ export function useChat(): UseChatReturn {
       );
 
       // Get recent messages for context window (last 20)
+      // Filter out empty-content messages to prevent "Empty response from AI provider" errors.
+      // This can happen if a previous assistant placeholder ("") wasn't fully cleaned up.
       const recentMsgs = useChatStore
         .getState()
         .messages.filter(
-          (m) => m.role !== "system" && m.sessionId === sessionId
+          (m) =>
+            m.role !== "system" &&
+            m.sessionId === sessionId &&
+            m.content.trim() !== ""
         )
         .slice(-MAX_MESSAGES_IN_CONTEXT)
         .map((m) => ({
@@ -239,7 +244,12 @@ async function sendToRealAI(
     content: m.content,
   }));
 
-  console.log("[Chat] Sending to AI provider, history length:", messages.length);
+  console.log(
+    "[Chat] Sending to AI provider:",
+    messages.length,
+    "messages, roles:",
+    messages.map((m) => m.role).join(", ")
+  );
 
   return new Promise<void>((resolve, reject) => {
     // Must handle the returned promise to catch async errors

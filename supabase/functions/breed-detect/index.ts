@@ -1,12 +1,12 @@
 /**
  * breed-detect — Supabase Edge Function
  *
- * Accepts a base64 image, sends to Google Cloud Vision,
+ * Accepts a base64 image, sends to Anthropic Claude (vision),
  * and returns top 3 breed predictions with confidence.
  *
  * PRD-01 Screen 3: Photo Upload + Breed Detection
  *
- * Required secret: GOOGLE_CLOUD_VISION_KEY
+ * Required secret: ANTHROPIC_API_KEY
  * Set in: Supabase Dashboard → Edge Functions → Secrets
  */
 
@@ -75,23 +75,13 @@ const DOG_BREEDS: string[] = [
   "Xoloitzcuintli","Yorkie","Yorkshire Terrier","Yorkipoo",
 ];
 
-// Pre-compute lowercase lookup map for fuzzy matching
-const BREED_LOOKUP = new Map<string, string>();
-for (const breed of DOG_BREEDS) {
-  BREED_LOOKUP.set(breed.toLowerCase(), breed);
-  // Also index without common suffixes for partial matching
-  const simplified = breed
-    .toLowerCase()
-    .replace(/ (terrier|spaniel|hound|retriever|shepherd|setter|pointer|pinscher|sheepdog|schnauzer|poodle|bulldog|collie|corgi)$/, "");
-  if (simplified !== breed.toLowerCase()) {
-    BREED_LOOKUP.set(simplified, breed);
-  }
-}
+// Pre-compute lowercase set for validation
+const BREED_SET = new Set(DOG_BREEDS.map((b) => b.toLowerCase()));
 
-interface VisionLabel {
-  description: string;
-  score: number;
-  topicality: number;
+// Map for canonical casing lookup
+const BREED_CANONICAL = new Map<string, string>();
+for (const breed of DOG_BREEDS) {
+  BREED_CANONICAL.set(breed.toLowerCase(), breed);
 }
 
 interface BreedResult {
@@ -100,30 +90,115 @@ interface BreedResult {
 }
 
 /**
- * Match a Vision API label to a known breed.
- * Returns the canonical breed name or null.
+ * Find the closest matching canonical breed name.
+ * Returns the canonical name or the original if no match found.
  */
-function matchBreed(label: string): string | null {
-  const lower = label.toLowerCase().trim();
+function matchToCanonicalBreed(name: string): string {
+  const lower = name.toLowerCase().trim();
 
   // Direct match
-  if (BREED_LOOKUP.has(lower)) return BREED_LOOKUP.get(lower)!;
+  if (BREED_CANONICAL.has(lower)) return BREED_CANONICAL.get(lower)!;
 
-  // Check if any known breed is contained within the label
-  for (const [key, canonical] of BREED_LOOKUP) {
+  // Check if any known breed is contained within or contains the name
+  for (const [key, canonical] of BREED_CANONICAL) {
     if (lower.includes(key) || key.includes(lower)) {
       return canonical;
     }
   }
 
-  return null;
+  // No match — return as-is (Claude's answer is still useful)
+  return name.trim();
 }
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
 };
+
+/** Timeout for the Anthropic API call */
+const ANTHROPIC_TIMEOUT_MS = 15_000;
+
+const BREED_PROMPT = `You are a professional dog breed identification expert. Analyze this photo and identify the dog breed.
+
+Consider the following physical characteristics:
+- Body size and proportions
+- Coat type, length, and texture
+- Face and muzzle shape
+- Ear type (floppy, erect, semi-erect)
+- Coloring and markings
+- Tail shape and carriage
+
+Return your answer as a JSON object with exactly this format:
+{
+  "breeds": [
+    { "name": "Breed Name", "confidence": 85 },
+    { "name": "Second Breed", "confidence": 10 },
+    { "name": "Third Breed", "confidence": 5 }
+  ]
+}
+
+Rules:
+- Return exactly 3 breed guesses, ranked by confidence (highest first).
+- Confidence values must be integers 0-100 and should sum to roughly 100.
+- Use standard AKC or common breed names (e.g. "Golden Retriever", not "Golden").
+- If the image is not a dog or you cannot identify the breed, return confidences below 30 for all.
+- If it looks like a mixed breed, list the most likely component breeds.
+- Return ONLY the JSON object, no other text.`;
+
+/**
+ * Parse Claude's text response into breed results.
+ * Tries JSON.parse first, then regex fallback.
+ */
+function parseBreedResponse(text: string): BreedResult[] {
+  // Try direct JSON parse (Claude usually returns clean JSON)
+  try {
+    // Extract JSON object from response (skip any preamble)
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      const parsed = JSON.parse(jsonMatch[0]);
+      if (Array.isArray(parsed.breeds) && parsed.breeds.length > 0) {
+        return parsed.breeds
+          .slice(0, 3)
+          .map((b: { name?: string; confidence?: number }) => ({
+            name: matchToCanonicalBreed(b.name ?? "Unknown"),
+            confidence: Math.round(Number(b.confidence) || 0),
+          }))
+          .filter((b: BreedResult) => b.name && b.confidence >= 0);
+      }
+    }
+  } catch {
+    // JSON parse failed, try regex
+  }
+
+  // Regex fallback: look for patterns like "Breed Name": 85 or "name": "Breed", "confidence": 85
+  const results: BreedResult[] = [];
+  const breedPattern =
+    /"name"\s*:\s*"([^"]+)"\s*,\s*"confidence"\s*:\s*(\d+)/gi;
+  let match;
+  while ((match = breedPattern.exec(text)) !== null && results.length < 3) {
+    results.push({
+      name: matchToCanonicalBreed(match[1]),
+      confidence: Math.round(Number(match[2])),
+    });
+  }
+
+  return results;
+}
+
+/**
+ * Detect the media type from base64 data or default to jpeg.
+ */
+function detectMediaType(
+  base64: string,
+): "image/jpeg" | "image/png" | "image/gif" | "image/webp" {
+  // Check for common base64 magic bytes
+  if (base64.startsWith("iVBOR")) return "image/png";
+  if (base64.startsWith("R0lGOD")) return "image/gif";
+  if (base64.startsWith("UklGR")) return "image/webp";
+  return "image/jpeg"; // Default
+}
 
 serve(async (req: Request): Promise<Response> => {
   // Handle CORS preflight
@@ -132,100 +207,169 @@ serve(async (req: Request): Promise<Response> => {
   }
 
   try {
-    const apiKey = Deno.env.get("GOOGLE_CLOUD_VISION_KEY");
+    const apiKey = Deno.env.get("ANTHROPIC_API_KEY");
     if (!apiKey) {
-      console.error("GOOGLE_CLOUD_VISION_KEY not set");
+      console.error("ANTHROPIC_API_KEY not set");
       return new Response(
-        JSON.stringify({ breeds: [], rawLabels: [], error: "Service not configured" }),
-        { status: 200, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } },
+        JSON.stringify({ breeds: [], error: "Service not configured" }),
+        {
+          status: 200,
+          headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+        },
       );
     }
 
     const { image } = await req.json();
     if (!image || typeof image !== "string") {
       return new Response(
-        JSON.stringify({ breeds: [], rawLabels: [], error: "Missing image field" }),
-        { status: 400, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } },
+        JSON.stringify({ breeds: [], error: "Missing image field" }),
+        {
+          status: 400,
+          headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+        },
       );
     }
 
     // Strip data URI prefix if present
     const base64Data = image.replace(/^data:image\/\w+;base64,/, "");
+    const mediaType = detectMediaType(base64Data);
 
-    // Call Google Cloud Vision API
-    const visionUrl = `https://vision.googleapis.com/v1/images:annotate?key=${apiKey}`;
-    const visionBody = {
-      requests: [
-        {
-          image: { content: base64Data },
-          features: [
-            { type: "LABEL_DETECTION", maxResults: 20 },
-            { type: "WEB_DETECTION", maxResults: 10 },
-          ],
+    // Call Anthropic Claude API with vision
+    const controller = new AbortController();
+    const timeout = setTimeout(
+      () => controller.abort(),
+      ANTHROPIC_TIMEOUT_MS,
+    );
+
+    let anthropicRes: Response;
+    try {
+      anthropicRes = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "x-api-key": apiKey,
+          "anthropic-version": "2023-06-01",
+          "content-type": "application/json",
         },
-      ],
-    };
-
-    const visionRes = await fetch(visionUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(visionBody),
-    });
-
-    if (!visionRes.ok) {
-      const errText = await visionRes.text();
-      console.error("Vision API error:", visionRes.status, errText);
+        body: JSON.stringify({
+          model: "claude-sonnet-4-20250514",
+          max_tokens: 300,
+          messages: [
+            {
+              role: "user",
+              content: [
+                {
+                  type: "image",
+                  source: {
+                    type: "base64",
+                    media_type: mediaType,
+                    data: base64Data,
+                  },
+                },
+                {
+                  type: "text",
+                  text: BREED_PROMPT,
+                },
+              ],
+            },
+          ],
+        }),
+        signal: controller.signal,
+      });
+    } catch (fetchErr: unknown) {
+      clearTimeout(timeout);
+      const errMsg =
+        fetchErr instanceof Error && fetchErr.name === "AbortError"
+          ? "Request timed out"
+          : "Failed to reach AI service";
+      console.error("Anthropic fetch error:", fetchErr);
       return new Response(
-        JSON.stringify({ breeds: [], rawLabels: [], error: "Vision API error" }),
-        { status: 200, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } },
+        JSON.stringify({ breeds: [], error: errMsg }),
+        {
+          status: 200,
+          headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+        },
       );
     }
 
-    const visionData = await visionRes.json();
-    const response = visionData.responses?.[0];
+    clearTimeout(timeout);
 
-    // Collect labels from both LABEL_DETECTION and WEB_DETECTION
-    const labelAnnotations: VisionLabel[] = response?.labelAnnotations ?? [];
-    const webEntities = (response?.webDetection?.webEntities ?? []).map(
-      (e: { description?: string; score?: number }) => ({
-        description: e.description ?? "",
-        score: e.score ?? 0,
-        topicality: 0,
-      }),
-    );
-
-    const allLabels = [...labelAnnotations, ...webEntities];
-    const rawLabels = allLabels.map((l) => l.description).filter(Boolean);
-
-    // Match labels against known breeds, deduplicate, take best confidence
-    const breedMap = new Map<string, number>();
-    for (const label of allLabels) {
-      if (!label.description) continue;
-      const breed = matchBreed(label.description);
-      if (breed) {
-        const confidence = Math.round((label.score ?? 0) * 100);
-        const existing = breedMap.get(breed) ?? 0;
-        if (confidence > existing) {
-          breedMap.set(breed, confidence);
-        }
-      }
+    if (!anthropicRes.ok) {
+      const errText = await anthropicRes.text();
+      console.error(
+        "Anthropic API error:",
+        anthropicRes.status,
+        errText.substring(0, 500),
+      );
+      return new Response(
+        JSON.stringify({ breeds: [], error: "AI service error" }),
+        {
+          status: 200,
+          headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+        },
+      );
     }
 
-    // Filter out generic "Dog" labels and sort by confidence
-    const breeds: BreedResult[] = Array.from(breedMap.entries())
-      .map(([name, confidence]) => ({ name, confidence }))
-      .sort((a, b) => b.confidence - a.confidence)
-      .slice(0, 3);
+    const anthropicData = await anthropicRes.json();
 
-    return new Response(
-      JSON.stringify({ breeds, rawLabels }),
-      { status: 200, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } },
+    // Extract text from Claude's response
+    const textContent = anthropicData.content?.find(
+      (block: { type: string }) => block.type === "text",
     );
+    const responseText: string = textContent?.text ?? "";
+
+    if (!responseText) {
+      console.error("Empty response from Claude");
+      return new Response(
+        JSON.stringify({ breeds: [], error: "Empty AI response" }),
+        {
+          status: 200,
+          headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+        },
+      );
+    }
+
+    // Parse the breed predictions from Claude's response
+    const breeds = parseBreedResponse(responseText);
+
+    if (breeds.length === 0) {
+      console.warn("Could not parse breeds from response:", responseText.substring(0, 200));
+      return new Response(
+        JSON.stringify({
+          breeds: [],
+          rawLabels: [responseText.substring(0, 200)],
+          error: "Could not parse breed data",
+        }),
+        {
+          status: 200,
+          headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+        },
+      );
+    }
+
+    // Build response with optional lowConfidence flag
+    const topConfidence = breeds[0]?.confidence ?? 0;
+    const result: {
+      breeds: BreedResult[];
+      lowConfidence?: boolean;
+      rawLabels?: string[];
+    } = { breeds };
+
+    if (topConfidence < 60) {
+      result.lowConfidence = true;
+    }
+
+    return new Response(JSON.stringify(result), {
+      status: 200,
+      headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+    });
   } catch (err) {
     console.error("breed-detect error:", err);
     return new Response(
-      JSON.stringify({ breeds: [], rawLabels: [], error: "Internal error" }),
-      { status: 200, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } },
+      JSON.stringify({ breeds: [], error: "Internal error" }),
+      {
+        status: 200,
+        headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+      },
     );
   }
 });

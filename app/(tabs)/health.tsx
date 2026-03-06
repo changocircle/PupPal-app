@@ -55,19 +55,20 @@ function HealthScreenContent() {
   const ageMonths = onboardingData.ageMonths ?? 3;
   const ageWeeks = ageMonths * 4;
 
-  // Health store
-  const {
-    vaccinationsInitialized,
-    milestonesInitialized,
-    initVaccinations,
-    initMilestones,
-    getHealthSummary,
-    getUpcomingEvents,
-    getActiveMedications,
-    getWeightHistory,
-    getHealthNotesForDog,
-    logMedicationDose,
-  } = useHealthStore();
+  // Health store - individual selectors for reactivity
+  const vaccinationsInitialized = useHealthStore((s) => s.vaccinationsInitialized);
+  const milestonesInitialized = useHealthStore((s) => s.milestonesInitialized);
+  const initVaccinations = useHealthStore((s) => s.initVaccinations);
+  const initMilestones = useHealthStore((s) => s.initMilestones);
+  const getHealthSummary = useHealthStore((s) => s.getHealthSummary);
+  const getUpcomingEvents = useHealthStore((s) => s.getUpcomingEvents);
+  const getActiveMedications = useHealthStore((s) => s.getActiveMedications);
+  const logMedicationDose = useHealthStore((s) => s.logMedicationDose);
+  // Raw state arrays: subscribe to these so useMemo recomputes on change
+  const weightEntries = useHealthStore((s) => s.weightEntries);
+  const healthNotes = useHealthStore((s) => s.healthNotes);
+  const vaccinations = useHealthStore((s) => s.vaccinations);
+  const medications = useHealthStore((s) => s.medications);
 
   // Derive a dogId (use plan dogName as key for now)
   const dogId = dog?.id ?? plan?.dogName ?? "default-dog";
@@ -94,24 +95,40 @@ function HealthScreenContent() {
     }
   }, [milestonesInitialized, dogId, ageWeeks]);
 
-  // Data
-  const summary = useMemo(() => getHealthSummary(dogId), [dogId, getHealthSummary]);
+  // Data - include raw state arrays in deps so useMemo recomputes
+  // when data changes (e.g., after adding a weight entry and navigating back)
+  const summary = useMemo(
+    () => getHealthSummary(dogId),
+    [dogId, weightEntries, vaccinations, medications, healthNotes]
+  );
   // PRD-07 §3: free users see max 2 upcoming events
   const upcomingEvents = useMemo(
     () => getUpcomingEvents(dogId, isPremium ? 5 : 2),
-    [dogId, getUpcomingEvents, isPremium]
+    [dogId, vaccinations, medications, isPremium]
   );
   const activeMeds = useMemo(
     () => getActiveMedications(dogId),
-    [dogId, getActiveMedications]
+    [dogId, medications]
   );
   const weights = useMemo(
-    () => getWeightHistory(dogId),
-    [dogId, getWeightHistory]
+    () =>
+      weightEntries
+        .filter((w) => w.dogId === dogId)
+        .sort(
+          (a, b) =>
+            new Date(a.measuredAt).getTime() - new Date(b.measuredAt).getTime()
+        ),
+    [weightEntries, dogId]
   );
   const notes = useMemo(
-    () => getHealthNotesForDog(dogId),
-    [dogId, getHealthNotesForDog]
+    () =>
+      healthNotes
+        .filter((n) => n.dogId === dogId)
+        .sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        ),
+    [healthNotes, dogId]
   );
   const unresolvedNotes = notes.filter((n) => !n.resolved);
 
@@ -364,11 +381,13 @@ function HealthScreenContent() {
           }>
             <Card>
               <View className="flex-row items-center justify-between mb-sm">
-                <Typography variant="h3">📝 Health Notes</Typography>
-                {!isPremium && <Typography style={{ fontSize: 12 }}>🔒</Typography>}
+                <View className="flex-row items-center gap-xs" style={{ flex: 1 }}>
+                  <Typography variant="h3">📝 Health Notes</Typography>
+                  {!isPremium && <Typography style={{ fontSize: 12 }}>🔒</Typography>}
+                </View>
                 <Typography
                   variant="body-sm-medium"
-                  style={{ color: "#FF6B5C" }}
+                  style={{ color: "#FF6B5C", flexShrink: 0 }}
                 >
                   {unresolvedNotes.length > 0
                     ? `${unresolvedNotes.length} active →`
