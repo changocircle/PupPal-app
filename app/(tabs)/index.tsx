@@ -3,7 +3,7 @@ import { View, ScrollView, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown, FadeIn } from "react-native-reanimated";
 import { useRouter } from "expo-router";
-import { Typography, Card, ProgressBar, PremiumGate, Button } from "@/components/ui";
+import { Typography, Card, ProgressBar, PremiumGate, Button, ErrorBoundary, HomeSkeleton } from "@/components/ui";
 import { ExerciseCard, DayProgress } from "@/components/training";
 import {
   GamificationRow,
@@ -16,6 +16,7 @@ import { useDogStore } from "@/stores/dogStore";
 import { useOnboardingStore } from "@/stores/onboardingStore";
 import { useGamification } from "@/hooks/useGamification";
 import { useSubscription } from "@/hooks/useSubscription";
+import { useHydration } from "@/hooks/useHydration";
 import { DogSwitcherButton } from "@/components/dog";
 
 /**
@@ -32,6 +33,20 @@ function getGreeting(): string {
 }
 
 export default function HomeScreen() {
+  const hydrated = useHydration(useDogStore, useTrainingStore, useOnboardingStore);
+
+  if (!hydrated) {
+    return <HomeSkeleton />;
+  }
+
+  return (
+    <ErrorBoundary screen="Home">
+      <HomeScreenContent />
+    </ErrorBoundary>
+  );
+}
+
+function HomeScreenContent() {
   const router = useRouter();
   const { isPremium } = useSubscription();
   const dog = useDogStore((s) => s.activeDog());

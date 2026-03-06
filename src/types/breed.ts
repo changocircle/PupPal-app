@@ -26,6 +26,12 @@ export interface BreedScreening {
   importance: 'essential' | 'recommended' | 'optional';
 }
 
+export interface GrowthCurvePoint {
+  weekNumber: number;
+  maleWeightLbs: number;
+  femaleWeightLbs: number;
+}
+
 export type SizeCategory = 'toy' | 'small' | 'medium' | 'large' | 'giant';
 export type RatingLevel = 'low' | 'moderate' | 'high' | 'very_high';
 export type LearningSpeed = 'slow' | 'average' | 'fast' | 'very_fast';
@@ -96,6 +102,9 @@ export interface BreedProfile {
   // Media
   hero_image_url: string | null;
   gallery_urls: string[];
+
+  // Growth Curves (weight-by-week from birth through adult)
+  growth_curve: GrowthCurvePoint[];
 
   // Metadata
   popularity_rank: number | null;
