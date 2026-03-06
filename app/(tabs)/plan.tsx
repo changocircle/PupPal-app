@@ -176,6 +176,7 @@ function PlanScreenContent() {
             currentWeek={currentWeek}
             getWeekProgress={getWeekProgress}
             dogName={dogName}
+            isPremium={isPremium}
           />
         ) : (
           <FullPlanView
@@ -201,6 +202,7 @@ function ThisWeekView({
   currentWeek,
   getWeekProgress,
   dogName,
+  isPremium,
 }: {
   plan: NonNullable<ReturnType<typeof useTrainingStore.getState>["plan"]>;
   currentWeek: ReturnType<
@@ -208,6 +210,7 @@ function ThisWeekView({
   >;
   getWeekProgress: (w: number) => number;
   dogName: string;
+  isPremium: boolean;
 }) {
   if (!currentWeek) return null;
   const progress = getWeekProgress(plan.currentWeek);
@@ -287,17 +290,22 @@ function ThisWeekView({
             </View>
 
             <View className="gap-sm ml-[36px]">
-              {day.exercises.map((planEx, idx) => (
-                <ExerciseCard
-                  key={planEx.id}
-                  planExercise={planEx}
-                  index={idx}
-                  locked={
-                    day.dayNumber > plan.currentDay &&
-                    day.status === "upcoming"
-                  }
-                />
-              ))}
+              {day.exercises.map((planEx, idx) => {
+                // Day-based progress lock: skip when dev premium override is ON
+                const dayLocked =
+                  !isPremium &&
+                  day.dayNumber > plan.currentDay &&
+                  day.status === "upcoming";
+                return (
+                  <ExerciseCard
+                    key={planEx.id}
+                    planExercise={planEx}
+                    index={idx}
+                    locked={dayLocked}
+                    lockReason="progress"
+                  />
+                );
+              })}
             </View>
           </View>
         );

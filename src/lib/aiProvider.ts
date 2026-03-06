@@ -78,6 +78,9 @@ export async function streamChatCompletion(
     ...messages,
   ];
 
+  console.log("[AI] Provider:", config.baseUrl, "Model:", config.model);
+  console.log("[AI] Messages count:", allMessages.length);
+
   try {
     // Skip SSE on React Native — ReadableStream is unreliable or hangs
     const hasReadableStream =
@@ -85,6 +88,7 @@ export async function streamChatCompletion(
       typeof globalThis.document !== "undefined"; // Web only
 
     if (hasReadableStream) {
+      console.log("[AI] Using SSE streaming");
       // Race streaming against a 15s timeout to prevent hanging
       const timeoutPromise = new Promise<never>((_, reject) =>
         setTimeout(() => reject(new Error("SSE streaming timeout")), 15000)
@@ -94,24 +98,15 @@ export async function streamChatCompletion(
         timeoutPromise,
       ]);
     } else {
-      // React Native / environments without ReadableStream: non-streaming
+      console.log("[AI] Using non-streaming fallback (React Native)");
       await nonStreamingFallback(config, allMessages, callbacks);
     }
-  } catch (streamError) {
-    // Fall back to non-streaming
-    console.warn(
-      "Streaming not supported, falling back to non-streaming:",
-      streamError
+  } catch (error) {
+    const errMsg = error instanceof Error ? error.message : String(error);
+    console.error("[AI] Request failed:", errMsg);
+    callbacks.onError(
+      error instanceof Error ? error : new Error("AI request failed")
     );
-    try {
-      await nonStreamingFallback(config, allMessages, callbacks);
-    } catch (fallbackError) {
-      callbacks.onError(
-        fallbackError instanceof Error
-          ? fallbackError
-          : new Error("AI request failed")
-      );
-    }
   }
 }
 
@@ -222,8 +217,11 @@ async function nonStreamingFallback(
 
   clearTimeout(timeout);
 
+  console.log("[AI] Non-streaming response status:", response.status);
+
   if (!response.ok) {
     const errorBody = await response.text();
+    console.error("[AI] API error body:", errorBody.slice(0, 300));
     throw new Error(
       `AI API error ${response.status}: ${errorBody.slice(0, 200)}`
     );
@@ -232,7 +230,10 @@ async function nonStreamingFallback(
   const data = await response.json();
   const content = data.choices?.[0]?.message?.content ?? "";
 
+  console.log("[AI] Response content length:", content.length);
+
   if (!content) {
+    console.error("[AI] Empty response. Full data:", JSON.stringify(data).slice(0, 300));
     throw new Error("Empty response from AI provider");
   }
 

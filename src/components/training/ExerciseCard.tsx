@@ -23,12 +23,15 @@ interface ExerciseCardProps {
   index?: number;
   /** Whether this exercise is locked behind premium */
   locked?: boolean;
+  /** Reason for locking: "premium" shows Premium badge, "progress" shows day info */
+  lockReason?: "premium" | "progress";
 }
 
 export function ExerciseCard({
   planExercise,
   index = 0,
   locked = false,
+  lockReason = "premium",
 }: ExerciseCardProps) {
   const router = useRouter();
   // Individual selectors → stable refs, prevents render loops
@@ -135,8 +138,10 @@ export function ExerciseCard({
             <Badge variant="neutral" label="Skipped" size="sm" />
           ) : planExercise.status === "needs_practice" ? (
             <Badge variant="warning" label="Retry" size="sm" />
-          ) : locked ? (
+          ) : locked && lockReason === "premium" ? (
             <Badge variant="neutral" label="Premium" size="sm" />
+          ) : locked && lockReason === "progress" ? (
+            <Badge variant="neutral" label="Upcoming" size="sm" />
           ) : (
             <View className="w-[24px] h-[24px] items-center justify-center">
               <Typography className="text-text-tertiary text-[16px]">›</Typography>

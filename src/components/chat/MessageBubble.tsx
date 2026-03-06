@@ -69,13 +69,13 @@ export function MessageBubble({
           {message.content}
         </Typography>
 
-        {/* Streaming cursor */}
-        {message.isStreaming && (
+        {/* Streaming cursor — use pipe char (▊ doesn't render on all devices) */}
+        {message.isStreaming && message.content.length > 0 && (
           <Typography
             variant="body-lg"
             style={{ color: "#FF6B5C", opacity: 0.6 }}
           >
-            ▊
+            |
           </Typography>
         )}
 
