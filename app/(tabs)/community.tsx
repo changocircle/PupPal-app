@@ -15,10 +15,12 @@ import { View, ScrollView, Pressable, Image, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
-import { Typography, Button, Card, Badge } from '@/components/ui';
+import { Typography, Button, Card, Badge, ErrorBoundary, CommunitySkeleton } from '@/components/ui';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useDogStore } from '@/stores/dogStore';
 import { useOnboardingStore } from '@/stores/onboardingStore';
+import { useSettingsStore } from '@/stores/settingsStore';
+import { useHydration } from '@/hooks/useHydration';
 import type { CommunityPost, FeedFilter } from '@/types/community';
 import { COLORS, RADIUS, SHADOWS } from '@/constants/theme';
 
@@ -224,6 +226,30 @@ function PostCard({ post, isPremium, onPress }: PostCardProps) {
 // ──────────────────────────────────────────────
 
 export default function CommunityScreen() {
+  const hydrated = useHydration(useDogStore, useOnboardingStore, useSettingsStore);
+
+  if (!hydrated) {
+    // Skeleton while stores hydrate (prevents flash of premium gate)
+    return (
+      <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }}>
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <Typography style={{ fontSize: 40 }}>👥</Typography>
+          <Typography variant="body" color="secondary" style={{ marginTop: 12 }}>
+            Loading Community...
+          </Typography>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  return (
+    <ErrorBoundary screen="Community">
+      <CommunityScreenContent />
+    </ErrorBoundary>
+  );
+}
+
+function CommunityScreenContent() {
   const router = useRouter();
   const { isPremium } = useSubscription();
   // Individual selectors → stable refs, prevents render loops
@@ -257,24 +283,18 @@ export default function CommunityScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }}>
-      {/* Header */}
+      {/* Header (tab screen, no back button) */}
       <View
         style={{
-          flexDirection: 'row',
-          alignItems: 'center',
           paddingHorizontal: 16,
           paddingVertical: 12,
           borderBottomWidth: 1,
           borderBottomColor: COLORS.border,
         }}
       >
-        <Pressable onPress={() => router.back()}>
-          <Typography variant="h3" style={{ fontSize: 24 }}>←</Typography>
-        </Pressable>
-        <Typography variant="h3" style={{ flex: 1, textAlign: 'center' }}>
+        <Typography variant="h3" style={{ textAlign: 'center' }}>
           Community
         </Typography>
-        <View style={{ width: 24 }} />
       </View>
 
       {/* Filter tabs */}

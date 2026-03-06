@@ -2,6 +2,7 @@
  * Client-side breed detection service.
  *
  * Calls the Supabase breed-detect Edge Function with a base64-encoded image.
+ * The Edge Function uses Claude (Anthropic) vision for breed identification.
  * Returns the top breed predictions or null on failure/timeout.
  *
  * PRD-01 Screen 3: Photo Upload + Breed Detection
@@ -12,8 +13,8 @@ import { File as ExpoFile } from "expo-file-system";
 const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL ?? "";
 const SUPABASE_ANON_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? "";
 
-/** Timeout for breed detection API call (generous to handle cold starts) */
-const DETECT_TIMEOUT_MS = 12000;
+/** Timeout for breed detection API call (generous to handle cold starts + Claude inference) */
+const DETECT_TIMEOUT_MS = 20_000;
 
 export interface BreedPrediction {
   name: string;
@@ -27,6 +28,8 @@ export interface BreedDetectResult {
   confidence: number;
   /** Top 3 predictions */
   suggestions: BreedPrediction[];
+  /** True when the top breed confidence is below 60% — UI should ask user to confirm */
+  lowConfidence: boolean;
 }
 
 /**
@@ -97,6 +100,11 @@ export async function detectBreed(
 
     const data = await res.json();
     console.log("[BreedDetect] Response data:", JSON.stringify(data).substring(0, 300));
+
+    if (data.error) {
+      console.warn("[BreedDetect] Server error:", data.error);
+    }
+
     const breeds: BreedPrediction[] = data.breeds ?? [];
 
     if (breeds.length === 0) {
@@ -108,6 +116,7 @@ export async function detectBreed(
       topBreed: breeds[0]!.name,
       confidence: breeds[0]!.confidence,
       suggestions: breeds,
+      lowConfidence: data.lowConfidence === true,
     };
   } catch (err: any) {
     // AbortError = timeout, anything else = network/parse error

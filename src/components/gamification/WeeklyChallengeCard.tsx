@@ -1,10 +1,12 @@
 /**
  * WeeklyChallengeCard, weekly challenge progress card
  * PRD-04 §8: title, description, progress bar, XP reward, days remaining
+ *
+ * Accepts optional onPress to make the card tappable (navigates to plan).
  */
 
 import React from "react";
-import { View } from "react-native";
+import { View, Pressable } from "react-native";
 import { Card, Typography, ProgressBar, Badge } from "@/components/ui";
 
 interface WeeklyChallengeCardProps {
@@ -14,6 +16,7 @@ interface WeeklyChallengeCardProps {
   target: number;
   xpReward: number;
   completed: boolean;
+  onPress?: () => void;
 }
 
 export function WeeklyChallengeCard({
@@ -23,10 +26,11 @@ export function WeeklyChallengeCard({
   target,
   xpReward,
   completed,
+  onPress,
 }: WeeklyChallengeCardProps) {
   const progressFraction = Math.min(progress / target, 1.0);
 
-  return (
+  const cardContent = (
     <Card>
       <View className="flex-row items-start justify-between mb-sm">
         <View className="flex-1 mr-md">
@@ -58,10 +62,23 @@ export function WeeklyChallengeCard({
           <Typography variant="caption" color="tertiary">
             {completed
               ? "Challenge complete! 🎉"
-              : `${progress}/${target} ${target === 1 ? "" : ""}`}
+              : `${progress}/${target}`}
           </Typography>
         </View>
       </View>
     </Card>
   );
+
+  if (onPress) {
+    return (
+      <Pressable
+        onPress={onPress}
+        style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
+      >
+        {cardContent}
+      </Pressable>
+    );
+  }
+
+  return cardContent;
 }

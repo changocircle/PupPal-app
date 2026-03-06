@@ -117,8 +117,8 @@ export default function WeightScreen() {
         >
           <Card>
             {weights.length > 0 ? (
-              <View className="flex-row items-end justify-between">
-                <View>
+              <View className="flex-row items-end justify-between" style={{ gap: 12 }}>
+                <View style={{ flex: 1 }}>
                   <Typography variant="caption" color="secondary">
                     Current Weight
                   </Typography>
@@ -131,21 +131,23 @@ export default function WeightScreen() {
                   </Typography>
                 </View>
                 {/* PRD-07: Free users get 1 entry, premium unlimited */}
-                {isPremium || weights.length === 0 ? (
-                  <Button
-                    label="+ Weigh In"
-                    variant="primary"
-                    size="sm"
-                    onPress={() => setShowForm(true)}
-                  />
-                ) : (
-                  <Button
-                    label="🔒 Track More"
-                    variant="secondary"
-                    size="sm"
-                    onPress={() => router.push({ pathname: "/paywall", params: { trigger: "feature_gate_health", source: "weight_chart" } })}
-                  />
-                )}
+                <View style={{ flexShrink: 0 }}>
+                  {isPremium || weights.length === 0 ? (
+                    <Button
+                      label="+ Weigh In"
+                      variant="primary"
+                      size="sm"
+                      onPress={() => setShowForm(true)}
+                    />
+                  ) : (
+                    <Button
+                      label="🔒 Track More"
+                      variant="secondary"
+                      size="sm"
+                      onPress={() => router.push({ pathname: "/paywall", params: { trigger: "feature_gate_health", source: "weight_chart" } })}
+                    />
+                  )}
+                </View>
               </View>
             ) : (
               <View className="items-center py-base">
