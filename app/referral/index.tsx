@@ -1,5 +1,5 @@
 /**
- * Referral Screen — PRD-08 §2-5
+ * Referral Screen, PRD-08 §2-5
  *
  * Shows user's referral code/link, sharing options,
  * referral progress, and rewards earned.
@@ -19,9 +19,9 @@ import { COLORS, RADIUS, SHADOWS } from '@/constants/theme';
 
 /** Reward tiers (PRD-08 §2) */
 const REWARD_TIERS = [
-  { action: 'Friend installs PupPal', referrer: '50 XP', referee: '—', emoji: '📲' },
+  { action: 'Friend installs PupPal', referrer: '50 XP', referee: ', ', emoji: '📲' },
   { action: 'Friend starts trial', referrer: '100 XP', referee: '+1 free msg/day', emoji: '🎯' },
-  { action: 'Friend goes Premium', referrer: '1 free month', referee: '—', emoji: '⭐' },
+  { action: 'Friend goes Premium', referrer: '1 free month', referee: ', ', emoji: '⭐' },
 ];
 
 export default function ReferralScreen() {
@@ -78,7 +78,7 @@ export default function ReferralScreen() {
   }, [dogName, getShareMessage, incrementShareCount]);
 
   const handleCopyLink = useCallback(async () => {
-    // Share the link — acts as both clipboard + sharing
+    // Share the link, acts as both clipboard + sharing
     await Share.share({ message: referralLink });
     analytics.track(EVENTS.REFERRAL_LINK_SHARED, { method: 'copy' });
   }, [referralLink]);
@@ -160,7 +160,7 @@ export default function ReferralScreen() {
               color="secondary"
               style={{ textAlign: 'center', maxWidth: 280 }}
             >
-              Invite fellow puppy parents — you both get rewarded when they join
+              Invite fellow puppy parents, you both get rewarded when they join
             </Typography>
           </Card>
         </Animated.View>
@@ -268,7 +268,7 @@ export default function ReferralScreen() {
                   </Typography>
                   <View style={{ flexDirection: 'row', gap: 8 }}>
                     <Badge label={`You: ${tier.referrer}`} variant="success" size="sm" />
-                    {tier.referee !== '—' && (
+                    {tier.referee !== ', ' && (
                       <Badge label={`Friend: ${tier.referee}`} variant="info" size="sm" />
                     )}
                   </View>

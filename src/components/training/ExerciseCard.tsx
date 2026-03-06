@@ -1,5 +1,5 @@
 /**
- * ExerciseCard — tappable card for exercise lists
+ * ExerciseCard, tappable card for exercise lists
  * PRD-03 §7: shows status, category tag, title, time
  *
  * Used in Today's Training + Plan week view.

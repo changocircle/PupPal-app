@@ -1,5 +1,5 @@
 /**
- * AI Provider Abstraction — PRD-02 §10
+ * AI Provider Abstraction, PRD-02 §10
  *
  * Provider-agnostic interface for AI chat.
  * Kimi K2.5 is primary (OpenAI-compatible API).
@@ -43,7 +43,7 @@ function getProviderConfig(): AIProviderConfig | null {
     apiKey,
     baseUrl,
     model,
-    maxTokens: 1024,
+    maxTokens: 300,
     temperature: 1, // Kimi K2.5 only accepts temperature=1
   };
 }
@@ -82,7 +82,7 @@ export async function streamChatCompletion(
   console.log("[AI] Messages count:", allMessages.length);
 
   try {
-    // Skip SSE on React Native — ReadableStream is unreliable or hangs
+    // Skip SSE on React Native, ReadableStream is unreliable or hangs
     const hasReadableStream =
       typeof ReadableStream !== "undefined" &&
       typeof globalThis.document !== "undefined"; // Web only
@@ -143,7 +143,7 @@ async function streamWithSSE(
   // Check if we can stream the response body
   const reader = response.body?.getReader();
   if (!reader) {
-    // No ReadableStream support — fall back
+    // No ReadableStream support, fall back
     throw new Error("ReadableStream not available");
   }
 

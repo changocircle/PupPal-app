@@ -1,5 +1,5 @@
 /**
- * Notification Settings Screen — PRD-09 §8
+ * Notification Settings Screen, PRD-09 §8
  *
  * Toggle notification categories, set preferred training time,
  * and manage system permission.
@@ -279,7 +279,7 @@ export default function NotificationSettingsScreen() {
           >
             <Typography variant="caption" color="secondary" style={{ textAlign: 'center', lineHeight: 18 }}>
               PupPal only sends notifications that help your training journey.
-              We'll never spam you — promise! 🐾
+              We'll never spam you, promise! 🐾
             </Typography>
           </View>
         </Animated.View>

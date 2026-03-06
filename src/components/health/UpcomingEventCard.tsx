@@ -1,5 +1,5 @@
 /**
- * Upcoming Health Event Card — PRD-05 §3
+ * Upcoming Health Event Card, PRD-05 §3
  *
  * Shows a single upcoming health event (vaccination, med, vet follow-up).
  */

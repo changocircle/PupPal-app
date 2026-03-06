@@ -1,5 +1,5 @@
 /**
- * Centralized store reset — call on sign-out or fresh onboarding start.
+ * Centralized store reset, call on sign-out or fresh onboarding start.
  *
  * Resets every Zustand store that uses AsyncStorage persistence,
  * clearing both in-memory state and the persisted copies.
@@ -17,7 +17,7 @@ import { useTrainingStore } from "@/stores/trainingStore";
 import { useTrickStore } from "@/stores/trickStore";
 
 export function resetAllStores(): void {
-  // Reset dog store first — it also cleans up per-dog AsyncStorage keys
+  // Reset dog store first, it also cleans up per-dog AsyncStorage keys
   useDogStore.getState().resetDogs();
 
   // Reset every other persisted store

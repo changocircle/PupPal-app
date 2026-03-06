@@ -1,5 +1,5 @@
 /**
- * XpFloatUp — "+15 XP" animated label that floats up and fades
+ * XpFloatUp, "+15 XP" animated label that floats up and fades
  * DESIGN-SYSTEM.md: accent gold, float up 40px over 600ms, fade out
  */
 

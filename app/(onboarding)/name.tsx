@@ -49,7 +49,7 @@ export default function NameScreen() {
               <Typography variant="body-lg" className="text-center">
                 {showReaction
                   ? `I love that! ${name.trim()} is a great name 🐾`
-                  : "First things first — what's your puppy's name?"}
+                  : "First things first, what's your puppy's name?"}
               </Typography>
             </View>
           </Animated.View>

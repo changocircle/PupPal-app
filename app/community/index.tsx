@@ -1,5 +1,5 @@
 /**
- * Community Screen — PRD-15
+ * Community Screen, PRD-15
  *
  * P3 post-launch feature. This is the scaffolded UI with sample data.
  * Full implementation requires:

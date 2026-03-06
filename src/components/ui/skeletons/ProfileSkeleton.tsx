@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Skeleton } from "../Skeleton";
 
 /**
- * Profile screen skeleton — header, avatar card, dog card,
+ * Profile screen skeleton, header, avatar card, dog card,
  * progress/level card, achievements, settings rows.
  */
 export function ProfileSkeleton() {

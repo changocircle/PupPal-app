@@ -1,9 +1,9 @@
 /**
- * Achievement Checker — PRD-04 §6
+ * Achievement Checker, PRD-04 §6
  *
  * Evaluates all achievement triggers against current user state.
  * Called after every exercise completion, streak update, and score change.
- * Returns newly unlocked achievements (idempotent — skips already unlocked).
+ * Returns newly unlocked achievements (idempotent, skips already unlocked).
  */
 
 import type {
@@ -217,7 +217,7 @@ function evaluateTrigger(
     }
 
     case "breed_percentile":
-      // Requires server-side breed comparison — not achievable locally
+      // Requires server-side breed comparison, not achievable locally
       return { unlocked: false };
 
     case "health_compliance":
@@ -285,7 +285,7 @@ function getMetricCount(metric: string, ctx: AchievementContext): number {
         return cat === "tricks";
       }).length;
     case "trick_packs":
-      // Placeholder — trick pack completion tracking
+      // Placeholder, trick pack completion tracking
       return 0;
     default:
       return 0;

@@ -13,7 +13,7 @@ import { TRICK_LEVEL_META, FREE_TRICK_ID } from '@/types/tricks';
 import type { TrickPack, TrickProgress } from '@/types/tricks';
 
 /**
- * Trick Library Screen — PRD-03 §6
+ * Trick Library Screen, PRD-03 §6
  *
  * Shows all trick packs in a 2-column grid with unlock status,
  * a "Tricks Known" section showing completed tricks with star ratings,
@@ -133,7 +133,7 @@ export default function TrickLibraryScreen() {
           <Typography variant="body" color="secondary">
             {totalTricksCompleted > 0
               ? `${dogName} knows ${totalTricksCompleted} trick${totalTricksCompleted !== 1 ? 's' : ''}!`
-              : `Teach ${dogName} fun tricks — start with Shake!`}
+              : `Teach ${dogName} fun tricks, start with Shake!`}
           </Typography>
         </Animated.View>
 

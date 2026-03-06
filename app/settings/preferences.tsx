@@ -8,7 +8,7 @@ import { useSettingsStore } from "@/stores/settingsStore";
 import { useHealthStore } from "@/stores/healthStore";
 
 /**
- * Preferences Screen — PRD-14 §5
+ * Preferences Screen, PRD-14 §5
  *
  * Notifications, units, training reminders.
  */

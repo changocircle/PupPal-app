@@ -18,7 +18,7 @@ import { useSubscription } from "@/hooks/useSubscription";
 import { useHydration } from "@/hooks/useHydration";
 
 /**
- * Health Dashboard — PRD-05 §3
+ * Health Dashboard, PRD-05 §3
  *
  * Centralises all health tracking: vaccinations, medications,
  * weight, vet visits, milestones, and health notes.
@@ -202,7 +202,7 @@ function HealthScreenContent() {
               ))
             ) : (
               <Typography variant="body-sm" color="secondary">
-                No upcoming health events — all clear! ✨
+                No upcoming health events, all clear! ✨
               </Typography>
             )}
           </Card>
@@ -406,7 +406,7 @@ function HealthScreenContent() {
                 ))
               ) : (
                 <Typography variant="body-sm" color="secondary">
-                  No active notes — jot down health observations here
+                  No active notes, jot down health observations here
                 </Typography>
               )}
             </Card>

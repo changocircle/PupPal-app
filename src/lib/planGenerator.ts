@@ -1,5 +1,5 @@
 /**
- * Training Plan Generator — PRD-03 §4
+ * Training Plan Generator, PRD-03 §4
  *
  * Generates a personalised 12-week training plan based on:
  *   - breed (learning speed, common issues)
@@ -140,7 +140,7 @@ const WEEK_THEMES: Array<{ title: string; description: string; milestone: string
   },
   {
     title: "Finding Your Rhythm",
-    description: "Consistency is paying off — time to expand your pup's skills.",
+    description: "Consistency is paying off! Time to expand your pup's skills.",
     milestone: "Master your first skill category",
   },
   {
@@ -150,7 +150,7 @@ const WEEK_THEMES: Array<{ title: string; description: string; milestone: string
   },
   {
     title: "Core Obedience",
-    description: "Sit, stay, come, down — the commands that make life easier.",
+    description: "Sit, stay, come, down: the commands that make life easier.",
     milestone: "Complete 5 command exercises",
   },
   {
@@ -402,7 +402,7 @@ function pickExercise(
     return true;
   });
 
-  // If all used, allow re-use (reinforcement) — pick easiest unused
+  // If all used, allow re-use (reinforcement), pick easiest unused
   if (!match) {
     return pool.find((e) => {
       if (e.min_age_weeks && ageWeeks < e.min_age_weeks) return false;

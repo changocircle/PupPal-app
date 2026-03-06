@@ -8,7 +8,7 @@ import { useSettingsStore } from '@/stores/settingsStore';
 import { resetAllStores } from '@/lib/resetStores';
 
 /**
- * Data & Privacy Screen — PRD-14 §6
+ * Data & Privacy Screen, PRD-14 §6
  *
  * Data export, privacy toggles (analytics, session recording, targeting),
  * and account deletion with double confirmation.

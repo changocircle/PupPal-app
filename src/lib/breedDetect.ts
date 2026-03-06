@@ -7,7 +7,7 @@
  * PRD-01 Screen 3: Photo Upload + Breed Detection
  */
 
-import * as FileSystem from "expo-file-system";
+import { File as ExpoFile } from "expo-file-system";
 
 const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL ?? "";
 const SUPABASE_ANON_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? "";
@@ -51,12 +51,11 @@ export async function detectBreed(
     console.log("[BreedDetect] Starting detection for URI:", imageUri.substring(0, 80));
     console.log("[BreedDetect] Endpoint:", `${SUPABASE_URL}/functions/v1/breed-detect`);
 
-    // Read image as base64
+    // Read image as base64 (SDK 54+ File API, legacy readAsStringAsync removed)
     let base64: string;
     try {
-      base64 = await FileSystem.readAsStringAsync(imageUri, {
-        encoding: FileSystem.EncodingType.Base64,
-      });
+      const file = new ExpoFile(imageUri);
+      base64 = await file.base64();
       console.log("[BreedDetect] Base64 length:", base64.length);
     } catch (readErr: any) {
       console.error("[BreedDetect] Failed to read image file:", readErr?.message);

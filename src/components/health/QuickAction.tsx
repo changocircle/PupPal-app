@@ -1,5 +1,5 @@
 /**
- * Quick Action Button — PRD-05 §3
+ * Quick Action Button, PRD-05 §3
  *
  * Horizontal action button for Health dashboard.
  * Supports locked state for premium-gated features.

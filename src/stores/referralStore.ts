@@ -1,5 +1,5 @@
 /**
- * Referral Store — PRD-08
+ * Referral Store, PRD-08
  *
  * Manages referral codes, sharing, and tracking.
  * In production: referral credits applied via Supabase Edge Functions.
@@ -125,7 +125,7 @@ export const useReferralStore = create<ReferralState>()(
 
       getShareMessage: (dogName: string) => {
         const link = get().getReferralLink();
-        return `🐾 I've been training ${dogName} with PupPal and it's amazing! Join us — ${link}`;
+        return `🐾 I've been training ${dogName} with PupPal and it's amazing! Join us! ${link}`;
       },
 
       resetReferral: () => {

@@ -4,7 +4,7 @@ import { Typography } from "@/components/ui";
 import type { JournalFilter } from "@/types/journal";
 
 /**
- * FilterTabs — All / Photos / Milestones pill tabs.
+ * FilterTabs, All / Photos / Milestones pill tabs.
  */
 
 interface FilterTabsProps {

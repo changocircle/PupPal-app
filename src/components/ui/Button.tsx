@@ -11,14 +11,14 @@ import { Typography } from "./Typography";
  * Button component matching PupPal Design System.
  *
  * Variants:
- * - primary: Coral filled — main CTA, one per screen
- * - secondary: Navy outlined — secondary actions
- * - ghost: Transparent text — tertiary actions, inline links
+ * - primary: Coral filled, main CTA, one per screen
+ * - secondary: Navy outlined, secondary actions
+ * - ghost: Transparent text, tertiary actions, inline links
  *
  * Sizes:
- * - lg: Full-width CTA (56px height) — used for main actions
- * - md: Standard (48px height) — used inline
- * - sm: Compact (36px height) — tags, small actions
+ * - lg: Full-width CTA (56px height), used for main actions
+ * - md: Standard (48px height), used inline
+ * - sm: Compact (36px height), tags, small actions
  */
 
 type ButtonVariant = "primary" | "secondary" | "ghost";

@@ -1,5 +1,5 @@
 /**
- * Weight Chart — PRD-05 §6
+ * Weight Chart, PRD-05 §6
  *
  * Simple line chart using basic RN views (no chart lib dependency).
  * Plots weight entries over time with age on x-axis.

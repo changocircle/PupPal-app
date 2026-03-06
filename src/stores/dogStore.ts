@@ -1,5 +1,5 @@
 /**
- * Dog Store — Zustand + AsyncStorage
+ * Dog Store, Zustand + AsyncStorage
  * PRD-11: Multi-dog management with per-dog isolation.
  *
  * Manages the dog list, active dog selection, archive/delete,
@@ -12,7 +12,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { Dog } from "@/types/database";
 
 // ──────────────────────────────────────────────
-// Per-Dog Store Keys — used to save/restore per-dog data on switch
+// Per-Dog Store Keys, used to save/restore per-dog data on switch
 // ──────────────────────────────────────────────
 
 const PER_DOG_STORE_KEYS = [
@@ -43,7 +43,7 @@ async function loadPerDogData(dogId: string): Promise<void> {
       if (data) {
         await AsyncStorage.setItem(key, data);
       } else {
-        // No data for this dog yet — remove current so stores reset to defaults
+        // No data for this dog yet, remove current so stores reset to defaults
         await AsyncStorage.removeItem(key);
       }
     }
@@ -89,7 +89,7 @@ interface DogState {
   unarchiveDog: (dogId: string) => void;
   deleteDog: (dogId: string) => void;
 
-  /** Switch active dog — saves current dog's state, loads new dog's state */
+  /** Switch active dog, saves current dog's state, loads new dog's state */
   switchDog: (dogId: string) => Promise<void>;
 
   /** Save current dog's per-dog state (call before app close or switch) */

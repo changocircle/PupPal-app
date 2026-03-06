@@ -1,5 +1,5 @@
 /**
- * useGamification Hook — PRD-04
+ * useGamification Hook, PRD-04
  *
  * Orchestrates XP, levels, GBS, achievements, and challenges.
  * Bridges trainingStore completions → gamification effects.

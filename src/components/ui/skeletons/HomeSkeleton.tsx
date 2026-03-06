@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Skeleton } from "../Skeleton";
 
 /**
- * Home screen skeleton — mirrors the real Home layout:
+ * Home screen skeleton, mirrors the real Home layout:
  * greeting + dog name, gamification row, week/day card, exercise cards
  */
 export function HomeSkeleton() {
@@ -18,7 +18,7 @@ export function HomeSkeleton() {
           <Skeleton width="70%" height={28} radius={8} />
         </View>
 
-        {/* Gamification row — 3 stat pills */}
+        {/* Gamification row, 3 stat pills */}
         <View className="flex-row gap-md mb-lg">
           {[1, 2, 3].map((i) => (
             <View

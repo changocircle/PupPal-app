@@ -1,5 +1,5 @@
 /**
- * AchievementUnlock — full-screen celebration overlay
+ * AchievementUnlock, full-screen celebration overlay
  * PRD-04 §6, DESIGN-SYSTEM.md: dark overlay, badge scale-in, confetti, share
  */
 

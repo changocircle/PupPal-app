@@ -10,7 +10,7 @@ import Animated, {
 
 /**
  * Skeleton loader per PupPal Design System.
- * "Never empty white screens" — always show skeleton while loading.
+ * "Never empty white screens", always show skeleton while loading.
  */
 
 interface SkeletonProps {

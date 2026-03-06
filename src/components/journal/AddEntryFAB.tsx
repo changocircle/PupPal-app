@@ -9,7 +9,7 @@ import { Typography } from "@/components/ui";
 import { COLORS, SHADOWS } from "@/constants/theme";
 
 /**
- * AddEntryFAB — Floating action button for "+ Add Memory".
+ * AddEntryFAB, Floating action button for "+ Add Memory".
  * Fixed to bottom-right of the timeline screen.
  */
 

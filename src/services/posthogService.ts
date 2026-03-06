@@ -13,7 +13,7 @@ const POSTHOG_HOST = process.env.EXPO_PUBLIC_POSTHOG_HOST || 'https://us.i.posth
 let posthogClient: PostHog | null = null;
 
 /**
- * Initialize PostHog client (v3 API — constructor, not initAsync)
+ * Initialize PostHog client (v3 API, constructor, not initAsync)
  * Called once from AnalyticsProvider useEffect
  */
 export async function initPostHog(): Promise<void> {

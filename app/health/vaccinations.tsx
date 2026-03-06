@@ -12,14 +12,14 @@ import { useTrainingStore } from "@/stores/trainingStore";
 import type { ScheduledVaccination } from "@/types/health";
 
 /**
- * Vaccination Timeline Screen — PRD-05 §4
+ * Vaccination Timeline Screen, PRD-05 §4
  */
 
 export default function VaccinationsScreen() {
   const router = useRouter();
   const { isPremium } = useSubscription();
 
-  // PRD-07: Gate premium content (inline, no redirect — prevents render loops)
+  // PRD-07: Gate premium content (inline, no redirect, prevents render loops)
   // Individual selectors → stable refs, prevents render loops
   const activeDogId = useDogStore((s) => s.activeDogId);
   const dogs = useDogStore((s) => s.dogs);

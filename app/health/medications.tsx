@@ -23,14 +23,14 @@ import {
 } from "@/types/health";
 
 /**
- * Medication Tracker Screen — PRD-05 §5
+ * Medication Tracker Screen, PRD-05 §5
  */
 
 export default function MedicationsScreen() {
   const router = useRouter();
   const { isPremium } = useSubscription();
 
-  // PRD-07: Gate premium content (inline, no redirect — prevents render loops)
+  // PRD-07: Gate premium content (inline, no redirect, prevents render loops)
   // Individual selectors → stable refs, prevents render loops
   const activeDogId = useDogStore((s) => s.activeDogId);
   const dogs = useDogStore((s) => s.dogs);

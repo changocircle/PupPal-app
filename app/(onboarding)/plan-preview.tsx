@@ -80,7 +80,7 @@ export default function PlanPreviewScreen() {
               <View className="flex-1">
                 <Typography variant="h3">Health Tracker</Typography>
                 <Typography variant="body-sm" color="secondary">
-                  Vaccinations, weight, vet visits — all in one place
+                  Vaccinations, weight, vet visits, all in one place
                 </Typography>
               </View>
             </Card>

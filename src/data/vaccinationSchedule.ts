@@ -1,5 +1,5 @@
 /**
- * AAHA-Based Puppy Vaccination Templates — PRD-05 §4
+ * AAHA-Based Puppy Vaccination Templates, PRD-05 §4
  *
  * Generates a personalised vaccination schedule
  * based on the dog's date of birth / age.
@@ -20,7 +20,7 @@ export const CORE_VACCINES: VaccineTemplate[] = [
     name: "DHPP",
     type: "core",
     description:
-      "Distemper, Hepatitis, Parainfluenza, Parvovirus — essential protection against four deadly diseases.",
+      "Distemper, Hepatitis, Parainfluenza, Parvovirus, essential protection against four deadly diseases.",
     doses: [
       {
         doseNumber: 1,
@@ -68,7 +68,7 @@ export const CORE_VACCINES: VaccineTemplate[] = [
     name: "Bordetella",
     type: "core",
     description:
-      "Kennel cough protection — recommended for puppies exposed to other dogs.",
+      "Kennel cough protection, recommended for puppies exposed to other dogs.",
     doses: [
       {
         doseNumber: 1,

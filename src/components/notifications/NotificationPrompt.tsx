@@ -1,8 +1,8 @@
 /**
- * NotificationPrompt — PRD-09 §2
+ * NotificationPrompt, PRD-09 §2
  *
  * Pre-permission screen shown after user completes first exercise.
- * "Buddy" asks if the user wants reminders — framed as helpful, not pushy.
+ * "Buddy" asks if the user wants reminders, framed as helpful, not pushy.
  * On "Yes" → triggers iOS system permission dialog.
  * On "Maybe Later" → defers (re-ask after 3rd exercise).
  */

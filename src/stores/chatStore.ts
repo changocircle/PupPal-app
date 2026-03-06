@@ -1,5 +1,5 @@
 /**
- * Chat Store — PRD-02 §9
+ * Chat Store, PRD-02 §9
  *
  * Zustand store for chat state with AsyncStorage persistence.
  * Manages messages, sessions, free tier limits, and conversation memory.

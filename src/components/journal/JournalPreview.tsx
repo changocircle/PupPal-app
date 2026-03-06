@@ -7,7 +7,7 @@ import { useJournalStore } from "@/stores/journalStore";
 import { ENTRY_TYPE_ICON } from "@/types/journal";
 
 /**
- * JournalPreview — Home screen section showing the most recent 2-3 entries.
+ * JournalPreview, Home screen section showing the most recent 2-3 entries.
  * Includes a "View Journal →" link.
  */
 

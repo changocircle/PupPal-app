@@ -1,5 +1,5 @@
 /**
- * GamificationRow — horizontal stats row for Home screen
+ * GamificationRow, horizontal stats row for Home screen
  * PRD-04: shows streak, daily XP, GBS, level in a compact horizontal layout
  */
 

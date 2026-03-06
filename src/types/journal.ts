@@ -1,5 +1,5 @@
 /**
- * Growth Journal Types — PRD-10
+ * Growth Journal Types, PRD-10
  * "Timehop for Your Dog"
  *
  * Covers manual entries (photos, notes) and auto-generated entries

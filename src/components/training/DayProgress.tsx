@@ -1,5 +1,5 @@
 /**
- * DayProgress — horizontal day dots for the current week
+ * DayProgress, horizontal day dots for the current week
  * Shows which day the user is on within the week
  */
 

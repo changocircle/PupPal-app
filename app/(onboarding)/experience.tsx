@@ -17,7 +17,7 @@ const EXPERIENCE_OPTIONS: ExperienceOption[] = [
     id: "first_time",
     label: "First Time",
     emoji: "🌱",
-    description: "This is my first puppy ever — help me with everything!",
+    description: "This is my first puppy ever, help me with everything!",
   },
   {
     id: "some_experience",
@@ -29,7 +29,7 @@ const EXPERIENCE_OPTIONS: ExperienceOption[] = [
     id: "experienced",
     label: "Experienced",
     emoji: "🏆",
-    description: "I know the basics — looking for advanced techniques.",
+    description: "I know the basics, looking for advanced techniques.",
   },
 ];
 

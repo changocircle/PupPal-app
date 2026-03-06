@@ -1,5 +1,5 @@
 /**
- * TypingIndicator — PRD-02 §5, DESIGN-SYSTEM chat animations
+ * TypingIndicator, PRD-02 §5, DESIGN-SYSTEM chat animations
  *
  * Three dots with staggered opacity animation in a Buddy-style bubble.
  */

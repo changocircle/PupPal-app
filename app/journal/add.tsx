@@ -22,7 +22,7 @@ import { useGamificationStore } from "@/stores/gamificationStore";
 import { resolveDateOfBirth, calculateDogAgeLabel } from "@/types/journal";
 
 /**
- * Add Journal Entry Screen — PRD-10 §4
+ * Add Journal Entry Screen, PRD-10 §4
  * Photo picker (1-5 photos), caption, date picker (backdating to DOB).
  * Toggle between photo mode and note mode.
  */
@@ -35,7 +35,7 @@ export default function AddEntryScreen() {
   const router = useRouter();
   const { isPremium } = useSubscription();
 
-  // PRD-07: Gate premium content (inline, no redirect — prevents render loops)
+  // PRD-07: Gate premium content (inline, no redirect, prevents render loops)
 
   // Dog context
   // Individual selectors → stable refs, prevents render loops

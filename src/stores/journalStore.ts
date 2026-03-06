@@ -1,5 +1,5 @@
 /**
- * Journal Store — Zustand + AsyncStorage
+ * Journal Store, Zustand + AsyncStorage
  * PRD-10: Growth Journal & Progress Timeline
  *
  * Local-first: all state persisted via AsyncStorage.
@@ -47,7 +47,7 @@ interface JournalState {
 
   // ─── Actions ───
 
-  /** Add a manual (user-created) entry — photo or note */
+  /** Add a manual (user-created) entry, photo or note */
   addManualEntry: (data: {
     dogId: string;
     entryType: "photo" | "note" | "weight";

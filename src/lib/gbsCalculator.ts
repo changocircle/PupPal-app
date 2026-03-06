@@ -1,5 +1,5 @@
 /**
- * Good Boy Score Calculator — PRD-04 §5
+ * Good Boy Score Calculator, PRD-04 §5
  *
  * Composite 0-100 score from 5 weighted dimensions.
  * Calculated from exercise completions + training data.

@@ -30,7 +30,7 @@ import {
 } from "@/types/training";
 
 /**
- * Exercise Detail Screen — PRD-03 §7
+ * Exercise Detail Screen, PRD-03 §7
  *
  * Full step-by-step instructions, timer, supplies, tips.
  * Bottom actions: Mark Complete, Need More Practice, Skip.
@@ -161,7 +161,7 @@ export default function ExerciseDetailScreen() {
 
   const handleCompletionDismiss = useCallback(() => {
     setShowCompletion(false);
-    // Check if all today's exercises are done — if so, advance day
+    // Check if all today's exercises are done, if so, advance day
     const todayExercises = useTrainingStore.getState().getTodayExercises();
     const allDone = todayExercises.every(
       (e) => e.status === "completed" || e.status === "skipped"
@@ -207,7 +207,7 @@ export default function ExerciseDetailScreen() {
           </Typography>
         </Pressable>
 
-        {/* ── Header (always visible — PRD-07: show title/time/difficulty) ── */}
+        {/* ── Header (always visible, PRD-07: show title/time/difficulty) ── */}
         <Animated.View
           entering={FadeInDown.duration(400)}
           className="px-xl mb-lg"

@@ -78,7 +78,7 @@ export default function PaywallScreen() {
                 <Typography variant="body-sm" color="secondary">/year</Typography>
               </View>
               <Typography variant="caption" color="secondary" className="mt-xs">
-                That's just $3.33/month — less than one training treat bag
+                That's just $3.33/month. Less than one training treat bag
               </Typography>
             </Card>
           </Animated.View>

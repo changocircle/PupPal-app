@@ -1,5 +1,5 @@
 /**
- * Gamification Store — Zustand + AsyncStorage
+ * Gamification Store, Zustand + AsyncStorage
  * PRD-04: XP events, levels, GBS, achievements, streaks, weekly challenges.
  *
  * Local-first: all state persisted via AsyncStorage.

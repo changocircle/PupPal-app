@@ -1,5 +1,5 @@
 /**
- * Analytics Service — PRD-13
+ * Analytics Service, PRD-13
  *
  * Centralized event tracking. In production: PostHog + Sentry.
  * For now: console logging in dev, ready for PostHog drop-in.

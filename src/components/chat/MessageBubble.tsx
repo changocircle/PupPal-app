@@ -1,12 +1,12 @@
 /**
- * MessageBubble — PRD-02 §5, DESIGN-SYSTEM chat wireframe
+ * MessageBubble, PRD-02 §5, DESIGN-SYSTEM chat wireframe
  *
  * Buddy (left): white surface, shadow, avatar, body-lg text
  * User (right): coral filled, white text, no shadow
  */
 
 import React from "react";
-import { View, Pressable } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { Typography } from "@/components/ui";
 import type { ChatMessage } from "@/types/chat";
@@ -33,7 +33,7 @@ export function MessageBubble({
       {/* Buddy avatar */}
       {isAssistant && showAvatar && (
         <View className="w-[32px] h-[32px] rounded-full bg-primary-light items-center justify-center mr-sm mt-[2px]">
-          <Typography style={{ fontSize: 18 }}>🐕</Typography>
+          <Text style={{ fontSize: 18, lineHeight: 24 }}>🐶</Text>
         </View>
       )}
       {isAssistant && !showAvatar && <View className="w-[32px] mr-sm" />}
@@ -69,7 +69,7 @@ export function MessageBubble({
           {message.content}
         </Typography>
 
-        {/* Streaming cursor — use pipe char (▊ doesn't render on all devices) */}
+        {/* Streaming cursor, use pipe char (▊ doesn't render on all devices) */}
         {message.isStreaming && message.content.length > 0 && (
           <Typography
             variant="body-lg"

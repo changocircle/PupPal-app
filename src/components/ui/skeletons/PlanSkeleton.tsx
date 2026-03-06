@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Skeleton } from "../Skeleton";
 
 /**
- * Plan screen skeleton — header, quick stats row, tab switcher, week cards
+ * Plan screen skeleton, header, quick stats row, tab switcher, week cards
  */
 export function PlanSkeleton() {
   return (

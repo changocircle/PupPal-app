@@ -1,5 +1,5 @@
 /**
- * PremiumGate — reusable component wrapping premium content
+ * PremiumGate, reusable component wrapping premium content
  * PRD-07 §4: shows preview for free users, full content for premium.
  *
  * Uses useSubscription as single source of truth.
@@ -25,7 +25,7 @@ interface PremiumGateProps {
   headline?: string;
   /** CTA button text */
   cta?: string;
-  /** Compact mode — inline lock badge instead of full overlay */
+  /** Compact mode, inline lock badge instead of full overlay */
   compact?: boolean;
 }
 

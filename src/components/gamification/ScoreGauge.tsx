@@ -1,5 +1,5 @@
 /**
- * ScoreGauge — circular Good Boy Score display
+ * ScoreGauge, circular Good Boy Score display
  * PRD-04 §5, DESIGN-SYSTEM.md: 120px, color gradient, animated fill
  *
  * Animated SVG circle with score number in center.

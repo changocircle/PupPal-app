@@ -1,5 +1,5 @@
 /**
- * ChatInput — PRD-02 §5
+ * ChatInput, PRD-02 §5
  *
  * Text input with send button, character counter near limit.
  * Photo button placeholder (premium only, future).
@@ -52,7 +52,7 @@ export function ChatInput({
       )}
 
       <View className="flex-row items-end gap-sm">
-        {/* Photo button placeholder — TODO: wire up camera/gallery
+        {/* Photo button placeholder, TODO: wire up camera/gallery
         <Pressable className="w-[40px] h-[40px] rounded-full bg-border items-center justify-center mb-[4px]">
           <Typography variant="body" style={{ fontSize: 18 }}>📷</Typography>
         </Pressable>

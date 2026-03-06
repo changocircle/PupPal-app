@@ -10,7 +10,7 @@ import {
 } from "@/types/journal";
 
 /**
- * JournalEntryCard — Renders any journal entry type.
+ * JournalEntryCard, Renders any journal entry type.
  *
  * Photo entries: show thumbnail grid + caption
  * Note entries: warm gold-tinted card with text
@@ -33,7 +33,7 @@ function formatEntryDate(dateStr: string): string {
   });
 }
 
-/** Photo thumbnail grid — 1, 2, or 3+ photos */
+/** Photo thumbnail grid, 1, 2, or 3+ photos */
 function PhotoGrid({ uris }: { uris: string[] }) {
   if (uris.length === 0) return null;
 

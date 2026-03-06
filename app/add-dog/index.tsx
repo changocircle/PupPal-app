@@ -1,5 +1,5 @@
 /**
- * Add Dog — Mini-Onboarding Flow (PRD-11 §4)
+ * Add Dog, Mini-Onboarding Flow (PRD-11 §4)
  * Shortened 5-step flow for adding a new dog (premium only).
  * Steps: Name → Photo/Breed → Age → Challenges → Generating
  *
@@ -328,7 +328,7 @@ export default function AddDogScreen() {
                 color="secondary"
                 style={{ textAlign: 'center', marginBottom: 24 }}
               >
-                Optional — you can add one later too
+                Optional, you can add one later too
               </Typography>
 
               {/* Photo picker */}

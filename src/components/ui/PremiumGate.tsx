@@ -1,5 +1,5 @@
 /**
- * PremiumGate — PRD-07 §4
+ * PremiumGate, PRD-07 §4
  *
  * Reusable component wrapping any premium content.
  * Premium users: renders children normally.
@@ -15,7 +15,9 @@ import React from 'react';
 import { View, Pressable, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import Animated, { FadeIn } from 'react-native-reanimated';
-import { Typography, Button } from '@/components/ui';
+// Direct imports to avoid require cycle (PremiumGate → index.ts → PremiumGate)
+import { Typography } from './Typography';
+import { Button } from './Button';
 import { useSubscription } from '@/hooks/useSubscription';
 import { canShowGate, recordGateShown } from '@/lib/gateThrottle';
 import { COLORS, RADIUS, SHADOWS } from '@/constants/theme';
@@ -28,7 +30,7 @@ interface PremiumGateProps {
   children: React.ReactNode;
   /** What free users see behind the lock overlay */
   preview?: React.ReactNode;
-  /** Gate headline — personalize with dog name! */
+  /** Gate headline, personalize with dog name! */
   headline?: string;
   /** CTA button text */
   cta?: string;

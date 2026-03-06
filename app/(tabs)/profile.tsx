@@ -15,7 +15,7 @@ import { LEVEL_DEFINITIONS } from "@/types/gamification";
 import { DogAvatar } from "@/components/dog";
 
 /**
- * Profile & Settings Tab — PRD-04 (gamification) + PRD-14 (settings)
+ * Profile & Settings Tab, PRD-04 (gamification) + PRD-14 (settings)
  *
  * Full implementation: user profile, dog info, gamification summary,
  * settings sections with navigation to sub-screens.
@@ -83,7 +83,7 @@ function ProfileScreenContent() {
   // Subscription
   const { isPremium } = useSubscription();
 
-  // Dev premium toggle — 5-tap easter egg on version text
+  // Dev premium toggle, 5-tap easter egg on version text
   const devPremiumOverride = useSettingsStore((s) => s.devPremiumOverride);
   const toggleDevPremium = useSettingsStore((s) => s.toggleDevPremium);
   const tapCountRef = useRef(0);
@@ -97,8 +97,8 @@ function ProfileScreenContent() {
       Alert.alert(
         devPremiumOverride ? "Premium Disabled" : "⚡ Premium Enabled",
         devPremiumOverride
-          ? "Dev override OFF — back to free tier."
-          : "Dev override ON — all premium features unlocked.",
+          ? "Dev override OFF. Back to free tier."
+          : "Dev override ON. All premium features unlocked.",
       );
     } else {
       tapTimerRef.current = setTimeout(() => {

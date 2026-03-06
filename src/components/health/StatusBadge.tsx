@@ -1,5 +1,5 @@
 /**
- * Health Status Badge — PRD-05 §3
+ * Health Status Badge, PRD-05 §3
  *
  * Colour-coded badge for vaccination/health status.
  */

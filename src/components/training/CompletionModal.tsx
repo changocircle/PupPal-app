@@ -1,5 +1,5 @@
 /**
- * CompletionModal — celebration overlay after exercise completion
+ * CompletionModal, celebration overlay after exercise completion
  * PRD-03 §7: celebration animation, XP float-up, optional rating
  */
 

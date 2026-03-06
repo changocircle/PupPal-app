@@ -1,5 +1,5 @@
 /**
- * Health & Vaccination Tracker Types — PRD-05
+ * Health & Vaccination Tracker Types, PRD-05
  *
  * Data models for vaccinations, medications, weight,
  * vet visits, milestones, and health notes.
