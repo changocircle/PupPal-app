@@ -23,7 +23,12 @@ const AGE_OPTIONS = [
 export default function AgeScreen() {
   const router = useRouter();
   const { data, updateData } = useOnboardingStore();
-  const [selectedAge, setSelectedAge] = useState<string | null>(null);
+
+  // Restore selection from store on back navigation
+  const initialAge = data.ageMonths
+    ? AGE_OPTIONS.find((o) => o.months === data.ageMonths)?.id ?? null
+    : null;
+  const [selectedAge, setSelectedAge] = useState<string | null>(initialAge);
 
   const handleSelect = (option: (typeof AGE_OPTIONS)[number]) => {
     setSelectedAge(option.id);

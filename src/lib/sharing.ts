@@ -32,8 +32,8 @@ interface ShareData {
  */
 function generateShareMessage(data: ShareData): string {
   const appLink = data.referralCode
-    ? `https://puppal.app/r/${data.referralCode}`
-    : 'https://puppal.app';
+    ? `https://puppal.dog/r/${data.referralCode}`
+    : 'https://puppal.dog';
 
   switch (data.type) {
     case 'achievement':

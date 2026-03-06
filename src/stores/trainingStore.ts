@@ -129,6 +129,16 @@ export const useTrainingStore = create<TrainingState>()(
         const { plan } = get();
         if (!plan) return 0;
 
+        // Guard: prevent duplicate completion (re-completing awards no XP)
+        const alreadyCompleted = plan.weeks.some((w) =>
+          w.days.some((d) =>
+            d.exercises.some(
+              (ex) => ex.id === planExerciseId && ex.status === "completed"
+            )
+          )
+        );
+        if (alreadyCompleted) return 0;
+
         let xpEarned = 0;
 
         // Find the exercise across all weeks/days

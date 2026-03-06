@@ -175,7 +175,7 @@ export default function PaywallScreen() {
     // In production: Purchases.restorePurchases()
     Alert.alert(
       'Restore Purchases',
-      'No previous purchases found. If you believe this is an error, please contact support@puppal.app.',
+      'No previous purchases found. If you believe this is an error, please contact support@puppal.dog.',
       [{ text: 'OK' }]
     );
   };
@@ -397,7 +397,7 @@ export default function PaywallScreen() {
           <Typography variant="caption" color="tertiary">
             ·
           </Typography>
-          <Pressable onPress={() => Linking.openURL('https://puppal.app/terms')}>
+          <Pressable onPress={() => Linking.openURL('https://puppal.dog/terms')}>
             <Typography variant="caption" color="tertiary">
               Terms
             </Typography>
@@ -405,7 +405,7 @@ export default function PaywallScreen() {
           <Typography variant="caption" color="tertiary">
             ·
           </Typography>
-          <Pressable onPress={() => Linking.openURL('https://puppal.app/privacy')}>
+          <Pressable onPress={() => Linking.openURL('https://puppal.dog/privacy')}>
             <Typography variant="caption" color="tertiary">
               Privacy
             </Typography>

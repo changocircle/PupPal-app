@@ -177,7 +177,7 @@ function ChatScreenContent() {
         )}
 
         {/* ── Free tier remaining (subtle) ── */}
-        {!isPremium && !isLimitHit && remainingMessages <= 3 && hasMessages && (
+        {!isPremium && !isLimitHit && remainingMessages <= 1 && hasMessages && (
           <ChatLimitBanner
             remaining={remainingMessages}
             isLimitHit={false}
