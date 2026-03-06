@@ -25,6 +25,8 @@ const INITIAL_DATA: OnboardingData = {
   breed: null,
   breedConfidence: null,
   breedDetected: false,
+  breedMix1: null,
+  breedMix2: null,
   dateOfBirth: null,
   ageMonths: null,
   challenges: [],

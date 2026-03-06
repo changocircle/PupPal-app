@@ -12,6 +12,9 @@ export interface OnboardingData {
   breed: string | null;
   breedConfidence: number | null;
   breedDetected: boolean;
+  /** When breed is "Mixed Breed", these hold the two component breeds */
+  breedMix1: string | null;
+  breedMix2: string | null;
   dateOfBirth: string | null;
   ageMonths: number | null;
   challenges: string[];
