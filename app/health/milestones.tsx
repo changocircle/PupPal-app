@@ -9,6 +9,7 @@ import { useHealthStore } from "@/stores/healthStore";
 import { useDogStore } from "@/stores/dogStore";
 import { useTrainingStore } from "@/stores/trainingStore";
 import { MILESTONE_CATEGORY_META } from "@/types/health";
+import { MILESTONE_TEMPLATES } from "@/data/milestones";
 
 /**
  * Developmental Milestones Screen — PRD-05 §8
@@ -24,12 +25,39 @@ export default function MilestonesScreen() {
       router.replace({ pathname: "/paywall", params: { trigger: "feature_gate_health", source: "health_milestones" } });
     }
   }, [isPremium]);
-  const dog = useDogStore((s) => s.activeDog());
+  // Individual selectors → stable refs, prevents render loops
+  const activeDogId = useDogStore((s) => s.activeDogId);
+  const dogs = useDogStore((s) => s.dogs);
+  const dog = useMemo(
+    () => dogs.find((d) => d.id === activeDogId) ?? null,
+    [dogs, activeDogId]
+  );
   const plan = useTrainingStore((s) => s.plan);
   const dogName = dog?.name ?? plan?.dogName ?? "Your Pup";
   const dogId = dog?.id ?? plan?.dogName ?? "default-dog";
 
-  const milestones = useHealthStore((s) => s.getMilestonesForDog(dogId));
+  // Stable: select raw data + memoize filter/join with templates
+  const userMilestones = useHealthStore((s) => s.userMilestones);
+  const milestones = useMemo(
+    () => userMilestones
+      .filter((m) => m.dogId === dogId)
+      .map((um) => {
+        const tmpl = MILESTONE_TEMPLATES.find((t) => t.id === um.milestoneId);
+        return {
+          ...um,
+          name: tmpl?.name ?? "Unknown",
+          description: tmpl?.description ?? "",
+          category: tmpl?.category ?? "health",
+          tips: tmpl?.tips ?? [],
+        };
+      })
+      .sort(
+        (a, b) =>
+          new Date(a.expectedDateStart).getTime() -
+          new Date(b.expectedDateStart).getTime()
+      ),
+    [userMilestones, dogId]
+  );
   const completeMilestone = useHealthStore((s) => s.completeMilestone);
 
   const stats = useMemo(() => {

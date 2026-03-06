@@ -10,7 +10,7 @@
  * Production: swap sendToAI() to call Supabase Edge Function instead.
  */
 
-import { useCallback, useRef } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import { useChatStore } from "@/stores/chatStore";
 import { useTrainingStore } from "@/stores/trainingStore";
 import { useDogStore } from "@/stores/dogStore";
@@ -49,7 +49,13 @@ interface UseChatReturn {
 
 export function useChat(): UseChatReturn {
   const { isPremium } = useSubscription();
-  const dog = useDogStore((s) => s.activeDog());
+  // Individual selectors → stable refs, prevents render loops
+  const activeDogId = useDogStore((s) => s.activeDogId);
+  const dogs = useDogStore((s) => s.dogs);
+  const dog = useMemo(
+    () => dogs.find((d) => d.id === activeDogId) ?? null,
+    [dogs, activeDogId]
+  );
   const onboarding = useOnboardingStore((s) => s.data);
   const plan = useTrainingStore((s) => s.plan);
   const streak = useTrainingStore((s) => s.streak);

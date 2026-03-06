@@ -226,7 +226,13 @@ function PostCard({ post, isPremium, onPress }: PostCardProps) {
 export default function CommunityScreen() {
   const router = useRouter();
   const { isPremium } = useSubscription();
-  const dog = useDogStore((s) => s.activeDog());
+  // Individual selectors → stable refs, prevents render loops
+  const activeDogId = useDogStore((s) => s.activeDogId);
+  const dogs = useDogStore((s) => s.dogs);
+  const dog = useMemo(
+    () => dogs.find((d) => d.id === activeDogId) ?? null,
+    [dogs, activeDogId]
+  );
   const onboarding = useOnboardingStore((s) => s.data);
   const userBreed = dog?.breed ?? onboarding.breed ?? null;
 

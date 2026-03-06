@@ -7,7 +7,7 @@
  * For now: shows a styled upgrade prompt.
  */
 
-import React from "react";
+import React, { useMemo } from "react";
 import { Pressable, View } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { Typography, Button } from "@/components/ui";
@@ -38,7 +38,13 @@ export function PremiumGate({
   compact = false,
 }: PremiumGateProps) {
   const { isPremium } = useSubscription();
-  const dog = useDogStore((s) => s.activeDog());
+  // Individual selectors → stable refs, prevents render loops
+  const activeDogId = useDogStore((s) => s.activeDogId);
+  const dogs = useDogStore((s) => s.dogs);
+  const dog = useMemo(
+    () => dogs.find((d) => d.id === activeDogId) ?? null,
+    [dogs, activeDogId]
+  );
   const dogName = dog?.name ?? "Your pup";
 
   // Premium users see content directly

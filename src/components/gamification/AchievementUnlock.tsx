@@ -3,7 +3,7 @@
  * PRD-04 §6, DESIGN-SYSTEM.md: dark overlay, badge scale-in, confetti, share
  */
 
-import React from "react";
+import React, { useMemo } from "react";
 import { Modal, View, Pressable, Share, Platform } from "react-native";
 import Animated, {
   FadeIn,
@@ -27,7 +27,13 @@ export function AchievementUnlock({
   achievement,
   onDismiss,
 }: AchievementUnlockProps) {
-  const dog = useDogStore((s) => s.activeDog());
+  // Individual selectors → stable refs, prevents render loops
+  const activeDogId = useDogStore((s) => s.activeDogId);
+  const dogs = useDogStore((s) => s.dogs);
+  const dog = useMemo(
+    () => dogs.find((d) => d.id === activeDogId) ?? null,
+    [dogs, activeDogId]
+  );
   const dogName =
     dog?.name ?? useOnboardingStore.getState().data.puppyName ?? "Your Pup";
 

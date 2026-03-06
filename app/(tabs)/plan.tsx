@@ -42,7 +42,13 @@ export default function PlanScreen() {
 function PlanScreenContent() {
   const [activeTab, setActiveTab] = useState<PlanTab>("this_week");
   const router = useRouter();
-  const dog = useDogStore((s) => s.activeDog());
+  // Individual selectors → stable refs, prevents render loops
+  const activeDogId = useDogStore((s) => s.activeDogId);
+  const dogs = useDogStore((s) => s.dogs);
+  const dog = useMemo(
+    () => dogs.find((d) => d.id === activeDogId) ?? null,
+    [dogs, activeDogId]
+  );
   const { isPremium } = useSubscription();
   const totalTricksCompleted = useTrickStore((s) => s.totalTricksCompleted);
 

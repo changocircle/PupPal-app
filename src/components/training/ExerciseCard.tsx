@@ -5,7 +5,7 @@
  * Used in Today's Training + Plan week view.
  */
 
-import React from "react";
+import React, { useMemo } from "react";
 import { Pressable, View } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { useRouter } from "expo-router";
@@ -31,7 +31,13 @@ export function ExerciseCard({
   locked = false,
 }: ExerciseCardProps) {
   const router = useRouter();
-  const dog = useDogStore((s) => s.activeDog());
+  // Individual selectors → stable refs, prevents render loops
+  const activeDogId = useDogStore((s) => s.activeDogId);
+  const dogs = useDogStore((s) => s.dogs);
+  const dog = useMemo(
+    () => dogs.find((d) => d.id === activeDogId) ?? null,
+    [dogs, activeDogId]
+  );
 
   const exercise = getExerciseById(planExercise.exerciseId);
   if (!exercise) return null;
