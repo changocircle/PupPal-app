@@ -409,10 +409,10 @@ export default function PhotoScreen() {
             )}
 
             {/* HIGH confidence — confirmed breed */}
-            {detection.status === "high" && !isMixedBreed && (
+            {detection.status === "high" && !isMixedBreed && !showManualSelector && (
               <Animated.View
                 entering={FadeInDown.duration(300)}
-                className="mt-lg items-center"
+                className="mt-lg items-center w-full px-lg"
               >
                 <View className="bg-accent-light rounded-md px-lg py-sm mb-xs">
                   <Typography variant="body-medium" className="text-center">
@@ -424,9 +424,9 @@ export default function PhotoScreen() {
                 </Typography>
                 <Pressable
                   onPress={showSelectorSection}
-                  className="mt-sm"
+                  className="mt-base bg-surface border border-border rounded-sm px-lg py-sm"
                 >
-                  <Typography variant="body-sm" color="accent">
+                  <Typography variant="body-sm" color="accent" className="text-center">
                     Actually, they're a...
                   </Typography>
                 </Pressable>
@@ -439,19 +439,23 @@ export default function PhotoScreen() {
                 entering={FadeInDown.duration(300)}
                 className="mt-lg items-center gap-sm w-full"
               >
-                <View className="flex-row gap-sm">
-                  <Button
-                    label="Yes!"
-                    variant="primary"
-                    size="sm"
-                    onPress={() => confirmBreed(detection.breed)}
-                  />
-                  <Button
-                    label="Actually, they're a..."
-                    variant="secondary"
-                    size="sm"
-                    onPress={showSelectorSection}
-                  />
+                <View className="flex-row gap-sm w-full px-lg">
+                  <View className="flex-1">
+                    <Button
+                      label="Yes!"
+                      variant="primary"
+                      size="sm"
+                      onPress={() => confirmBreed(detection.breed)}
+                    />
+                  </View>
+                  <View className="flex-1">
+                    <Button
+                      label="Actually, they're a..."
+                      variant="secondary"
+                      size="sm"
+                      onPress={showSelectorSection}
+                    />
+                  </View>
                 </View>
                 {detection.suggestions.length > 1 && (
                   <View className="mt-xs items-center">
@@ -588,8 +592,9 @@ export default function PhotoScreen() {
                     setNotSure(false);
                     setShowManualSelector(true);
                   }}
+                  className="bg-surface border border-border rounded-sm px-lg py-sm"
                 >
-                  <Typography variant="body-sm" color="accent">
+                  <Typography variant="body-sm" color="accent" className="text-center">
                     Actually, I know the breed
                   </Typography>
                 </Pressable>
@@ -605,7 +610,7 @@ export default function PhotoScreen() {
               !showManualSelector && (
                 <Animated.View
                   entering={FadeInDown.duration(300)}
-                  className="mt-lg items-center"
+                  className="mt-lg items-center w-full px-lg"
                 >
                   <View className="bg-accent-light rounded-md px-lg py-sm">
                     <Typography variant="body-medium">
@@ -614,9 +619,9 @@ export default function PhotoScreen() {
                   </View>
                   <Pressable
                     onPress={showSelectorSection}
-                    className="mt-sm"
+                    className="mt-base bg-surface border border-border rounded-sm px-lg py-sm"
                   >
-                    <Typography variant="body-sm" color="accent">
+                    <Typography variant="body-sm" color="accent" className="text-center">
                       Change breed
                     </Typography>
                   </Pressable>
