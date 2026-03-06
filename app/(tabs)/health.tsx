@@ -3,7 +3,7 @@ import { View, ScrollView, Pressable, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { useRouter } from "expo-router";
-import { Typography, Card, Badge, Button, PremiumGate } from "@/components/ui";
+import { Typography, Card, Badge, Button, PremiumGate, ErrorBoundary, HealthSkeleton } from "@/components/ui";
 import {
   StatusBadge,
   UpcomingEventCard,
@@ -15,6 +15,7 @@ import { useDogStore } from "@/stores/dogStore";
 import { useTrainingStore } from "@/stores/trainingStore";
 import { useOnboardingStore } from "@/stores/onboardingStore";
 import { useSubscription } from "@/hooks/useSubscription";
+import { useHydration } from "@/hooks/useHydration";
 
 /**
  * Health Dashboard — PRD-05 §3
@@ -24,6 +25,20 @@ import { useSubscription } from "@/hooks/useSubscription";
  */
 
 export default function HealthScreen() {
+  const hydrated = useHydration(useDogStore, useHealthStore, useOnboardingStore);
+
+  if (!hydrated) {
+    return <HealthSkeleton />;
+  }
+
+  return (
+    <ErrorBoundary screen="Health">
+      <HealthScreenContent />
+    </ErrorBoundary>
+  );
+}
+
+function HealthScreenContent() {
   const router = useRouter();
   const { isPremium } = useSubscription();
   const dog = useDogStore((s) => s.activeDog());

@@ -3,7 +3,7 @@ import { View, ScrollView, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown, FadeIn } from "react-native-reanimated";
 import { useRouter } from "expo-router";
-import { Typography, Card, ProgressBar, Badge, Button } from "@/components/ui";
+import { Typography, Card, ProgressBar, Badge, Button, ErrorBoundary, PlanSkeleton } from "@/components/ui";
 import {
   WeekCard,
   ExerciseCard,
@@ -13,6 +13,7 @@ import {
 import { useTrainingStore } from "@/stores/trainingStore";
 import { useDogStore } from "@/stores/dogStore";
 import { useSubscription } from "@/hooks/useSubscription";
+import { useHydration } from "@/hooks/useHydration";
 import { useTrickStore } from "@/stores/trickStore";
 
 /**
@@ -25,6 +26,20 @@ import { useTrickStore } from "@/stores/trickStore";
 type PlanTab = "this_week" | "full_plan" | "tricks";
 
 export default function PlanScreen() {
+  const hydrated = useHydration(useDogStore, useTrainingStore, useTrickStore);
+
+  if (!hydrated) {
+    return <PlanSkeleton />;
+  }
+
+  return (
+    <ErrorBoundary screen="Plan">
+      <PlanScreenContent />
+    </ErrorBoundary>
+  );
+}
+
+function PlanScreenContent() {
   const [activeTab, setActiveTab] = useState<PlanTab>("this_week");
   const router = useRouter();
   const dog = useDogStore((s) => s.activeDog());

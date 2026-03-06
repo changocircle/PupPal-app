@@ -3,13 +3,14 @@ import { View, ScrollView, Pressable, Alert, Linking } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { useRouter } from "expo-router";
-import { Typography, Card, Badge, ProgressBar, Button } from "@/components/ui";
+import { Typography, Card, Badge, ProgressBar, Button, ErrorBoundary, ProfileSkeleton } from "@/components/ui";
 import { useGamificationStore } from "@/stores/gamificationStore";
 import { useDogStore } from "@/stores/dogStore";
 import { useTrainingStore } from "@/stores/trainingStore";
 import { useOnboardingStore } from "@/stores/onboardingStore";
 import { useSettingsStore } from "@/stores/settingsStore";
 import { useSubscription } from "@/hooks/useSubscription";
+import { useHydration } from "@/hooks/useHydration";
 import { LEVEL_DEFINITIONS } from "@/types/gamification";
 import { DogAvatar } from "@/components/dog";
 
@@ -27,6 +28,25 @@ import { DogAvatar } from "@/components/dog";
  */
 
 export default function ProfileScreen() {
+  const hydrated = useHydration(
+    useDogStore,
+    useGamificationStore,
+    useOnboardingStore,
+    useSettingsStore,
+  );
+
+  if (!hydrated) {
+    return <ProfileSkeleton />;
+  }
+
+  return (
+    <ErrorBoundary screen="Profile">
+      <ProfileScreenContent />
+    </ErrorBoundary>
+  );
+}
+
+function ProfileScreenContent() {
   const router = useRouter();
 
   // FIX-04: Individual selectors instead of object destructure.

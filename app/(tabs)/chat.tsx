@@ -2,7 +2,7 @@ import React, { useRef, useCallback, useEffect } from "react";
 import { View, FlatList, KeyboardAvoidingView, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
-import { Typography } from "@/components/ui";
+import { Typography, ErrorBoundary, ChatSkeleton } from "@/components/ui";
 import {
   MessageBubble,
   TypingIndicator,
@@ -14,6 +14,7 @@ import { useChat } from "@/hooks/useChat";
 import { useDogStore } from "@/stores/dogStore";
 import { useOnboardingStore } from "@/stores/onboardingStore";
 import { useSubscription } from "@/hooks/useSubscription";
+import { useHydration } from "@/hooks/useHydration";
 import type { ChatMessage } from "@/types/chat";
 
 /**
@@ -29,6 +30,20 @@ import type { ChatMessage } from "@/types/chat";
  */
 
 export default function ChatScreen() {
+  const hydrated = useHydration(useDogStore, useOnboardingStore);
+
+  if (!hydrated) {
+    return <ChatSkeleton />;
+  }
+
+  return (
+    <ErrorBoundary screen="Chat">
+      <ChatScreenContent />
+    </ErrorBoundary>
+  );
+}
+
+function ChatScreenContent() {
   const flatListRef = useRef<FlatList>(null);
   const { isPremium } = useSubscription();
   const dog = useDogStore((s) => s.activeDog());

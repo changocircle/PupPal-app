@@ -180,7 +180,94 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 1,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 1.1,
+        "femaleWeightLbs": 1.0
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 3.8,
+        "femaleWeightLbs": 3.4
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 9.2,
+        "femaleWeightLbs": 8.1
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 17.0,
+        "femaleWeightLbs": 15.0
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 26.4,
+        "femaleWeightLbs": 23.0
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 35.8,
+        "femaleWeightLbs": 31.1
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 44.4,
+        "femaleWeightLbs": 38.5
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 51.7,
+        "femaleWeightLbs": 44.7
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 57.5,
+        "femaleWeightLbs": 49.7
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 62.0,
+        "femaleWeightLbs": 53.5
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 65.3,
+        "femaleWeightLbs": 56.3
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 67.8,
+        "femaleWeightLbs": 58.4
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 69.5,
+        "femaleWeightLbs": 60.0
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 70.8,
+        "femaleWeightLbs": 61.1
+      },
+      {
+        "weekNumber": 56,
+        "maleWeightLbs": 71.7,
+        "femaleWeightLbs": 61.8
+      },
+      {
+        "weekNumber": 60,
+        "maleWeightLbs": 72.4,
+        "femaleWeightLbs": 62.4
+      },
+      {
+        "weekNumber": 64,
+        "maleWeightLbs": 72.5,
+        "femaleWeightLbs": 62.5
+      }
+    ]
   },
   {
     "id": "breed-002",
@@ -366,7 +453,79 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 2,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 0.6,
+        "femaleWeightLbs": 0.6
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 2.1,
+        "femaleWeightLbs": 1.8
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 4.7,
+        "femaleWeightLbs": 4.0
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 8.1,
+        "femaleWeightLbs": 6.9
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 11.6,
+        "femaleWeightLbs": 9.8
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 14.9,
+        "femaleWeightLbs": 12.5
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 17.5,
+        "femaleWeightLbs": 14.7
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 19.6,
+        "femaleWeightLbs": 16.4
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 21.1,
+        "femaleWeightLbs": 17.6
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 22.1,
+        "femaleWeightLbs": 18.5
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 22.9,
+        "femaleWeightLbs": 19.1
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 23.4,
+        "femaleWeightLbs": 19.5
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 23.8,
+        "femaleWeightLbs": 19.8
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 24.0,
+        "femaleWeightLbs": 20.0
+      }
+    ]
   },
   {
     "id": "breed-003",
@@ -551,7 +710,94 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 3,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 1.1,
+        "femaleWeightLbs": 1.0
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 3.7,
+        "femaleWeightLbs": 3.3
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 8.9,
+        "femaleWeightLbs": 7.9
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 16.5,
+        "femaleWeightLbs": 14.5
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 25.5,
+        "femaleWeightLbs": 22.2
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 34.6,
+        "femaleWeightLbs": 30.0
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 42.9,
+        "femaleWeightLbs": 37.0
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 49.9,
+        "femaleWeightLbs": 43.0
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 55.5,
+        "femaleWeightLbs": 47.7
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 59.8,
+        "femaleWeightLbs": 51.4
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 63.1,
+        "femaleWeightLbs": 54.1
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 65.4,
+        "femaleWeightLbs": 56.1
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 67.1,
+        "femaleWeightLbs": 57.6
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 68.4,
+        "femaleWeightLbs": 58.6
+      },
+      {
+        "weekNumber": 56,
+        "maleWeightLbs": 69.3,
+        "femaleWeightLbs": 59.4
+      },
+      {
+        "weekNumber": 60,
+        "maleWeightLbs": 69.9,
+        "femaleWeightLbs": 59.9
+      },
+      {
+        "weekNumber": 64,
+        "maleWeightLbs": 70.0,
+        "femaleWeightLbs": 60.0
+      }
+    ]
   },
   {
     "id": "breed-004",
@@ -736,7 +982,114 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 4,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 1.1,
+        "femaleWeightLbs": 1.0
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 3.1,
+        "femaleWeightLbs": 2.6
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 6.8,
+        "femaleWeightLbs": 5.6
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 12.2,
+        "femaleWeightLbs": 9.9
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 19.1,
+        "femaleWeightLbs": 15.3
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 26.9,
+        "femaleWeightLbs": 21.3
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 34.8,
+        "femaleWeightLbs": 27.4
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 42.4,
+        "femaleWeightLbs": 33.2
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 49.2,
+        "femaleWeightLbs": 38.4
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 55.2,
+        "femaleWeightLbs": 43.0
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 60.2,
+        "femaleWeightLbs": 46.7
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 64.2,
+        "femaleWeightLbs": 49.9
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 67.5,
+        "femaleWeightLbs": 52.4
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 70.1,
+        "femaleWeightLbs": 54.3
+      },
+      {
+        "weekNumber": 56,
+        "maleWeightLbs": 72.2,
+        "femaleWeightLbs": 55.9
+      },
+      {
+        "weekNumber": 60,
+        "maleWeightLbs": 73.8,
+        "femaleWeightLbs": 57.1
+      },
+      {
+        "weekNumber": 64,
+        "maleWeightLbs": 75.0,
+        "femaleWeightLbs": 58.1
+      },
+      {
+        "weekNumber": 68,
+        "maleWeightLbs": 76.0,
+        "femaleWeightLbs": 58.8
+      },
+      {
+        "weekNumber": 72,
+        "maleWeightLbs": 76.7,
+        "femaleWeightLbs": 59.4
+      },
+      {
+        "weekNumber": 76,
+        "maleWeightLbs": 77.2,
+        "femaleWeightLbs": 59.8
+      },
+      {
+        "weekNumber": 80,
+        "maleWeightLbs": 77.5,
+        "femaleWeightLbs": 60.0
+      }
+    ]
   },
   {
     "id": "breed-005",
@@ -922,7 +1275,94 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 5,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 1.1,
+        "femaleWeightLbs": 0.8
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 3.6,
+        "femaleWeightLbs": 2.8
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 8.5,
+        "femaleWeightLbs": 6.3
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 15.6,
+        "femaleWeightLbs": 11.3
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 24.0,
+        "femaleWeightLbs": 17.1
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 32.4,
+        "femaleWeightLbs": 22.9
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 40.1,
+        "femaleWeightLbs": 28.1
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 46.5,
+        "femaleWeightLbs": 32.4
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 51.7,
+        "femaleWeightLbs": 35.9
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 55.6,
+        "femaleWeightLbs": 38.6
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 58.6,
+        "femaleWeightLbs": 40.6
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 60.8,
+        "femaleWeightLbs": 42.1
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 62.4,
+        "femaleWeightLbs": 43.2
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 63.5,
+        "femaleWeightLbs": 44.0
+      },
+      {
+        "weekNumber": 56,
+        "maleWeightLbs": 64.3,
+        "femaleWeightLbs": 44.5
+      },
+      {
+        "weekNumber": 60,
+        "maleWeightLbs": 64.9,
+        "femaleWeightLbs": 44.9
+      },
+      {
+        "weekNumber": 64,
+        "maleWeightLbs": 65.0,
+        "femaleWeightLbs": 45.0
+      }
+    ]
   },
   {
     "id": "breed-006",
@@ -1108,7 +1548,79 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 6,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 0.9,
+        "femaleWeightLbs": 0.8
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 3.6,
+        "femaleWeightLbs": 3.1
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 8.9,
+        "femaleWeightLbs": 7.5
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 16.3,
+        "femaleWeightLbs": 13.4
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 24.3,
+        "femaleWeightLbs": 19.9
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 31.6,
+        "femaleWeightLbs": 25.8
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 37.7,
+        "femaleWeightLbs": 30.7
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 42.4,
+        "femaleWeightLbs": 34.4
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 45.9,
+        "femaleWeightLbs": 37.2
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 48.3,
+        "femaleWeightLbs": 39.1
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 50.0,
+        "femaleWeightLbs": 40.5
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 51.2,
+        "femaleWeightLbs": 41.4
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 52.0,
+        "femaleWeightLbs": 42.1
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 52.5,
+        "femaleWeightLbs": 42.5
+      }
+    ]
   },
   {
     "id": "breed-007",
@@ -1287,7 +1799,114 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 7,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 1.4,
+        "femaleWeightLbs": 1.2
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 4.1,
+        "femaleWeightLbs": 3.5
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 9.3,
+        "femaleWeightLbs": 7.6
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 17.1,
+        "femaleWeightLbs": 13.8
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 27.2,
+        "femaleWeightLbs": 21.8
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 38.7,
+        "femaleWeightLbs": 30.8
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 50.6,
+        "femaleWeightLbs": 40.1
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 62.0,
+        "femaleWeightLbs": 49.0
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 72.3,
+        "femaleWeightLbs": 57.0
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 81.3,
+        "femaleWeightLbs": 63.9
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 88.8,
+        "femaleWeightLbs": 69.7
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 95.0,
+        "femaleWeightLbs": 74.5
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 100.0,
+        "femaleWeightLbs": 78.3
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 103.9,
+        "femaleWeightLbs": 81.4
+      },
+      {
+        "weekNumber": 56,
+        "maleWeightLbs": 107.0,
+        "femaleWeightLbs": 83.8
+      },
+      {
+        "weekNumber": 60,
+        "maleWeightLbs": 109.4,
+        "femaleWeightLbs": 85.6
+      },
+      {
+        "weekNumber": 64,
+        "maleWeightLbs": 111.3,
+        "femaleWeightLbs": 87.1
+      },
+      {
+        "weekNumber": 68,
+        "maleWeightLbs": 112.7,
+        "femaleWeightLbs": 88.2
+      },
+      {
+        "weekNumber": 72,
+        "maleWeightLbs": 113.8,
+        "femaleWeightLbs": 89.1
+      },
+      {
+        "weekNumber": 76,
+        "maleWeightLbs": 114.6,
+        "femaleWeightLbs": 89.7
+      },
+      {
+        "weekNumber": 80,
+        "maleWeightLbs": 115.0,
+        "femaleWeightLbs": 90.0
+      }
+    ]
   },
   {
     "id": "breed-008",
@@ -1470,7 +2089,79 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 8,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 0.6,
+        "femaleWeightLbs": 0.6
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 2.1,
+        "femaleWeightLbs": 2.1
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 4.8,
+        "femaleWeightLbs": 4.8
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 8.4,
+        "femaleWeightLbs": 8.4
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 12.1,
+        "femaleWeightLbs": 12.1
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 15.5,
+        "femaleWeightLbs": 15.5
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 18.3,
+        "femaleWeightLbs": 18.3
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 20.4,
+        "femaleWeightLbs": 20.4
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 22.0,
+        "femaleWeightLbs": 22.0
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 23.1,
+        "femaleWeightLbs": 23.1
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 23.8,
+        "femaleWeightLbs": 23.8
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 24.4,
+        "femaleWeightLbs": 24.4
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 24.7,
+        "femaleWeightLbs": 24.7
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 25.0,
+        "femaleWeightLbs": 25.0
+      }
+    ]
   },
   {
     "id": "breed-009",
@@ -1655,7 +2346,79 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 9,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 0.6,
+        "femaleWeightLbs": 0.6
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 2.5,
+        "femaleWeightLbs": 2.5
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 6.0,
+        "femaleWeightLbs": 6.0
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 10.2,
+        "femaleWeightLbs": 10.2
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 14.3,
+        "femaleWeightLbs": 14.3
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 17.5,
+        "femaleWeightLbs": 17.5
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 19.9,
+        "femaleWeightLbs": 19.9
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 21.6,
+        "femaleWeightLbs": 21.6
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 22.6,
+        "femaleWeightLbs": 22.6
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 23.3,
+        "femaleWeightLbs": 23.3
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 23.8,
+        "femaleWeightLbs": 23.8
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 24.0,
+        "femaleWeightLbs": 24.0
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 24.0,
+        "femaleWeightLbs": 24.0
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 24.0,
+        "femaleWeightLbs": 24.0
+      }
+    ]
   },
   {
     "id": "breed-010",
@@ -1832,7 +2595,104 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 10,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 1.0,
+        "femaleWeightLbs": 0.9
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 3.0,
+        "femaleWeightLbs": 2.7
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 6.7,
+        "femaleWeightLbs": 5.9
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 12.2,
+        "femaleWeightLbs": 10.6
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 18.9,
+        "femaleWeightLbs": 16.2
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 26.1,
+        "femaleWeightLbs": 22.2
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 33.1,
+        "femaleWeightLbs": 28.0
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 39.3,
+        "femaleWeightLbs": 33.3
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 44.7,
+        "femaleWeightLbs": 37.7
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 49.1,
+        "femaleWeightLbs": 41.4
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 52.6,
+        "femaleWeightLbs": 44.3
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 55.4,
+        "femaleWeightLbs": 46.6
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 57.5,
+        "femaleWeightLbs": 48.3
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 59.1,
+        "femaleWeightLbs": 49.6
+      },
+      {
+        "weekNumber": 56,
+        "maleWeightLbs": 60.3,
+        "femaleWeightLbs": 50.6
+      },
+      {
+        "weekNumber": 60,
+        "maleWeightLbs": 61.2,
+        "femaleWeightLbs": 51.4
+      },
+      {
+        "weekNumber": 64,
+        "maleWeightLbs": 61.8,
+        "femaleWeightLbs": 52.0
+      },
+      {
+        "weekNumber": 68,
+        "maleWeightLbs": 62.3,
+        "femaleWeightLbs": 52.4
+      },
+      {
+        "weekNumber": 72,
+        "maleWeightLbs": 62.5,
+        "femaleWeightLbs": 52.5
+      }
+    ]
   },
   {
     "id": "breed-011",
@@ -2007,7 +2867,79 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 11,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 0.7,
+        "femaleWeightLbs": 0.7
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 2.3,
+        "femaleWeightLbs": 2.2
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 5.2,
+        "femaleWeightLbs": 5.1
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 9.1,
+        "femaleWeightLbs": 8.8
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 13.2,
+        "femaleWeightLbs": 12.8
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 17.0,
+        "femaleWeightLbs": 16.4
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 20.0,
+        "femaleWeightLbs": 19.3
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 22.4,
+        "femaleWeightLbs": 21.6
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 24.1,
+        "femaleWeightLbs": 23.3
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 25.4,
+        "femaleWeightLbs": 24.4
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 26.2,
+        "femaleWeightLbs": 25.3
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 26.8,
+        "femaleWeightLbs": 25.8
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 27.2,
+        "femaleWeightLbs": 26.2
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 27.5,
+        "femaleWeightLbs": 26.5
+      }
+    ]
   },
   {
     "id": "breed-012",
@@ -2187,7 +3119,104 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 12,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 1.0,
+        "femaleWeightLbs": 0.9
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 2.9,
+        "femaleWeightLbs": 2.5
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 6.4,
+        "femaleWeightLbs": 5.5
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 11.5,
+        "femaleWeightLbs": 9.7
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 17.7,
+        "femaleWeightLbs": 14.9
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 24.2,
+        "femaleWeightLbs": 20.3
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 30.6,
+        "femaleWeightLbs": 25.5
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 36.4,
+        "femaleWeightLbs": 30.2
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 41.2,
+        "femaleWeightLbs": 34.2
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 45.3,
+        "femaleWeightLbs": 37.5
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 48.5,
+        "femaleWeightLbs": 40.1
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 51.0,
+        "femaleWeightLbs": 42.2
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 52.9,
+        "femaleWeightLbs": 43.7
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 54.4,
+        "femaleWeightLbs": 44.9
+      },
+      {
+        "weekNumber": 56,
+        "maleWeightLbs": 55.5,
+        "femaleWeightLbs": 45.8
+      },
+      {
+        "weekNumber": 60,
+        "maleWeightLbs": 56.3,
+        "femaleWeightLbs": 46.5
+      },
+      {
+        "weekNumber": 64,
+        "maleWeightLbs": 56.9,
+        "femaleWeightLbs": 47.0
+      },
+      {
+        "weekNumber": 68,
+        "maleWeightLbs": 57.4,
+        "femaleWeightLbs": 47.4
+      },
+      {
+        "weekNumber": 72,
+        "maleWeightLbs": 57.5,
+        "femaleWeightLbs": 47.5
+      }
+    ]
   },
   {
     "id": "breed-013",
@@ -2370,7 +3399,79 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 13,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 0.3,
+        "femaleWeightLbs": 0.3
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 1.1,
+        "femaleWeightLbs": 1.1
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 2.2,
+        "femaleWeightLbs": 2.2
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 3.3,
+        "femaleWeightLbs": 3.3
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 4.2,
+        "femaleWeightLbs": 4.2
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 4.8,
+        "femaleWeightLbs": 4.8
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 5.1,
+        "femaleWeightLbs": 5.1
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 5.3,
+        "femaleWeightLbs": 5.3
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 5.4,
+        "femaleWeightLbs": 5.4
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 5.5,
+        "femaleWeightLbs": 5.5
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 5.5,
+        "femaleWeightLbs": 5.5
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 5.5,
+        "femaleWeightLbs": 5.5
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 5.5,
+        "femaleWeightLbs": 5.5
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 5.5,
+        "femaleWeightLbs": 5.5
+      }
+    ]
   },
   {
     "id": "breed-014",
@@ -2550,7 +3651,79 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 14,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 0.5,
+        "femaleWeightLbs": 0.5
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 1.8,
+        "femaleWeightLbs": 1.8
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 4.1,
+        "femaleWeightLbs": 4.1
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 6.8,
+        "femaleWeightLbs": 6.8
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 9.4,
+        "femaleWeightLbs": 9.4
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 11.4,
+        "femaleWeightLbs": 11.4
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 12.9,
+        "femaleWeightLbs": 12.9
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 14.0,
+        "femaleWeightLbs": 14.0
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 14.6,
+        "femaleWeightLbs": 14.6
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 15.1,
+        "femaleWeightLbs": 15.1
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 15.3,
+        "femaleWeightLbs": 15.3
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 15.5,
+        "femaleWeightLbs": 15.5
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 15.5,
+        "femaleWeightLbs": 15.5
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 15.5,
+        "femaleWeightLbs": 15.5
+      }
+    ]
   },
   {
     "id": "breed-015",
@@ -2732,7 +3905,104 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 15,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 1.2,
+        "femaleWeightLbs": 1.1
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 3.8,
+        "femaleWeightLbs": 3.4
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 8.8,
+        "femaleWeightLbs": 7.8
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 16.3,
+        "femaleWeightLbs": 14.3
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 25.6,
+        "femaleWeightLbs": 22.3
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 35.7,
+        "femaleWeightLbs": 30.9
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 45.6,
+        "femaleWeightLbs": 39.3
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 54.5,
+        "femaleWeightLbs": 46.9
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 62.1,
+        "femaleWeightLbs": 53.4
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 68.4,
+        "femaleWeightLbs": 58.8
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 73.4,
+        "femaleWeightLbs": 63.0
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 77.4,
+        "femaleWeightLbs": 66.4
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 80.4,
+        "femaleWeightLbs": 68.9
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 82.6,
+        "femaleWeightLbs": 70.9
+      },
+      {
+        "weekNumber": 56,
+        "maleWeightLbs": 84.3,
+        "femaleWeightLbs": 72.3
+      },
+      {
+        "weekNumber": 60,
+        "maleWeightLbs": 85.6,
+        "femaleWeightLbs": 73.4
+      },
+      {
+        "weekNumber": 64,
+        "maleWeightLbs": 86.6,
+        "femaleWeightLbs": 74.2
+      },
+      {
+        "weekNumber": 68,
+        "maleWeightLbs": 87.3,
+        "femaleWeightLbs": 74.8
+      },
+      {
+        "weekNumber": 72,
+        "maleWeightLbs": 87.5,
+        "femaleWeightLbs": 75.0
+      }
+    ]
   },
   {
     "id": "breed-016",
@@ -2909,7 +4179,104 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 16,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 1.1,
+        "femaleWeightLbs": 1.0
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 3.3,
+        "femaleWeightLbs": 2.8
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 7.6,
+        "femaleWeightLbs": 6.3
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 13.9,
+        "femaleWeightLbs": 11.4
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 21.6,
+        "femaleWeightLbs": 17.6
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 30.0,
+        "femaleWeightLbs": 24.2
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 38.1,
+        "femaleWeightLbs": 30.6
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 45.4,
+        "femaleWeightLbs": 36.3
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 51.7,
+        "femaleWeightLbs": 41.2
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 56.8,
+        "femaleWeightLbs": 45.2
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 61.0,
+        "femaleWeightLbs": 48.5
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 64.2,
+        "femaleWeightLbs": 51.0
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 66.6,
+        "femaleWeightLbs": 52.9
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 68.5,
+        "femaleWeightLbs": 54.4
+      },
+      {
+        "weekNumber": 56,
+        "maleWeightLbs": 69.9,
+        "femaleWeightLbs": 55.5
+      },
+      {
+        "weekNumber": 60,
+        "maleWeightLbs": 71.0,
+        "femaleWeightLbs": 56.3
+      },
+      {
+        "weekNumber": 64,
+        "maleWeightLbs": 71.7,
+        "femaleWeightLbs": 56.9
+      },
+      {
+        "weekNumber": 68,
+        "maleWeightLbs": 72.3,
+        "femaleWeightLbs": 57.4
+      },
+      {
+        "weekNumber": 72,
+        "maleWeightLbs": 72.5,
+        "femaleWeightLbs": 57.5
+      }
+    ]
   },
   {
     "id": "breed-017",
@@ -3086,7 +4453,79 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 17,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 0.5,
+        "femaleWeightLbs": 0.5
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 1.8,
+        "femaleWeightLbs": 1.8
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 4.1,
+        "femaleWeightLbs": 4.1
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 6.8,
+        "femaleWeightLbs": 6.8
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 9.4,
+        "femaleWeightLbs": 9.4
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 11.4,
+        "femaleWeightLbs": 11.4
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 12.9,
+        "femaleWeightLbs": 12.9
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 14.0,
+        "femaleWeightLbs": 14.0
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 14.6,
+        "femaleWeightLbs": 14.6
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 15.1,
+        "femaleWeightLbs": 15.1
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 15.3,
+        "femaleWeightLbs": 15.3
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 15.5,
+        "femaleWeightLbs": 15.5
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 15.5,
+        "femaleWeightLbs": 15.5
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 15.5,
+        "femaleWeightLbs": 15.5
+      }
+    ]
   },
   {
     "id": "breed-018",
@@ -3263,7 +4702,124 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 18,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 1.4,
+        "femaleWeightLbs": 1.2
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 3.6,
+        "femaleWeightLbs": 3.2
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 7.7,
+        "femaleWeightLbs": 6.7
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 13.9,
+        "femaleWeightLbs": 12.0
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 22.1,
+        "femaleWeightLbs": 18.9
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 31.6,
+        "femaleWeightLbs": 26.9
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 41.7,
+        "femaleWeightLbs": 35.5
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 51.9,
+        "femaleWeightLbs": 44.0
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 61.5,
+        "femaleWeightLbs": 52.0
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 70.2,
+        "femaleWeightLbs": 59.3
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 77.8,
+        "femaleWeightLbs": 65.6
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 84.3,
+        "femaleWeightLbs": 71.1
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 89.8,
+        "femaleWeightLbs": 75.6
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 94.3,
+        "femaleWeightLbs": 79.4
+      },
+      {
+        "weekNumber": 56,
+        "maleWeightLbs": 98.0,
+        "femaleWeightLbs": 82.5
+      },
+      {
+        "weekNumber": 60,
+        "maleWeightLbs": 101.0,
+        "femaleWeightLbs": 84.9
+      },
+      {
+        "weekNumber": 64,
+        "maleWeightLbs": 103.3,
+        "femaleWeightLbs": 86.9
+      },
+      {
+        "weekNumber": 68,
+        "maleWeightLbs": 105.2,
+        "femaleWeightLbs": 88.5
+      },
+      {
+        "weekNumber": 72,
+        "maleWeightLbs": 106.7,
+        "femaleWeightLbs": 89.8
+      },
+      {
+        "weekNumber": 76,
+        "maleWeightLbs": 107.9,
+        "femaleWeightLbs": 90.7
+      },
+      {
+        "weekNumber": 80,
+        "maleWeightLbs": 108.8,
+        "femaleWeightLbs": 91.5
+      },
+      {
+        "weekNumber": 84,
+        "maleWeightLbs": 109.6,
+        "femaleWeightLbs": 92.1
+      },
+      {
+        "weekNumber": 88,
+        "maleWeightLbs": 110.0,
+        "femaleWeightLbs": 92.5
+      }
+    ]
   },
   {
     "id": "breed-019",
@@ -3448,7 +5004,144 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 19,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 1.8,
+        "femaleWeightLbs": 1.6
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 4.1,
+        "femaleWeightLbs": 3.5
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 8.2,
+        "femaleWeightLbs": 6.9
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 14.3,
+        "femaleWeightLbs": 11.9
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 22.5,
+        "femaleWeightLbs": 18.6
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 32.6,
+        "femaleWeightLbs": 26.7
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 44.0,
+        "femaleWeightLbs": 35.8
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 56.1,
+        "femaleWeightLbs": 45.4
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 68.4,
+        "femaleWeightLbs": 55.1
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 80.3,
+        "femaleWeightLbs": 64.4
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 91.5,
+        "femaleWeightLbs": 73.2
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 101.7,
+        "femaleWeightLbs": 81.2
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 110.8,
+        "femaleWeightLbs": 88.4
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 118.8,
+        "femaleWeightLbs": 94.7
+      },
+      {
+        "weekNumber": 56,
+        "maleWeightLbs": 125.8,
+        "femaleWeightLbs": 100.1
+      },
+      {
+        "weekNumber": 60,
+        "maleWeightLbs": 131.7,
+        "femaleWeightLbs": 104.7
+      },
+      {
+        "weekNumber": 64,
+        "maleWeightLbs": 136.7,
+        "femaleWeightLbs": 108.7
+      },
+      {
+        "weekNumber": 68,
+        "maleWeightLbs": 140.9,
+        "femaleWeightLbs": 112.0
+      },
+      {
+        "weekNumber": 72,
+        "maleWeightLbs": 144.4,
+        "femaleWeightLbs": 114.7
+      },
+      {
+        "weekNumber": 76,
+        "maleWeightLbs": 147.3,
+        "femaleWeightLbs": 117.0
+      },
+      {
+        "weekNumber": 80,
+        "maleWeightLbs": 149.8,
+        "femaleWeightLbs": 118.9
+      },
+      {
+        "weekNumber": 84,
+        "maleWeightLbs": 151.8,
+        "femaleWeightLbs": 120.5
+      },
+      {
+        "weekNumber": 88,
+        "maleWeightLbs": 153.4,
+        "femaleWeightLbs": 121.8
+      },
+      {
+        "weekNumber": 92,
+        "maleWeightLbs": 154.7,
+        "femaleWeightLbs": 122.8
+      },
+      {
+        "weekNumber": 96,
+        "maleWeightLbs": 155.8,
+        "femaleWeightLbs": 123.7
+      },
+      {
+        "weekNumber": 100,
+        "maleWeightLbs": 156.7,
+        "femaleWeightLbs": 124.4
+      },
+      {
+        "weekNumber": 104,
+        "maleWeightLbs": 157.5,
+        "femaleWeightLbs": 125.0
+      }
+    ]
   },
   {
     "id": "breed-020",
@@ -3627,7 +5320,79 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 20,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 0.4,
+        "femaleWeightLbs": 0.4
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 1.6,
+        "femaleWeightLbs": 1.6
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 3.4,
+        "femaleWeightLbs": 3.4
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 5.6,
+        "femaleWeightLbs": 5.6
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 7.7,
+        "femaleWeightLbs": 7.7
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 9.3,
+        "femaleWeightLbs": 9.3
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 10.5,
+        "femaleWeightLbs": 10.5
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 11.3,
+        "femaleWeightLbs": 11.3
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 11.8,
+        "femaleWeightLbs": 11.8
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 12.2,
+        "femaleWeightLbs": 12.2
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 12.4,
+        "femaleWeightLbs": 12.4
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 12.5,
+        "femaleWeightLbs": 12.5
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 12.5,
+        "femaleWeightLbs": 12.5
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 12.5,
+        "femaleWeightLbs": 12.5
+      }
+    ]
   },
   {
     "id": "breed-021",
@@ -3794,7 +5559,94 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 21,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 0.9,
+        "femaleWeightLbs": 0.8
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 3.1,
+        "femaleWeightLbs": 2.6
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 7.2,
+        "femaleWeightLbs": 6.0
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 13.0,
+        "femaleWeightLbs": 10.7
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 19.7,
+        "femaleWeightLbs": 16.2
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 26.5,
+        "femaleWeightLbs": 21.6
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 32.6,
+        "femaleWeightLbs": 26.5
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 37.7,
+        "femaleWeightLbs": 30.7
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 41.8,
+        "femaleWeightLbs": 34.0
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 45.0,
+        "femaleWeightLbs": 36.5
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 47.4,
+        "femaleWeightLbs": 38.4
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 49.1,
+        "femaleWeightLbs": 39.8
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 50.4,
+        "femaleWeightLbs": 40.8
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 51.3,
+        "femaleWeightLbs": 41.5
+      },
+      {
+        "weekNumber": 56,
+        "maleWeightLbs": 52.0,
+        "femaleWeightLbs": 42.1
+      },
+      {
+        "weekNumber": 60,
+        "maleWeightLbs": 52.4,
+        "femaleWeightLbs": 42.4
+      },
+      {
+        "weekNumber": 64,
+        "maleWeightLbs": 52.5,
+        "femaleWeightLbs": 42.5
+      }
+    ]
   },
   {
     "id": "breed-022",
@@ -3966,7 +5818,144 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 22,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 1.4,
+        "femaleWeightLbs": 1.3
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 3.1,
+        "femaleWeightLbs": 2.8
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 5.9,
+        "femaleWeightLbs": 5.3
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 10.0,
+        "femaleWeightLbs": 8.8
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 15.3,
+        "femaleWeightLbs": 13.4
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 21.7,
+        "femaleWeightLbs": 18.8
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 28.8,
+        "femaleWeightLbs": 24.9
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 36.2,
+        "femaleWeightLbs": 31.2
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 43.7,
+        "femaleWeightLbs": 37.5
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 51.0,
+        "femaleWeightLbs": 43.5
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 57.7,
+        "femaleWeightLbs": 49.2
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 63.9,
+        "femaleWeightLbs": 54.4
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 69.4,
+        "femaleWeightLbs": 58.9
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 74.2,
+        "femaleWeightLbs": 63.0
+      },
+      {
+        "weekNumber": 56,
+        "maleWeightLbs": 78.3,
+        "femaleWeightLbs": 66.5
+      },
+      {
+        "weekNumber": 60,
+        "maleWeightLbs": 81.9,
+        "femaleWeightLbs": 69.4
+      },
+      {
+        "weekNumber": 64,
+        "maleWeightLbs": 84.9,
+        "femaleWeightLbs": 71.9
+      },
+      {
+        "weekNumber": 68,
+        "maleWeightLbs": 87.5,
+        "femaleWeightLbs": 74.1
+      },
+      {
+        "weekNumber": 72,
+        "maleWeightLbs": 89.6,
+        "femaleWeightLbs": 75.8
+      },
+      {
+        "weekNumber": 76,
+        "maleWeightLbs": 91.3,
+        "femaleWeightLbs": 77.3
+      },
+      {
+        "weekNumber": 80,
+        "maleWeightLbs": 92.8,
+        "femaleWeightLbs": 78.5
+      },
+      {
+        "weekNumber": 84,
+        "maleWeightLbs": 94.0,
+        "femaleWeightLbs": 79.6
+      },
+      {
+        "weekNumber": 88,
+        "maleWeightLbs": 95.0,
+        "femaleWeightLbs": 80.4
+      },
+      {
+        "weekNumber": 92,
+        "maleWeightLbs": 95.8,
+        "femaleWeightLbs": 81.1
+      },
+      {
+        "weekNumber": 96,
+        "maleWeightLbs": 96.5,
+        "femaleWeightLbs": 81.6
+      },
+      {
+        "weekNumber": 100,
+        "maleWeightLbs": 97.0,
+        "femaleWeightLbs": 82.1
+      },
+      {
+        "weekNumber": 104,
+        "maleWeightLbs": 97.5,
+        "femaleWeightLbs": 82.5
+      }
+    ]
   },
   {
     "id": "breed-023",
@@ -4149,7 +6138,79 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 23,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 0.3,
+        "femaleWeightLbs": 0.3
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 1.0,
+        "femaleWeightLbs": 1.0
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 2.1,
+        "femaleWeightLbs": 2.1
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 3.1,
+        "femaleWeightLbs": 3.1
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 3.8,
+        "femaleWeightLbs": 3.8
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 4.3,
+        "femaleWeightLbs": 4.3
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 4.7,
+        "femaleWeightLbs": 4.7
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 4.8,
+        "femaleWeightLbs": 4.8
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 5.0,
+        "femaleWeightLbs": 5.0
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 5.0,
+        "femaleWeightLbs": 5.0
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 5.0,
+        "femaleWeightLbs": 5.0
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 5.0,
+        "femaleWeightLbs": 5.0
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 5.0,
+        "femaleWeightLbs": 5.0
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 5.0,
+        "femaleWeightLbs": 5.0
+      }
+    ]
   },
   {
     "id": "breed-024",
@@ -4325,7 +6386,79 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 24,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 0.5,
+        "femaleWeightLbs": 0.5
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 2.1,
+        "femaleWeightLbs": 2.1
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 4.8,
+        "femaleWeightLbs": 4.8
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 8.1,
+        "femaleWeightLbs": 8.1
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 11.1,
+        "femaleWeightLbs": 11.1
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 13.6,
+        "femaleWeightLbs": 13.6
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 15.4,
+        "femaleWeightLbs": 15.4
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 16.6,
+        "femaleWeightLbs": 16.6
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 17.5,
+        "femaleWeightLbs": 17.5
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 18.0,
+        "femaleWeightLbs": 18.0
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 18.3,
+        "femaleWeightLbs": 18.3
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 18.5,
+        "femaleWeightLbs": 18.5
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 18.5,
+        "femaleWeightLbs": 18.5
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 18.5,
+        "femaleWeightLbs": 18.5
+      }
+    ]
   },
   {
     "id": "breed-025",
@@ -4500,7 +6633,79 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 25,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 0.4,
+        "femaleWeightLbs": 0.4
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 1.3,
+        "femaleWeightLbs": 1.3
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 2.9,
+        "femaleWeightLbs": 2.9
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 4.6,
+        "femaleWeightLbs": 4.6
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 6.2,
+        "femaleWeightLbs": 6.2
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 7.5,
+        "femaleWeightLbs": 7.5
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 8.4,
+        "femaleWeightLbs": 8.4
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 9.0,
+        "femaleWeightLbs": 9.0
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 9.5,
+        "femaleWeightLbs": 9.5
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 9.7,
+        "femaleWeightLbs": 9.7
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 9.9,
+        "femaleWeightLbs": 9.9
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 10.0,
+        "femaleWeightLbs": 10.0
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 10.0,
+        "femaleWeightLbs": 10.0
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 10.0,
+        "femaleWeightLbs": 10.0
+      }
+    ]
   },
   {
     "id": "breed-026",
@@ -4674,7 +6879,94 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 26,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 0.9,
+        "femaleWeightLbs": 0.8
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 3.1,
+        "femaleWeightLbs": 2.6
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 7.2,
+        "femaleWeightLbs": 6.0
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 13.0,
+        "femaleWeightLbs": 10.7
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 19.7,
+        "femaleWeightLbs": 16.2
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 26.5,
+        "femaleWeightLbs": 21.6
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 32.6,
+        "femaleWeightLbs": 26.5
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 37.7,
+        "femaleWeightLbs": 30.7
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 41.8,
+        "femaleWeightLbs": 34.0
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 45.0,
+        "femaleWeightLbs": 36.5
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 47.4,
+        "femaleWeightLbs": 38.4
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 49.1,
+        "femaleWeightLbs": 39.8
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 50.4,
+        "femaleWeightLbs": 40.8
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 51.3,
+        "femaleWeightLbs": 41.5
+      },
+      {
+        "weekNumber": 56,
+        "maleWeightLbs": 52.0,
+        "femaleWeightLbs": 42.1
+      },
+      {
+        "weekNumber": 60,
+        "maleWeightLbs": 52.4,
+        "femaleWeightLbs": 42.4
+      },
+      {
+        "weekNumber": 64,
+        "maleWeightLbs": 52.5,
+        "femaleWeightLbs": 42.5
+      }
+    ]
   },
   {
     "id": "breed-027",
@@ -4850,7 +7142,79 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 27,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 0.6,
+        "femaleWeightLbs": 0.6
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 1.8,
+        "femaleWeightLbs": 1.8
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 4.0,
+        "femaleWeightLbs": 4.0
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 6.9,
+        "femaleWeightLbs": 6.9
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 9.8,
+        "femaleWeightLbs": 9.8
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 12.5,
+        "femaleWeightLbs": 12.5
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 14.7,
+        "femaleWeightLbs": 14.7
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 16.4,
+        "femaleWeightLbs": 16.4
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 17.6,
+        "femaleWeightLbs": 17.6
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 18.5,
+        "femaleWeightLbs": 18.5
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 19.1,
+        "femaleWeightLbs": 19.1
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 19.5,
+        "femaleWeightLbs": 19.5
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 19.8,
+        "femaleWeightLbs": 19.8
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 20.0,
+        "femaleWeightLbs": 20.0
+      }
+    ]
   },
   {
     "id": "breed-028",
@@ -5011,7 +7375,94 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 28,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 0.8,
+        "femaleWeightLbs": 0.8
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 2.3,
+        "femaleWeightLbs": 2.3
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 5.2,
+        "femaleWeightLbs": 5.2
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 9.1,
+        "femaleWeightLbs": 9.1
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 13.6,
+        "femaleWeightLbs": 13.6
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 18.0,
+        "femaleWeightLbs": 18.0
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 22.0,
+        "femaleWeightLbs": 22.0
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 25.4,
+        "femaleWeightLbs": 25.4
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 28.0,
+        "femaleWeightLbs": 28.0
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 30.1,
+        "femaleWeightLbs": 30.1
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 31.6,
+        "femaleWeightLbs": 31.6
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 32.8,
+        "femaleWeightLbs": 32.8
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 33.6,
+        "femaleWeightLbs": 33.6
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 34.2,
+        "femaleWeightLbs": 34.2
+      },
+      {
+        "weekNumber": 56,
+        "maleWeightLbs": 34.6,
+        "femaleWeightLbs": 34.6
+      },
+      {
+        "weekNumber": 60,
+        "maleWeightLbs": 34.9,
+        "femaleWeightLbs": 34.9
+      },
+      {
+        "weekNumber": 64,
+        "maleWeightLbs": 35.0,
+        "femaleWeightLbs": 35.0
+      }
+    ]
   },
   {
     "id": "breed-029",
@@ -5193,7 +7644,79 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 29,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 0.7,
+        "femaleWeightLbs": 0.6
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 2.3,
+        "femaleWeightLbs": 2.0
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 5.2,
+        "femaleWeightLbs": 4.4
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 9.1,
+        "femaleWeightLbs": 7.6
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 13.2,
+        "femaleWeightLbs": 11.0
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 17.0,
+        "femaleWeightLbs": 14.0
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 20.0,
+        "femaleWeightLbs": 16.5
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 22.4,
+        "femaleWeightLbs": 18.4
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 24.1,
+        "femaleWeightLbs": 19.8
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 25.4,
+        "femaleWeightLbs": 20.8
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 26.2,
+        "femaleWeightLbs": 21.5
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 26.8,
+        "femaleWeightLbs": 21.9
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 27.2,
+        "femaleWeightLbs": 22.3
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 27.5,
+        "femaleWeightLbs": 22.5
+      }
+    ]
   },
   {
     "id": "breed-030",
@@ -5356,7 +7879,79 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 30,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 0.7,
+        "femaleWeightLbs": 0.7
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 2.4,
+        "femaleWeightLbs": 2.4
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 5.7,
+        "femaleWeightLbs": 5.7
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 9.9,
+        "femaleWeightLbs": 9.9
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 14.4,
+        "femaleWeightLbs": 14.4
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 18.5,
+        "femaleWeightLbs": 18.5
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 21.8,
+        "femaleWeightLbs": 21.8
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 24.4,
+        "femaleWeightLbs": 24.4
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 26.3,
+        "femaleWeightLbs": 26.3
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 27.7,
+        "femaleWeightLbs": 27.7
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 28.6,
+        "femaleWeightLbs": 28.6
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 29.3,
+        "femaleWeightLbs": 29.3
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 29.7,
+        "femaleWeightLbs": 29.7
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 30.0,
+        "femaleWeightLbs": 30.0
+      }
+    ]
   },
   {
     "id": "breed-031",
@@ -5540,7 +8135,94 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 31,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 0.8,
+        "femaleWeightLbs": 0.8
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 2.6,
+        "femaleWeightLbs": 2.6
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 6.0,
+        "femaleWeightLbs": 6.0
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 10.7,
+        "femaleWeightLbs": 10.7
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 16.2,
+        "femaleWeightLbs": 16.2
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 21.6,
+        "femaleWeightLbs": 21.6
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 26.5,
+        "femaleWeightLbs": 26.5
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 30.7,
+        "femaleWeightLbs": 30.7
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 34.0,
+        "femaleWeightLbs": 34.0
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 36.5,
+        "femaleWeightLbs": 36.5
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 38.4,
+        "femaleWeightLbs": 38.4
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 39.8,
+        "femaleWeightLbs": 39.8
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 40.8,
+        "femaleWeightLbs": 40.8
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 41.5,
+        "femaleWeightLbs": 41.5
+      },
+      {
+        "weekNumber": 56,
+        "maleWeightLbs": 42.1,
+        "femaleWeightLbs": 42.1
+      },
+      {
+        "weekNumber": 60,
+        "maleWeightLbs": 42.4,
+        "femaleWeightLbs": 42.4
+      },
+      {
+        "weekNumber": 64,
+        "maleWeightLbs": 42.5,
+        "femaleWeightLbs": 42.5
+      }
+    ]
   },
   {
     "name": "Vizsla",
@@ -5687,7 +8369,104 @@
     "diet_notes": "High-quality food for active sporting dogs. Lean body condition is essential \u2014 you should see ribs slightly. Adjust portions to activity level.",
     "exercise_notes": "90+ minutes daily of vigorous exercise. Running, swimming, field work, and hiking are ideal. Without sufficient exercise, Vizslas become destructive and anxious. Not for sedentary owners.",
     "grooming_notes": "Minimal grooming \u2014 weekly wipe-down or brush. They're naturally clean dogs with little odour. Regular nail trims. No undercoat means they're cold-sensitive.",
-    "popularity_rank": 32
+    "popularity_rank": 32,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 1.0,
+        "femaleWeightLbs": 0.9
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 2.9,
+        "femaleWeightLbs": 2.6
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 6.4,
+        "femaleWeightLbs": 5.7
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 11.5,
+        "femaleWeightLbs": 10.1
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 17.7,
+        "femaleWeightLbs": 15.4
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 24.2,
+        "femaleWeightLbs": 21.1
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 30.6,
+        "femaleWeightLbs": 26.5
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 36.4,
+        "femaleWeightLbs": 31.4
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 41.2,
+        "femaleWeightLbs": 35.6
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 45.3,
+        "femaleWeightLbs": 39.0
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 48.5,
+        "femaleWeightLbs": 41.8
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 51.0,
+        "femaleWeightLbs": 43.9
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 52.9,
+        "femaleWeightLbs": 45.6
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 54.4,
+        "femaleWeightLbs": 46.8
+      },
+      {
+        "weekNumber": 56,
+        "maleWeightLbs": 55.5,
+        "femaleWeightLbs": 47.8
+      },
+      {
+        "weekNumber": 60,
+        "maleWeightLbs": 56.3,
+        "femaleWeightLbs": 48.5
+      },
+      {
+        "weekNumber": 64,
+        "maleWeightLbs": 56.9,
+        "femaleWeightLbs": 49.0
+      },
+      {
+        "weekNumber": 68,
+        "maleWeightLbs": 57.4,
+        "femaleWeightLbs": 49.4
+      },
+      {
+        "weekNumber": 72,
+        "maleWeightLbs": 57.5,
+        "femaleWeightLbs": 49.5
+      }
+    ]
   },
   {
     "name": "Maltese",
@@ -5839,7 +8618,79 @@
     "diet_notes": "Small, frequent meals to prevent hypoglycaemia. High-quality toy-breed formula. Dental-friendly kibble or dental chews are important given their dental vulnerability.",
     "exercise_notes": "Short walks and indoor play. They're active but tire quickly. Protect from rough play and larger dogs. Mental stimulation through training and puzzle toys.",
     "grooming_notes": "Daily brushing if kept in full coat. Most owners use a short 'puppy clip' trimmed every 6-8 weeks. Tear staining needs daily cleaning. Regular dental care is critical \u2014 toy breeds are prone to dental disease.",
-    "popularity_rank": 33
+    "popularity_rank": 33,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 0.3,
+        "femaleWeightLbs": 0.3
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 0.9,
+        "femaleWeightLbs": 0.9
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 1.8,
+        "femaleWeightLbs": 1.8
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 2.7,
+        "femaleWeightLbs": 2.7
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 3.5,
+        "femaleWeightLbs": 3.5
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 4.2,
+        "femaleWeightLbs": 4.2
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 4.7,
+        "femaleWeightLbs": 4.7
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 5.0,
+        "femaleWeightLbs": 5.0
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 5.2,
+        "femaleWeightLbs": 5.2
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 5.4,
+        "femaleWeightLbs": 5.4
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 5.4,
+        "femaleWeightLbs": 5.4
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 5.5,
+        "femaleWeightLbs": 5.5
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 5.5,
+        "femaleWeightLbs": 5.5
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 5.5,
+        "femaleWeightLbs": 5.5
+      }
+    ]
   },
   {
     "name": "Weimaraner",
@@ -5990,7 +8841,114 @@
     "diet_notes": "High-quality food for active large breeds. Feed 2-3 meals daily to reduce bloat risk. Maintain lean athletic condition \u2014 Weimaraners should be visibly fit.",
     "exercise_notes": "90+ minutes of vigorous daily exercise. Running, hiking, swimming, and field work. Without enough exercise, they become anxious and destructive. Not for apartment living.",
     "grooming_notes": "Minimal \u2014 weekly wipe-down or brush. Short coat sheds moderately. Regular nail trims. Clean ears. They're naturally clean dogs.",
-    "popularity_rank": 34
+    "popularity_rank": 34,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 1.1,
+        "femaleWeightLbs": 1.0
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 3.2,
+        "femaleWeightLbs": 2.8
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 6.9,
+        "femaleWeightLbs": 5.9
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 12.5,
+        "femaleWeightLbs": 10.6
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 19.7,
+        "femaleWeightLbs": 16.4
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 27.7,
+        "femaleWeightLbs": 22.9
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 35.9,
+        "femaleWeightLbs": 29.5
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 43.7,
+        "femaleWeightLbs": 35.8
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 50.8,
+        "femaleWeightLbs": 41.5
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 56.9,
+        "femaleWeightLbs": 46.4
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 62.1,
+        "femaleWeightLbs": 50.6
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 66.3,
+        "femaleWeightLbs": 54.0
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 69.7,
+        "femaleWeightLbs": 56.7
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 72.4,
+        "femaleWeightLbs": 58.9
+      },
+      {
+        "weekNumber": 56,
+        "maleWeightLbs": 74.5,
+        "femaleWeightLbs": 60.6
+      },
+      {
+        "weekNumber": 60,
+        "maleWeightLbs": 76.1,
+        "femaleWeightLbs": 61.9
+      },
+      {
+        "weekNumber": 64,
+        "maleWeightLbs": 77.4,
+        "femaleWeightLbs": 62.9
+      },
+      {
+        "weekNumber": 68,
+        "maleWeightLbs": 78.4,
+        "femaleWeightLbs": 63.7
+      },
+      {
+        "weekNumber": 72,
+        "maleWeightLbs": 79.2,
+        "femaleWeightLbs": 64.3
+      },
+      {
+        "weekNumber": 76,
+        "maleWeightLbs": 79.7,
+        "femaleWeightLbs": 64.8
+      },
+      {
+        "weekNumber": 80,
+        "maleWeightLbs": 80.0,
+        "femaleWeightLbs": 65.0
+      }
+    ]
   },
   {
     "name": "Chihuahua",
@@ -6155,7 +9113,79 @@
     "diet_notes": "Small, frequent meals to prevent hypoglycaemia. High-quality toy-breed formula. Dental-supporting food. Every treat counts significantly in their tiny calorie budget.",
     "exercise_notes": "Short walks and indoor play. They have moderate energy but are easily over-exercised. Protect from cold weather. Mental stimulation through training and puzzle toys.",
     "grooming_notes": "Smooth coat: weekly brushing. Long coat: 2-3 times weekly. Regular dental care is critical. Nail trims. Keep warm in cold weather with sweaters or coats.",
-    "popularity_rank": 35
+    "popularity_rank": 35,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 0.3,
+        "femaleWeightLbs": 0.3
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 0.8,
+        "femaleWeightLbs": 0.8
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 1.5,
+        "femaleWeightLbs": 1.5
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 2.3,
+        "femaleWeightLbs": 2.3
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 2.9,
+        "femaleWeightLbs": 2.9
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 3.5,
+        "femaleWeightLbs": 3.5
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 3.8,
+        "femaleWeightLbs": 3.8
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 4.1,
+        "femaleWeightLbs": 4.1
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 4.3,
+        "femaleWeightLbs": 4.3
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 4.4,
+        "femaleWeightLbs": 4.4
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 4.5,
+        "femaleWeightLbs": 4.5
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 4.5,
+        "femaleWeightLbs": 4.5
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 4.5,
+        "femaleWeightLbs": 4.5
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 4.5,
+        "femaleWeightLbs": 4.5
+      }
+    ]
   },
   {
     "name": "Bichon Frise",
@@ -6305,7 +9335,79 @@
     "diet_notes": "High-quality small-breed food. Watch for food allergies. Measured portions to maintain weight. Dental-friendly options recommended.",
     "exercise_notes": "Moderate daily exercise. Short walks, indoor play, and training sessions. They adapt well to apartment living. Enjoy agility at a small-breed level.",
     "grooming_notes": "Professional grooming every 4-6 weeks is essential. Daily brushing prevents mats. Tear staining needs daily cleaning. Regular dental care. Their coat grows continuously and must be maintained.",
-    "popularity_rank": 36
+    "popularity_rank": 36,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 0.5,
+        "femaleWeightLbs": 0.5
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 1.5,
+        "femaleWeightLbs": 1.5
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 3.2,
+        "femaleWeightLbs": 3.2
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 5.3,
+        "femaleWeightLbs": 5.3
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 7.5,
+        "femaleWeightLbs": 7.5
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 9.5,
+        "femaleWeightLbs": 9.5
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 11.1,
+        "femaleWeightLbs": 11.1
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 12.3,
+        "femaleWeightLbs": 12.3
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 13.2,
+        "femaleWeightLbs": 13.2
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 13.9,
+        "femaleWeightLbs": 13.9
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 14.3,
+        "femaleWeightLbs": 14.3
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 14.6,
+        "femaleWeightLbs": 14.6
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 14.8,
+        "femaleWeightLbs": 14.8
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 15.0,
+        "femaleWeightLbs": 15.0
+      }
+    ]
   },
   {
     "name": "Basset Hound",
@@ -6463,7 +9565,104 @@
     "diet_notes": "Strict portion control \u2014 Bassets are prone to obesity and excess weight stresses their long spine. Feed measured meals. Limit treats. Maintain lean body condition.",
     "exercise_notes": "Moderate daily walks with plenty of sniffing time. They're not athletes but need regular movement to stay healthy and manage weight. Scent games provide mental stimulation.",
     "grooming_notes": "Weekly brushing. Ear cleaning is critical \u2014 those long ears trap moisture and bacteria. Check and clean ears 2-3 times weekly. Wipe facial wrinkles. Regular nail trims.",
-    "popularity_rank": 37
+    "popularity_rank": 37,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 0.9,
+        "femaleWeightLbs": 0.9
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 2.7,
+        "femaleWeightLbs": 2.7
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 5.9,
+        "femaleWeightLbs": 5.9
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 10.6,
+        "femaleWeightLbs": 10.6
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 16.3,
+        "femaleWeightLbs": 16.3
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 22.3,
+        "femaleWeightLbs": 22.3
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 28.1,
+        "femaleWeightLbs": 28.1
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 33.3,
+        "femaleWeightLbs": 33.3
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 37.7,
+        "femaleWeightLbs": 37.7
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 41.4,
+        "femaleWeightLbs": 41.4
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 44.3,
+        "femaleWeightLbs": 44.3
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 46.6,
+        "femaleWeightLbs": 46.6
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 48.3,
+        "femaleWeightLbs": 48.3
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 49.6,
+        "femaleWeightLbs": 49.6
+      },
+      {
+        "weekNumber": 56,
+        "maleWeightLbs": 50.6,
+        "femaleWeightLbs": 50.6
+      },
+      {
+        "weekNumber": 60,
+        "maleWeightLbs": 51.4,
+        "femaleWeightLbs": 51.4
+      },
+      {
+        "weekNumber": 64,
+        "maleWeightLbs": 52.0,
+        "femaleWeightLbs": 52.0
+      },
+      {
+        "weekNumber": 68,
+        "maleWeightLbs": 52.4,
+        "femaleWeightLbs": 52.4
+      },
+      {
+        "weekNumber": 72,
+        "maleWeightLbs": 52.5,
+        "femaleWeightLbs": 52.5
+      }
+    ]
   },
   {
     "id": "breed-038",
@@ -6632,7 +9831,104 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 38,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 1.1,
+        "femaleWeightLbs": 0.9
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 3.2,
+        "femaleWeightLbs": 2.6
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 7.4,
+        "femaleWeightLbs": 5.7
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 13.4,
+        "femaleWeightLbs": 10.2
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 20.9,
+        "femaleWeightLbs": 15.5
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 29.0,
+        "femaleWeightLbs": 21.3
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 36.8,
+        "femaleWeightLbs": 26.8
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 43.9,
+        "femaleWeightLbs": 31.7
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 49.9,
+        "femaleWeightLbs": 36.0
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 54.9,
+        "femaleWeightLbs": 39.4
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 58.9,
+        "femaleWeightLbs": 42.2
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 62.0,
+        "femaleWeightLbs": 44.4
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 64.3,
+        "femaleWeightLbs": 46.0
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 66.1,
+        "femaleWeightLbs": 47.3
+      },
+      {
+        "weekNumber": 56,
+        "maleWeightLbs": 67.5,
+        "femaleWeightLbs": 48.2
+      },
+      {
+        "weekNumber": 60,
+        "maleWeightLbs": 68.5,
+        "femaleWeightLbs": 48.9
+      },
+      {
+        "weekNumber": 64,
+        "maleWeightLbs": 69.3,
+        "femaleWeightLbs": 49.5
+      },
+      {
+        "weekNumber": 68,
+        "maleWeightLbs": 69.8,
+        "femaleWeightLbs": 49.9
+      },
+      {
+        "weekNumber": 72,
+        "maleWeightLbs": 70.0,
+        "femaleWeightLbs": 50.0
+      }
+    ]
   },
   {
     "id": "breed-039",
@@ -6809,7 +10105,99 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 39,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 1.0,
+        "femaleWeightLbs": 1.0
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 3.4,
+        "femaleWeightLbs": 3.0
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 7.8,
+        "femaleWeightLbs": 6.9
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 14.4,
+        "femaleWeightLbs": 12.6
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 22.3,
+        "femaleWeightLbs": 19.3
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 30.6,
+        "femaleWeightLbs": 26.3
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 38.4,
+        "femaleWeightLbs": 32.9
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 45.2,
+        "femaleWeightLbs": 38.7
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 50.9,
+        "femaleWeightLbs": 43.5
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 55.4,
+        "femaleWeightLbs": 47.3
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 58.9,
+        "femaleWeightLbs": 50.2
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 61.5,
+        "femaleWeightLbs": 52.4
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 63.5,
+        "femaleWeightLbs": 54.1
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 64.9,
+        "femaleWeightLbs": 55.3
+      },
+      {
+        "weekNumber": 56,
+        "maleWeightLbs": 66.0,
+        "femaleWeightLbs": 56.2
+      },
+      {
+        "weekNumber": 60,
+        "maleWeightLbs": 66.8,
+        "femaleWeightLbs": 56.9
+      },
+      {
+        "weekNumber": 64,
+        "maleWeightLbs": 67.4,
+        "femaleWeightLbs": 57.4
+      },
+      {
+        "weekNumber": 68,
+        "maleWeightLbs": 67.5,
+        "femaleWeightLbs": 57.5
+      }
+    ]
   },
   {
     "id": "breed-040",
@@ -6982,7 +10370,144 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 40,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 1.6,
+        "femaleWeightLbs": 1.5
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 3.8,
+        "femaleWeightLbs": 3.3
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 7.5,
+        "femaleWeightLbs": 6.4
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 13.0,
+        "femaleWeightLbs": 10.9
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 20.4,
+        "femaleWeightLbs": 16.8
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 29.4,
+        "femaleWeightLbs": 23.9
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 39.6,
+        "femaleWeightLbs": 31.9
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 50.3,
+        "femaleWeightLbs": 40.4
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 61.2,
+        "femaleWeightLbs": 48.9
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 71.7,
+        "femaleWeightLbs": 57.1
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 81.6,
+        "femaleWeightLbs": 64.8
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 90.7,
+        "femaleWeightLbs": 71.8
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 98.7,
+        "femaleWeightLbs": 78.0
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 105.8,
+        "femaleWeightLbs": 83.5
+      },
+      {
+        "weekNumber": 56,
+        "maleWeightLbs": 111.9,
+        "femaleWeightLbs": 88.2
+      },
+      {
+        "weekNumber": 60,
+        "maleWeightLbs": 117.2,
+        "femaleWeightLbs": 92.3
+      },
+      {
+        "weekNumber": 64,
+        "maleWeightLbs": 121.6,
+        "femaleWeightLbs": 95.7
+      },
+      {
+        "weekNumber": 68,
+        "maleWeightLbs": 125.3,
+        "femaleWeightLbs": 98.6
+      },
+      {
+        "weekNumber": 72,
+        "maleWeightLbs": 128.4,
+        "femaleWeightLbs": 101.0
+      },
+      {
+        "weekNumber": 76,
+        "maleWeightLbs": 131.0,
+        "femaleWeightLbs": 103.0
+      },
+      {
+        "weekNumber": 80,
+        "maleWeightLbs": 133.1,
+        "femaleWeightLbs": 104.7
+      },
+      {
+        "weekNumber": 84,
+        "maleWeightLbs": 134.9,
+        "femaleWeightLbs": 106.0
+      },
+      {
+        "weekNumber": 88,
+        "maleWeightLbs": 136.4,
+        "femaleWeightLbs": 107.2
+      },
+      {
+        "weekNumber": 92,
+        "maleWeightLbs": 137.5,
+        "femaleWeightLbs": 108.1
+      },
+      {
+        "weekNumber": 96,
+        "maleWeightLbs": 138.5,
+        "femaleWeightLbs": 108.8
+      },
+      {
+        "weekNumber": 100,
+        "maleWeightLbs": 139.3,
+        "femaleWeightLbs": 109.5
+      },
+      {
+        "weekNumber": 104,
+        "maleWeightLbs": 140.0,
+        "femaleWeightLbs": 110.0
+      }
+    ]
   },
   {
     "id": "breed-041",
@@ -7152,7 +10677,94 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 41,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 1.2,
+        "femaleWeightLbs": 1.1
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 4.3,
+        "femaleWeightLbs": 3.8
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 10.7,
+        "femaleWeightLbs": 9.2
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 20.1,
+        "femaleWeightLbs": 17.0
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 31.3,
+        "femaleWeightLbs": 26.4
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 42.8,
+        "femaleWeightLbs": 35.8
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 53.3,
+        "femaleWeightLbs": 44.4
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 62.1,
+        "femaleWeightLbs": 51.7
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 69.2,
+        "femaleWeightLbs": 57.5
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 74.7,
+        "femaleWeightLbs": 62.0
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 78.7,
+        "femaleWeightLbs": 65.3
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 81.7,
+        "femaleWeightLbs": 67.8
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 83.9,
+        "femaleWeightLbs": 69.5
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 85.5,
+        "femaleWeightLbs": 70.8
+      },
+      {
+        "weekNumber": 56,
+        "maleWeightLbs": 86.6,
+        "femaleWeightLbs": 71.7
+      },
+      {
+        "weekNumber": 60,
+        "maleWeightLbs": 87.4,
+        "femaleWeightLbs": 72.4
+      },
+      {
+        "weekNumber": 64,
+        "maleWeightLbs": 87.5,
+        "femaleWeightLbs": 72.5
+      }
+    ]
   },
   {
     "id": "breed-042",
@@ -7316,7 +10928,79 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 42,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 0.5,
+        "femaleWeightLbs": 0.5
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 1.6,
+        "femaleWeightLbs": 1.6
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 3.6,
+        "femaleWeightLbs": 3.6
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 6.1,
+        "femaleWeightLbs": 6.1
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 8.7,
+        "femaleWeightLbs": 8.7
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 11.0,
+        "femaleWeightLbs": 11.0
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 12.9,
+        "femaleWeightLbs": 12.9
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 14.3,
+        "femaleWeightLbs": 14.3
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 15.4,
+        "femaleWeightLbs": 15.4
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 16.2,
+        "femaleWeightLbs": 16.2
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 16.7,
+        "femaleWeightLbs": 16.7
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 17.1,
+        "femaleWeightLbs": 17.1
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 17.3,
+        "femaleWeightLbs": 17.3
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 17.5,
+        "femaleWeightLbs": 17.5
+      }
+    ]
   },
   {
     "id": "breed-043",
@@ -7484,7 +11168,79 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 43,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 0.6,
+        "femaleWeightLbs": 0.5
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 2.1,
+        "femaleWeightLbs": 1.7
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 4.7,
+        "femaleWeightLbs": 3.8
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 8.1,
+        "femaleWeightLbs": 6.4
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 11.6,
+        "femaleWeightLbs": 9.1
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 14.9,
+        "femaleWeightLbs": 11.6
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 17.5,
+        "femaleWeightLbs": 13.6
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 19.6,
+        "femaleWeightLbs": 15.1
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 21.1,
+        "femaleWeightLbs": 16.3
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 22.1,
+        "femaleWeightLbs": 17.1
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 22.9,
+        "femaleWeightLbs": 17.7
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 23.4,
+        "femaleWeightLbs": 18.0
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 23.8,
+        "femaleWeightLbs": 18.3
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 24.0,
+        "femaleWeightLbs": 18.5
+      }
+    ]
   },
   {
     "id": "breed-044",
@@ -7651,7 +11407,114 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 44,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 1.3,
+        "femaleWeightLbs": 1.2
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 3.7,
+        "femaleWeightLbs": 3.5
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 8.3,
+        "femaleWeightLbs": 7.6
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 15.2,
+        "femaleWeightLbs": 13.8
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 24.0,
+        "femaleWeightLbs": 21.8
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 34.0,
+        "femaleWeightLbs": 30.8
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 44.3,
+        "femaleWeightLbs": 40.1
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 54.2,
+        "femaleWeightLbs": 49.0
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 63.1,
+        "femaleWeightLbs": 57.0
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 70.9,
+        "femaleWeightLbs": 63.9
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 77.4,
+        "femaleWeightLbs": 69.7
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 82.7,
+        "femaleWeightLbs": 74.5
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 87.0,
+        "femaleWeightLbs": 78.3
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 90.4,
+        "femaleWeightLbs": 81.4
+      },
+      {
+        "weekNumber": 56,
+        "maleWeightLbs": 93.1,
+        "femaleWeightLbs": 83.8
+      },
+      {
+        "weekNumber": 60,
+        "maleWeightLbs": 95.1,
+        "femaleWeightLbs": 85.6
+      },
+      {
+        "weekNumber": 64,
+        "maleWeightLbs": 96.8,
+        "femaleWeightLbs": 87.1
+      },
+      {
+        "weekNumber": 68,
+        "maleWeightLbs": 98.0,
+        "femaleWeightLbs": 88.2
+      },
+      {
+        "weekNumber": 72,
+        "maleWeightLbs": 98.9,
+        "femaleWeightLbs": 89.1
+      },
+      {
+        "weekNumber": 76,
+        "maleWeightLbs": 99.7,
+        "femaleWeightLbs": 89.7
+      },
+      {
+        "weekNumber": 80,
+        "maleWeightLbs": 100.0,
+        "femaleWeightLbs": 90.0
+      }
+    ]
   },
   {
     "id": "breed-045",
@@ -7819,7 +11682,114 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 45,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 1.4,
+        "femaleWeightLbs": 1.2
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 4.1,
+        "femaleWeightLbs": 3.3
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 9.3,
+        "femaleWeightLbs": 7.3
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 17.1,
+        "femaleWeightLbs": 13.2
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 27.2,
+        "femaleWeightLbs": 20.8
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 38.7,
+        "femaleWeightLbs": 29.3
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 50.6,
+        "femaleWeightLbs": 38.0
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 62.0,
+        "femaleWeightLbs": 46.3
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 72.3,
+        "femaleWeightLbs": 53.9
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 81.3,
+        "femaleWeightLbs": 60.4
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 88.8,
+        "femaleWeightLbs": 65.9
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 95.0,
+        "femaleWeightLbs": 70.4
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 100.0,
+        "femaleWeightLbs": 74.0
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 103.9,
+        "femaleWeightLbs": 76.9
+      },
+      {
+        "weekNumber": 56,
+        "maleWeightLbs": 107.0,
+        "femaleWeightLbs": 79.1
+      },
+      {
+        "weekNumber": 60,
+        "maleWeightLbs": 109.4,
+        "femaleWeightLbs": 80.9
+      },
+      {
+        "weekNumber": 64,
+        "maleWeightLbs": 111.3,
+        "femaleWeightLbs": 82.2
+      },
+      {
+        "weekNumber": 68,
+        "maleWeightLbs": 112.7,
+        "femaleWeightLbs": 83.3
+      },
+      {
+        "weekNumber": 72,
+        "maleWeightLbs": 113.8,
+        "femaleWeightLbs": 84.1
+      },
+      {
+        "weekNumber": 76,
+        "maleWeightLbs": 114.6,
+        "femaleWeightLbs": 84.7
+      },
+      {
+        "weekNumber": 80,
+        "maleWeightLbs": 115.0,
+        "femaleWeightLbs": 85.0
+      }
+    ]
   },
   {
     "id": "breed-046",
@@ -7991,7 +11961,94 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 46,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 0.9,
+        "femaleWeightLbs": 0.8
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 3.0,
+        "femaleWeightLbs": 2.6
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 7.0,
+        "femaleWeightLbs": 6.0
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 12.6,
+        "femaleWeightLbs": 10.7
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 19.2,
+        "femaleWeightLbs": 16.2
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 25.7,
+        "femaleWeightLbs": 21.6
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 31.7,
+        "femaleWeightLbs": 26.5
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 36.7,
+        "femaleWeightLbs": 30.7
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 40.6,
+        "femaleWeightLbs": 34.0
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 43.7,
+        "femaleWeightLbs": 36.5
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 46.0,
+        "femaleWeightLbs": 38.4
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 47.7,
+        "femaleWeightLbs": 39.8
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 48.9,
+        "femaleWeightLbs": 40.8
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 49.8,
+        "femaleWeightLbs": 41.5
+      },
+      {
+        "weekNumber": 56,
+        "maleWeightLbs": 50.5,
+        "femaleWeightLbs": 42.1
+      },
+      {
+        "weekNumber": 60,
+        "maleWeightLbs": 50.9,
+        "femaleWeightLbs": 42.4
+      },
+      {
+        "weekNumber": 64,
+        "maleWeightLbs": 51.0,
+        "femaleWeightLbs": 42.5
+      }
+    ]
   },
   {
     "id": "breed-047",
@@ -8162,7 +12219,104 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 47,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 1.1,
+        "femaleWeightLbs": 1.0
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 3.3,
+        "femaleWeightLbs": 3.0
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 7.6,
+        "femaleWeightLbs": 6.7
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 13.9,
+        "femaleWeightLbs": 12.2
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 21.6,
+        "femaleWeightLbs": 18.9
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 30.0,
+        "femaleWeightLbs": 26.1
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 38.1,
+        "femaleWeightLbs": 33.1
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 45.4,
+        "femaleWeightLbs": 39.3
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 51.7,
+        "femaleWeightLbs": 44.7
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 56.8,
+        "femaleWeightLbs": 49.1
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 61.0,
+        "femaleWeightLbs": 52.6
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 64.2,
+        "femaleWeightLbs": 55.4
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 66.6,
+        "femaleWeightLbs": 57.5
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 68.5,
+        "femaleWeightLbs": 59.1
+      },
+      {
+        "weekNumber": 56,
+        "maleWeightLbs": 69.9,
+        "femaleWeightLbs": 60.3
+      },
+      {
+        "weekNumber": 60,
+        "maleWeightLbs": 71.0,
+        "femaleWeightLbs": 61.2
+      },
+      {
+        "weekNumber": 64,
+        "maleWeightLbs": 71.7,
+        "femaleWeightLbs": 61.8
+      },
+      {
+        "weekNumber": 68,
+        "maleWeightLbs": 72.3,
+        "femaleWeightLbs": 62.3
+      },
+      {
+        "weekNumber": 72,
+        "maleWeightLbs": 72.5,
+        "femaleWeightLbs": 62.5
+      }
+    ]
   },
   {
     "id": "breed-048",
@@ -8331,7 +12485,104 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 48,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 1.0,
+        "femaleWeightLbs": 0.9
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 2.8,
+        "femaleWeightLbs": 2.8
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 6.3,
+        "femaleWeightLbs": 6.1
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 11.4,
+        "femaleWeightLbs": 11.0
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 17.6,
+        "femaleWeightLbs": 16.9
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 24.2,
+        "femaleWeightLbs": 23.2
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 30.6,
+        "femaleWeightLbs": 29.3
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 36.3,
+        "femaleWeightLbs": 34.8
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 41.2,
+        "femaleWeightLbs": 39.5
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 45.2,
+        "femaleWeightLbs": 43.3
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 48.5,
+        "femaleWeightLbs": 46.4
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 51.0,
+        "femaleWeightLbs": 48.8
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 52.9,
+        "femaleWeightLbs": 50.6
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 54.4,
+        "femaleWeightLbs": 52.0
+      },
+      {
+        "weekNumber": 56,
+        "maleWeightLbs": 55.5,
+        "femaleWeightLbs": 53.0
+      },
+      {
+        "weekNumber": 60,
+        "maleWeightLbs": 56.3,
+        "femaleWeightLbs": 53.8
+      },
+      {
+        "weekNumber": 64,
+        "maleWeightLbs": 56.9,
+        "femaleWeightLbs": 54.4
+      },
+      {
+        "weekNumber": 68,
+        "maleWeightLbs": 57.4,
+        "femaleWeightLbs": 54.9
+      },
+      {
+        "weekNumber": 72,
+        "maleWeightLbs": 57.5,
+        "femaleWeightLbs": 55.0
+      }
+    ]
   },
   {
     "id": "breed-049",
@@ -8501,7 +12752,104 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 49,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 0.9,
+        "femaleWeightLbs": 0.8
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 2.8,
+        "femaleWeightLbs": 2.3
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 6.2,
+        "femaleWeightLbs": 5.0
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 11.0,
+        "femaleWeightLbs": 8.8
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 16.9,
+        "femaleWeightLbs": 13.4
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 23.2,
+        "femaleWeightLbs": 18.3
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 29.3,
+        "femaleWeightLbs": 22.9
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 34.8,
+        "femaleWeightLbs": 27.1
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 39.5,
+        "femaleWeightLbs": 30.7
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 43.3,
+        "femaleWeightLbs": 33.6
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 46.4,
+        "femaleWeightLbs": 35.9
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 48.8,
+        "femaleWeightLbs": 37.7
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 50.6,
+        "femaleWeightLbs": 39.1
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 52.0,
+        "femaleWeightLbs": 40.2
+      },
+      {
+        "weekNumber": 56,
+        "maleWeightLbs": 53.1,
+        "femaleWeightLbs": 41.0
+      },
+      {
+        "weekNumber": 60,
+        "maleWeightLbs": 53.8,
+        "femaleWeightLbs": 41.6
+      },
+      {
+        "weekNumber": 64,
+        "maleWeightLbs": 54.4,
+        "femaleWeightLbs": 42.1
+      },
+      {
+        "weekNumber": 68,
+        "maleWeightLbs": 54.9,
+        "femaleWeightLbs": 42.4
+      },
+      {
+        "weekNumber": 72,
+        "maleWeightLbs": 55.0,
+        "femaleWeightLbs": 42.5
+      }
+    ]
   },
   {
     "id": "breed-050",
@@ -8670,7 +13018,94 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": 50,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 0.8,
+        "femaleWeightLbs": 0.8
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 2.6,
+        "femaleWeightLbs": 2.5
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 6.0,
+        "femaleWeightLbs": 5.7
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 10.7,
+        "femaleWeightLbs": 10.2
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 16.2,
+        "femaleWeightLbs": 15.3
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 21.6,
+        "femaleWeightLbs": 20.4
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 26.5,
+        "femaleWeightLbs": 25.0
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 30.7,
+        "femaleWeightLbs": 28.9
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 34.0,
+        "femaleWeightLbs": 32.0
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 36.5,
+        "femaleWeightLbs": 34.4
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 38.4,
+        "femaleWeightLbs": 36.1
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 39.8,
+        "femaleWeightLbs": 37.4
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 40.8,
+        "femaleWeightLbs": 38.4
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 41.5,
+        "femaleWeightLbs": 39.1
+      },
+      {
+        "weekNumber": 56,
+        "maleWeightLbs": 42.1,
+        "femaleWeightLbs": 39.6
+      },
+      {
+        "weekNumber": 60,
+        "maleWeightLbs": 42.4,
+        "femaleWeightLbs": 39.9
+      },
+      {
+        "weekNumber": 64,
+        "maleWeightLbs": 42.5,
+        "femaleWeightLbs": 40.0
+      }
+    ]
   },
   {
     "id": "breed-051",
@@ -8838,6 +13273,78 @@
     "hero_image_url": null,
     "gallery_urls": [],
     "popularity_rank": null,
-    "active": true
+    "active": true,
+    "growth_curve": [
+      {
+        "weekNumber": 0,
+        "maleWeightLbs": 0.9,
+        "femaleWeightLbs": 0.8
+      },
+      {
+        "weekNumber": 4,
+        "maleWeightLbs": 3.5,
+        "femaleWeightLbs": 3.1
+      },
+      {
+        "weekNumber": 8,
+        "maleWeightLbs": 8.5,
+        "femaleWeightLbs": 7.5
+      },
+      {
+        "weekNumber": 12,
+        "maleWeightLbs": 15.5,
+        "femaleWeightLbs": 13.4
+      },
+      {
+        "weekNumber": 16,
+        "maleWeightLbs": 23.1,
+        "femaleWeightLbs": 19.9
+      },
+      {
+        "weekNumber": 20,
+        "maleWeightLbs": 30.2,
+        "femaleWeightLbs": 25.8
+      },
+      {
+        "weekNumber": 24,
+        "maleWeightLbs": 36.0,
+        "femaleWeightLbs": 30.7
+      },
+      {
+        "weekNumber": 28,
+        "maleWeightLbs": 40.4,
+        "femaleWeightLbs": 34.4
+      },
+      {
+        "weekNumber": 32,
+        "maleWeightLbs": 43.7,
+        "femaleWeightLbs": 37.2
+      },
+      {
+        "weekNumber": 36,
+        "maleWeightLbs": 46.0,
+        "femaleWeightLbs": 39.1
+      },
+      {
+        "weekNumber": 40,
+        "maleWeightLbs": 47.6,
+        "femaleWeightLbs": 40.5
+      },
+      {
+        "weekNumber": 44,
+        "maleWeightLbs": 48.7,
+        "femaleWeightLbs": 41.4
+      },
+      {
+        "weekNumber": 48,
+        "maleWeightLbs": 49.5,
+        "femaleWeightLbs": 42.1
+      },
+      {
+        "weekNumber": 52,
+        "maleWeightLbs": 50.0,
+        "femaleWeightLbs": 42.5
+      }
+    ]
   }
 ]

@@ -12,5 +12,6 @@ export { Badge } from "./Badge";
 export { ProgressBar } from "./ProgressBar";
 export { Input } from "./Input";
 export { Skeleton, CardSkeleton } from "./Skeleton";
+export { HomeSkeleton, ChatSkeleton, PlanSkeleton, HealthSkeleton, ProfileSkeleton } from "./skeletons";
 export { PremiumGate } from "./PremiumGate";
 export { ErrorBoundary } from "./ErrorBoundary";
