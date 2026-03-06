@@ -35,7 +35,13 @@ export default function VetVisitsScreen() {
       router.replace({ pathname: "/paywall", params: { trigger: "feature_gate_health", source: "health_vet_visits" } });
     }
   }, [isPremium]);
-  const dog = useDogStore((s) => s.activeDog());
+  // Individual selectors → stable refs, prevents render loops
+  const activeDogId = useDogStore((s) => s.activeDogId);
+  const dogs = useDogStore((s) => s.dogs);
+  const dog = useMemo(
+    () => dogs.find((d) => d.id === activeDogId) ?? null,
+    [dogs, activeDogId]
+  );
   const plan = useTrainingStore((s) => s.plan);
   const dogName = dog?.name ?? plan?.dogName ?? "Your Pup";
   const dogId = dog?.id ?? plan?.dogName ?? "default-dog";

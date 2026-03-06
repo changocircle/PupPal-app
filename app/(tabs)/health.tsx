@@ -41,7 +41,13 @@ export default function HealthScreen() {
 function HealthScreenContent() {
   const router = useRouter();
   const { isPremium } = useSubscription();
-  const dog = useDogStore((s) => s.activeDog());
+  // Individual selectors → stable refs, prevents render loops
+  const activeDogId = useDogStore((s) => s.activeDogId);
+  const dogs = useDogStore((s) => s.dogs);
+  const dog = useMemo(
+    () => dogs.find((d) => d.id === activeDogId) ?? null,
+    [dogs, activeDogId]
+  );
   const plan = useTrainingStore((s) => s.plan);
   const onboardingData = useOnboardingStore((s) => s.data);
   const dogName = dog?.name ?? plan?.dogName ?? (onboardingData.puppyName || "Your Pup");
