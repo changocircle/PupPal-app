@@ -94,6 +94,9 @@ interface DogState {
 
   /** Save current dog's per-dog state (call before app close or switch) */
   saveCurrentDogState: () => Promise<void>;
+
+  /** Reset all dog data and per-dog AsyncStorage (call on sign-out) */
+  resetDogs: () => void;
 }
 
 export const useDogStore = create<DogState>()(
@@ -249,6 +252,15 @@ export const useDogStore = create<DogState>()(
         if (activeDogId) {
           await savePerDogData(activeDogId);
         }
+      },
+
+      resetDogs: () => {
+        const { dogs } = get();
+        // Clean up per-dog AsyncStorage data in the background
+        for (const dog of dogs) {
+          deletePerDogData(dog.id).catch(() => {});
+        }
+        set({ dogs: [], activeDogId: null, isSwitching: false });
       },
     }),
     {

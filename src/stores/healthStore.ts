@@ -197,6 +197,9 @@ interface HealthState {
   resolveHealthNote: (id: string) => void;
   deleteHealthNote: (id: string) => void;
 
+  /** Reset all health data (call on sign-out) */
+  resetHealth: () => void;
+
   // Selectors
   getVaccinationsForDog: (dogId: string) => ScheduledVaccination[];
   getUpcomingEvents: (
@@ -546,6 +549,22 @@ export const useHealthStore = create<HealthState>()(
         set((state) => ({
           healthNotes: state.healthNotes.filter((n) => n.id !== id),
         }));
+      },
+
+      resetHealth: () => {
+        set({
+          vaccinations: [],
+          vaccinationsInitialized: false,
+          medications: [],
+          medicationEvents: [],
+          weightEntries: [],
+          preferredWeightUnit: "lbs",
+          vetVisits: [],
+          vetContacts: [],
+          userMilestones: [],
+          milestonesInitialized: false,
+          healthNotes: [],
+        });
       },
 
       // ═══════════════════════════════════════════

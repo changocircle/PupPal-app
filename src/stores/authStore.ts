@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import type { User } from "@/types/database";
+import { resetAllStores } from "@/lib/resetStores";
 
 interface AuthState {
   /** Currently authenticated user (null = not logged in) */
@@ -28,5 +29,8 @@ export const useAuthStore = create<AuthState>((set) => ({
     }),
   setLoading: (isLoading) => set({ isLoading }),
   setOnboardingCompleted: (completed) => set({ hasCompletedOnboarding: completed }),
-  signOut: () => set({ user: null, hasCompletedOnboarding: false }),
+  signOut: () => {
+    resetAllStores();
+    set({ user: null, hasCompletedOnboarding: false });
+  },
 }));

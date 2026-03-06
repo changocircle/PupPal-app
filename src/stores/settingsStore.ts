@@ -36,6 +36,9 @@ interface SettingsState {
   setTrainingReminderTime: (time: string) => void;
   setHealthRemindersEnabled: (enabled: boolean) => void;
   setDailyTipEnabled: (enabled: boolean) => void;
+
+  /** Reset all settings to defaults (call on sign-out) */
+  resetSettings: () => void;
 }
 
 export const useSettingsStore = create<SettingsState>()(
@@ -67,6 +70,21 @@ export const useSettingsStore = create<SettingsState>()(
       setHealthRemindersEnabled: (enabled) =>
         set({ healthRemindersEnabled: enabled }),
       setDailyTipEnabled: (enabled) => set({ dailyTipEnabled: enabled }),
+
+      resetSettings: () => {
+        set({
+          userName: "",
+          userEmail: "",
+          userAvatar: null,
+          weightUnit: "lbs",
+          temperatureUnit: "F" as const,
+          notificationsEnabled: true,
+          trainingReminderEnabled: true,
+          trainingReminderTime: "09:00",
+          healthRemindersEnabled: true,
+          dailyTipEnabled: true,
+        });
+      },
     }),
     {
       name: "puppal-settings",
