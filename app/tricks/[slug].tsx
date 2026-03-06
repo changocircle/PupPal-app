@@ -25,7 +25,15 @@ import { Button } from '@/components/ui';
 export default function PackDetailScreen() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const router = useRouter();
-  const dog = useDogStore((s) => s.activeDog());
+
+  // Individual selectors → stable refs, prevents render loops
+  const activeDogId = useDogStore((s) => s.activeDogId);
+  const dogs = useDogStore((s) => s.dogs);
+  const dog = useMemo(
+    () => dogs.find((d) => d.id === activeDogId) ?? null,
+    [dogs, activeDogId]
+  );
+
   const plan = useTrainingStore((s) => s.plan);
   const { isPremium } = useSubscription();
 
@@ -41,8 +49,17 @@ export default function PackDetailScreen() {
   }, [pack]);
 
   const trickProgress = useTrickStore((s) => s.trickProgress);
-  const packProgress = useTrickStore((s) =>
-    pack ? s.getPackProgress(pack.id) : { packId: '', unlocked: false, unlockedAt: null, tricksCompleted: 0, tricksMastered: 0 }
+  const packProgressMap = useTrickStore((s) => s.packProgress);
+  const packProgress = useMemo(
+    () =>
+      (pack && packProgressMap[pack.id]) ?? {
+        packId: '',
+        unlocked: false,
+        unlockedAt: null,
+        tricksCompleted: 0,
+        tricksMastered: 0,
+      },
+    [pack, packProgressMap]
   );
 
   const getStars = (tp: TrickProgress | undefined): string => {

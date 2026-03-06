@@ -88,24 +88,23 @@ export function Button({
       onPressOut={() => {
         scale.value = withTiming(1, { duration: 100 });
       }}
-      className={`
-        ${sizeStyle.container}
-        ${fullWidth ? "w-full" : ""}
-        flex-row items-center justify-center gap-sm
-        ${isDisabled ? "opacity-50" : ""}
-        ${className ?? ""}
-      `}
+      className={[
+        sizeStyle.container,
+        fullWidth ? "w-full" : "",
+        "flex-row items-center justify-center gap-sm",
+        isDisabled ? "opacity-50" : "",
+        className ?? "",
+      ].filter(Boolean).join(" ")}
       {...props}
     >
-      {({ pressed }) => (
+      {({ pressed }: { pressed: boolean }) => (
         <Animated.View
           style={animatedStyle}
-          className={`
-            flex-1 flex-row items-center justify-center gap-sm
-            rounded-sm
-            ${sizeStyle.container}
-            ${pressed ? variantStyle.pressed : variantStyle.base}
-          `}
+          className={[
+            "flex-1 flex-row items-center justify-center gap-sm rounded-sm",
+            sizeStyle.container,
+            pressed ? variantStyle.pressed : variantStyle.base,
+          ].join(" ")}
         >
           {isLoading ? (
             <ActivityIndicator
@@ -114,7 +113,7 @@ export function Button({
             />
           ) : (
             <>
-              {leftIcon}
+              {leftIcon ?? null}
               <Typography
                 variant={size === "sm" ? "body-sm-medium" : "body-medium"}
                 color={variant === "primary" ? "inverse" : variant === "ghost" ? "accent" : "primary"}
@@ -122,7 +121,7 @@ export function Button({
               >
                 {label}
               </Typography>
-              {rightIcon}
+              {rightIcon ?? null}
             </>
           )}
         </Animated.View>
