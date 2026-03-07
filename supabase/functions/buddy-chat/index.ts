@@ -17,8 +17,15 @@
 import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
 
 const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY") ?? "";
-const MODEL = "claude-sonnet-4-6-20250514";
-const DEFAULT_MAX_TOKENS = 1024;
+const MODEL = "claude-sonnet-4-6";
+const DEFAULT_MAX_TOKENS = 500;
+
+// Server-side word limit prepended to every system prompt.
+// This enforces brevity even if the client prompt is verbose.
+const WORD_LIMIT_PREFIX =
+  "HARD LIMIT: Maximum 80 words per response. Count them. " +
+  "If you need to say more, ask a follow-up question instead. " +
+  "This is a mobile chat, not an email.\n\n";
 const ANTHROPIC_VERSION = "2023-06-01";
 
 // ── CORS headers (allow Expo/React Native clients) ──
@@ -158,9 +165,12 @@ serve(async (req: Request) => {
     // ── Sanitize messages (Anthropic requires alternating user/assistant) ──
     const sanitizedMessages = sanitizeMessages(messages);
 
+    // Prepend server-side word limit to system prompt
+    const finalSystemPrompt = WORD_LIMIT_PREFIX + systemPrompt;
+
     console.log(
       `[buddy-chat] Request: ${sanitizedMessages.length} messages, ` +
-        `system prompt ~${Math.ceil(systemPrompt.length / 4)} tokens, ` +
+        `system prompt ~${Math.ceil(finalSystemPrompt.length / 4)} tokens, ` +
         `max_tokens=${maxTokens}`,
     );
 
@@ -177,7 +187,7 @@ serve(async (req: Request) => {
         body: JSON.stringify({
           model: MODEL,
           max_tokens: maxTokens,
-          system: systemPrompt,
+          system: finalSystemPrompt,
           messages: sanitizedMessages,
         }),
       },

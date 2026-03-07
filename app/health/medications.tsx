@@ -9,8 +9,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { useRouter } from "expo-router";
-import { useSubscription } from "@/hooks/useSubscription";
-import { Typography, Card, Button, Badge } from "@/components/ui";
+import { Typography, Card, Button } from "@/components/ui";
 import { MedicationCard } from "@/components/health";
 import { useHealthStore } from "@/stores/healthStore";
 import { useDogStore } from "@/stores/dogStore";
@@ -28,9 +27,7 @@ import {
 
 export default function MedicationsScreen() {
   const router = useRouter();
-  const { isPremium } = useSubscription();
 
-  // PRD-07: Gate premium content (inline, no redirect, prevents render loops)
   // Individual selectors → stable refs, prevents render loops
   const activeDogId = useDogStore((s) => s.activeDogId);
   const dogs = useDogStore((s) => s.dogs);
