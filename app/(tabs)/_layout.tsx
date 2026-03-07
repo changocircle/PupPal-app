@@ -3,6 +3,7 @@ import { Tabs } from "expo-router";
 import { View } from "react-native";
 import { Typography } from "@/components/ui";
 import { COLORS } from "@/constants/theme";
+import { useDogSync } from "@/hooks/useDogSync";
 
 /**
  * Main Tab Navigation Layout
@@ -21,6 +22,9 @@ function TabIcon({ emoji, focused }: { emoji: string; focused: boolean }) {
 }
 
 export default function TabLayout() {
+  // Initialize dog profile sync (runs when user is authenticated)
+  useDogSync();
+
   return (
     <Tabs
       screenOptions={{

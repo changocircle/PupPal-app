@@ -1,76 +1,65 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/services/supabase";
+/**
+ * Dog data hooks.
+ *
+ * Local-first: all reads come from the Zustand store (instant).
+ * Sync happens in the background via useDogSync.
+ *
+ * useDogs() - reactive dog list + sync status
+ * useCreateDog() - create a dog locally (sync pushes it)
+ * useUpdateDog() - update a dog locally (sync pushes it)
+ */
+
 import { useDogStore } from "@/stores/dogStore";
 import { useAuthStore } from "@/stores/authStore";
-import type { Dog, InsertDog, UpdateDog } from "@/types/database";
+import type { Dog, UpdateDog } from "@/types/database";
 
 /**
- * Dog data hook, all dog CRUD via TanStack Query.
- * Per TECH-STACK.md: server state through TanStack Query,
- * client state (active selection) through Zustand.
+ * Reactive dog list with sync status.
+ * Replaces the old TanStack Query-based fetch with local-first reads.
  */
 export function useDogs() {
-  const user = useAuthStore((s) => s.user);
-  const { setDogs } = useDogStore();
+  const dogs = useDogStore((s) => s.dogs);
+  const activeDogId = useDogStore((s) => s.activeDogId);
+  const syncMeta = useDogStore((s) => s._syncMeta);
 
-  return useQuery({
-    queryKey: ["dogs", user?.id],
-    queryFn: async () => {
-      if (!user) return [];
-      const { data, error } = await supabase
-        .from("dogs")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: true });
-
-      if (error) throw error;
-      const dogs = (data ?? []) as Dog[];
-      setDogs(dogs);
-      return dogs;
-    },
-    enabled: !!user,
-  });
+  return {
+    dogs,
+    activeDogId,
+    syncStatus: syncMeta.status,
+    lastSyncedAt: syncMeta.lastSyncedAt,
+    pendingCount: syncMeta.pendingCount,
+    isLoading: syncMeta.status === "syncing",
+  };
 }
 
+/**
+ * Create a new dog. Writes to local store immediately.
+ * The sync layer detects the addition and pushes to Supabase.
+ */
 export function useCreateDog() {
-  const queryClient = useQueryClient();
+  const addDog = useDogStore((s) => s.addDog);
+  const user = useAuthStore((s) => s.user);
 
-  return useMutation({
-    mutationFn: async (dog: InsertDog) => {
-      const { data, error } = await supabase
-        .from("dogs")
-        .insert(dog)
-        .select()
-        .single();
-
-      if (error) throw error;
-      return data as Dog;
+  return {
+    mutate: (dog: Omit<Dog, "user_id"> & { user_id?: string }) => {
+      addDog({
+        ...dog,
+        user_id: user?.id ?? "local",
+      } as Dog);
     },
-    onSuccess: (newDog) => {
-      queryClient.invalidateQueries({ queryKey: ["dogs"] });
-      useDogStore.getState().addDog(newDog);
-    },
-  });
+  };
 }
 
+/**
+ * Update an existing dog. Writes to local store immediately.
+ * The sync layer detects the change and pushes to Supabase.
+ */
 export function useUpdateDog() {
-  const queryClient = useQueryClient();
+  const updateDog = useDogStore((s) => s.updateDog);
 
-  return useMutation({
-    mutationFn: async ({ id, updates }: { id: string; updates: UpdateDog }) => {
-      const { data, error } = await supabase
-        .from("dogs")
-        .update(updates)
-        .eq("id", id)
-        .select()
-        .single();
-
-      if (error) throw error;
-      return data as Dog;
+  return {
+    mutate: ({ id, updates }: { id: string; updates: UpdateDog }) => {
+      updateDog(id, updates);
     },
-    onSuccess: (updatedDog) => {
-      queryClient.invalidateQueries({ queryKey: ["dogs"] });
-      useDogStore.getState().updateDog(updatedDog.id, updatedDog);
-    },
-  });
+  };
 }

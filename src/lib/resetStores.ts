@@ -3,6 +3,7 @@
  *
  * Resets every Zustand store that uses AsyncStorage persistence,
  * clearing both in-memory state and the persisted copies.
+ * Also clears sync data (pending ops, synced IDs, last sync time).
  */
 
 import { useChatStore } from "@/stores/chatStore";
@@ -15,10 +16,14 @@ import { useReferralStore } from "@/stores/referralStore";
 import { useSettingsStore } from "@/stores/settingsStore";
 import { useTrainingStore } from "@/stores/trainingStore";
 import { useTrickStore } from "@/stores/trickStore";
+import { clearSyncData } from "@/services/dogSync";
 
 export function resetAllStores(): void {
   // Reset dog store first, it also cleans up per-dog AsyncStorage keys
   useDogStore.getState().resetDogs();
+
+  // Clear sync data (pending ops, synced IDs, timestamps)
+  clearSyncData().catch(() => {});
 
   // Reset every other persisted store
   useChatStore.getState().clearConversation();
