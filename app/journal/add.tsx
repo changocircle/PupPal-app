@@ -7,6 +7,7 @@ import {
   Alert,
   Image,
   Platform,
+  KeyboardAvoidingView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
@@ -200,6 +201,10 @@ export default function AddEntryScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-background">
+      <KeyboardAvoidingView
+        className="flex-1"
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
       <ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
@@ -388,6 +393,7 @@ export default function AddEntryScreen() {
           />
         </Animated.View>
       </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

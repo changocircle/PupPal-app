@@ -5,12 +5,14 @@ import {
   Pressable,
   TextInput,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { useRouter } from "expo-router";
 import { Typography, Card, Button } from "@/components/ui";
-import { MedicationCard } from "@/components/health";
+import { MedicationCard, ReminderPicker, scheduleReminder, type ReminderOption } from "@/components/health";
 import { useHealthStore } from "@/stores/healthStore";
 import { useDogStore } from "@/stores/dogStore";
 import { useTrainingStore } from "@/stores/trainingStore";
@@ -56,6 +58,7 @@ export default function MedicationsScreen() {
   const [frequency, setFrequency] =
     useState<MedicationFrequency>("monthly");
   const [notes, setNotes] = useState("");
+  const [reminder, setReminder] = useState<ReminderOption>("none");
 
   const activeMeds = useMemo(
     () => medications.filter((m) => m.active),
@@ -80,12 +83,32 @@ export default function MedicationsScreen() {
       startDate: new Date().toISOString().split("T")[0]!,
       notes: notes.trim() || undefined,
     });
+    // Schedule reminder if selected and frequency provides a next-due
+    if (reminder !== "none") {
+      const nextDue = new Date();
+      switch (frequency) {
+        case "daily": nextDue.setDate(nextDue.getDate() + 1); break;
+        case "weekly": nextDue.setDate(nextDue.getDate() + 7); break;
+        case "biweekly": nextDue.setDate(nextDue.getDate() + 14); break;
+        case "monthly": nextDue.setMonth(nextDue.getMonth() + 1); break;
+        case "quarterly": nextDue.setMonth(nextDue.getMonth() + 3); break;
+        default: break;
+      }
+      scheduleReminder({
+        title: `💊 ${name.trim()} due`,
+        body: `Time for ${dogName}'s ${name.trim()}`,
+        dueDate: nextDue,
+        reminderOption: reminder,
+      }).catch(() => {}); // Best effort
+    }
+
     setName("");
     setDosage("");
     setNotes("");
+    setReminder("none");
     setShowForm(false);
-    Alert.alert("Added!", `${name.trim()} added to ${dogName}'s medications.`);
-  }, [name, category, dosage, frequency, notes, dogId, dogName, addMedication]);
+    Alert.alert("Added!", `${name.trim()} added to ${dogName}'s medications.${reminder !== "none" ? " Reminder set! 🔔" : ""}`);
+  }, [name, category, dosage, frequency, notes, reminder, dogId, dogName, addMedication]);
 
   const handleLogDose = useCallback(
     (med: Medication) => {
@@ -128,10 +151,15 @@ export default function MedicationsScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-background">
+      <KeyboardAvoidingView
+        className="flex-1"
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
       <ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 100 }}
+        keyboardShouldPersistTaps="handled"
       >
         {/* Header */}
         <Pressable
@@ -147,19 +175,22 @@ export default function MedicationsScreen() {
           entering={FadeInDown.duration(400)}
           className="px-xl mb-lg"
         >
-          <View className="flex-row items-center justify-between">
-            <View>
+          <View className="flex-row items-center justify-between gap-sm">
+            <View className="flex-1 flex-shrink">
               <Typography variant="h1">💊 Medications</Typography>
-              <Typography variant="body" color="secondary">
+              <Typography variant="body" color="secondary" numberOfLines={1}>
                 {dogName}'s medication tracker
               </Typography>
             </View>
-            <Button
-              label="+ Add"
-              variant="primary"
-              size="sm"
-              onPress={() => setShowForm(true)}
-            />
+            <View className="flex-shrink-0">
+              <Button
+                label="+ Add"
+                variant="primary"
+                size="sm"
+                fullWidth={false}
+                onPress={() => setShowForm(true)}
+              />
+            </View>
           </View>
         </Animated.View>
 
@@ -254,6 +285,13 @@ export default function MedicationsScreen() {
                   ))}
                 </View>
               </ScrollView>
+
+              {/* Reminder */}
+              <ReminderPicker
+                selected={reminder}
+                onSelect={setReminder}
+                label="Set Reminder"
+              />
 
               {/* Notes */}
               <TextInput
@@ -353,6 +391,7 @@ export default function MedicationsScreen() {
           </Animated.View>
         )}
       </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

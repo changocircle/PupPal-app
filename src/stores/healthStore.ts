@@ -650,20 +650,24 @@ export const useHealthStore = create<HealthState>()(
           daysUntil: number;
         }[] = [];
 
-        // Vaccinations
-        for (const vax of get().vaccinations) {
-          if (vax.dogId !== dogId) continue;
-          if (vax.status === "completed" || vax.status === "skipped") continue;
-          const daysUntil = Math.round(
-            (new Date(vax.dueDate).getTime() - todayMs) / 86_400_000
-          );
-          events.push({
-            type: "vaccination",
-            icon: "💉",
-            title: vax.vaccineName,
-            dueDate: vax.dueDate,
-            daysUntil,
-          });
+        // Vaccinations (only show when setup is complete)
+        const setupDone = get().vaccinationSetupComplete;
+        if (setupDone) {
+          for (const vax of get().vaccinations) {
+            if (vax.dogId !== dogId) continue;
+            if (vax.status === "completed" || vax.status === "skipped") continue;
+            if (vax.status === "not_logged") continue;
+            const daysUntil = Math.round(
+              (new Date(vax.dueDate).getTime() - todayMs) / 86_400_000
+            );
+            events.push({
+              type: "vaccination",
+              icon: "💉",
+              title: vax.vaccineName,
+              dueDate: vax.dueDate,
+              daysUntil,
+            });
+          }
         }
 
         // Medications due

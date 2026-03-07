@@ -6,12 +6,15 @@ import {
   TextInput,
   Alert,
   Switch,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { useRouter } from "expo-router";
 import { useSubscription } from "@/hooks/useSubscription";
 import { Typography, Card, Button, Badge } from "@/components/ui";
+import { ReminderPicker, scheduleReminder, type ReminderOption } from "@/components/health";
 import { useHealthStore } from "@/stores/healthStore";
 import { useDogStore } from "@/stores/dogStore";
 import { useTrainingStore } from "@/stores/trainingStore";
@@ -61,6 +64,7 @@ export default function VetVisitsScreen() {
   const [cost, setCost] = useState("");
   const [notes, setNotes] = useState("");
   const [followUp, setFollowUp] = useState(false);
+  const [reminder, setReminder] = useState<ReminderOption>("none");
 
   const VISIT_TYPES = Object.entries(VISIT_TYPE_META) as [
     VisitType,
@@ -77,6 +81,7 @@ export default function VetVisitsScreen() {
     setCost("");
     setNotes("");
     setFollowUp(false);
+    setReminder("none");
     setShowForm(false);
   };
 
@@ -98,8 +103,20 @@ export default function VetVisitsScreen() {
       notes: notes.trim() || undefined,
       followUpNeeded: followUp,
     });
+    // Schedule follow-up reminder if enabled
+    if (followUp && reminder !== "none") {
+      const followUpDate = new Date();
+      followUpDate.setDate(followUpDate.getDate() + 30); // Default 30 days out
+      scheduleReminder({
+        title: "🏥 Vet Follow-up Reminder",
+        body: `${dogName}'s follow-up for ${reason.trim()}`,
+        dueDate: followUpDate,
+        reminderOption: reminder,
+      }).catch(() => {}); // Best effort
+    }
+
     resetForm();
-    Alert.alert("Logged! 🏥", `Vet visit recorded. +5 XP 🎉`);
+    Alert.alert("Logged! 🏥", `Vet visit recorded.${followUp && reminder !== "none" ? " Follow-up reminder set! 🔔" : ""} +5 XP 🎉`);
   }, [
     visitType,
     reason,
@@ -110,16 +127,23 @@ export default function VetVisitsScreen() {
     cost,
     notes,
     followUp,
+    reminder,
     dogId,
+    dogName,
     addVetVisit,
   ]);
 
   return (
     <SafeAreaView className="flex-1 bg-background">
+      <KeyboardAvoidingView
+        className="flex-1"
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
       <ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 100 }}
+        keyboardShouldPersistTaps="handled"
       >
         {/* Header */}
         <Pressable
@@ -135,19 +159,22 @@ export default function VetVisitsScreen() {
           entering={FadeInDown.duration(400)}
           className="px-xl mb-lg"
         >
-          <View className="flex-row items-center justify-between">
-            <View>
+          <View className="flex-row items-center justify-between gap-sm">
+            <View className="flex-1 flex-shrink">
               <Typography variant="h1">🏥 Vet Visits</Typography>
-              <Typography variant="body" color="secondary">
+              <Typography variant="body" color="secondary" numberOfLines={1}>
                 {dogName}'s veterinary history
               </Typography>
             </View>
-            <Button
-              label="+ Log Visit"
-              variant="primary"
-              size="sm"
-              onPress={() => setShowForm(true)}
-            />
+            <View className="flex-shrink-0">
+              <Button
+                label="+ Log Visit"
+                variant="primary"
+                size="sm"
+                fullWidth={false}
+                onPress={() => setShowForm(true)}
+              />
+            </View>
           </View>
         </Animated.View>
 
@@ -297,6 +324,15 @@ export default function VetVisitsScreen() {
                 />
               </View>
 
+              {/* Reminder (shown when follow-up is on) */}
+              {followUp && (
+                <ReminderPicker
+                  selected={reminder}
+                  onSelect={setReminder}
+                  label="Follow-up Reminder"
+                />
+              )}
+
               {/* Notes */}
               <TextInput
                 value={notes}
@@ -417,6 +453,7 @@ export default function VetVisitsScreen() {
           )}
         </Animated.View>
       </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

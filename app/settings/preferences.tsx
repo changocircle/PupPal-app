@@ -4,8 +4,16 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { useRouter } from "expo-router";
 import { Typography, Card } from "@/components/ui";
-import { useSettingsStore } from "@/stores/settingsStore";
+import { useSettingsStore, type AppLanguage } from "@/stores/settingsStore";
 import { useHealthStore } from "@/stores/healthStore";
+
+const LANGUAGES: { key: AppLanguage; label: string; flag: string }[] = [
+  { key: "en", label: "English", flag: "🇬🇧" },
+  { key: "es", label: "Español", flag: "🇪🇸" },
+  { key: "fr", label: "Français", flag: "🇫🇷" },
+  { key: "de", label: "Deutsch", flag: "🇩🇪" },
+  { key: "pt", label: "Português", flag: "🇧🇷" },
+];
 
 /**
  * Preferences Screen, PRD-14 §5
@@ -30,6 +38,8 @@ export default function PreferencesScreen() {
     setTrainingReminderEnabled,
     setHealthRemindersEnabled,
     setDailyTipEnabled,
+    language,
+    setLanguage,
   } = useSettingsStore();
 
   const setHealthUnit = useHealthStore((s) => s.setPreferredWeightUnit);
@@ -152,9 +162,48 @@ export default function PreferencesScreen() {
           </Card>
         </Animated.View>
 
+        {/* ── Language ── */}
+        <Animated.View
+          entering={FadeInDown.duration(400).delay(90)}
+          className="px-xl mb-lg"
+        >
+          <Typography
+            variant="body-sm-medium"
+            color="secondary"
+            className="mb-sm uppercase tracking-wide"
+          >
+            Language
+          </Typography>
+
+          <Card>
+            {LANGUAGES.map((lang, index) => (
+              <Pressable
+                key={lang.key}
+                onPress={() => setLanguage(lang.key)}
+                className={`flex-row items-center justify-between py-md ${
+                  index < LANGUAGES.length - 1 ? "border-b border-border" : ""
+                }`}
+              >
+                <View className="flex-row items-center gap-sm">
+                  <Typography className="text-[20px]">{lang.flag}</Typography>
+                  <Typography variant="body-medium">{lang.label}</Typography>
+                </View>
+                {language === lang.key && (
+                  <Typography variant="body-medium" style={{ color: "#FF6B5C" }}>
+                    ✓
+                  </Typography>
+                )}
+              </Pressable>
+            ))}
+          </Card>
+          <Typography variant="caption" color="tertiary" className="mt-xs px-sm">
+            More languages coming soon!
+          </Typography>
+        </Animated.View>
+
         {/* ── Notifications ── */}
         <Animated.View
-          entering={FadeInDown.duration(400).delay(120)}
+          entering={FadeInDown.duration(400).delay(150)}
           className="px-xl mb-lg"
         >
           <Typography

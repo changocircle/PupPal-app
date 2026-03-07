@@ -424,10 +424,10 @@ export default function PhotoScreen() {
                 </Typography>
                 <Pressable
                   onPress={showSelectorSection}
-                  className="mt-base bg-surface border border-border rounded-sm px-lg py-sm"
+                  className="mt-base bg-surface border border-border rounded-md px-xl py-md"
                 >
-                  <Typography variant="body-sm" color="accent" className="text-center">
-                    Actually, they're a...
+                  <Typography variant="body-sm-medium" color="accent" className="text-center">
+                    Change breed
                   </Typography>
                 </Pressable>
               </Animated.View>
@@ -450,7 +450,7 @@ export default function PhotoScreen() {
                   </View>
                   <View className="flex-1">
                     <Button
-                      label="Actually, they're a..."
+                      label="Change breed"
                       variant="secondary"
                       size="sm"
                       onPress={showSelectorSection}
