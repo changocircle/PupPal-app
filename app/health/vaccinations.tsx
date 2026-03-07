@@ -33,6 +33,7 @@ export default function VaccinationsScreen() {
 
   // Stable: select raw data + memoize filter
   const vaccinationEntries = useHealthStore((s) => s.vaccinations);
+  const vaccinationSetupComplete = useHealthStore((s) => s.vaccinationSetupComplete);
   const vaccinations = useMemo(
     () => vaccinationEntries.filter((v) => v.dogId === dogId),
     [vaccinationEntries, dogId]
@@ -49,6 +50,7 @@ export default function VaccinationsScreen() {
           v.status === "upcoming" ||
           v.status === "due_soon" ||
           v.status === "overdue" ||
+          v.status === "not_logged" ||
           v.status === "unknown"
       );
     if (filter === "completed")
@@ -62,7 +64,11 @@ export default function VaccinationsScreen() {
     const completed = vaccinations.filter(
       (v) => v.status === "completed"
     ).length;
-    const total = vaccinations.length;
+    // Don't count not_logged or skipped in remaining total
+    const actionable = vaccinations.filter(
+      (v) => v.status !== "not_logged" && v.status !== "skipped"
+    ).length;
+    const total = actionable;
     const overdue = vaccinations.filter(
       (v) => v.status === "overdue"
     ).length;
@@ -123,9 +129,40 @@ export default function VaccinationsScreen() {
           </Typography>
         </Animated.View>
 
+        {/* Setup banner (if not yet completed) */}
+        {!vaccinationSetupComplete && (
+          <Animated.View
+            entering={FadeInDown.duration(400).delay(60)}
+            className="px-xl mb-lg"
+          >
+            <Pressable onPress={() => router.push("/health/vaccination-setup")}>
+              <Card
+                style={{
+                  borderWidth: 2,
+                  borderColor: "#FF6B5C",
+                  borderStyle: "dashed",
+                }}
+              >
+                <View className="flex-row items-center gap-md">
+                  <Typography className="text-[28px]">🐾</Typography>
+                  <View className="flex-1">
+                    <Typography variant="body-medium">
+                      Set up {dogName}'s records
+                    </Typography>
+                    <Typography variant="caption" color="secondary">
+                      Upload vet records or enter vaccines manually to unlock full tracking.
+                    </Typography>
+                  </View>
+                  <Typography style={{ color: "#FF6B5C" }}>→</Typography>
+                </View>
+              </Card>
+            </Pressable>
+          </Animated.View>
+        )}
+
         {/* Stats */}
         <Animated.View
-          entering={FadeInDown.duration(400).delay(60)}
+          entering={FadeInDown.duration(400).delay(vaccinationSetupComplete ? 60 : 120)}
           className="px-xl mb-lg"
         >
           <View className="flex-row gap-md">

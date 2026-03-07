@@ -57,6 +57,7 @@ function HealthScreenContent() {
 
   // Health store - individual selectors for reactivity
   const vaccinationsInitialized = useHealthStore((s) => s.vaccinationsInitialized);
+  const vaccinationSetupComplete = useHealthStore((s) => s.vaccinationSetupComplete);
   const milestonesInitialized = useHealthStore((s) => s.milestonesInitialized);
   const initVaccinations = useHealthStore((s) => s.initVaccinations);
   const initMilestones = useHealthStore((s) => s.initMilestones);
@@ -138,7 +139,7 @@ function HealthScreenContent() {
     up_to_date: "Up to date",
     due_soon: "Due soon",
     overdue: "Overdue!",
-    not_set_up: "Not set up",
+    not_set_up: "Set up needed",
   };
 
   // Handlers
@@ -235,11 +236,15 @@ function HealthScreenContent() {
             <QuickAction
               icon="💉"
               label="Vaccinations"
-              onPress={() =>
-                isPremium
-                  ? router.push("/health/vaccinations")
-                  : router.push({ pathname: "/paywall", params: { trigger: "feature_gate_health", source: "health_vaccinations" } })
-              }
+              onPress={() => {
+                if (!isPremium) {
+                  router.push({ pathname: "/paywall", params: { trigger: "feature_gate_health", source: "health_vaccinations" } });
+                } else if (!vaccinationSetupComplete) {
+                  router.push("/health/vaccination-setup");
+                } else {
+                  router.push("/health/vaccinations");
+                }
+              }}
               locked={!isPremium}
             />
             <QuickAction
