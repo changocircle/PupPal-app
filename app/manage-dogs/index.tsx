@@ -16,6 +16,7 @@ import { DogAvatar } from "@/components/dog/DogAvatar";
 import { useDogStore } from "@/stores/dogStore";
 import { useSubscription } from "@/hooks/useSubscription";
 import { COLORS, RADIUS } from "@/constants/theme";
+import { getDogAge } from "@/lib/dogAge";
 
 export default function ManageDogsScreen() {
   const router = useRouter();
@@ -68,11 +69,9 @@ export default function ManageDogsScreen() {
   }, [isPremium, router]);
 
   const formatAge = (dog: any) => {
-    if (dog.age_months == null) return null;
-    if (dog.age_months < 12) return `${dog.age_months} months`;
-    const years = Math.floor(dog.age_months / 12);
-    const months = dog.age_months % 12;
-    return months > 0 ? `${years}y ${months}m` : `${years} year${years > 1 ? "s" : ""}`;
+    const age = getDogAge(dog.date_of_birth, dog.age_months_at_creation, dog.created_at);
+    if (!age) return null;
+    return age.estimated ? `~${age.label}` : age.label;
   };
 
   return (

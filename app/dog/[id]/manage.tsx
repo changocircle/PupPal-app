@@ -17,6 +17,7 @@ import DateTimePicker, {
   type DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
 import { loadDogPhotos, saveDogPhotos } from '@/lib/dogPhotos';
+import { getDogAge } from '@/lib/dogAge';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
@@ -600,6 +601,44 @@ export default function DogManageScreen() {
         {/* Info card */}
         <Animated.View entering={FadeInDown.duration(300).delay(200)}>
           <Card style={{ marginBottom: 24 }}>
+            {/* Age — dynamic from DOB or estimated */}
+            {(() => {
+              const age = getDogAge(
+                dog.date_of_birth ?? (dateOfBirth ? dateOfBirth.toISOString().split('T')[0] : null),
+                dog.age_months_at_creation,
+                dog.created_at,
+              );
+              if (!age) return null;
+              return (
+                <View style={{ marginBottom: 8 }}>
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <Typography variant="caption" color="secondary">
+                      Age
+                    </Typography>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                      <Typography variant="caption">
+                        {age.label}
+                      </Typography>
+                      {age.estimated && (
+                        <Typography variant="caption" color="tertiary" style={{ fontSize: 11 }}>
+                          (estimated)
+                        </Typography>
+                      )}
+                    </View>
+                  </View>
+                  {age.estimated && !dog.date_of_birth && (
+                    <Pressable onPress={() => setShowDatePicker(true)}>
+                      <Typography
+                        variant="caption"
+                        style={{ color: COLORS.primary.DEFAULT, marginTop: 2, fontSize: 11 }}
+                      >
+                        Set date of birth for exact age →
+                      </Typography>
+                    </Pressable>
+                  )}
+                </View>
+              );
+            })()}
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 }}>
               <Typography variant="caption" color="secondary">
                 Added
@@ -608,16 +647,6 @@ export default function DogManageScreen() {
                 {new Date(dog.created_at).toLocaleDateString()}
               </Typography>
             </View>
-            {dog.age_months_at_creation && (
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 }}>
-                <Typography variant="caption" color="secondary">
-                  Age at signup
-                </Typography>
-                <Typography variant="caption">
-                  {dog.age_months_at_creation} months
-                </Typography>
-              </View>
-            )}
             {dog.challenges.length > 0 && (
               <View>
                 <Typography variant="caption" color="secondary" style={{ marginBottom: 4 }}>
