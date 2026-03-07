@@ -1,22 +1,18 @@
 /**
- * AI Provider Abstraction, PRD-02 §10
+ * AI Provider — PRD-02 §10
  *
- * Provider-agnostic interface for AI chat.
- * Kimi K2.5 is primary (OpenAI-compatible API).
- * Architecture allows swapping providers by changing config.
+ * Routes chat requests through the buddy-chat Supabase Edge Function,
+ * which proxies to Claude Sonnet 4.6 server-side. API keys never
+ * leave the server.
  *
- * For development: calls Kimi API directly from client.
- * For production: swap to Supabase Edge Function endpoint.
+ * Architecture:
+ *   Client → Supabase Edge Function (buddy-chat) → Anthropic Claude
+ *
+ * When EXPO_PUBLIC_SUPABASE_URL + EXPO_PUBLIC_SUPABASE_ANON_KEY are set,
+ * calls the Edge Function. Otherwise falls back to mock responses.
  */
 
-// ── Provider Interface ──
-export interface AIProviderConfig {
-  apiKey: string;
-  baseUrl: string;
-  model: string;
-  maxTokens?: number;
-  temperature?: number;
-}
+// ── Types ──
 
 export interface AIMessage {
   role: "system" | "user" | "assistant";
@@ -24,48 +20,47 @@ export interface AIMessage {
 }
 
 export interface AIStreamCallbacks {
-  onToken: (token: string) => void;
+  onToken: (fullText: string) => void;
   onDone: (fullText: string) => void;
   onError: (error: Error) => void;
 }
 
-// ── Default provider config (Kimi K2.5 / Moonshot) ──
-function getProviderConfig(): AIProviderConfig | null {
-  const apiKey = process.env.EXPO_PUBLIC_KIMI_API_KEY ?? "";
-  const baseUrl =
-    process.env.EXPO_PUBLIC_KIMI_BASE_URL ??
-    "https://api.moonshot.ai/v1";
-  const model = process.env.EXPO_PUBLIC_KIMI_MODEL ?? "kimi-k2.5";
+// ── Provider config ──
 
-  if (!apiKey) return null;
+interface ProviderConfig {
+  endpoint: string;
+  anonKey: string;
+}
+
+function getProviderConfig(): ProviderConfig | null {
+  const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL ?? "";
+  const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? "";
+
+  if (!supabaseUrl || !supabaseAnonKey) return null;
 
   return {
-    apiKey,
-    baseUrl,
-    model,
-    maxTokens: 500,
-    temperature: 1, // Kimi K2.5 only accepts temperature=1
+    endpoint: `${supabaseUrl}/functions/v1/buddy-chat`,
+    anonKey: supabaseAnonKey,
   };
 }
 
 /**
- * Check if a real AI provider is configured.
+ * Check if the AI provider (Edge Function) is configured.
  */
 export function isAIProviderAvailable(): boolean {
   return getProviderConfig() !== null;
 }
 
 /**
- * Stream a chat completion from the AI provider.
+ * Send a chat completion request through the Edge Function.
  *
- * Uses OpenAI-compatible API (works with Kimi, OpenAI, Anthropic-via-proxy, etc.)
- * Streams response token-by-token via SSE.
- * Falls back to non-streaming if SSE parsing fails.
+ * The Edge Function calls Claude server-side and returns the full response.
+ * We simulate word-by-word streaming client-side for a natural typing feel.
  */
 export async function streamChatCompletion(
   systemPrompt: string,
   messages: AIMessage[],
-  callbacks: AIStreamCallbacks
+  callbacks: AIStreamCallbacks,
 ): Promise<void> {
   const config = getProviderConfig();
   if (!config) {
@@ -73,182 +68,121 @@ export async function streamChatCompletion(
     return;
   }
 
-  const allMessages: AIMessage[] = [
-    { role: "system", content: systemPrompt },
-    ...messages,
-  ];
+  // Strip system messages from the messages array (system prompt is sent separately)
+  const chatMessages = messages.filter(
+    (m) => m.role === "user" || m.role === "assistant",
+  );
 
-  console.log("[AI] Provider:", config.baseUrl, "Model:", config.model);
-  console.log("[AI] Messages count:", allMessages.length);
+  console.log("[AI] Calling buddy-chat Edge Function");
+  console.log("[AI] Messages:", chatMessages.length);
+  console.log(
+    "[AI] System prompt length:",
+    systemPrompt.length,
+    "chars (~" + Math.ceil(systemPrompt.length / 4) + " tokens)",
+  );
+
+  // Log message roles for debugging
+  console.log(
+    "[AI] Message roles:",
+    chatMessages.map((m) => m.role).join(", "),
+  );
 
   try {
-    // Skip SSE on React Native, ReadableStream is unreliable or hangs
-    const hasReadableStream =
-      typeof ReadableStream !== "undefined" &&
-      typeof globalThis.document !== "undefined"; // Web only
+    // 30-second timeout
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30_000);
 
-    if (hasReadableStream) {
-      console.log("[AI] Using SSE streaming");
-      // Race streaming against a 15s timeout to prevent hanging
-      const timeoutPromise = new Promise<never>((_, reject) =>
-        setTimeout(() => reject(new Error("SSE streaming timeout")), 15000)
+    const response = await fetch(config.endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${config.anonKey}`,
+        apikey: config.anonKey,
+      },
+      body: JSON.stringify({
+        systemPrompt,
+        messages: chatMessages.map((m) => ({
+          role: m.role,
+          content: m.content,
+        })),
+        maxTokens: 1024,
+      }),
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeout);
+
+    console.log("[AI] Response status:", response.status);
+
+    if (!response.ok) {
+      const errorBody = await response.text().catch(() => "");
+      console.error("[AI] Edge Function error:", response.status, errorBody);
+
+      // Parse structured error if available
+      try {
+        const errorJson = JSON.parse(errorBody);
+        if (errorJson.error) {
+          throw new Error(errorJson.error);
+        }
+      } catch (parseErr) {
+        if (parseErr instanceof Error && parseErr.message !== errorBody) {
+          throw parseErr;
+        }
+      }
+
+      throw new Error(
+        `Chat request failed (${response.status}): ${errorBody.slice(0, 200)}`,
       );
-      await Promise.race([
-        streamWithSSE(config, allMessages, callbacks),
-        timeoutPromise,
-      ]);
-    } else {
-      console.log("[AI] Using non-streaming fallback (React Native)");
-      await nonStreamingFallback(config, allMessages, callbacks);
     }
+
+    const data = await response.json();
+
+    console.log("[AI] Response content length:", data.content?.length ?? 0);
+    console.log(
+      "[AI] Token usage:",
+      data.usage?.input_tokens,
+      "in /",
+      data.usage?.output_tokens,
+      "out",
+    );
+    console.log("[AI] Stop reason:", data.stop_reason);
+
+    const content: string = data.content ?? "";
+
+    if (!content) {
+      console.error("[AI] Empty response from Edge Function:", JSON.stringify(data).slice(0, 300));
+      throw new Error("Empty response from AI");
+    }
+
+    // Simulate word-by-word streaming for natural typing feel
+    const words = content.split(" ");
+    let streamed = "";
+
+    for (let i = 0; i < words.length; i++) {
+      const word = words[i];
+      if (!word && word !== "") continue;
+      streamed += (i > 0 ? " " : "") + word;
+      callbacks.onToken(streamed);
+      // Natural typing cadence: slower after punctuation
+      const delay =
+        word.endsWith(".") || word.endsWith("!") || word.endsWith("?")
+          ? 60 + Math.random() * 40
+          : 15 + Math.random() * 20;
+      await new Promise((r) => setTimeout(r, delay));
+    }
+
+    callbacks.onDone(content);
   } catch (error) {
+    if (error instanceof Error && error.name === "AbortError") {
+      console.error("[AI] Request timed out after 30s");
+      callbacks.onError(new Error("Request timed out. Please try again."));
+      return;
+    }
+
     const errMsg = error instanceof Error ? error.message : String(error);
     console.error("[AI] Request failed:", errMsg);
     callbacks.onError(
-      error instanceof Error ? error : new Error("AI request failed")
+      error instanceof Error ? error : new Error("AI request failed"),
     );
   }
-}
-
-// ── SSE Streaming Implementation ──
-async function streamWithSSE(
-  config: AIProviderConfig,
-  messages: AIMessage[],
-  callbacks: AIStreamCallbacks
-): Promise<void> {
-  const url = `${config.baseUrl}/chat/completions`;
-
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${config.apiKey}`,
-    },
-    body: JSON.stringify({
-      model: config.model,
-      messages,
-      max_tokens: config.maxTokens,
-      temperature: config.temperature,
-      stream: true,
-    }),
-  });
-
-  if (!response.ok) {
-    const errorBody = await response.text();
-    throw new Error(
-      `AI API error ${response.status}: ${errorBody.slice(0, 200)}`
-    );
-  }
-
-  // Check if we can stream the response body
-  const reader = response.body?.getReader();
-  if (!reader) {
-    // No ReadableStream support, fall back
-    throw new Error("ReadableStream not available");
-  }
-
-  const decoder = new TextDecoder();
-  let fullText = "";
-  let buffer = "";
-
-  try {
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-
-      buffer += decoder.decode(value, { stream: true });
-
-      // Parse SSE events from buffer
-      const lines = buffer.split("\n");
-      // Keep the last incomplete line in buffer
-      buffer = lines.pop() ?? "";
-
-      for (const line of lines) {
-        const trimmed = line.trim();
-        if (!trimmed || trimmed === "data: [DONE]") continue;
-        if (!trimmed.startsWith("data: ")) continue;
-
-        try {
-          const json = JSON.parse(trimmed.slice(6));
-          const delta = json.choices?.[0]?.delta?.content;
-          if (delta) {
-            fullText += delta;
-            callbacks.onToken(fullText);
-          }
-        } catch {
-          // Skip malformed JSON chunks
-        }
-      }
-    }
-  } finally {
-    reader.releaseLock();
-  }
-
-  callbacks.onDone(fullText);
-}
-
-// ── Non-Streaming Fallback ──
-async function nonStreamingFallback(
-  config: AIProviderConfig,
-  messages: AIMessage[],
-  callbacks: AIStreamCallbacks
-): Promise<void> {
-  const url = `${config.baseUrl}/chat/completions`;
-
-  // 30-second timeout for non-streaming requests
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 30000);
-
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${config.apiKey}`,
-    },
-    body: JSON.stringify({
-      model: config.model,
-      messages,
-      max_tokens: config.maxTokens,
-      temperature: config.temperature,
-      stream: false,
-    }),
-    signal: controller.signal,
-  });
-
-  clearTimeout(timeout);
-
-  console.log("[AI] Non-streaming response status:", response.status);
-
-  if (!response.ok) {
-    const errorBody = await response.text();
-    console.error("[AI] API error body:", errorBody.slice(0, 300));
-    throw new Error(
-      `AI API error ${response.status}: ${errorBody.slice(0, 200)}`
-    );
-  }
-
-  const data = await response.json();
-  const content = data.choices?.[0]?.message?.content ?? "";
-
-  console.log("[AI] Response content length:", content.length);
-
-  if (!content) {
-    console.error("[AI] Empty response. Full data:", JSON.stringify(data).slice(0, 300));
-    throw new Error("Empty response from AI provider");
-  }
-
-  // Simulate word-by-word streaming for natural feel
-  const words = content.split(" ");
-  let streamed = "";
-
-  for (let i = 0; i < words.length; i++) {
-    const word = words[i];
-    if (!word && word !== "") continue;
-    streamed += (i > 0 ? " " : "") + word;
-    callbacks.onToken(streamed);
-    // Small delay for natural rendering
-    await new Promise((r) => setTimeout(r, 20 + Math.random() * 25));
-  }
-
-  callbacks.onDone(content);
 }

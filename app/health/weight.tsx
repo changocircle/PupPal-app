@@ -53,6 +53,7 @@ export default function WeightScreen() {
   const [showForm, setShowForm] = useState(false);
   const [weightInput, setWeightInput] = useState("");
   const [unit, setUnit] = useState<WeightUnit>(preferredUnit);
+  const [dateInput, setDateInput] = useState(""); // YYYY-MM-DD, empty = today
   const [notesInput, setNotesInput] = useState("");
 
   const currentAgeWeeks = useMemo(() => {
@@ -61,11 +62,29 @@ export default function WeightScreen() {
     return ageWeeks + Math.floor((Date.now() - planDate) / (7 * 86_400_000));
   }, [ageWeeks, plan]);
 
+  // Format today's date as YYYY-MM-DD for placeholder
+  const todayStr = useMemo(() => new Date().toISOString().split("T")[0]!, []);
+
   const handleSave = useCallback(() => {
     const val = parseFloat(weightInput);
     if (isNaN(val) || val <= 0) {
       Alert.alert("Invalid Weight", "Please enter a valid weight.");
       return;
+    }
+
+    // Validate date if provided
+    let measuredAt: string | undefined;
+    if (dateInput.trim()) {
+      const parsed = new Date(dateInput.trim());
+      if (isNaN(parsed.getTime())) {
+        Alert.alert("Invalid Date", "Please use YYYY-MM-DD format (e.g. 2025-03-01).");
+        return;
+      }
+      if (parsed > new Date()) {
+        Alert.alert("Invalid Date", "Date cannot be in the future.");
+        return;
+      }
+      measuredAt = dateInput.trim();
     }
 
     addWeightEntry({
@@ -74,14 +93,16 @@ export default function WeightScreen() {
       weightUnit: unit,
       ageWeeks: currentAgeWeeks,
       notes: notesInput.trim() || undefined,
+      measuredAt,
     });
 
     setPreferredUnit(unit);
     setWeightInput("");
+    setDateInput("");
     setNotesInput("");
     setShowForm(false);
     Alert.alert("Logged! ⚖️", `${val} ${unit} recorded. +5 XP 🎉`);
-  }, [weightInput, unit, notesInput, dogId, currentAgeWeeks, addWeightEntry, setPreferredUnit]);
+  }, [weightInput, unit, dateInput, notesInput, dogId, currentAgeWeeks, addWeightEntry, setPreferredUnit]);
 
   return (
     <SafeAreaView className="flex-1 bg-background">
@@ -214,6 +235,23 @@ export default function WeightScreen() {
                     </Typography>
                   </Pressable>
                 </View>
+              </View>
+
+              {/* Date picker */}
+              <View className="mb-base">
+                <Typography variant="caption" color="secondary" className="mb-xs">
+                  Date (defaults to today)
+                </Typography>
+                <TextInput
+                  value={dateInput}
+                  onChangeText={setDateInput}
+                  placeholder={todayStr}
+                  className="bg-surface border border-border rounded-xl px-base py-md text-[14px]"
+                  style={{ fontFamily: "PlusJakartaSans-Regular" }}
+                  placeholderTextColor="#9CA3AF"
+                  keyboardType="numbers-and-punctuation"
+                  maxLength={10}
+                />
               </View>
 
               {/* Notes */}

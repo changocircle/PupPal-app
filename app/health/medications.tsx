@@ -42,8 +42,11 @@ export default function MedicationsScreen() {
   const dogName = dog?.name ?? plan?.dogName ?? "Your Pup";
   const dogId = dog?.id ?? plan?.dogName ?? "default-dog";
 
-  const medications = useHealthStore((s) =>
-    s.medications.filter((m) => m.dogId === dogId)
+  // Stable: select raw data + memoize filter (prevents render loops)
+  const medicationEntries = useHealthStore((s) => s.medications);
+  const medications = useMemo(
+    () => medicationEntries.filter((m) => m.dogId === dogId),
+    [medicationEntries, dogId]
   );
   const addMedication = useHealthStore((s) => s.addMedication);
   const logMedicationDose = useHealthStore((s) => s.logMedicationDose);
