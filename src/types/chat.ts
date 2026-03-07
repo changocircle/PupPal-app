@@ -100,8 +100,10 @@ export interface DogContext {
     exercise: string;
     result: string;
   }[];
+  /** Whether a training plan has been generated */
+  hasPlan: boolean;
   /** Today's assigned exercises from the training plan */
-  todayExercises?: { name: string; status: string }[];
+  todayExercises?: { name: string; status: string; category?: string }[];
   /** All dogs in the household (for multi-dog awareness) */
   householdDogs?: HouseholdDog[];
 }

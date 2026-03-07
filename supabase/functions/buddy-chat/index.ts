@@ -64,6 +64,8 @@ interface ChatRequest {
   systemPrompt: string;
   messages: Array<{ role: "user" | "assistant"; content: string }>;
   maxTokens?: number;
+  /** Dog name for personalising suggested follow-ups */
+  dogName?: string;
 }
 
 interface AnthropicResponse {
@@ -122,7 +124,7 @@ serve(async (req: Request) => {
   try {
     // ── Parse request ──
     const body: ChatRequest = await req.json();
-    const { systemPrompt, messages, maxTokens = DEFAULT_MAX_TOKENS } = body;
+    const { systemPrompt, messages, maxTokens = DEFAULT_MAX_TOKENS, dogName } = body;
 
     if (!systemPrompt || !messages || !Array.isArray(messages)) {
       return new Response(
@@ -278,6 +280,63 @@ serve(async (req: Request) => {
       );
     }
 
+    // ── Generate dynamic suggested prompts based on Buddy's response ──
+    let suggestedPrompts: string[] = [];
+    try {
+      const nameStr = dogName || "the dog";
+      const suggestionsRes = await fetch(
+        "https://api.anthropic.com/v1/messages",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": ANTHROPIC_API_KEY,
+            "anthropic-version": ANTHROPIC_VERSION,
+          },
+          body: JSON.stringify({
+            model: MODEL,
+            max_tokens: 200,
+            system: `Generate 3-4 short follow-up prompts (max 8 words each) that a user would naturally tap after this AI dog trainer response. The dog's name is "${nameStr}".
+
+Rules:
+- Each prompt should be a DIRECT response or natural follow-up to what the AI just said
+- If the AI asked a question, prompts should be possible answers to that question
+- If the AI gave training advice, prompts should be reactions or next steps
+- Use the dog's name naturally
+- Keep them conversational and specific, NOT generic
+- Return ONLY a JSON array of strings, nothing else
+
+Example: If AI asks "Does ${nameStr} pull on the leash, get distracted, or something else?"
+Return: ["${nameStr} pulls hard", "Gets distracted by other dogs", "Lunges at things", "A bit of everything"]`,
+            messages: [
+              {
+                role: "user",
+                content: `AI trainer's last response:\n"${content.slice(0, 500)}"`,
+              },
+            ],
+          }),
+        },
+      );
+
+      if (suggestionsRes.ok) {
+        const sugData = await suggestionsRes.json();
+        const sugText =
+          sugData.content?.find((b: { type: string }) => b.type === "text")
+            ?.text ?? "";
+        const parsed = JSON.parse(
+          sugText.match(/\[[\s\S]*\]/)?.[0] ?? "[]",
+        );
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          suggestedPrompts = parsed
+            .filter((s: unknown) => typeof s === "string")
+            .slice(0, 4);
+        }
+      }
+    } catch (sugErr) {
+      console.warn("[buddy-chat] Suggestion generation failed:", sugErr);
+      // Non-fatal: return response without suggestions
+    }
+
     // ── Return structured response ──
     return new Response(
       JSON.stringify({
@@ -285,6 +344,7 @@ serve(async (req: Request) => {
         model: data.model,
         usage: data.usage,
         stop_reason: data.stop_reason,
+        suggestedPrompts,
       }),
       {
         status: 200,

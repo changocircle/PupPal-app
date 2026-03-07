@@ -98,6 +98,20 @@ function buildDogContextBlock(ctx: DogContext): string {
           .join("\n")
       : "  No exercises scheduled";
 
+  const planStatusBlock = ctx.hasPlan
+    ? `- Training plan: ACTIVE — Week ${ctx.currentPlanWeek} of 12
+- Completed milestones: ${ctx.completedMilestones.length > 0 ? ctx.completedMilestones.join(", ") : "None yet"}
+- Good Boy Score: ${ctx.goodBoyScore}/100
+- Current streak: ${ctx.streakDays} days
+- Today's exercises:
+${todayExercisesFormatted}
+- Recent training sessions:
+${recentSessionsFormatted}`
+    : `- Training plan: NOT YET GENERATED
+  The user has not completed onboarding or no plan has been generated yet.
+  If they ask about training, encourage them to complete their profile setup so you can create a personalised plan.
+  Do NOT make up exercises or pretend a plan exists.`;
+
   let block = `The user's dog:
 - Name: ${ctx.dogName}
 - Breed: ${ctx.breed ?? "Mixed / Unknown"}
@@ -105,16 +119,13 @@ function buildDogContextBlock(ctx: DogContext): string {
 - Developmental stage: ${stage}
 - Owner's challenges: ${ctx.challenges.length > 0 ? ctx.challenges.join(", ") : "None specified"}
 - Owner experience level: ${ctx.experienceLevel}
-- Current training plan: Week ${ctx.currentPlanWeek} of 12
-- Completed milestones: ${ctx.completedMilestones.length > 0 ? ctx.completedMilestones.join(", ") : "None yet"}
-- Good Boy Score: ${ctx.goodBoyScore}/100
-- Current streak: ${ctx.streakDays} days
-- Today's exercises:
-${todayExercisesFormatted}
-- Recent training sessions:
-${recentSessionsFormatted}
+${planStatusBlock}
 
-Use this information in EVERY response. Make the user feel like you truly know their specific dog. When the user asks about today's training, reference the ACTUAL exercises listed above, not made-up ones.`;
+CRITICAL RULES:
+- Use this information in EVERY response. Make the user feel like you truly know their specific dog.
+- When the user asks about today's training, reference the ACTUAL exercises listed above by name. NEVER make up exercise names.
+- If today's exercises are listed, walk the user through them step by step when asked. Reference the exact exercise names.
+- If no exercises are scheduled or no plan exists, say so honestly. Do not invent exercises.`;
 
   // Multi-dog household context
   if (ctx.householdDogs && ctx.householdDogs.length > 1) {

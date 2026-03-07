@@ -8,12 +8,13 @@
  * When not configured → falls back to smart mock responses for development.
  */
 
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useChatStore } from "@/stores/chatStore";
 import { useTrainingStore } from "@/stores/trainingStore";
 import { useDogStore } from "@/stores/dogStore";
 import { useOnboardingStore } from "@/stores/onboardingStore";
 import { useSubscription } from "@/hooks/useSubscription";
+import { getExerciseById } from "@/data/exerciseData";
 import {
   buildSystemPrompt,
   generateSuggestedPrompts,
@@ -95,6 +96,12 @@ export function useChat(): UseChatReturn {
       isActive: d.id === activeDogId,
     }));
 
+  // Helper: resolve exercise name from exerciseId via exercise library
+  const resolveExerciseName = useCallback((exerciseId: string): string => {
+    const exercise = getExerciseById(exerciseId);
+    return exercise?.title ?? "Exercise";
+  }, []);
+
   // Build recent sessions from completion history (last 5)
   const recentSessions = useMemo(() => {
     const sorted = [...completions]
@@ -102,14 +109,14 @@ export function useChat(): UseChatReturn {
       .slice(0, 5);
 
     return sorted.map((c) => {
-      // Find exercise name from plan
+      // Find the PlanExercise to get exerciseId, then look up title from library
       let exerciseName = "Exercise";
       if (plan) {
         for (const week of plan.weeks) {
           for (const day of week.days) {
-            const ex = day.exercises.find((e) => e.id === c.planExerciseId);
-            if (ex) {
-              exerciseName = ex.name ?? ex.title ?? "Exercise";
+            const planEx = day.exercises.find((e) => e.id === c.planExerciseId);
+            if (planEx) {
+              exerciseName = resolveExerciseName(planEx.exerciseId);
               break;
             }
           }
@@ -122,7 +129,7 @@ export function useChat(): UseChatReturn {
         result: `Completed${rating}, +${c.xpEarned} XP`,
       };
     });
-  }, [completions, plan]);
+  }, [completions, plan, resolveExerciseName]);
 
   // Build completed milestones from plan weeks
   const completedMilestones = useMemo(() => {
@@ -140,14 +147,21 @@ export function useChat(): UseChatReturn {
     return milestones;
   }, [plan]);
 
-  // Build today's exercises for context
+  // Build today's exercises for context — resolve names from exercise library
   const todayExerciseNames = useMemo(() => {
     const exercises = getTodayExercises();
+    if (exercises.length === 0 && plan) {
+      console.log(
+        `[useChat] todayExercises empty. plan.currentWeek=${plan.currentWeek}, ` +
+          `plan.currentDay=${plan.currentDay}, weeks=${plan.weeks.length}`,
+      );
+    }
     return exercises.map((e) => ({
-      name: e.name ?? e.title ?? "Exercise",
+      name: resolveExerciseName(e.exerciseId),
       status: e.status,
+      category: getExerciseById(e.exerciseId)?.category ?? "basic_commands",
     }));
-  }, [getTodayExercises, plan]);
+  }, [getTodayExercises, plan, resolveExerciseName]);
 
   const dogContext: DogContext = {
     dogName,
@@ -159,6 +173,7 @@ export function useChat(): UseChatReturn {
     challenges: dog?.challenges ?? onboarding.challenges ?? [],
     experienceLevel: (dog?.owner_experience as any) ?? onboarding.ownerExperience ?? "first_time",
     currentPlanWeek: plan?.currentWeek ?? 1,
+    hasPlan: plan !== null,
     completedMilestones,
     goodBoyScore: Math.min(100, Math.round(totalXp / 5)),
     streakDays: streak,
@@ -166,6 +181,22 @@ export function useChat(): UseChatReturn {
     todayExercises: todayExerciseNames,
     householdDogs: householdDogs.length > 1 ? householdDogs : undefined,
   };
+
+  // Debug log: training context being sent to system prompt
+  console.log(
+    "[useChat] Training context:",
+    JSON.stringify({
+      hasPlan: plan !== null,
+      currentWeek: plan?.currentWeek,
+      currentDay: plan?.currentDay,
+      todayExercises: todayExerciseNames.length,
+      todayExerciseNames: todayExerciseNames.map((e) => e.name),
+      completedMilestones: completedMilestones.length,
+      recentSessions: recentSessions.length,
+      totalXp,
+      streak,
+    }),
+  );
 
   const canSend = canSendMessage(isPremium) && !isStreaming;
   const remainingMessages = getRemainingMessages(isPremium);
@@ -176,15 +207,20 @@ export function useChat(): UseChatReturn {
     ? messages.filter((m) => m.sessionId === currentSessionId)
     : [];
 
-  // Suggested prompts
+  // Suggested prompts — dynamic (from AI) preferred, static fallback
+  const [dynamicSuggestions, setDynamicSuggestions] = useState<string[]>([]);
   const isFirstSession = messages.length === 0;
-  const suggestedPrompts = generateSuggestedPrompts(
+  const staticPrompts = generateSuggestedPrompts(
     dogName,
     breed ?? undefined,
     onboarding.challenges,
     plan?.currentWeek,
     isFirstSession
   );
+  // Use dynamic suggestions if available, fall back to static
+  const suggestedPrompts = dynamicSuggestions.length > 0
+    ? dynamicSuggestions
+    : staticPrompts;
 
   // ── Send message ──
   const sendMessage = useCallback(
@@ -236,7 +272,16 @@ export function useChat(): UseChatReturn {
       try {
         if (isAIProviderAvailable()) {
           // ── Real AI Provider (Claude Sonnet 4.6 via Edge Function) ──
-          await sendToRealAI(systemPrompt, recentMsgs, assistantMsg.id);
+          const result = await sendToRealAI(
+            systemPrompt,
+            recentMsgs,
+            assistantMsg.id,
+            dogName,
+          );
+          // Update dynamic suggestions from AI response
+          if (result.suggestedPrompts.length > 0) {
+            setDynamicSuggestions(result.suggestedPrompts);
+          }
         } else {
           // ── Mock fallback ──
           await sendToMockAI(assistantMsg.id, dogName, content);
@@ -264,6 +309,7 @@ export function useChat(): UseChatReturn {
 
   const startNewSession = useCallback(() => {
     startSession(dog?.id ?? "local");
+    setDynamicSuggestions([]); // Reset to static prompts for new session
   }, [dog?.id]);
 
   const setFeedback = useCallback(
@@ -304,8 +350,9 @@ export function useChat(): UseChatReturn {
 async function sendToRealAI(
   systemPrompt: string,
   history: { role: string; content: string }[],
-  messageId: string
-): Promise<void> {
+  messageId: string,
+  dogName?: string,
+): Promise<{ suggestedPrompts: string[] }> {
   const { updateStreamingContent, finishStreaming } = useChatStore.getState();
 
   const messages: AIMessage[] = history.map((m) => ({
@@ -320,25 +367,31 @@ async function sendToRealAI(
     messages.map((m) => m.role).join(", ")
   );
 
-  return new Promise<void>((resolve, reject) => {
-    // Must handle the returned promise to catch async errors
-    streamChatCompletion(systemPrompt, messages, {
-      onToken: (fullText) => {
-        updateStreamingContent(messageId, fullText);
+  return new Promise<{ suggestedPrompts: string[] }>((resolve, reject) => {
+    streamChatCompletion(
+      systemPrompt,
+      messages,
+      {
+        onToken: (fullText) => {
+          updateStreamingContent(messageId, fullText);
+        },
+        onDone: (fullText, meta) => {
+          console.log("[Chat] AI response complete, length:", fullText.length);
+          if (meta?.suggestedPrompts?.length) {
+            console.log("[Chat] Dynamic suggestions:", meta.suggestedPrompts);
+          }
+          updateStreamingContent(messageId, fullText);
+          finishStreaming(messageId);
+          resolve({ suggestedPrompts: meta?.suggestedPrompts ?? [] });
+        },
+        onError: (error) => {
+          console.error("[Chat] AI error:", error.message);
+          finishStreaming(messageId);
+          reject(error);
+        },
       },
-      onDone: (fullText) => {
-        console.log("[Chat] AI response complete, length:", fullText.length);
-        updateStreamingContent(messageId, fullText);
-        finishStreaming(messageId);
-        resolve();
-      },
-      onError: (error) => {
-        console.error("[Chat] AI error:", error.message);
-        finishStreaming(messageId);
-        reject(error);
-      },
-    }).catch((err) => {
-      // Catch unhandled async errors from streamChatCompletion itself
+      { dogName },
+    ).catch((err) => {
       console.error("[Chat] Unhandled AI error:", err);
       finishStreaming(messageId);
       reject(err instanceof Error ? err : new Error(String(err)));

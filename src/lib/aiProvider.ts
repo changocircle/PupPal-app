@@ -21,7 +21,7 @@ export interface AIMessage {
 
 export interface AIStreamCallbacks {
   onToken: (fullText: string) => void;
-  onDone: (fullText: string) => void;
+  onDone: (fullText: string, meta?: { suggestedPrompts?: string[] }) => void;
   onError: (error: Error) => void;
 }
 
@@ -61,6 +61,7 @@ export async function streamChatCompletion(
   systemPrompt: string,
   messages: AIMessage[],
   callbacks: AIStreamCallbacks,
+  options?: { dogName?: string },
 ): Promise<void> {
   const config = getProviderConfig();
   if (!config) {
@@ -106,6 +107,7 @@ export async function streamChatCompletion(
           content: m.content,
         })),
         maxTokens: 2048,
+        dogName: options?.dogName,
       }),
       signal: controller.signal,
     });
@@ -171,7 +173,12 @@ export async function streamChatCompletion(
       await new Promise((r) => setTimeout(r, delay));
     }
 
-    callbacks.onDone(content);
+    // Pass suggested prompts from edge function response
+    const suggestedPrompts: string[] = Array.isArray(data.suggestedPrompts)
+      ? data.suggestedPrompts.filter((s: unknown) => typeof s === "string").slice(0, 4)
+      : [];
+
+    callbacks.onDone(content, { suggestedPrompts });
   } catch (error) {
     if (error instanceof Error && error.name === "AbortError") {
       console.error("[AI] Request timed out after 30s");
