@@ -23,7 +23,7 @@ Buddy is not a generic chatbot. Buddy is a dog training expert who:
 
 **Why this is the killer feature**: GoodPup charges $34/week for scheduled video calls with a trainer. In-person training is $50-$125/session. PupPal gives you an always-available mentor for $3.33/month. The value proposition is undeniable IF the chat feels genuinely helpful and personalized.
 
-**AI Provider**: Kimi K2.5 (selected for cost efficiency at scale). Architecture should allow swapping providers without changing the user experience.
+**AI Provider**: Claude Sonnet 4.6 (selected for cost efficiency at scale). Architecture should allow swapping providers without changing the user experience.
 
 ### Success Metrics
 
@@ -473,11 +473,11 @@ User sends message
   → Client sends to PupPal backend
     → Backend fetches DogContext, ConversationContext, UserContext
     → Backend constructs system prompt with dynamic context
-    → Backend sends to Kimi K2.5:
+    → Backend sends to Claude Sonnet 4.6:
         system: [full prompt with context]
         messages: [history, max 20]
         new message (text + optional image)
-    → Kimi streams response via SSE
+    → Claude streams response via SSE
     → Backend streams to client
   → Client renders streaming text
   → Client removes typing indicator
@@ -517,12 +517,12 @@ AIProvider interface {
   ) → Stream<string> | string
 }
 
-KimiProvider implements AIProvider      // primary
+ClaudeProvider implements AIProvider      // primary
 AnthropicProvider implements AIProvider // backup
 OpenAIProvider implements AIProvider    // backup
 ```
 
-**Why**: Kimi K2.5 chosen for cost. AI pricing/quality changes fast. Must swap providers in hours, not weeks. Periodically test 1% traffic through alternatives, compare quality ratings.
+**Why**: Claude Sonnet 4.6 chosen for cost. AI pricing/quality changes fast. Must swap providers in hours, not weeks. Periodically test 1% traffic through alternatives, compare quality ratings.
 
 ### Rate Limiting
 
@@ -708,12 +708,12 @@ chat_error — {error_type, retry_attempted, succeeded}
 ## 17. Open Questions
 
 1. Voice input: v1 or defer to v2?
-2. Kimi K2.5 multimodal: Does it support images? If not, separate vision model needed.
+2. Claude Sonnet 4.6 multimodal: Does it support images? If not, separate vision model needed.
 3. Summarization model: Same as chat or cheaper/faster model?
 4. Buddy avatar: Static or animated in chat?
 5. Proactive notifications: How many per day before annoying? (Start 1/day max?)
 6. Chat export: Full conversations or just individual messages?
-7. Multi-language: Kimi's non-English quality? Language-specific prompts needed?
+7. Multi-language: Claude's non-English quality? Language-specific prompts needed?
 8. Breed knowledge: Structured database injected in prompt, or rely on AI training data?
 
 ---
@@ -722,7 +722,7 @@ chat_error — {error_type, retry_attempted, succeeded}
 
 | Dependency | Purpose | Fallback |
 |------------|---------|----------|
-| Kimi K2.5 API | Primary AI | Anthropic or OpenAI |
+| Claude Sonnet 4.6 API | Primary AI | Anthropic or OpenAI |
 | SSE / WebSocket | Streaming | Non-streaming (worse UX) |
 | Image storage (S3/R2) | Photo storage | Local device only |
 | Summary generation | Cross-session memory | No cross-session memory |

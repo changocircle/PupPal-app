@@ -91,6 +91,13 @@ function buildDogContextBlock(ctx: DogContext): string {
           .join("\n")
       : "  No completed exercises yet";
 
+  const todayExercisesFormatted =
+    ctx.todayExercises && ctx.todayExercises.length > 0
+      ? ctx.todayExercises
+          .map((e) => `  - ${e.name} (${e.status})`)
+          .join("\n")
+      : "  No exercises scheduled";
+
   let block = `The user's dog:
 - Name: ${ctx.dogName}
 - Breed: ${ctx.breed ?? "Mixed / Unknown"}
@@ -102,10 +109,12 @@ function buildDogContextBlock(ctx: DogContext): string {
 - Completed milestones: ${ctx.completedMilestones.length > 0 ? ctx.completedMilestones.join(", ") : "None yet"}
 - Good Boy Score: ${ctx.goodBoyScore}/100
 - Current streak: ${ctx.streakDays} days
+- Today's exercises:
+${todayExercisesFormatted}
 - Recent training sessions:
 ${recentSessionsFormatted}
 
-Use this information in EVERY response. Make the user feel like you truly know their specific dog.`;
+Use this information in EVERY response. Make the user feel like you truly know their specific dog. When the user asks about today's training, reference the ACTUAL exercises listed above, not made-up ones.`;
 
   // Multi-dog household context
   if (ctx.householdDogs && ctx.householdDogs.length > 1) {

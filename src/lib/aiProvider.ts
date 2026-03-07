@@ -105,7 +105,7 @@ export async function streamChatCompletion(
           role: m.role,
           content: m.content,
         })),
-        maxTokens: 1024,
+        maxTokens: 2048,
       }),
       signal: controller.signal,
     });

@@ -100,6 +100,8 @@ export interface DogContext {
     exercise: string;
     result: string;
   }[];
+  /** Today's assigned exercises from the training plan */
+  todayExercises?: { name: string; status: string }[];
   /** All dogs in the household (for multi-dog awareness) */
   householdDogs?: HouseholdDog[];
 }

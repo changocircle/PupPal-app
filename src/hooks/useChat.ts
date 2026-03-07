@@ -57,6 +57,9 @@ export function useChat(): UseChatReturn {
   const onboarding = useOnboardingStore((s) => s.data);
   const plan = useTrainingStore((s) => s.plan);
   const streak = useTrainingStore((s) => s.streak);
+  const completions = useTrainingStore((s) => s.completions);
+  const totalXp = useTrainingStore((s) => s.totalXp);
+  const getTodayExercises = useTrainingStore((s) => s.getTodayExercises);
 
   const messages = useChatStore((s) => s.messages);
   const isStreaming = useChatStore((s) => s.isStreaming);
@@ -92,6 +95,60 @@ export function useChat(): UseChatReturn {
       isActive: d.id === activeDogId,
     }));
 
+  // Build recent sessions from completion history (last 5)
+  const recentSessions = useMemo(() => {
+    const sorted = [...completions]
+      .sort((a, b) => b.completedAt.localeCompare(a.completedAt))
+      .slice(0, 5);
+
+    return sorted.map((c) => {
+      // Find exercise name from plan
+      let exerciseName = "Exercise";
+      if (plan) {
+        for (const week of plan.weeks) {
+          for (const day of week.days) {
+            const ex = day.exercises.find((e) => e.id === c.planExerciseId);
+            if (ex) {
+              exerciseName = ex.name ?? ex.title ?? "Exercise";
+              break;
+            }
+          }
+        }
+      }
+      const rating = c.rating ? ` (rated ${c.rating}/5)` : "";
+      return {
+        date: c.completedAt.split("T")[0],
+        exercise: exerciseName,
+        result: `Completed${rating}, +${c.xpEarned} XP`,
+      };
+    });
+  }, [completions, plan]);
+
+  // Build completed milestones from plan weeks
+  const completedMilestones = useMemo(() => {
+    if (!plan) return [];
+    const milestones: string[] = [];
+    for (const week of plan.weeks) {
+      if (week.weekNumber >= (plan.currentWeek ?? 1)) break;
+      const allDone = week.days.every((d) =>
+        d.exercises.every((e) => e.status === "completed" || e.status === "skipped"),
+      );
+      if (allDone) {
+        milestones.push(`Week ${week.weekNumber} complete`);
+      }
+    }
+    return milestones;
+  }, [plan]);
+
+  // Build today's exercises for context
+  const todayExerciseNames = useMemo(() => {
+    const exercises = getTodayExercises();
+    return exercises.map((e) => ({
+      name: e.name ?? e.title ?? "Exercise",
+      status: e.status,
+    }));
+  }, [getTodayExercises, plan]);
+
   const dogContext: DogContext = {
     dogName,
     breed: breed ?? undefined,
@@ -102,10 +159,11 @@ export function useChat(): UseChatReturn {
     challenges: dog?.challenges ?? onboarding.challenges ?? [],
     experienceLevel: (dog?.owner_experience as any) ?? onboarding.ownerExperience ?? "first_time",
     currentPlanWeek: plan?.currentWeek ?? 1,
-    completedMilestones: [],
-    goodBoyScore: 0,
+    completedMilestones,
+    goodBoyScore: Math.min(100, Math.round(totalXp / 5)),
     streakDays: streak,
-    recentSessions: [],
+    recentSessions,
+    todayExercises: todayExerciseNames,
     householdDogs: householdDogs.length > 1 ? householdDogs : undefined,
   };
 
