@@ -18,14 +18,7 @@ import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
 
 const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY") ?? "";
 const MODEL = "claude-sonnet-4-6";
-const DEFAULT_MAX_TOKENS = 200;
-
-// Server-side word limit prepended to every system prompt.
-// This enforces brevity even if the client prompt is verbose.
-const WORD_LIMIT_PREFIX =
-  "HARD LIMIT: Maximum 50 words per response. Count them. " +
-  "If you need to say more, ask a follow-up question instead. " +
-  "This is a mobile chat, not an email.\n\n";
+const DEFAULT_MAX_TOKENS = 2048;
 const ANTHROPIC_VERSION = "2023-06-01";
 
 // ── CORS headers (allow Expo/React Native clients) ──
@@ -165,12 +158,9 @@ serve(async (req: Request) => {
     // ── Sanitize messages (Anthropic requires alternating user/assistant) ──
     const sanitizedMessages = sanitizeMessages(messages);
 
-    // Prepend server-side word limit to system prompt
-    const finalSystemPrompt = WORD_LIMIT_PREFIX + systemPrompt;
-
     console.log(
       `[buddy-chat] Request: ${sanitizedMessages.length} messages, ` +
-        `system prompt ~${Math.ceil(finalSystemPrompt.length / 4)} tokens, ` +
+        `system prompt ~${Math.ceil(systemPrompt.length / 4)} tokens, ` +
         `max_tokens=${maxTokens}`,
     );
 
@@ -187,7 +177,7 @@ serve(async (req: Request) => {
         body: JSON.stringify({
           model: MODEL,
           max_tokens: maxTokens,
-          system: finalSystemPrompt,
+          system: systemPrompt,
           messages: sanitizedMessages,
         }),
       },
@@ -252,26 +242,18 @@ serve(async (req: Request) => {
 
     // ── Parse response ──
     const data: AnthropicResponse = await anthropicResponse.json();
-    let content =
+    const content =
       data.content
         ?.filter((block) => block.type === "text")
         .map((block) => block.text)
         .join("\n") ?? "";
 
-    // ── Post-processing: hard truncate to 400 chars (belt and suspenders) ──
-    if (content.length > 400) {
-      // Truncate at last sentence boundary within 400 chars
-      const truncated = content.slice(0, 400);
-      const lastSentence = Math.max(
-        truncated.lastIndexOf(". "),
-        truncated.lastIndexOf("! "),
-        truncated.lastIndexOf("? "),
-        truncated.lastIndexOf(".\n"),
-        truncated.lastIndexOf("!\n"),
-        truncated.lastIndexOf("?\n"),
+    // Log truncation warning if model hit token limit
+    if (data.stop_reason === "max_tokens") {
+      console.warn(
+        `[buddy-chat] Response truncated by max_tokens (${maxTokens}). ` +
+          `Output: ${data.usage?.output_tokens ?? "?"} tokens. Consider increasing limit.`,
       );
-      content = lastSentence > 100 ? truncated.slice(0, lastSentence + 1) : truncated;
-      console.log(`[buddy-chat] Truncated from ${data.content?.[0]?.text?.length ?? "?"} to ${content.length} chars`);
     }
 
     console.log(

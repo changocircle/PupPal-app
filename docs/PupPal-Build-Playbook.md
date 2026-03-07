@@ -17,7 +17,7 @@
 - [ ] **Superwall** --- account needed for paywall A/B testing
 - [x] **PostHog** --- analytics instrumented
 - [x] **OneSignal** --- SDK integrated (delivery not connected)
-- [x] **Kimi/Moonshot** --- API key for AI chat (**temperature must be 1**)
+- [x] **Anthropic** --- API key for AI chat (standard Anthropic settings)
 - [x] **Google Cloud** --- Vision API for breed detection
 - [x] **Expo** --- EAS account for builds
 - [x] **Sentry** --- error tracking set up
@@ -77,20 +77,20 @@
 
 ### What Was Built
 - Chat UI with streaming, Buddy avatars, typing indicator
-- Kimi K2.5 integration via Vercel AI SDK
+- Claude Sonnet 4.6 integration via Vercel AI SDK
 - Context injection (dog profile, plan, completions)
 - 3 messages/day free limit with counter
 - Buddy personality system prompt
 
 ### Key Files
 - `app/(tabs)/chat.tsx` --- chat screen
-- `src/lib/aiProvider.ts` --- Kimi K2.5 client (**temperature: 1 only**)
+- `src/lib/aiProvider.ts` --- Claude Sonnet 4.6 client (**temperature: 1 only**)
 - `src/lib/buddyPrompt.ts` --- system prompt builder
 - `src/stores/chatStore.ts` --- conversation state
 - `src/hooks/useChat.ts` --- chat hook
 
 ### Gotcha
-Kimi K2.5 only accepts `temperature: 1`. Any other value returns HTTP 400.
+Claude Sonnet 4.6 is called via the buddy-chat Edge Function. Temperature defaults are fine.
 This is set in `aiProvider.ts:47`.
 
 ---
@@ -266,7 +266,7 @@ These features have UI built but need real backend connections:
 
 **PR #3** (`fix/qa-audit-round2`): onboarding persistence, duplicate exercise guard, puppal.app->puppal.dog URLs, sign-in coming soon, exercise_access gate, age screen restore, chat limit banner, dev-guard console.error, empty dir cleanup
 
-**PR #4** (`fix/device-test-blockers`): Kimi temperature=1, weight screen render loop, trick pack render loop, Button.tsx text node fix, activeDog() sweep across 20 screens
+**PR #4** (`fix/device-test-blockers`): Claude Sonnet 4.6 migration, weight screen render loop, trick pack render loop, Button.tsx text node fix, activeDog() sweep across 20 screens
 
 ### Step 8.2: Device Testing Checklist
 
@@ -356,7 +356,7 @@ isPremium = subscription_status === 'active' || subscription_status === 'trial'
 4. **Point to specific PRDs.** "Read docs/PRD-03 and build X." Don't dump all PRDs.
 5. **Commit after each working feature.** Descriptive messages. You can always roll back.
 6. **Zustand selectors MUST return stable references.** See CLAUDE.md Critical Patterns #1.
-7. **Kimi K2.5 temperature MUST be 1.** See CLAUDE.md Critical Patterns #4.
+7. **Claude Sonnet 4.6 temperature MUST be 1.** See CLAUDE.md Critical Patterns #4.
 8. **Use resetAllStores() for any sign-out.** Never reset stores individually.
 9. **URLs are puppal.dog.** Not puppal.app.
 10. **Animations are not optional.** They make PupPal feel premium.

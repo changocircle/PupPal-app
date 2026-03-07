@@ -111,7 +111,7 @@ CREATE POLICY "Users insert own dogs" ON dogs
 
 ### Edge Functions for Compute
 Heavy logic runs in Edge Functions, not client-side:
-- `chat`: Proxies to Kimi K2.5 API with system prompt injection. Streams response back to client. Never exposes API key to client.
+- `chat`: Proxies to Claude Sonnet 4.6 API with system prompt injection. Streams response back to client. Never exposes API key to client.
 - `generate-plan`: Takes dog profile, runs plan generation algorithm, writes plan to database.
 - `calculate-score`: Takes dog_id, recalculates Good Boy Score from all exercise completions.
 - `check-achievements`: Takes user_id + event, evaluates all achievement triggers, inserts any new unlocks.
@@ -124,29 +124,29 @@ Supabase Pro plan ($25/month) handles up to ~100K users easily. Beyond that: Sup
 
 ---
 
-## AI Chat: Vercel AI SDK + Kimi K2.5
+## AI Chat: Vercel AI SDK + Claude Sonnet 4.6
 
 ### Why Vercel AI SDK?
 The Vercel AI SDK is the most modern way to build AI chat interfaces. It provides:
-- **Provider-agnostic**: Same code works with Kimi, Anthropic Claude, OpenAI, Mistral, etc. Swap provider by changing one import.
+- **Provider-agnostic**: Same code works with Claude, Anthropic Claude, OpenAI, Mistral, etc. Swap provider by changing one import.
 - **Streaming built-in**: SSE streaming with React hooks (`useChat`) that handle token-by-token rendering.
 - **React Native compatible**: Works with the `fetch`-based approach in React Native.
 - **Tool calling support**: If you want Buddy to take actions (log exercise, check score) in the future.
 
 ### Provider Abstraction
 ```ts
-// Switch from Kimi to Claude by changing one line:
-import { createKimi } from '@ai-sdk/kimi';     // primary
+// Switch from Claude to Claude by changing one line:
+import { createClaude } from '@ai-sdk/claude';     // primary
 // import { createAnthropic } from '@ai-sdk/anthropic'; // backup
 
-const model = createKimi('kimi-k2.5');
+const model = createClaude('claude-k2.5');
 ```
 
 ### Chat Architecture
-Client sends message → Edge Function receives → Edge Function constructs system prompt by fetching dog context, conversation summaries, and plan status from Supabase → Edge Function calls Kimi with full context → Kimi streams response → Edge Function streams to client via SSE → Client renders tokens progressively → Edge Function stores message + response in database after stream completes.
+Client sends message → Edge Function receives → Edge Function constructs system prompt by fetching dog context, conversation summaries, and plan status from Supabase → Edge Function calls Claude with full context → Claude streams response → Edge Function streams to client via SSE → Client renders tokens progressively → Edge Function stores message + response in database after stream completes.
 
 ### Cost Management
-Kimi K2.5 is chosen for cost efficiency. At scale: monitor cost per message (target <$0.01), set up alerts if cost spikes, keep provider abstraction so you can switch. Run 1% of traffic through Claude or GPT quarterly to compare quality.
+Claude Sonnet 4.6 is chosen for cost efficiency. At scale: monitor cost per message (target <$0.01), set up alerts if cost spikes, keep provider abstraction so you can switch. Run 1% of traffic through Claude or GPT quarterly to compare quality.
 
 ---
 
@@ -309,13 +309,13 @@ Sequential numbered migrations in `supabase/migrations/`. Each migration is idem
 - Supabase free/pro tier handles this easily
 - Single Postgres instance is fine
 - Edge Functions handle burst with cold starts < 200ms
-- Kimi API costs: ~$50-100/month at this scale
+- Claude API costs: ~$50-100/month at this scale
 
 ### 100K Users
 - Supabase Pro ($25/month) with larger instance
 - Add database indexes on hot queries (user_id + created_at patterns)
 - Consider read replicas for analytics queries
-- Kimi costs: ~$500-1000/month
+- Claude costs: ~$500-1000/month
 - RevenueCat and OneSignal costs scale linearly
 
 ### 1M Users
