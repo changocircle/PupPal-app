@@ -51,7 +51,9 @@ export default function ExerciseDetailScreen() {
   );
   const plan = useTrainingStore((s) => s.plan);
   const completeExercise = useTrainingStore((s) => s.completeExercise);
+  const rateExercise = useTrainingStore((s) => s.rateExercise);
   const markNeedsPractice = useTrainingStore((s) => s.markNeedsPractice);
+  const rescheduleForPractice = useTrainingStore((s) => s.rescheduleForPractice);
   const skipExercise = useTrainingStore((s) => s.skipExercise);
   const advanceDay = useTrainingStore((s) => s.advanceDay);
   const streak = useTrainingStore((s) => s.streak);
@@ -149,9 +151,10 @@ export default function ExerciseDetailScreen() {
   const handleNeedsPractice = useCallback(() => {
     if (!planExercise) return;
     markNeedsPractice(planExercise.id);
+    rescheduleForPractice(planExercise.id);
     setTimerActive(false);
     router.back();
-  }, [planExercise, markNeedsPractice, router]);
+  }, [planExercise, markNeedsPractice, rescheduleForPractice, router]);
 
   const handleSkip = useCallback(() => {
     if (!planExercise) return;
@@ -463,7 +466,9 @@ export default function ExerciseDetailScreen() {
         dogName={dogName}
         streak={streak}
         onRate={(rating) => {
-          // Rating saved via completeExercise already
+          if (planExercise) {
+            rateExercise(planExercise.id, rating);
+          }
         }}
         onDismiss={handleCompletionDismiss}
       />

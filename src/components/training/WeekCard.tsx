@@ -15,6 +15,8 @@ interface WeekCardProps {
   index: number;
   isCurrentWeek: boolean;
   locked: boolean;
+  /** Custom lock message — defaults to "Unlock with Premium" */
+  lockLabel?: string;
   onPress: () => void;
 }
 
@@ -30,6 +32,7 @@ export function WeekCard({
   index,
   isCurrentWeek,
   locked,
+  lockLabel,
   onPress,
 }: WeekCardProps) {
   const phaseBadge = PHASE_BADGES[week.phase] ?? {
@@ -123,7 +126,7 @@ export function WeekCard({
           <View className="flex-row items-center gap-xs mt-xs">
             <Typography className="text-[12px]">🔒</Typography>
             <Typography variant="caption" color="tertiary">
-              Unlock with Premium
+              {lockLabel || "Unlock with Premium"}
             </Typography>
           </View>
         )}

@@ -121,6 +121,20 @@ export function ExerciseCard({
             {personalised.title}
           </Typography>
 
+          {/* Star rating (shown when completed and rated) */}
+          {isCompleted && planExercise.userRating != null && (
+            <View className="flex-row gap-[1px] mt-[1px]">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <Typography
+                  key={star}
+                  style={{ fontSize: 11, lineHeight: 14 }}
+                >
+                  {star <= planExercise.userRating! ? "⭐" : "☆"}
+                </Typography>
+              ))}
+            </View>
+          )}
+
           {/* Time */}
           <Typography variant="caption" color="secondary">
             {exercise.time_minutes} min
@@ -137,7 +151,7 @@ export function ExerciseCard({
           ) : isSkipped ? (
             <Badge variant="neutral" label="Skipped" size="sm" />
           ) : planExercise.status === "needs_practice" ? (
-            <Badge variant="warning" label="Retry" size="sm" />
+            <Badge variant="warning" label="Practice again" size="sm" />
           ) : locked && lockReason === "premium" ? (
             <Badge variant="neutral" label="Premium" size="sm" />
           ) : locked && lockReason === "progress" ? (

@@ -112,6 +112,12 @@ export function useSubscription() {
    */
   const willRenew = isPremium && !isCancelled;
 
+  // Plan type detection (for week unlock logic)
+  const productId = user?.subscription_product_id ?? null;
+  const isAnnual = isPremium && productId === PRODUCTS.ANNUAL;
+  const isMonthly = isPremium && productId === PRODUCTS.MONTHLY;
+  const isLifetime = isPremium && productId === PRODUCTS.LIFETIME;
+
   return {
     // Status
     status,
@@ -122,6 +128,11 @@ export function useSubscription() {
     isCancelled,
     willRenew,
 
+    // Plan type (for week unlock logic — PRD-03 §9)
+    isAnnual,
+    isMonthly,
+    isLifetime,
+
     // Access check
     hasAccess,
 
@@ -131,6 +142,9 @@ export function useSubscription() {
     trialDaysRemaining,
 
     // Product info (in production: from RevenueCat)
-    productId: user?.subscription_product_id ?? null,
+    productId,
+
+    // Dev override flag (for UI logic that needs to know)
+    devOverride: devPremiumOverride,
   };
 }
