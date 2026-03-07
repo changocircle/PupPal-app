@@ -199,6 +199,16 @@ export default function AddDogScreen() {
     // Add to dog store
     addDog(newDog);
 
+    // Store photo for later reference
+    if (photoUri) {
+      import("@/lib/dogPhotos").then(({ saveDogPhotos }) => {
+        saveDogPhotos(newDogId, {
+          profileUri: photoUri,
+          allUris: [photoUri],
+        });
+      });
+    }
+
     // Short delay for visual effect
     await new Promise((r) => setTimeout(r, 1500));
 

@@ -22,6 +22,7 @@ interface OnboardingState {
 const INITIAL_DATA: OnboardingData = {
   puppyName: "",
   photoUri: null,
+  allPhotoUris: [],
   breed: null,
   breedConfidence: null,
   breedDetected: false,

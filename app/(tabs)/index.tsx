@@ -100,6 +100,17 @@ function HomeScreenContent() {
       } as any);
       setActiveDog(firstDogId);
 
+      // Store all onboarding photos (up to 3) for later reference
+      const allUris = onboardingData.allPhotoUris ?? [];
+      if (allUris.length > 0 || onboardingData.photoUri) {
+        import("@/lib/dogPhotos").then(({ saveDogPhotos }) => {
+          saveDogPhotos(firstDogId, {
+            profileUri: onboardingData.photoUri,
+            allUris: allUris.length > 0 ? allUris : onboardingData.photoUri ? [onboardingData.photoUri] : [],
+          });
+        });
+      }
+
       // Save per-dog data snapshot so the first dog's plan, health, etc.
       // persist correctly when switching to a second dog later.
       setTimeout(() => saveCurrentDogState(), 500);

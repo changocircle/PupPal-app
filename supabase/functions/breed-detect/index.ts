@@ -155,7 +155,10 @@ Rules:
 - If it looks like a mixed breed, list the most likely component breeds.
 - Return ONLY the JSON object, no other text.`;
 
-const BREED_PROMPT_MULTI = `You are an expert veterinary breed identification specialist with 20+ years of experience. You have been given multiple photos of the SAME dog from different angles.
+const BREED_PROMPT_MULTI = `You are an expert veterinary breed identification specialist with 20+ years of experience. You have been given multiple photos that should all be of the SAME dog from different angles.
+
+STEP 0 — VERIFY SAME DOG: Before anything else, check if all images appear to show the same dog. Compare size, coloring, coat type, and distinctive markings across all photos. If the images appear to show DIFFERENT dogs, stop immediately and return:
+{ "error": "different_dogs", "message": "These look like different dogs. Please upload photos of the same pup!" }
 
 STEP 1 — OBSERVE EACH PHOTO: For each photo, describe what angle it shows and what features are visible:
 - Coat: type (short/medium/long/wire/curly/double), texture (silky/coarse/dense), feathering
@@ -182,6 +185,7 @@ Return your answer as JSON:
 }
 
 Rules:
+- If images show DIFFERENT dogs, return ONLY the error JSON above and nothing else.
 - Return exactly 3 breed guesses, ranked by confidence (highest first).
 - Confidence values must be integers 0-100 and should sum to roughly 100.
 - Use standard AKC or common breed names (e.g. "Golden Retriever", not "Golden").
@@ -393,6 +397,30 @@ serve(async (req: Request): Promise<Response> => {
           headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
         },
       );
+    }
+
+    // Check for different_dogs error before breed parsing
+    try {
+      const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        const preCheck = JSON.parse(jsonMatch[0]);
+        if (preCheck.error === "different_dogs") {
+          console.log("[breed-detect] Different dogs detected across photos");
+          return new Response(
+            JSON.stringify({
+              breeds: [],
+              error: "different_dogs",
+              message: preCheck.message ?? "These look like different dogs. Please upload photos of the same pup!",
+            }),
+            {
+              status: 200,
+              headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+            },
+          );
+        }
+      }
+    } catch {
+      // Not a different_dogs error, continue with breed parsing
     }
 
     // Parse the breed predictions + reasoning from Claude's response

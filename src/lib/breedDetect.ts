@@ -33,6 +33,10 @@ export interface BreedDetectResult {
   lowConfidence: boolean;
   /** Number of photos that were analysed */
   photoCount: number;
+  /** Set when multi-photo validation detects different dogs */
+  differentDogs?: boolean;
+  /** Server error message (e.g. different dogs warning) */
+  errorMessage?: string;
 }
 
 /**
@@ -118,6 +122,20 @@ export async function detectBreed(
 
     const data = await res.json();
     console.log("[BreedDetect] Response data:", JSON.stringify(data).substring(0, 300));
+
+    // Handle different_dogs validation error
+    if (data.error === "different_dogs") {
+      console.warn("[BreedDetect] Different dogs detected:", data.message);
+      return {
+        topBreed: "",
+        confidence: 0,
+        suggestions: [],
+        lowConfidence: true,
+        photoCount: images.length,
+        differentDogs: true,
+        errorMessage: data.message ?? "These look like different dogs. Please upload photos of the same pup!",
+      };
+    }
 
     if (data.error) {
       console.warn("[BreedDetect] Server error:", data.error);

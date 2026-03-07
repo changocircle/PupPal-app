@@ -3,7 +3,7 @@
  * PRD-11 §8: Edit name/photo/breed, archive, delete with sensitive handling
  */
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   View,
   ScrollView,
@@ -16,6 +16,7 @@ import {
 import DateTimePicker, {
   type DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
+import { loadDogPhotos, saveDogPhotos } from '@/lib/dogPhotos';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
@@ -42,7 +43,21 @@ export default function DogManageScreen() {
   const [name, setName] = useState(dog?.name ?? '');
   const [breed, setBreed] = useState(dog?.breed ?? '');
   const [photoUri, setPhotoUri] = useState(dog?.photo_url ?? null);
+  const [allPhotos, setAllPhotos] = useState<string[]>([]);
   const [hasChanges, setHasChanges] = useState(false);
+
+  // Load stored photos on mount
+  useEffect(() => {
+    if (id) {
+      loadDogPhotos(id).then((photos) => {
+        if (photos.allUris.length > 0) {
+          setAllPhotos(photos.allUris);
+        } else if (dog?.photo_url) {
+          setAllPhotos([dog.photo_url]);
+        }
+      });
+    }
+  }, [id]);
 
   // DOB: start with stored date_of_birth, or estimate from age_months_at_creation
   const estimatedDob = useMemo(() => {
@@ -105,9 +120,36 @@ export default function DogManageScreen() {
     });
 
     if (!result.canceled && result.assets[0]) {
-      setPhotoUri(result.assets[0].uri);
+      const newUri = result.assets[0].uri;
+      setPhotoUri(newUri);
+      // Add to allPhotos if not already present, cap at 3
+      setAllPhotos((prev) => {
+        const updated = prev.includes(newUri)
+          ? prev
+          : [...prev, newUri].slice(-3);
+        return updated;
+      });
       setHasChanges(true);
     }
+  };
+
+  /** Set one of the existing photos as the profile photo */
+  const handleSetProfilePhoto = (uri: string) => {
+    setPhotoUri(uri);
+    setHasChanges(true);
+  };
+
+  /** Remove a photo from the gallery */
+  const handleRemovePhoto = (uri: string) => {
+    setAllPhotos((prev) => {
+      const updated = prev.filter((p) => p !== uri);
+      // If removing the current profile photo, switch to first available
+      if (uri === photoUri) {
+        setPhotoUri(updated[0] ?? null);
+      }
+      return updated;
+    });
+    setHasChanges(true);
   };
 
   const handleSave = () => {
@@ -125,6 +167,17 @@ export default function DogManageScreen() {
     const newDob = dateOfBirth ? dateOfBirth.toISOString().split('T')[0] : null;
     if (newDob !== (dog.date_of_birth ?? null)) updates.date_of_birth = newDob;
 
+    // Always persist photo gallery changes
+    const savePhotosAndApply = () => {
+      updateDog(dog.id, updates as any);
+      saveDogPhotos(dog.id, {
+        profileUri: photoUri,
+        allUris: allPhotos,
+      });
+      setHasChanges(false);
+      router.back();
+    };
+
     if (Object.keys(updates).length > 0) {
       // Warn about breed change → plan regen
       if (updates.breed !== undefined && dog.breed && updates.breed !== dog.breed) {
@@ -133,21 +186,20 @@ export default function DogManageScreen() {
           `Changing ${dog.name}'s breed may affect the training plan. The plan will be regenerated.`,
           [
             { text: 'Cancel', style: 'cancel' },
-            {
-              text: 'Update',
-              onPress: () => {
-                updateDog(dog.id, updates as any);
-                setHasChanges(false);
-                router.back();
-              },
-            },
+            { text: 'Update', onPress: savePhotosAndApply },
           ]
         );
       } else {
-        updateDog(dog.id, updates as any);
-        setHasChanges(false);
-        router.back();
+        savePhotosAndApply();
       }
+    } else if (hasChanges) {
+      // Only photo gallery changed but not the dog record fields
+      saveDogPhotos(dog.id, {
+        profileUri: photoUri,
+        allUris: allPhotos,
+      });
+      setHasChanges(false);
+      router.back();
     } else {
       router.back();
     }
@@ -272,10 +324,10 @@ export default function DogManageScreen() {
           {isArchived && <Badge label="Archived" variant="warning" size="sm" />}
         </Animated.View>
 
-        {/* Photo */}
+        {/* Profile photo */}
         <Animated.View
           entering={FadeInDown.duration(300).delay(50)}
-          style={{ alignItems: 'center', marginBottom: 24 }}
+          style={{ alignItems: 'center', marginBottom: 16 }}
         >
           <Pressable onPress={handlePickPhoto}>
             {photoUri ? (
@@ -331,7 +383,100 @@ export default function DogManageScreen() {
               </View>
             )}
           </Pressable>
+          <Typography variant="caption" color="secondary" style={{ marginTop: 8 }}>
+            Tap to change profile photo
+          </Typography>
         </Animated.View>
+
+        {/* All photos gallery */}
+        {allPhotos.length > 1 && (
+          <Animated.View
+            entering={FadeInDown.duration(300).delay(75)}
+            style={{ marginBottom: 24 }}
+          >
+            <Typography variant="caption" style={{ fontWeight: '600', marginBottom: 8 }}>
+              All Photos
+            </Typography>
+            <View style={{ flexDirection: 'row', gap: 10, justifyContent: 'center' }}>
+              {allPhotos.map((uri, idx) => {
+                const isProfile = uri === photoUri;
+                return (
+                  <View key={`${uri}-${idx}`} style={{ alignItems: 'center' }}>
+                    <Pressable
+                      onPress={() => handleSetProfilePhoto(uri)}
+                      onLongPress={() => {
+                        Alert.alert(
+                          'Remove Photo',
+                          'Remove this photo from your gallery?',
+                          [
+                            { text: 'Cancel', style: 'cancel' },
+                            { text: 'Remove', style: 'destructive', onPress: () => handleRemovePhoto(uri) },
+                          ],
+                        );
+                      }}
+                    >
+                      <Image
+                        source={{ uri }}
+                        style={{
+                          width: 72,
+                          height: 72,
+                          borderRadius: 12,
+                          borderWidth: isProfile ? 3 : 1,
+                          borderColor: isProfile ? COLORS.primary.DEFAULT : COLORS.border,
+                        }}
+                      />
+                      {isProfile && (
+                        <View
+                          style={{
+                            position: 'absolute',
+                            top: -4,
+                            right: -4,
+                            backgroundColor: COLORS.primary.DEFAULT,
+                            width: 20,
+                            height: 20,
+                            borderRadius: 10,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }}
+                        >
+                          <Typography style={{ color: '#fff', fontSize: 10 }}>✓</Typography>
+                        </View>
+                      )}
+                    </Pressable>
+                    <Typography variant="caption" color={isProfile ? 'accent' : 'secondary'} style={{ marginTop: 4, fontSize: 10 }}>
+                      {isProfile ? 'Profile' : ['Front', 'Side', 'Body'][idx] ?? ''}
+                    </Typography>
+                  </View>
+                );
+              })}
+              {allPhotos.length < 3 && (
+                <Pressable onPress={handlePickPhoto} style={{ alignItems: 'center' }}>
+                  <View
+                    style={{
+                      width: 72,
+                      height: 72,
+                      borderRadius: 12,
+                      borderWidth: 2,
+                      borderStyle: 'dashed',
+                      borderColor: COLORS.border,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      backgroundColor: COLORS.surface,
+                    }}
+                  >
+                    <Typography style={{ fontSize: 24, color: COLORS.text.secondary }}>+</Typography>
+                  </View>
+                  <Typography variant="caption" color="secondary" style={{ marginTop: 4, fontSize: 10 }}>
+                    Add
+                  </Typography>
+                </Pressable>
+              )}
+            </View>
+            <Typography variant="caption" color="tertiary" style={{ textAlign: 'center', marginTop: 6 }}>
+              Tap to set as profile photo. Long press to remove.
+            </Typography>
+          </Animated.View>
+        )}
 
         {/* Name */}
         <Animated.View entering={FadeInDown.duration(300).delay(100)}>
