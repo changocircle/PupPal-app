@@ -72,6 +72,12 @@ interface TrainingState {
   /** Get total exercises completed */
   getTotalCompleted: () => number;
 
+  /** Rate a completed exercise (called from CompletionModal after completion) */
+  rateExercise: (planExerciseId: string, rating: number) => void;
+
+  /** Reschedule an exercise for practice on a future day (low rating or manual) */
+  rescheduleForPractice: (planExerciseId: string) => void;
+
   /** Reset plan (for testing / re-onboarding) */
   resetPlan: () => void;
 }
@@ -327,6 +333,109 @@ export const useTrainingStore = create<TrainingState>()(
 
       getTotalCompleted: () => {
         return get().completions.length;
+      },
+
+      rateExercise: (planExerciseId, rating) => {
+        const { plan } = get();
+        if (!plan) return;
+
+        const updatedWeeks = plan.weeks.map((week) => ({
+          ...week,
+          days: week.days.map((day) => ({
+            ...day,
+            exercises: day.exercises.map((ex) =>
+              ex.id === planExerciseId
+                ? { ...ex, userRating: rating }
+                : ex
+            ),
+          })),
+        }));
+
+        // Also update the matching completion record
+        const updatedCompletions = get().completions.map((c) =>
+          c.planExerciseId === planExerciseId
+            ? { ...c, rating }
+            : c
+        );
+
+        set({
+          plan: { ...plan, weeks: updatedWeeks },
+          completions: updatedCompletions,
+        });
+
+        // PRD-03: low rating (1-2 stars) auto-reschedules for practice
+        if (rating <= 2) {
+          get().rescheduleForPractice(planExerciseId);
+        }
+      },
+
+      rescheduleForPractice: (planExerciseId) => {
+        const { plan } = get();
+        if (!plan) return;
+
+        // Find the original exercise
+        let originalExercise: PlanExercise | null = null;
+        for (const week of plan.weeks) {
+          for (const day of week.days) {
+            const found = day.exercises.find((e) => e.id === planExerciseId);
+            if (found) {
+              originalExercise = found;
+              break;
+            }
+          }
+          if (originalExercise) break;
+        }
+        if (!originalExercise) return;
+
+        // Find the next available day to add it to (current day + 1, or next week)
+        const currentWeek = plan.weeks.find((w) => w.weekNumber === plan.currentWeek);
+        if (!currentWeek) return;
+
+        let targetWeekIdx = plan.weeks.findIndex((w) => w.weekNumber === plan.currentWeek);
+        let targetDayIdx = -1;
+
+        // Look for a future day in the current week first
+        for (let i = 0; i < currentWeek.days.length; i++) {
+          if (currentWeek.days[i].dayNumber > plan.currentDay) {
+            targetDayIdx = i;
+            break;
+          }
+        }
+
+        // If no future day in current week, use first day of next week
+        if (targetDayIdx === -1 && targetWeekIdx + 1 < plan.weeks.length) {
+          targetWeekIdx += 1;
+          targetDayIdx = 0;
+        }
+
+        if (targetDayIdx === -1) return; // No future day available
+
+        // Clone exercise as a practice re-do
+        const practiceExercise: PlanExercise = {
+          id: `${originalExercise.exerciseId}-practice-${Date.now()}`,
+          exerciseId: originalExercise.exerciseId,
+          type: "reinforcement" as const,
+          status: "needs_practice" as ExerciseStatus,
+          completedAt: null,
+          userRating: null,
+          xpEarned: null,
+        };
+
+        const updatedWeeks = plan.weeks.map((week, wIdx) => {
+          if (wIdx !== targetWeekIdx) return week;
+          return {
+            ...week,
+            days: week.days.map((day, dIdx) => {
+              if (dIdx !== targetDayIdx) return day;
+              return {
+                ...day,
+                exercises: [...day.exercises, practiceExercise],
+              };
+            }),
+          };
+        });
+
+        set({ plan: { ...plan, weeks: updatedWeeks } });
       },
 
       resetPlan: () => {

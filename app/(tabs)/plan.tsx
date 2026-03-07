@@ -50,7 +50,7 @@ function PlanScreenContent() {
     () => dogs.find((d) => d.id === activeDogId) ?? null,
     [dogs, activeDogId]
   );
-  const { isPremium } = useSubscription();
+  const { isPremium, isAnnual, devOverride } = useSubscription();
   const totalTricksCompleted = useTrickStore((s) => s.totalTricksCompleted);
 
   const plan = useTrainingStore((s) => s.plan);
@@ -186,6 +186,8 @@ function PlanScreenContent() {
           <FullPlanView
             plan={plan}
             isPremium={isPremium}
+            isAnnual={isAnnual}
+            devOverride={devOverride}
             getWeekProgress={getWeekProgress}
             dogName={dogName}
           />
@@ -322,14 +324,25 @@ function ThisWeekView({
 // Full Plan sub-view
 // ──────────────────────────────────────────────
 
+/**
+ * Week unlock rules (PRD-03 §9):
+ * - Free:             Week 1 only
+ * - Premium monthly:  Sequential — complete Week N to access Week N+1
+ * - Premium annual:   All weeks visible and browsable, can skip ahead
+ * - Dev override:     All unlocked
+ */
 function FullPlanView({
   plan,
   isPremium,
+  isAnnual,
+  devOverride,
   getWeekProgress,
   dogName,
 }: {
   plan: NonNullable<ReturnType<typeof useTrainingStore.getState>["plan"]>;
   isPremium: boolean;
+  isAnnual: boolean;
+  devOverride: boolean;
   getWeekProgress: (w: number) => number;
   dogName: string;
 }) {
@@ -337,11 +350,39 @@ function FullPlanView({
     <View className="gap-md">
       {plan.weeks.map((week, idx) => {
         const isCurrentWeek = week.weekNumber === plan.currentWeek;
-        const locked = !isPremium && week.weekNumber > 1;
         const progress = getWeekProgress(week.weekNumber);
 
-        if (locked && week.weekNumber === 2) {
-          // Show premium gate after Week 1
+        // Determine lock state per plan type
+        let locked = false;
+        let lockLabel = "";
+
+        if (devOverride) {
+          // Dev override: everything unlocked
+          locked = false;
+        } else if (!isPremium) {
+          // Free: only Week 1
+          locked = week.weekNumber > 1;
+          lockLabel = "Unlock with Premium";
+        } else if (isAnnual) {
+          // Annual: all weeks browsable
+          locked = false;
+        } else {
+          // Monthly (default premium): sequential unlock
+          // A week is unlocked if it's the current week, completed, or
+          // the previous week is completed
+          const prevWeek = plan.weeks.find(
+            (w) => w.weekNumber === week.weekNumber - 1
+          );
+          const prevCompleted = !prevWeek || prevWeek.status === "completed";
+          locked =
+            week.weekNumber > plan.currentWeek &&
+            week.status !== "completed" &&
+            !prevCompleted;
+          lockLabel = "Complete previous week first";
+        }
+
+        if (!isPremium && locked && week.weekNumber === 2) {
+          // Show premium gate after Week 1 for free users
           return (
             <React.Fragment key={week.weekNumber}>
               <WeekCard
