@@ -318,7 +318,7 @@ function ProfileScreenContent() {
           entering={FadeInDown.duration(400).delay(260)}
           className="px-xl mb-lg"
         >
-          <Pressable onPress={() => router.push("/add-dog")}>
+          <Pressable onPress={() => router.push("/manage-dogs")}>
             <Card className="flex-row items-center gap-md">
               <Typography className="text-[32px]">🐾</Typography>
               <View className="flex-1">

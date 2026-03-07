@@ -14,6 +14,7 @@ import {
 import { useTrainingStore } from "@/stores/trainingStore";
 import { useDogStore } from "@/stores/dogStore";
 import { useOnboardingStore } from "@/stores/onboardingStore";
+import { nanoid } from "nanoid/non-secure";
 import { useGamification } from "@/hooks/useGamification";
 import { useSubscription } from "@/hooks/useSubscription";
 import { useHydration } from "@/hooks/useHydration";
@@ -67,6 +68,35 @@ function HomeScreenContent() {
 
   // Gamification hook, XP, level, GBS, streak, achievements
   const gam = useGamification();
+
+  const addDog = useDogStore((s) => s.addDog);
+  const setActiveDog = useDogStore((s) => s.setActiveDog);
+
+  // Auto-register the first dog into dogStore if it only exists in onboardingStore.
+  // This ensures the dog appears in the DogSwitcher and manage-dogs list.
+  useEffect(() => {
+    if (onboardingData.puppyName && dogs.length === 0) {
+      const now = new Date().toISOString();
+      const firstDogId = nanoid();
+      addDog({
+        id: firstDogId,
+        user_id: "local",
+        name: onboardingData.puppyName,
+        breed: onboardingData.breed,
+        photo_url: onboardingData.photoUri,
+        age_months: onboardingData.ageMonths,
+        date_of_birth: onboardingData.dateOfBirth,
+        challenges: onboardingData.challenges,
+        owner_experience: onboardingData.ownerExperience,
+        is_active: true,
+        onboarding_completed: true,
+        created_at: now,
+        updated_at: now,
+        archived_at: null,
+      } as any);
+      setActiveDog(firstDogId);
+    }
+  }, [onboardingData.puppyName, dogs.length]);
 
   // Auto-generate plan if not yet created and we have onboarding data
   useEffect(() => {
