@@ -172,6 +172,15 @@ function BreedSearchDropdown({
   );
 }
 
+/** Silhouette guide labels for each photo slot */
+const PHOTO_GUIDES = [
+  { emoji: "🐕", label: "Front face" },
+  { emoji: "🐕‍🦺", label: "Side profile" },
+  { emoji: "🐩", label: "Full body" },
+] as const;
+
+const MAX_PHOTOS = 3;
+
 // ─── Main Screen ───
 export default function PhotoScreen() {
   const router = useRouter();
@@ -184,10 +193,17 @@ export default function PhotoScreen() {
   const [notSure, setNotSure] = useState(false);
   const [showFreeText, setShowFreeText] = useState(false);
   const [freeTextBreed, setFreeTextBreed] = useState("");
+
+  /** Array of up to 3 photo URIs for multi-angle breed detection */
+  const [photoUris, setPhotoUris] = useState<string[]>(
+    data.photoUri ? [data.photoUri] : [],
+  );
   const puppyName = data.puppyName || "your pup";
 
   const runDetection = useCallback(
-    async (uri: string) => {
+    async (uris: string[]) => {
+      if (uris.length === 0) return;
+
       setDetection({ status: "detecting" });
       setShowManualSelector(false);
       setIsMixedBreed(false);
@@ -195,7 +211,8 @@ export default function PhotoScreen() {
       setShowFreeText(false);
       setFreeTextBreed("");
 
-      const result = await detectBreed(uri);
+      // Send all photos (1–3) for cross-referencing
+      const result = await detectBreed(uris);
 
       if (!result) {
         // Timeout, error, or no breeds found → show selector
@@ -239,7 +256,8 @@ export default function PhotoScreen() {
     [updateData],
   );
 
-  const pickImage = async () => {
+  /** Pick/replace a photo at the given slot index */
+  const pickImage = async (slotIndex?: number) => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
       allowsEditing: true,
@@ -249,16 +267,41 @@ export default function PhotoScreen() {
 
     if (!result.canceled && result.assets[0]) {
       const uri = result.assets[0].uri;
-      updateData({
-        photoUri: uri,
-        breed: undefined,
-        breedConfidence: undefined,
-        breedDetected: false,
-        breedMix1: null,
-        breedMix2: null,
+
+      setPhotoUris((prev) => {
+        const next = [...prev];
+        const idx = slotIndex ?? prev.length;
+        next[idx] = uri;
+        // Save the first photo as the canonical photoUri in onboarding store
+        updateData({
+          photoUri: next[0] ?? uri,
+          breed: undefined,
+          breedConfidence: undefined,
+          breedDetected: false,
+          breedMix1: null,
+          breedMix2: null,
+        });
+        // Auto-detect when first photo is added or when replacing
+        runDetection(next.filter(Boolean));
+        return next;
       });
-      await runDetection(uri);
     }
+  };
+
+  /** Remove a photo from the given slot */
+  const removePhoto = (index: number) => {
+    setPhotoUris((prev) => {
+      const next = prev.filter((_, i) => i !== index);
+      if (next.length === 0) {
+        updateData({ photoUri: null, breed: undefined, breedDetected: false });
+        setDetection({ status: "idle" });
+      } else {
+        updateData({ photoUri: next[0] });
+        // Re-detect with remaining photos
+        runDetection(next);
+      }
+      return next;
+    });
   };
 
   const confirmBreed = (breed: string) => {
@@ -376,28 +419,145 @@ export default function PhotoScreen() {
               </Typography>
             </View>
 
-            {/* Photo upload area */}
-            <Pressable onPress={pickImage}>
-              <Animated.View
-                entering={FadeIn.duration(300)}
-                className="w-[200px] h-[200px] rounded-xl bg-surface border-2 border-dashed border-border items-center justify-center overflow-hidden"
-              >
-                {data.photoUri ? (
-                  <Image
-                    source={{ uri: data.photoUri }}
-                    style={{ width: 200, height: 200 }}
-                    contentFit="cover"
-                  />
-                ) : (
-                  <View className="items-center gap-sm">
+            {/* Multi-photo upload area */}
+            <Animated.View entering={FadeIn.duration(300)}>
+              {photoUris.length === 0 ? (
+                /* No photos yet — single large upload target */
+                <Pressable onPress={() => pickImage(0)}>
+                  <View className="w-[200px] h-[200px] rounded-xl bg-surface border-2 border-dashed border-border items-center justify-center">
                     <Typography className="text-[48px]">📸</Typography>
                     <Typography variant="body-sm" color="secondary">
                       Tap to upload
                     </Typography>
                   </View>
-                )}
-              </Animated.View>
-            </Pressable>
+                </Pressable>
+              ) : (
+                /* Photo thumbnail row — up to 3 slots */
+                <View className="flex-row gap-sm justify-center">
+                  {PHOTO_GUIDES.map((guide, idx) => {
+                    const uri = photoUris[idx];
+                    const isNextEmpty = idx === photoUris.length && idx < MAX_PHOTOS;
+
+                    if (uri) {
+                      // Filled slot — show photo with remove button
+                      return (
+                        <View key={idx} style={{ alignItems: "center" }}>
+                          <Pressable onPress={() => pickImage(idx)}>
+                            <View
+                              className="rounded-lg overflow-hidden"
+                              style={{
+                                width: 100,
+                                height: 100,
+                                borderWidth: 2,
+                                borderColor: "#FF6B5C",
+                                borderRadius: 12,
+                              }}
+                            >
+                              <Image
+                                source={{ uri }}
+                                style={{ width: 100, height: 100 }}
+                                contentFit="cover"
+                              />
+                            </View>
+                          </Pressable>
+                          <Pressable
+                            onPress={() => removePhoto(idx)}
+                            style={{
+                              position: "absolute",
+                              top: -6,
+                              right: -6,
+                              backgroundColor: "#FF6B5C",
+                              width: 22,
+                              height: 22,
+                              borderRadius: 11,
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <Typography
+                              style={{ color: "#fff", fontSize: 12, lineHeight: 14, fontWeight: "700" }}
+                            >
+                              ✕
+                            </Typography>
+                          </Pressable>
+                          <Typography variant="caption" color="secondary" className="mt-xs text-center">
+                            {guide.label}
+                          </Typography>
+                        </View>
+                      );
+                    }
+
+                    if (isNextEmpty) {
+                      // Next empty slot — show add button with silhouette guide
+                      return (
+                        <Pressable key={idx} onPress={() => pickImage(idx)}>
+                          <View style={{ alignItems: "center" }}>
+                            <View
+                              style={{
+                                width: 100,
+                                height: 100,
+                                borderRadius: 12,
+                                borderWidth: 2,
+                                borderStyle: "dashed",
+                                borderColor: "#ccc",
+                                backgroundColor: "#f9f9f9",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <Typography style={{ fontSize: 28, opacity: 0.4 }}>
+                                {guide.emoji}
+                              </Typography>
+                              <Typography style={{ fontSize: 20, marginTop: 2 }}>+</Typography>
+                            </View>
+                            <Typography variant="caption" color="secondary" className="mt-xs text-center">
+                              {guide.label}
+                            </Typography>
+                          </View>
+                        </Pressable>
+                      );
+                    }
+
+                    // Future empty slot — show faded guide only
+                    return (
+                      <View key={idx} style={{ alignItems: "center", opacity: 0.3 }}>
+                        <View
+                          style={{
+                            width: 100,
+                            height: 100,
+                            borderRadius: 12,
+                            borderWidth: 1,
+                            borderStyle: "dashed",
+                            borderColor: "#ddd",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <Typography style={{ fontSize: 28, opacity: 0.3 }}>
+                            {guide.emoji}
+                          </Typography>
+                        </View>
+                        <Typography variant="caption" color="secondary" className="mt-xs text-center">
+                          {guide.label}
+                        </Typography>
+                      </View>
+                    );
+                  })}
+                </View>
+              )}
+
+              {/* Hint text */}
+              {photoUris.length > 0 && photoUris.length < MAX_PHOTOS && detection.status !== "detecting" && (
+                <Typography variant="caption" color="secondary" className="text-center mt-sm">
+                  Add more angles for better accuracy
+                </Typography>
+              )}
+              {photoUris.length > 1 && detection.status !== "detecting" && (
+                <Typography variant="caption" color="secondary" className="text-center mt-xs" style={{ opacity: 0.6 }}>
+                  {photoUris.length} photos will be cross-referenced
+                </Typography>
+              )}
+            </Animated.View>
 
             {/* ─── Detection result states ─── */}
 
@@ -486,7 +646,7 @@ export default function PhotoScreen() {
             )}
 
             {/* ─── Mixed Breed + Free Text links (visible after any detection) ─── */}
-            {data.photoUri && detection.status !== "idle" && detection.status !== "detecting" && !isMixedBreed && !notSure && !showFreeText && (
+            {photoUris.length > 0 && detection.status !== "idle" && detection.status !== "detecting" && !isMixedBreed && !notSure && !showFreeText && (
               <Animated.View
                 entering={FadeInDown.duration(300).delay(200)}
                 className="mt-base w-full items-center gap-xs"
@@ -724,9 +884,9 @@ export default function PhotoScreen() {
           <Button
             label="Continue"
             onPress={handleContinue}
-            disabled={!canContinue && !!data.photoUri}
+            disabled={!canContinue && photoUris.length > 0}
           />
-          {!data.photoUri && (
+          {photoUris.length === 0 && (
             <Button
               variant="ghost"
               label="Skip for now"

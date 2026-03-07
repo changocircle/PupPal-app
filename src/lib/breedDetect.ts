@@ -1,7 +1,8 @@
 /**
  * Client-side breed detection service.
  *
- * Calls the Supabase breed-detect Edge Function with a base64-encoded image.
+ * Calls the Supabase breed-detect Edge Function with 1–3 base64-encoded images.
+ * Supports multi-photo for cross-referencing features across angles.
  * The Edge Function uses Claude (Anthropic) vision for breed identification.
  * Returns the top breed predictions or null on failure/timeout.
  *
@@ -13,8 +14,8 @@ import { File as ExpoFile } from "expo-file-system";
 const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL ?? "";
 const SUPABASE_ANON_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? "";
 
-/** Timeout for breed detection API call (generous to handle cold starts + Claude inference) */
-const DETECT_TIMEOUT_MS = 20_000;
+/** Timeout for breed detection API call (generous for multi-image + reasoning) */
+const DETECT_TIMEOUT_MS = 35_000;
 
 export interface BreedPrediction {
   name: string;
@@ -28,17 +29,36 @@ export interface BreedDetectResult {
   confidence: number;
   /** Top 3 predictions */
   suggestions: BreedPrediction[];
-  /** True when the top breed confidence is below 60% — UI should ask user to confirm */
+  /** True when the top breed confidence is below 50% — UI should ask user to confirm */
   lowConfidence: boolean;
+  /** Number of photos that were analysed */
+  photoCount: number;
 }
 
 /**
- * Detect breed from a photo URI.
+ * Read a local image URI to base64.
+ */
+async function readImageBase64(uri: string): Promise<string | null> {
+  try {
+    const file = new ExpoFile(uri);
+    const base64 = await file.base64();
+    if (!base64 || base64.length < 100) return null;
+    return base64;
+  } catch (err: any) {
+    console.error("[BreedDetect] Failed to read image:", uri.substring(0, 40), err?.message);
+    return null;
+  }
+}
+
+/**
+ * Detect breed from one or more photo URIs.
+ * For best results, provide front view, side view, and full body shot.
  *
+ * @param imageUris - 1 to 3 local image URIs
  * @returns BreedDetectResult or null (timeout / error / no breeds found)
  */
 export async function detectBreed(
-  imageUri: string,
+  imageUris: string | string[],
 ): Promise<BreedDetectResult | null> {
   try {
     if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
@@ -51,24 +71,22 @@ export async function detectBreed(
       return null;
     }
 
-    console.log("[BreedDetect] Starting detection for URI:", imageUri.substring(0, 80));
+    // Normalise to array
+    const uris = Array.isArray(imageUris) ? imageUris.slice(0, 3) : [imageUris];
+
+    console.log(`[BreedDetect] Starting detection for ${uris.length} photo(s)`);
     console.log("[BreedDetect] Endpoint:", `${SUPABASE_URL}/functions/v1/breed-detect`);
 
-    // Read image as base64 (SDK 54+ File API, legacy readAsStringAsync removed)
-    let base64: string;
-    try {
-      const file = new ExpoFile(imageUri);
-      base64 = await file.base64();
-      console.log("[BreedDetect] Base64 length:", base64.length);
-    } catch (readErr: any) {
-      console.error("[BreedDetect] Failed to read image file:", readErr?.message);
+    // Read all images to base64 in parallel
+    const base64Results = await Promise.all(uris.map(readImageBase64));
+    const images = base64Results.filter((b): b is string => b !== null);
+
+    if (images.length === 0) {
+      console.warn("[BreedDetect] No valid images to send");
       return null;
     }
 
-    if (!base64 || base64.length < 100) {
-      console.warn("[BreedDetect] Base64 too short or empty:", base64?.length);
-      return null;
-    }
+    console.log(`[BreedDetect] Sending ${images.length} image(s), total base64 length: ${images.reduce((s, b) => s + b.length, 0)}`);
 
     // Race the fetch against a timeout
     const controller = new AbortController();
@@ -83,7 +101,7 @@ export async function detectBreed(
           Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
           apikey: SUPABASE_ANON_KEY,
         },
-        body: JSON.stringify({ image: base64 }),
+        body: JSON.stringify({ images }),
         signal: controller.signal,
       },
     );
@@ -117,6 +135,7 @@ export async function detectBreed(
       confidence: breeds[0]!.confidence,
       suggestions: breeds,
       lowConfidence: data.lowConfidence === true,
+      photoCount: data.photoCount ?? images.length,
     };
   } catch (err: any) {
     // AbortError = timeout, anything else = network/parse error

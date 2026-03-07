@@ -1,8 +1,9 @@
 /**
  * breed-detect — Supabase Edge Function
  *
- * Accepts a base64 image, sends to Anthropic Claude (vision),
+ * Accepts 1–3 base64 images, sends to Anthropic Claude (vision),
  * and returns top 3 breed predictions with confidence.
+ * Supports multi-photo for cross-referencing features across angles.
  *
  * PRD-01 Screen 3: Photo Upload + Breed Detection
  *
@@ -117,40 +118,26 @@ const CORS_HEADERS = {
     "authorization, x-client-info, apikey, content-type",
 };
 
-/** Timeout for the Anthropic API call */
-const ANTHROPIC_TIMEOUT_MS = 15_000;
+/** Timeout for the Anthropic API call (generous for multi-image + reasoning) */
+const ANTHROPIC_TIMEOUT_MS = 30_000;
 
-const BREED_PROMPT = `You are an expert veterinary breed identification specialist with 20+ years of experience. Your task is to identify the dog breed from this photo with high accuracy.
+const BREED_PROMPT_SINGLE = `You are an expert veterinary breed identification specialist with 20+ years of experience.
 
-CRITICAL: Examine each physical feature methodically before deciding:
+STEP 1 — OBSERVE: Describe the dog's physical features in detail:
+- Coat: type (short/medium/long/wire/curly/double), texture (silky/coarse/dense), feathering
+- Coat color and pattern (solid, bicolor, tricolor, merle, brindle, saddle markings, mask)
+- Ears: shape (erect/floppy/semi-erect/rose), size, position
+- Head and muzzle: skull width, muzzle length, stop prominence, lip shape
+- Body: build (stocky/athletic/lean), chest depth, back line (level/sloping)
+- Tail: length, shape (straight/curved/sickle/plumed), carriage
 
-1. COAT — What is the length? (short / medium / long / wire / curly / double)
-   What is the texture? (silky, flowing, coarse, dense undercoat?)
-   Is it smooth or feathered on the legs/tail/ears?
-   Example: Golden Retrievers have LONG, flowing, silky coats with heavy feathering on legs and tail. German Shepherds have MEDIUM-length dense double coats that lie flat. These are very different.
+STEP 2 — IDENTIFY: Based ONLY on the features you described above, identify the most likely breed. Compare against all 200+ AKC recognized breeds plus common designer mixes.
 
-2. EARS — Are they floppy/pendant, erect/pricked, semi-erect, or rose-shaped?
-   Size relative to head? Position (high-set or low-set)?
-   Example: Golden Retrievers have medium floppy ears set just above eye level. German Shepherds have large, triangular, fully erect ears. This is a KEY differentiator.
+STEP 3 — VERIFY: List 2 features that CONFIRM your top breed choice. Then note any features that are atypical for this breed. If atypical features are significant, lower your confidence accordingly.
 
-3. HEAD & MUZZLE — Is the skull broad or narrow? Muzzle length and shape?
-   Stop (forehead-to-muzzle transition) — pronounced or gradual?
-   Lip shape — tight or loose? Any jowls?
-
-4. BODY — Overall build: stocky, athletic, lean, heavy-boned?
-   Chest depth and width? Back line — level, sloping, or roached?
-   Example: German Shepherds have a distinctive sloping topline. Golden Retrievers have a level back.
-
-5. SIZE & PROPORTIONS — Estimate weight range. Height at shoulder.
-   Length-to-height ratio. Leg length relative to body.
-
-6. COLORING & MARKINGS — Base color, patterns, saddle markings, masks, points.
-   Example: Golden Retrievers are solid gold/cream/dark golden. German Shepherds typically have black saddle with tan points.
-
-7. TAIL — Length, shape (straight, curved, sickle, plumed), carriage.
-
-Return your answer as a JSON object with exactly this format:
+Return your answer as JSON:
 {
+  "reasoning": "Description of features observed and breed reasoning...",
   "breeds": [
     { "name": "Breed Name", "confidence": 85 },
     { "name": "Second Breed", "confidence": 10 },
@@ -162,18 +149,58 @@ Rules:
 - Return exactly 3 breed guesses, ranked by confidence (highest first).
 - Confidence values must be integers 0-100 and should sum to roughly 100.
 - Use standard AKC or common breed names (e.g. "Golden Retriever", not "Golden").
-- Compare against all 200+ AKC recognized breeds before deciding.
 - If you are not at least 60% confident in your top pick, keep the confidence value LOW.
 - Do NOT be overconfident. A 90%+ confidence means you are absolutely certain.
 - If the image is not a dog or you cannot identify the breed, return confidences below 30 for all.
 - If it looks like a mixed breed, list the most likely component breeds.
 - Return ONLY the JSON object, no other text.`;
 
+const BREED_PROMPT_MULTI = `You are an expert veterinary breed identification specialist with 20+ years of experience. You have been given multiple photos of the SAME dog from different angles.
+
+STEP 1 — OBSERVE EACH PHOTO: For each photo, describe what angle it shows and what features are visible:
+- Coat: type (short/medium/long/wire/curly/double), texture (silky/coarse/dense), feathering
+- Coat color and pattern (solid, bicolor, tricolor, merle, brindle, saddle markings, mask)
+- Ears: shape (erect/floppy/semi-erect/rose), size, position
+- Head and muzzle: skull width, muzzle length, stop prominence, lip shape
+- Body: build (stocky/athletic/lean), chest depth, back line (level/sloping)
+- Tail: length, shape (straight/curved/sickle/plumed), carriage
+
+STEP 2 — CROSS-REFERENCE: Combine features from ALL photos to build a complete picture. Note any details visible in one angle but not another.
+
+STEP 3 — IDENTIFY: Based on the combined features, identify the most likely breed. Compare against all 200+ AKC recognized breeds plus common designer mixes.
+
+STEP 4 — VERIFY: List 2 features that CONFIRM your top breed choice. Then note any features that are atypical for this breed. If atypical features are significant, lower your confidence accordingly.
+
+Return your answer as JSON:
+{
+  "reasoning": "Description of features observed across photos and breed reasoning...",
+  "breeds": [
+    { "name": "Breed Name", "confidence": 85 },
+    { "name": "Second Breed", "confidence": 10 },
+    { "name": "Third Breed", "confidence": 5 }
+  ]
+}
+
+Rules:
+- Return exactly 3 breed guesses, ranked by confidence (highest first).
+- Confidence values must be integers 0-100 and should sum to roughly 100.
+- Use standard AKC or common breed names (e.g. "Golden Retriever", not "Golden").
+- If you are not at least 60% confident in your top pick, keep the confidence value LOW.
+- Do NOT be overconfident. A 90%+ confidence means you are absolutely certain.
+- If the images are not of a dog or you cannot identify the breed, return confidences below 30 for all.
+- If it looks like a mixed breed, list the most likely component breeds.
+- Return ONLY the JSON object, no other text.`;
+
+interface ParsedResponse {
+  breeds: BreedResult[];
+  reasoning: string | null;
+}
+
 /**
- * Parse Claude's text response into breed results.
+ * Parse Claude's text response into breed results + reasoning.
  * Tries JSON.parse first, then regex fallback.
  */
-function parseBreedResponse(text: string): BreedResult[] {
+function parseBreedResponse(text: string): ParsedResponse {
   // Try direct JSON parse (Claude usually returns clean JSON)
   try {
     // Extract JSON object from response (skip any preamble)
@@ -181,20 +208,24 @@ function parseBreedResponse(text: string): BreedResult[] {
     if (jsonMatch) {
       const parsed = JSON.parse(jsonMatch[0]);
       if (Array.isArray(parsed.breeds) && parsed.breeds.length > 0) {
-        return parsed.breeds
+        const breeds = parsed.breeds
           .slice(0, 3)
           .map((b: { name?: string; confidence?: number }) => ({
             name: matchToCanonicalBreed(b.name ?? "Unknown"),
             confidence: Math.round(Number(b.confidence) || 0),
           }))
           .filter((b: BreedResult) => b.name && b.confidence >= 0);
+        return {
+          breeds,
+          reasoning: typeof parsed.reasoning === "string" ? parsed.reasoning : null,
+        };
       }
     }
   } catch {
     // JSON parse failed, try regex
   }
 
-  // Regex fallback: look for patterns like "Breed Name": 85 or "name": "Breed", "confidence": 85
+  // Regex fallback: look for patterns like "name": "Breed", "confidence": 85
   const results: BreedResult[] = [];
   const breedPattern =
     /"name"\s*:\s*"([^"]+)"\s*,\s*"confidence"\s*:\s*(\d+)/gi;
@@ -206,7 +237,7 @@ function parseBreedResponse(text: string): BreedResult[] {
     });
   }
 
-  return results;
+  return { breeds: results, reasoning: null };
 }
 
 /**
@@ -241,10 +272,19 @@ serve(async (req: Request): Promise<Response> => {
       );
     }
 
-    const { image } = await req.json();
-    if (!image || typeof image !== "string") {
+    const body = await req.json();
+
+    // Accept either `images` (array of base64 strings) or legacy `image` (single string)
+    let imageList: string[] = [];
+    if (Array.isArray(body.images) && body.images.length > 0) {
+      imageList = body.images.filter((img: unknown) => typeof img === "string").slice(0, 3);
+    } else if (typeof body.image === "string" && body.image) {
+      imageList = [body.image];
+    }
+
+    if (imageList.length === 0) {
       return new Response(
-        JSON.stringify({ breeds: [], error: "Missing image field" }),
+        JSON.stringify({ breeds: [], error: "Missing image(s)" }),
         {
           status: 400,
           headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
@@ -252,9 +292,21 @@ serve(async (req: Request): Promise<Response> => {
       );
     }
 
-    // Strip data URI prefix if present
-    const base64Data = image.replace(/^data:image\/\w+;base64,/, "");
-    const mediaType = detectMediaType(base64Data);
+    // Build image content blocks for Claude (1–3 images)
+    const imageBlocks = imageList.map((img) => {
+      const base64Data = img.replace(/^data:image\/\w+;base64,/, "");
+      return {
+        type: "image" as const,
+        source: {
+          type: "base64" as const,
+          media_type: detectMediaType(base64Data),
+          data: base64Data,
+        },
+      };
+    });
+
+    // Choose prompt based on single vs multi-photo
+    const prompt = imageList.length > 1 ? BREED_PROMPT_MULTI : BREED_PROMPT_SINGLE;
 
     // Call Anthropic Claude API with vision
     const controller = new AbortController();
@@ -274,22 +326,15 @@ serve(async (req: Request): Promise<Response> => {
         },
         body: JSON.stringify({
           model: "claude-sonnet-4-20250514",
-          max_tokens: 300,
+          max_tokens: 800,
           messages: [
             {
               role: "user",
               content: [
-                {
-                  type: "image",
-                  source: {
-                    type: "base64",
-                    media_type: mediaType,
-                    data: base64Data,
-                  },
-                },
+                ...imageBlocks,
                 {
                   type: "text",
-                  text: BREED_PROMPT,
+                  text: prompt,
                 },
               ],
             },
@@ -350,11 +395,19 @@ serve(async (req: Request): Promise<Response> => {
       );
     }
 
-    // Parse the breed predictions from Claude's response
-    const breeds = parseBreedResponse(responseText);
+    // Parse the breed predictions + reasoning from Claude's response
+    const parsed = parseBreedResponse(responseText);
 
-    if (breeds.length === 0) {
-      console.warn("Could not parse breeds from response:", responseText.substring(0, 200));
+    // Log reasoning server-side for debugging (not sent to client)
+    if (parsed.reasoning) {
+      console.log(
+        `[breed-detect] Reasoning (${imageList.length} photo${imageList.length > 1 ? "s" : ""}):`,
+        parsed.reasoning.substring(0, 500),
+      );
+    }
+
+    if (parsed.breeds.length === 0) {
+      console.warn("Could not parse breeds from response:", responseText.substring(0, 300));
       return new Response(
         JSON.stringify({
           breeds: [],
@@ -369,12 +422,16 @@ serve(async (req: Request): Promise<Response> => {
     }
 
     // Build response with optional lowConfidence flag
-    const topConfidence = breeds[0]?.confidence ?? 0;
+    const topConfidence = parsed.breeds[0]?.confidence ?? 0;
     const result: {
       breeds: BreedResult[];
       lowConfidence?: boolean;
       rawLabels?: string[];
-    } = { breeds };
+      photoCount?: number;
+    } = {
+      breeds: parsed.breeds,
+      photoCount: imageList.length,
+    };
 
     if (topConfidence < 50) {
       result.lowConfidence = true;

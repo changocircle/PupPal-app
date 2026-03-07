@@ -148,7 +148,7 @@ export default function VetVisitsScreen() {
         {/* Header */}
         <Pressable
           onPress={() => router.back()}
-          className="px-xl pt-base pb-sm"
+          className="px-xl pt-base pb-base"
         >
           <Typography variant="body-medium" style={{ color: "#FF6B5C" }}>
             ← Back
@@ -161,7 +161,7 @@ export default function VetVisitsScreen() {
         >
           <View className="flex-row items-center justify-between gap-sm">
             <View className="flex-1 flex-shrink">
-              <Typography variant="h1">🏥 Vet Visits</Typography>
+              <Typography variant="h1">Vet Visits</Typography>
               <Typography variant="body" color="secondary" numberOfLines={1}>
                 {dogName}'s veterinary history
               </Typography>
@@ -431,8 +431,10 @@ export default function VetVisitsScreen() {
             })
           ) : (
             !showForm && (
-              <Card className="items-center py-xl">
-                <Typography className="text-[40px] mb-sm">🏥</Typography>
+              <Card className="items-center py-xl" style={{ overflow: "visible" }}>
+                <View style={{ width: 56, height: 56, alignItems: "center", justifyContent: "center", marginBottom: 8 }}>
+                  <Typography style={{ fontSize: 40, lineHeight: 56 }}>🏥</Typography>
+                </View>
                 <Typography variant="body-medium" className="mb-xs">
                   No vet visits logged
                 </Typography>
