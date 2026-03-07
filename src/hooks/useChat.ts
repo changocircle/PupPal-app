@@ -3,11 +3,9 @@
  *
  * Handles sending messages, streaming responses, context injection.
  *
- * When EXPO_PUBLIC_KIMI_API_KEY is set → calls Kimi K2.5 directly
- * via OpenAI-compatible API with SSE streaming.
- * When no key → falls back to smart mock responses for development.
- *
- * Production: swap sendToAI() to call Supabase Edge Function instead.
+ * When Supabase URL + anon key are set → calls the buddy-chat Edge Function,
+ * which proxies to Claude Sonnet 4.6 server-side (API key stays on server).
+ * When not configured → falls back to smart mock responses for development.
  */
 
 import { useCallback, useMemo, useRef } from "react";
@@ -229,7 +227,7 @@ export function useChat(): UseChatReturn {
 }
 
 // ──────────────────────────────────────────────
-// Real AI, Kimi K2.5 via aiProvider
+// Real AI — Claude Sonnet 4.6 via buddy-chat Edge Function
 // ──────────────────────────────────────────────
 
 async function sendToRealAI(
