@@ -15,13 +15,14 @@ interface VaccinationTimelineItemProps {
   isLast?: boolean;
 }
 
-const STATUS_CONFIG = {
-  completed: { icon: "✅", badgeVariant: "success" as const, label: "Done" },
-  upcoming: { icon: "🔵", badgeVariant: "info" as const, label: "Upcoming" },
-  due_soon: { icon: "🟡", badgeVariant: "warning" as const, label: "Due Soon" },
-  overdue: { icon: "🔴", badgeVariant: "error" as const, label: "Overdue" },
-  skipped: { icon: "⏭", badgeVariant: "neutral" as const, label: "Skipped" },
-  unknown: { icon: "❓", badgeVariant: "neutral" as const, label: "Not Logged" },
+const STATUS_CONFIG: Record<string, { icon: string; badgeVariant: "success" | "info" | "warning" | "error" | "neutral" | "accent"; label: string }> = {
+  completed: { icon: "✅", badgeVariant: "success", label: "Done" },
+  upcoming: { icon: "🔵", badgeVariant: "info", label: "Upcoming" },
+  due_soon: { icon: "🟡", badgeVariant: "warning", label: "Due Soon" },
+  overdue: { icon: "🔴", badgeVariant: "error", label: "Overdue" },
+  skipped: { icon: "⏭", badgeVariant: "neutral", label: "Skipped" },
+  unknown: { icon: "❓", badgeVariant: "neutral", label: "Not Logged" },
+  not_logged: { icon: "📋", badgeVariant: "neutral", label: "Not Yet Logged" },
 };
 
 export function VaccinationTimelineItem({
