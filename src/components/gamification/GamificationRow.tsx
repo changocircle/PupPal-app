@@ -75,12 +75,9 @@ export function GamificationRow({
             style={{ backgroundColor: COLORS.accent.light }}
           >
             <Typography variant="caption" style={{ color: COLORS.accent.dark }}>
-              Lv.{level}
+              {levelTitle}
             </Typography>
           </View>
-          <Typography variant="caption" color="tertiary" className="mt-[1px]">
-            {levelTitle}
-          </Typography>
         </Pressable>
       </View>
 
@@ -113,10 +110,10 @@ export function GamificationRow({
           style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
         >
           <Typography variant="body-sm-medium" style={{ color: COLORS.accent.dark }}>
-            {totalXp.toLocaleString()} XP
+            {totalXp.toLocaleString()} points
           </Typography>
           <Typography variant="caption" color="tertiary">
-            Total earned
+            Paw Points
           </Typography>
         </Pressable>
       </View>

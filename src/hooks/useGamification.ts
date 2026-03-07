@@ -202,7 +202,7 @@ export function useGamification(): UseGamificationReturn {
           XP_VALUES.rate_exercise,
           "rating",
           `rating-${planExerciseId}`,
-          `+${XP_VALUES.rate_exercise} XP`
+          `+${XP_VALUES.rate_exercise} points`
         );
       }
 
@@ -222,7 +222,7 @@ export function useGamification(): UseGamificationReturn {
           XP_VALUES.daily_complete,
           "daily_bonus",
           `daily-${new Date().toISOString().split("T")[0]}`,
-          `+${XP_VALUES.daily_complete} XP Daily Bonus!`
+          `+${XP_VALUES.daily_complete} points - Daily Bonus!`
         );
       }
 

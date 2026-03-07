@@ -42,6 +42,16 @@ export function CompletionModal({
     onDismiss();
   };
 
+  // Low rating (1-2 stars): show re-practice message instead of celebration
+  const isLowRating = selectedRating != null && selectedRating <= 2;
+  const celebrationEmoji = isLowRating ? "💪" : "🎉";
+  const titleText = isLowRating
+    ? "Practice makes perfect!"
+    : "Great job!";
+  const subtitleText = isLowRating
+    ? `No worries, this will come back for practice in a few days! Repetition is how ${dogName} learns best.`
+    : `${dogName} is getting better every day!`;
+
   return (
     <Modal visible={visible} transparent animationType="none" statusBarTranslucent>
       <Animated.View
@@ -58,12 +68,12 @@ export function CompletionModal({
             entering={FadeIn.delay(100).duration(200)}
             className="text-[56px] mb-base"
           >
-            🎉
+            {celebrationEmoji}
           </Animated.Text>
 
           {/* Title */}
           <Typography variant="h2" className="text-center mb-xs">
-            Great job!
+            {titleText}
           </Typography>
 
           <Typography
@@ -71,7 +81,7 @@ export function CompletionModal({
             color="secondary"
             className="text-center mb-lg"
           >
-            {dogName} is getting better every day!
+            {subtitleText}
           </Typography>
 
           {/* XP earned */}
@@ -80,7 +90,7 @@ export function CompletionModal({
             className="bg-accent-light rounded-2xl px-xl py-base mb-lg w-full items-center"
           >
             <Typography variant="h3" style={{ color: "#F5A623" }}>
-              +{xpEarned} XP
+              +{xpEarned} points
             </Typography>
             {streak > 1 && (
               <Typography variant="body-sm" color="secondary" className="mt-[2px]">

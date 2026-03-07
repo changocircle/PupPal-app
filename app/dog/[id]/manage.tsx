@@ -11,7 +11,11 @@ import {
   TextInput,
   Alert,
   Image,
+  Platform,
 } from 'react-native';
+import DateTimePicker, {
+  type DateTimePickerEvent,
+} from '@react-native-community/datetimepicker';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
@@ -39,6 +43,32 @@ export default function DogManageScreen() {
   const [breed, setBreed] = useState(dog?.breed ?? '');
   const [photoUri, setPhotoUri] = useState(dog?.photo_url ?? null);
   const [hasChanges, setHasChanges] = useState(false);
+
+  // DOB: start with stored date_of_birth, or estimate from age_months_at_creation
+  const estimatedDob = useMemo(() => {
+    if (dog?.date_of_birth) return new Date(dog.date_of_birth);
+    if (dog?.age_months_at_creation && dog?.created_at) {
+      const created = new Date(dog.created_at);
+      const est = new Date(created);
+      est.setMonth(est.getMonth() - dog.age_months_at_creation);
+      return est;
+    }
+    return null;
+  }, [dog]);
+
+  const [dateOfBirth, setDateOfBirth] = useState<Date | null>(estimatedDob);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
+  const handleDateChange = (_: DateTimePickerEvent, selectedDate?: Date) => {
+    if (Platform.OS === 'android') setShowDatePicker(false);
+    if (selectedDate) {
+      setDateOfBirth(selectedDate);
+      setHasChanges(true);
+    }
+  };
+
+  const formatDob = (date: Date) =>
+    date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
   if (!dog) {
     return (
@@ -92,6 +122,8 @@ export default function DogManageScreen() {
     if (trimmedName !== dog.name) updates.name = trimmedName;
     if (breed.trim() !== (dog.breed ?? '')) updates.breed = breed.trim() || null;
     if (photoUri !== dog.photo_url) updates.photo_url = photoUri;
+    const newDob = dateOfBirth ? dateOfBirth.toISOString().split('T')[0] : null;
+    if (newDob !== (dog.date_of_birth ?? null)) updates.date_of_birth = newDob;
 
     if (Object.keys(updates).length > 0) {
       // Warn about breed change → plan regen
@@ -351,6 +383,73 @@ export default function DogManageScreen() {
               marginBottom: 16,
             }}
           />
+        </Animated.View>
+
+        {/* Date of Birth */}
+        <Animated.View entering={FadeInDown.duration(300).delay(175)}>
+          <Typography variant="caption" style={{ fontWeight: '600', marginBottom: 6 }}>
+            Date of Birth
+          </Typography>
+          <Pressable
+            onPress={() => setShowDatePicker(true)}
+            style={{
+              backgroundColor: COLORS.surface,
+              borderRadius: RADIUS.md,
+              paddingHorizontal: 16,
+              paddingVertical: 14,
+              borderWidth: 1,
+              borderColor: COLORS.border,
+              marginBottom: 4,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <Typography
+              variant="body"
+              color={dateOfBirth ? 'primary' : 'tertiary'}
+            >
+              {dateOfBirth ? formatDob(dateOfBirth) : 'Tap to set date of birth'}
+            </Typography>
+            <Typography style={{ fontSize: 16 }}>📅</Typography>
+          </Pressable>
+          {!dog.date_of_birth && dateOfBirth && (
+            <Typography variant="caption" color="tertiary" style={{ marginBottom: 12 }}>
+              Estimated from age at signup. Tap to set the exact date.
+            </Typography>
+          )}
+          {!dateOfBirth && (
+            <Typography variant="caption" color="tertiary" style={{ marginBottom: 12 }}>
+              Exact DOB helps with milestone tracking, vaccinations, and growth curves.
+            </Typography>
+          )}
+          {dog.date_of_birth && dateOfBirth && (
+            <View style={{ height: 12 }} />
+          )}
+          {showDatePicker && (
+            <View style={{ marginBottom: 12 }}>
+              <DateTimePicker
+                value={dateOfBirth ?? new Date()}
+                mode="date"
+                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                maximumDate={new Date()}
+                onChange={handleDateChange}
+              />
+              {Platform.OS === 'ios' && (
+                <Pressable
+                  onPress={() => setShowDatePicker(false)}
+                  style={{ alignSelf: 'flex-end', paddingVertical: 8, paddingHorizontal: 4 }}
+                >
+                  <Typography
+                    variant="body-sm-medium"
+                    style={{ color: COLORS.primary.DEFAULT }}
+                  >
+                    Done
+                  </Typography>
+                </Pressable>
+              )}
+            </View>
+          )}
         </Animated.View>
 
         {/* Info card */}

@@ -117,7 +117,7 @@ export function AchievementUnlock({
             className="bg-accent-light rounded-2xl px-xl py-base mb-lg w-full items-center"
           >
             <Typography variant="h3" style={{ color: "#F5A623" }}>
-              +{achievement.xpBonus} XP
+              +{achievement.xpBonus} points
             </Typography>
           </Animated.View>
 
