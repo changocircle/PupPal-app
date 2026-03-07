@@ -12,6 +12,7 @@ import { nanoid } from "nanoid/non-secure";
 import type {
   ScheduledVaccination,
   VaccinationStatus,
+  VaccinationSetupMethod,
   Medication,
   MedicationEvent,
   MedicationCategory,
@@ -81,6 +82,8 @@ interface HealthState {
   // ─── Vaccinations ───
   vaccinations: ScheduledVaccination[];
   vaccinationsInitialized: boolean;
+  vaccinationSetupComplete: boolean;
+  vaccinationSetupMethod: VaccinationSetupMethod;
 
   // ─── Medications ───
   medications: Medication[];
@@ -117,6 +120,16 @@ interface HealthState {
     data: { completedAt?: string; vetName?: string; notes?: string }
   ) => void;
   skipVaccination: (id: string) => void;
+
+  /** Complete the vaccination setup flow and recompute statuses */
+  completeVaccinationSetup: (params: {
+    method: VaccinationSetupMethod;
+    completedVaccines?: { vaccineKey: string; doseNumber: number; completedAt: string; vetName?: string }[];
+    dogId: string;
+    dateOfBirth: Date;
+    ageWeeks: number;
+    breed: string | null;
+  }) => void;
 
   // Medications
   addMedication: (data: {
@@ -231,6 +244,8 @@ export const useHealthStore = create<HealthState>()(
       // ─── Initial state ───
       vaccinations: [],
       vaccinationsInitialized: false,
+      vaccinationSetupComplete: false,
+      vaccinationSetupMethod: null,
       medications: [],
       medicationEvents: [],
       weightEntries: [],
@@ -277,6 +292,49 @@ export const useHealthStore = create<HealthState>()(
               : v
           ),
         }));
+      },
+
+      completeVaccinationSetup: (params) => {
+        const { method, completedVaccines = [], dogId, dateOfBirth, ageWeeks, breed } = params;
+
+        // Regenerate schedule with setupComplete=true so statuses compute correctly
+        const freshSchedule = generateVaccinationSchedule({
+          dogId,
+          dateOfBirth,
+          ageWeeks,
+          breed,
+          registrationDate: new Date().toISOString().split("T")[0],
+          setupComplete: true,
+        });
+
+        // Apply completed vaccines from upload/manual entry
+        const updatedSchedule = freshSchedule.map((vax) => {
+          const match = completedVaccines.find(
+            (cv) => cv.vaccineKey === vax.vaccineKey && cv.doseNumber === vax.doseNumber
+          );
+          if (match) {
+            return {
+              ...vax,
+              status: "completed" as VaccinationStatus,
+              completedAt: match.completedAt,
+              vetName: match.vetName ?? null,
+            };
+          }
+
+          // "Start fresh": skip all past-window vaccines that weren't completed
+          if (method === "fresh" && (vax.status === "overdue" || vax.status === "unknown")) {
+            return { ...vax, status: "skipped" as VaccinationStatus };
+          }
+
+          return vax;
+        });
+
+        set({
+          vaccinations: updatedSchedule,
+          vaccinationsInitialized: true,
+          vaccinationSetupComplete: true,
+          vaccinationSetupMethod: method,
+        });
       },
 
       // ═══════════════════════════════════════════
@@ -559,6 +617,8 @@ export const useHealthStore = create<HealthState>()(
         set({
           vaccinations: [],
           vaccinationsInitialized: false,
+          vaccinationSetupComplete: false,
+          vaccinationSetupMethod: null,
           medications: [],
           medicationEvents: [],
           weightEntries: [],
@@ -716,9 +776,10 @@ export const useHealthStore = create<HealthState>()(
         const notes = get().getHealthNotesForDog(dogId);
 
         // Vaccination status
+        const setupDone = get().vaccinationSetupComplete;
         let vaccinationStatus: "up_to_date" | "due_soon" | "overdue" | "not_set_up" =
           "not_set_up";
-        if (vaccinations.length > 0) {
+        if (vaccinations.length > 0 && setupDone) {
           if (vaccinations.some((v) => v.status === "overdue")) {
             vaccinationStatus = "overdue";
           } else if (vaccinations.some((v) => v.status === "due_soon")) {

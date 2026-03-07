@@ -14,7 +14,10 @@ export type VaccinationStatus =
   | "overdue"
   | "completed"
   | "skipped"
-  | "unknown";
+  | "unknown"
+  | "not_logged";
+
+export type VaccinationSetupMethod = "upload" | "manual" | "fresh" | null;
 
 export interface ScheduledVaccination {
   id: string;

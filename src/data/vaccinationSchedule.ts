@@ -9,6 +9,7 @@ import type {
   VaccineTemplate,
   ScheduledVaccination,
   VaccinationStatus,
+  VaccinationSetupMethod,
 } from "@/types/health";
 import { nanoid } from "nanoid/non-secure";
 
@@ -200,20 +201,26 @@ function addMonths(date: Date, months: number): string {
  * Determine status based on dates.
  *
  * `registrationDate` = when the dog was added to the app.
- * If a vaccine window closed *before* the registration date,
- * we mark it "unknown" instead of "overdue" because the user
- * hasn't had a chance to log it yet — they may already have it.
+ * `setupComplete`    = whether the user has completed vaccination setup.
+ *
+ * Before setup is complete, past-window vaccines show as "not_logged"
+ * instead of "overdue" so new users aren't alarmed by a wall of red.
  */
 function computeStatus(
   dueDate: string,
   windowEnd: string,
   today: string,
   registrationDate?: string,
+  setupComplete?: boolean,
 ): VaccinationStatus {
   if (today > windowEnd) {
-    // Window has closed — but was it already closed before the user registered?
+    // Window has closed. If setup hasn't been done yet, show as not_logged.
+    if (!setupComplete) {
+      return "not_logged";
+    }
+    // If user registered after window closed and hasn't marked it, it's unknown.
     if (registrationDate && windowEnd < registrationDate) {
-      return "unknown"; // user joined after window closed, don't flag overdue
+      return "unknown";
     }
     return "overdue";
   }
@@ -235,6 +242,7 @@ export function generateVaccinationSchedule(params: {
   breed: string | null;
   enabledNonCore?: string[]; // vaccine keys
   registrationDate?: string; // ISO date when dog was added (for overdue vs unknown)
+  setupComplete?: boolean; // whether vaccination setup flow is done
 }): ScheduledVaccination[] {
   const {
     dogId,
@@ -242,6 +250,7 @@ export function generateVaccinationSchedule(params: {
     breed,
     enabledNonCore = [],
     registrationDate,
+    setupComplete = false,
   } = params;
 
   const today = new Date().toISOString().split("T")[0]!;
@@ -264,14 +273,16 @@ export function generateVaccinationSchedule(params: {
       const windowStart = addWeeks(dateOfBirth, dose.windowStartWeeks);
       const windowEnd = addWeeks(dateOfBirth, dose.windowEndWeeks);
 
-      // If due date is way in the past (> 8 weeks ago), mark unknown
+      // If due date is way in the past (> 8 weeks ago) and setup is done, mark unknown
       const daysOverdue =
         (new Date(today).getTime() - new Date(windowEnd).getTime()) /
         86_400_000;
       const status: VaccinationStatus =
-        daysOverdue > 56
-          ? "unknown"
-          : computeStatus(dueDate, windowEnd, today, registrationDate);
+        !setupComplete && daysOverdue > 0
+          ? "not_logged" // Before setup: all past vaccines are "not logged"
+          : daysOverdue > 56
+            ? "unknown"
+            : computeStatus(dueDate, windowEnd, today, registrationDate, setupComplete);
 
       schedule.push({
         id: nanoid(),
