@@ -8,9 +8,7 @@ import { Modal, View, Share } from "react-native";
 import Animated, {
   FadeIn,
   FadeOut,
-  ZoomIn,
   FadeInDown,
-  SlideInUp,
 } from "react-native-reanimated";
 import { Typography, Button } from "@/components/ui";
 import type { LevelDefinition } from "@/types/gamification";
@@ -59,12 +57,12 @@ export function LevelUpOverlay({
         className="flex-1 bg-black/60 items-center justify-center px-xl"
       >
         <Animated.View
-          entering={ZoomIn.springify().damping(12)}
+          entering={FadeIn.duration(200)}
           className="bg-surface rounded-3xl p-3xl w-full max-w-[340px] items-center"
         >
           {/* Level badge */}
           <Animated.View
-            entering={ZoomIn.delay(200).springify().damping(8)}
+            entering={FadeIn.delay(100).duration(200)}
             className="w-[90px] h-[90px] rounded-full items-center justify-center mb-lg"
             style={{ backgroundColor: "#FFF6E5" }}
           >
@@ -94,7 +92,7 @@ export function LevelUpOverlay({
 
           {/* Buddy celebration */}
           <Animated.View
-            entering={SlideInUp.delay(500).springify()}
+            entering={FadeInDown.delay(350).duration(200)}
             className="flex-row items-start gap-sm mb-xl bg-background rounded-xl p-base w-full"
           >
             <Typography className="text-[24px]">🐕</Typography>

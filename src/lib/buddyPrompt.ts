@@ -5,7 +5,7 @@
  * Based on buddy-system-prompt.md.
  */
 
-import type { DogContext } from "@/types/chat";
+import type { DogContext, HouseholdDog } from "@/types/chat";
 import { getDevelopmentalStage } from "@/types/chat";
 
 // ── Main system prompt (static sections) ──
@@ -91,7 +91,7 @@ function buildDogContextBlock(ctx: DogContext): string {
           .join("\n")
       : "  No completed exercises yet";
 
-  return `The user's dog:
+  let block = `The user's dog:
 - Name: ${ctx.dogName}
 - Breed: ${ctx.breed ?? "Mixed / Unknown"}
 - Age: ${ageDisplay}
@@ -106,6 +106,25 @@ function buildDogContextBlock(ctx: DogContext): string {
 ${recentSessionsFormatted}
 
 Use this information in EVERY response. Make the user feel like you truly know their specific dog.`;
+
+  // Multi-dog household context
+  if (ctx.householdDogs && ctx.householdDogs.length > 1) {
+    const otherDogs = ctx.householdDogs
+      .filter((d) => d.name !== ctx.dogName)
+      .map((d) => {
+        const ageStr = d.ageMonths
+          ? d.ageMonths >= 12
+            ? `${Math.round(d.ageMonths / 12)} year(s)`
+            : `${d.ageMonths} months`
+          : "age unknown";
+        return `  - ${d.name}: ${d.breed ?? "Mixed/Unknown"}, ${ageStr}${d.challenges.length > 0 ? `, challenges: ${d.challenges.join(", ")}` : ""}`;
+      })
+      .join("\n");
+
+    block += `\n\nMULTI-DOG HOUSEHOLD:\nThe user has ${ctx.householdDogs.length} dogs total. The active dog is ${ctx.dogName}.\nOther dogs:\n${otherDogs}\n\nYou know ALL of these dogs. If the user asks about any of them, you can give breed-appropriate advice. If they ask about dogs interacting, reference both dogs' breeds, ages, and temperaments. Never say you don't have info about their other dogs.`;
+  }
+
+  return block;
 }
 
 // ── Build conversation context block ──

@@ -8,8 +8,6 @@ import { Modal, View, Pressable, Share, Platform } from "react-native";
 import Animated, {
   FadeIn,
   FadeOut,
-  ZoomIn,
-  SlideInUp,
   FadeInDown,
 } from "react-native-reanimated";
 import { Typography, Button } from "@/components/ui";
@@ -68,12 +66,12 @@ export function AchievementUnlock({
         className="flex-1 bg-black/60 items-center justify-center px-xl"
       >
         <Animated.View
-          entering={ZoomIn.springify().damping(12)}
+          entering={FadeIn.duration(200)}
           className="bg-surface rounded-3xl p-3xl w-full max-w-[340px] items-center"
         >
           {/* Badge */}
           <Animated.View
-            entering={ZoomIn.delay(200).springify().damping(8)}
+            entering={FadeIn.delay(100).duration(200)}
             className="w-[80px] h-[80px] rounded-full items-center justify-center mb-lg"
             style={{ backgroundColor: `${rarityColor}20` }}
           >
@@ -115,7 +113,7 @@ export function AchievementUnlock({
 
           {/* XP bonus */}
           <Animated.View
-            entering={SlideInUp.delay(500).springify()}
+            entering={FadeInDown.delay(350).duration(200)}
             className="bg-accent-light rounded-2xl px-xl py-base mb-lg w-full items-center"
           >
             <Typography variant="h3" style={{ color: "#F5A623" }}>

@@ -79,21 +79,34 @@ export function useChat(): UseChatReturn {
   // Build dog context for system prompt
   const dogName = dog?.name ?? onboarding.puppyName ?? "Your Pup";
   const breed = dog?.breed ?? onboarding.breed;
+  const ageMonths = dog?.age_months_at_creation ?? dog?.age_months ?? onboarding.ageMonths;
+
+  // Build household dogs list for multi-dog awareness
+  const householdDogs = dogs
+    .filter((d) => !d.archived_at)
+    .map((d) => ({
+      name: d.name,
+      breed: d.breed,
+      ageMonths: d.age_months_at_creation ?? d.age_months ?? null,
+      challenges: d.challenges ?? [],
+      isActive: d.id === activeDogId,
+    }));
 
   const dogContext: DogContext = {
     dogName,
     breed: breed ?? undefined,
-    ageWeeks: onboarding.ageMonths
-      ? Math.round(onboarding.ageMonths * 4.3)
+    ageWeeks: ageMonths
+      ? Math.round(ageMonths * 4.3)
       : 12,
     developmentalStage: "",
-    challenges: onboarding.challenges ?? [],
-    experienceLevel: onboarding.ownerExperience ?? "first_time",
+    challenges: dog?.challenges ?? onboarding.challenges ?? [],
+    experienceLevel: (dog?.owner_experience as any) ?? onboarding.ownerExperience ?? "first_time",
     currentPlanWeek: plan?.currentWeek ?? 1,
     completedMilestones: [],
     goodBoyScore: 0,
     streakDays: streak,
     recentSessions: [],
+    householdDogs: householdDogs.length > 1 ? householdDogs : undefined,
   };
 
   const canSend = canSendMessage(isPremium) && !isStreaming;

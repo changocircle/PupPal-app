@@ -75,6 +75,15 @@ export type BuddyExpression =
   | "attentive";
 
 // ── Dog context for system prompt ──
+/** Summary of a dog in the household (for multi-dog context in chat) */
+export interface HouseholdDog {
+  name: string;
+  breed: string | null;
+  ageMonths: number | null;
+  challenges: string[];
+  isActive: boolean;
+}
+
 export interface DogContext {
   dogName: string;
   breed?: string;
@@ -91,6 +100,8 @@ export interface DogContext {
     exercise: string;
     result: string;
   }[];
+  /** All dogs in the household (for multi-dog awareness) */
+  householdDogs?: HouseholdDog[];
 }
 
 // ── Free tier tracking ──

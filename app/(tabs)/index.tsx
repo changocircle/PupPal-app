@@ -72,8 +72,11 @@ function HomeScreenContent() {
   const addDog = useDogStore((s) => s.addDog);
   const setActiveDog = useDogStore((s) => s.setActiveDog);
 
+  const saveCurrentDogState = useDogStore((s) => s.saveCurrentDogState);
+
   // Auto-register the first dog into dogStore if it only exists in onboardingStore.
   // This ensures the dog appears in the DogSwitcher and manage-dogs list.
+  // Also saves per-dog data so it survives dog switches later.
   useEffect(() => {
     if (onboardingData.puppyName && dogs.length === 0) {
       const now = new Date().toISOString();
@@ -85,6 +88,7 @@ function HomeScreenContent() {
         breed: onboardingData.breed,
         photo_url: onboardingData.photoUri,
         age_months: onboardingData.ageMonths,
+        age_months_at_creation: onboardingData.ageMonths,
         date_of_birth: onboardingData.dateOfBirth,
         challenges: onboardingData.challenges,
         owner_experience: onboardingData.ownerExperience,
@@ -95,24 +99,39 @@ function HomeScreenContent() {
         archived_at: null,
       } as any);
       setActiveDog(firstDogId);
+
+      // Save per-dog data snapshot so the first dog's plan, health, etc.
+      // persist correctly when switching to a second dog later.
+      setTimeout(() => saveCurrentDogState(), 500);
     }
   }, [onboardingData.puppyName, dogs.length]);
 
-  // Auto-generate plan if not yet created and we have onboarding data
+  const isSwitching = useDogStore((s) => s.isSwitching);
+
+  // Auto-generate plan if not yet created for the ACTIVE dog.
+  // Uses the active dog's data (not onboardingData) to ensure each dog
+  // gets a personalised plan based on their breed, age, and challenges.
   useEffect(() => {
-    if (!plan && onboardingData.puppyName) {
-      const ageWeeks = onboardingData.ageMonths
-        ? onboardingData.ageMonths * 4.3
-        : 12;
-      generatePlan({
-        dogName: onboardingData.puppyName,
-        breed: onboardingData.breed,
-        ageWeeks: Math.round(ageWeeks),
-        challenges: onboardingData.challenges,
-        experience: onboardingData.ownerExperience,
-      });
-    }
-  }, [plan, onboardingData.puppyName]);
+    // Don't regenerate during a dog switch — the per-dog store swap will
+    // load the correct plan from AsyncStorage via rehydration.
+    if (isSwitching) return;
+    if (plan) return;
+
+    // Use active dog data if available, fall back to onboarding data for first dog
+    const name = dog?.name ?? onboardingData.puppyName;
+    if (!name) return;
+
+    const ageMonths = dog?.age_months_at_creation ?? dog?.age_months ?? onboardingData.ageMonths ?? 3;
+    const ageWeeks = Math.round(ageMonths * 4.3);
+
+    generatePlan({
+      dogName: name,
+      breed: dog?.breed ?? onboardingData.breed,
+      ageWeeks,
+      challenges: dog?.challenges ?? onboardingData.challenges,
+      experience: (dog?.owner_experience as any) ?? onboardingData.ownerExperience,
+    });
+  }, [plan, dog?.id, isSwitching]);
 
   const todayExercises = useMemo(() => getTodayExercises(), [plan]);
   const currentWeek = useMemo(() => getCurrentWeek(), [plan]);
