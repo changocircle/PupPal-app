@@ -44,7 +44,7 @@ export default function VaccineManualScreen() {
   const plan = useTrainingStore((s) => s.plan);
   const onboardingData = useOnboardingStore((s) => s.data);
   const dogName =
-    dog?.name ?? plan?.dogName ?? onboardingData.puppyName || "Your Pup";
+    dog?.name ?? plan?.dogName ?? onboardingData.puppyName ?? "Your Pup";
   const dogId = dog?.id ?? plan?.dogName ?? "default-dog";
   const breed = dog?.breed ?? plan?.breed ?? onboardingData.breed ?? null;
   const ageMonths = onboardingData.ageMonths ?? 3;
