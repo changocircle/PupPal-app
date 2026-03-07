@@ -4,6 +4,10 @@
  *
  * Manages the dog list, active dog selection, archive/delete,
  * and coordinates per-dog store data swaps on switch.
+ *
+ * Sync-aware: exposes _syncMeta and _mergeDogs for the sync layer.
+ * The sync layer (dogSync.ts) subscribes to changes via useDogSync hook,
+ * NOT via imports in this file (avoids circular deps).
  */
 
 import { create } from "zustand";
@@ -83,6 +87,24 @@ async function deletePerDogData(dogId: string): Promise<void> {
 }
 
 // ──────────────────────────────────────────────
+// Sync Metadata (transient, not persisted)
+// ──────────────────────────────────────────────
+
+export type SyncStatus = "idle" | "syncing" | "error";
+
+export interface DogSyncMeta {
+  status: SyncStatus;
+  lastSyncedAt: string | null;
+  pendingCount: number;
+}
+
+const DEFAULT_SYNC_META: DogSyncMeta = {
+  status: "idle",
+  lastSyncedAt: null,
+  pendingCount: 0,
+};
+
+// ──────────────────────────────────────────────
 // Store
 // ──────────────────────────────────────────────
 
@@ -93,6 +115,8 @@ interface DogState {
   activeDogId: string | null;
   /** Whether a dog switch is in progress */
   isSwitching: boolean;
+  /** Sync metadata (transient, not persisted to AsyncStorage) */
+  _syncMeta: DogSyncMeta;
 
   // Computed
   activeDog: () => Dog | null;
@@ -117,6 +141,18 @@ interface DogState {
 
   /** Reset all dog data and per-dog AsyncStorage (call on sign-out) */
   resetDogs: () => void;
+
+  // ── Sync-layer actions (prefixed with _ to indicate internal use) ──
+
+  /** Update sync metadata (called by dogSync.ts) */
+  _setSyncMeta: (updates: Partial<DogSyncMeta>) => void;
+
+  /**
+   * Merge dogs from sync without resetting active selection.
+   * Unlike setDogs, this preserves the current activeDogId if possible.
+   * Called by dogSync.ts during pull phase.
+   */
+  _mergeDogs: (dogs: Dog[]) => void;
 }
 
 export const useDogStore = create<DogState>()(
@@ -125,6 +161,7 @@ export const useDogStore = create<DogState>()(
       dogs: [],
       activeDogId: null,
       isSwitching: false,
+      _syncMeta: { ...DEFAULT_SYNC_META },
 
       // ─── Computed ───
 
@@ -285,6 +322,29 @@ export const useDogStore = create<DogState>()(
         }
         set({ dogs: [], activeDogId: null, isSwitching: false });
       },
+
+      // ─── Sync Actions ───
+
+      _setSyncMeta: (updates) =>
+        set((state) => ({
+          _syncMeta: { ...state._syncMeta, ...updates },
+        })),
+
+      _mergeDogs: (dogs) => {
+        const { activeDogId } = get();
+        const activeStillExists = dogs.some(
+          (d) => d.id === activeDogId && !d.archived_at,
+        );
+
+        set({
+          dogs,
+          activeDogId: activeStillExists
+            ? activeDogId
+            : dogs.find((d) => d.is_active && !d.archived_at)?.id ??
+              dogs.find((d) => !d.archived_at)?.id ??
+              null,
+        });
+      },
     }),
     {
       name: "puppal-dogs",
@@ -292,6 +352,7 @@ export const useDogStore = create<DogState>()(
       partialize: (state) => ({
         dogs: state.dogs,
         activeDogId: state.activeDogId,
+        // _syncMeta is NOT persisted (resets to defaults on restart)
       }),
     }
   )
