@@ -16,6 +16,7 @@ import { useOnboardingStore } from "@/stores/onboardingStore";
 import { useSubscription } from "@/hooks/useSubscription";
 import { useHydration } from "@/hooks/useHydration";
 import type { ChatMessage } from "@/types/chat";
+import { FREE_MESSAGE_LIMIT } from "@/types/chat";
 
 /**
  * Buddy AI Chat Screen, PRD-02
@@ -129,11 +130,11 @@ function ChatScreenContent() {
               </Typography>
             </View>
           </View>
-          {/* Free tier counter */}
+          {/* Free tier counter — hidden for premium users */}
           {!isPremium && remainingMessages < Infinity && (
             <View className="bg-primary-light px-sm py-xs rounded-full">
               <Typography variant="caption" style={{ color: "#FF6B5C" }}>
-                {remainingMessages}/3 today
+                {remainingMessages}/{FREE_MESSAGE_LIMIT} today
               </Typography>
             </View>
           )}

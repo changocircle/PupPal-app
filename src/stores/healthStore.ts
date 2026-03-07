@@ -110,6 +110,7 @@ interface HealthState {
     ageWeeks: number;
     breed: string | null;
     enabledNonCore?: string[];
+    registrationDate?: string;
   }) => void;
   completeVaccination: (
     id: string,
@@ -245,7 +246,10 @@ export const useHealthStore = create<HealthState>()(
       // ═══════════════════════════════════════════
 
       initVaccinations: (params) => {
-        const schedule = generateVaccinationSchedule(params);
+        const schedule = generateVaccinationSchedule({
+          ...params,
+          registrationDate: params.registrationDate,
+        });
         set({ vaccinations: schedule, vaccinationsInitialized: true });
       },
 

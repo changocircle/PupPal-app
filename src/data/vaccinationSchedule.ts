@@ -197,14 +197,26 @@ function addMonths(date: Date, months: number): string {
 }
 
 /**
- * Determine status based on dates
+ * Determine status based on dates.
+ *
+ * `registrationDate` = when the dog was added to the app.
+ * If a vaccine window closed *before* the registration date,
+ * we mark it "unknown" instead of "overdue" because the user
+ * hasn't had a chance to log it yet — they may already have it.
  */
 function computeStatus(
   dueDate: string,
   windowEnd: string,
-  today: string
+  today: string,
+  registrationDate?: string,
 ): VaccinationStatus {
-  if (today > windowEnd) return "overdue";
+  if (today > windowEnd) {
+    // Window has closed — but was it already closed before the user registered?
+    if (registrationDate && windowEnd < registrationDate) {
+      return "unknown"; // user joined after window closed, don't flag overdue
+    }
+    return "overdue";
+  }
   // "due_soon" = within 7 days
   const dueDateMs = new Date(dueDate).getTime();
   const todayMs = new Date(today).getTime();
@@ -222,12 +234,14 @@ export function generateVaccinationSchedule(params: {
   ageWeeks: number;
   breed: string | null;
   enabledNonCore?: string[]; // vaccine keys
+  registrationDate?: string; // ISO date when dog was added (for overdue vs unknown)
 }): ScheduledVaccination[] {
   const {
     dogId,
     dateOfBirth,
     breed,
     enabledNonCore = [],
+    registrationDate,
   } = params;
 
   const today = new Date().toISOString().split("T")[0]!;
@@ -255,7 +269,9 @@ export function generateVaccinationSchedule(params: {
         (new Date(today).getTime() - new Date(windowEnd).getTime()) /
         86_400_000;
       const status: VaccinationStatus =
-        daysOverdue > 56 ? "unknown" : computeStatus(dueDate, windowEnd, today);
+        daysOverdue > 56
+          ? "unknown"
+          : computeStatus(dueDate, windowEnd, today, registrationDate);
 
       schedule.push({
         id: nanoid(),

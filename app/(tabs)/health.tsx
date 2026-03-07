@@ -83,6 +83,7 @@ function HealthScreenContent() {
         dateOfBirth: dob,
         ageWeeks,
         breed,
+        registrationDate: new Date().toISOString().split("T")[0],
       });
     }
   }, [vaccinationsInitialized, dogId, breed, ageWeeks]);
