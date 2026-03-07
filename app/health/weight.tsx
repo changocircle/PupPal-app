@@ -107,7 +107,7 @@ export default function WeightScreen() {
         {/* Header */}
         <Pressable
           onPress={() => router.back()}
-          className="px-xl pt-base pb-sm"
+          className="px-xl pt-base pb-base"
         >
           <Typography variant="body-medium" style={{ color: "#FF6B5C" }}>
             ← Back

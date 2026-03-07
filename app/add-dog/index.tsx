@@ -364,22 +364,23 @@ export default function AddDogScreen() {
                     </View>
                   </Pressable>
                 ) : (
-                  <View style={{ flexDirection: 'row', gap: 12 }}>
+                  <View style={{ flexDirection: 'row', gap: 16, justifyContent: 'center' }}>
                     <Pressable
                       onPress={handlePickPhoto}
                       style={{
-                        width: 120,
-                        height: 120,
-                        borderRadius: 60,
+                        width: 110,
+                        height: 110,
+                        borderRadius: 55,
                         backgroundColor: COLORS.primary.extralight,
                         borderWidth: 2,
                         borderColor: COLORS.primary.light,
                         borderStyle: 'dashed',
                         justifyContent: 'center',
                         alignItems: 'center',
+                        overflow: 'visible',
                       }}
                     >
-                      <Typography style={{ fontSize: 32, marginBottom: 4 }}>
+                      <Typography style={{ fontSize: 28, marginBottom: 4 }}>
                         🖼️
                       </Typography>
                       <Typography variant="caption" color="secondary">
@@ -389,18 +390,19 @@ export default function AddDogScreen() {
                     <Pressable
                       onPress={handleTakePhoto}
                       style={{
-                        width: 120,
-                        height: 120,
-                        borderRadius: 60,
+                        width: 110,
+                        height: 110,
+                        borderRadius: 55,
                         backgroundColor: COLORS.primary.extralight,
                         borderWidth: 2,
                         borderColor: COLORS.primary.light,
                         borderStyle: 'dashed',
                         justifyContent: 'center',
                         alignItems: 'center',
+                        overflow: 'visible',
                       }}
                     >
-                      <Typography style={{ fontSize: 32, marginBottom: 4 }}>
+                      <Typography style={{ fontSize: 28, marginBottom: 4 }}>
                         📷
                       </Typography>
                       <Typography variant="caption" color="secondary">
