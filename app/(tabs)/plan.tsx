@@ -12,6 +12,7 @@ import {
 } from "@/components/training";
 import { useTrainingStore } from "@/stores/trainingStore";
 import { useDogStore } from "@/stores/dogStore";
+import { DogSwitcherButton } from "@/components/dog/DogSwitcherButton";
 import { useSubscription } from "@/hooks/useSubscription";
 import { useHydration } from "@/hooks/useHydration";
 import { useTrickStore } from "@/stores/trickStore";
@@ -101,7 +102,10 @@ function PlanScreenContent() {
           entering={FadeInDown.duration(400)}
           className="pt-3xl mb-lg"
         >
-          <Typography variant="h1">{dogName}'s Plan</Typography>
+          <View className="flex-row items-center justify-between mb-xs">
+            <Typography variant="h1">{dogName}'s Plan</Typography>
+            <DogSwitcherButton />
+          </View>
           <Typography variant="body" color="secondary">
             12-week personalised training roadmap
           </Typography>

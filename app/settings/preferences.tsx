@@ -1,5 +1,5 @@
 import React from "react";
-import { View, ScrollView, Pressable, Switch, Alert } from "react-native";
+import { View, ScrollView, Pressable, Switch, Alert, Platform, ToastAndroid } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { useRouter } from "expo-router";
@@ -43,6 +43,21 @@ export default function PreferencesScreen() {
   } = useSettingsStore();
 
   const setHealthUnit = useHealthStore((s) => s.setPreferredWeightUnit);
+
+  const handleLanguageSelect = (lang: AppLanguage) => {
+    setLanguage(lang);
+    if (lang !== "en") {
+      if (Platform.OS === "android") {
+        ToastAndroid.show("Language support coming soon! English only for now.", ToastAndroid.SHORT);
+      } else {
+        Alert.alert(
+          "Coming Soon! 🌍",
+          `${LANGUAGES.find((l) => l.key === lang)?.label} support is on its way! We'll notify you when it's ready. English only for now.`,
+          [{ text: "Got it" }]
+        );
+      }
+    }
+  };
 
   const handleWeightToggle = () => {
     const newUnit = weightUnit === "lbs" ? "kg" : "lbs";
@@ -179,7 +194,7 @@ export default function PreferencesScreen() {
             {LANGUAGES.map((lang, index) => (
               <Pressable
                 key={lang.key}
-                onPress={() => setLanguage(lang.key)}
+                onPress={() => handleLanguageSelect(lang.key)}
                 className={`flex-row items-center justify-between py-md ${
                   index < LANGUAGES.length - 1 ? "border-b border-border" : ""
                 }`}

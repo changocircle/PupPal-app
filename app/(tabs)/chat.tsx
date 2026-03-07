@@ -12,6 +12,7 @@ import {
 } from "@/components/chat";
 import { useChat } from "@/hooks/useChat";
 import { useDogStore } from "@/stores/dogStore";
+import { DogSwitcherButton } from "@/components/dog/DogSwitcherButton";
 import { useOnboardingStore } from "@/stores/onboardingStore";
 import { useSubscription } from "@/hooks/useSubscription";
 import { useHydration } from "@/hooks/useHydration";
@@ -138,6 +139,9 @@ function ChatScreenContent() {
               </Typography>
             </View>
           )}
+          <View className="ml-sm">
+            <DogSwitcherButton />
+          </View>
         </Animated.View>
 
         {/* ── Messages ── */}

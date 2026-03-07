@@ -22,9 +22,9 @@ import BREEDS_JSON from "@/data/breeds.json";
  * PRD-01 Section 3, Screen 3
  *
  * Confidence thresholds:
- *   >70%  → auto-fill breed with Buddy reaction
- *   40-70 → show suggestion with confirm/change
- *   <40%  → "I couldn't get a clear read" + searchable breed selector
+ *   >80%  → auto-fill breed with Buddy reaction
+ *   50-80 → show suggestion with confirm/change
+ *   <50%  → "I couldn't get a clear read" + searchable breed selector
  *   fail  → "What breed is [Name]?" + searchable breed selector
  *
  * Special options:
@@ -182,6 +182,8 @@ export default function PhotoScreen() {
   const [showManualSelector, setShowManualSelector] = useState(false);
   const [isMixedBreed, setIsMixedBreed] = useState(false);
   const [notSure, setNotSure] = useState(false);
+  const [showFreeText, setShowFreeText] = useState(false);
+  const [freeTextBreed, setFreeTextBreed] = useState("");
   const puppyName = data.puppyName || "your pup";
 
   const runDetection = useCallback(
@@ -190,6 +192,8 @@ export default function PhotoScreen() {
       setShowManualSelector(false);
       setIsMixedBreed(false);
       setNotSure(false);
+      setShowFreeText(false);
+      setFreeTextBreed("");
 
       const result = await detectBreed(uri);
 
@@ -200,7 +204,7 @@ export default function PhotoScreen() {
         return;
       }
 
-      if (result.lowConfidence || result.confidence < 40) {
+      if (result.lowConfidence || result.confidence < 50) {
         // Low confidence → show selector with message
         setDetection({
           status: "low",
@@ -210,7 +214,7 @@ export default function PhotoScreen() {
         return;
       }
 
-      if (result.confidence > 70) {
+      if (result.confidence > 80) {
         // High confidence → auto-fill
         updateData({
           breed: result.topBreed,
@@ -240,7 +244,7 @@ export default function PhotoScreen() {
       mediaTypes: ["images"],
       allowsEditing: true,
       aspect: [1, 1],
-      quality: 0.8,
+      quality: 1.0,
     });
 
     if (!result.canceled && result.assets[0]) {
@@ -481,8 +485,93 @@ export default function PhotoScreen() {
               </Animated.View>
             )}
 
+            {/* ─── Mixed Breed + Free Text links (visible after any detection) ─── */}
+            {data.photoUri && detection.status !== "idle" && detection.status !== "detecting" && !isMixedBreed && !notSure && !showFreeText && (
+              <Animated.View
+                entering={FadeInDown.duration(300).delay(200)}
+                className="mt-base w-full items-center gap-xs"
+              >
+                <Pressable
+                  onPress={() => {
+                    setIsMixedBreed(true);
+                    setShowManualSelector(false);
+                    setShowFreeText(false);
+                    updateData({ breed: "Mixed Breed", breedDetected: true, breedMix1: null, breedMix2: null });
+                  }}
+                  className="bg-surface border border-border rounded-md px-xl py-sm"
+                >
+                  <Typography variant="body-sm-medium" color="accent" className="text-center">
+                    🐾 My dog is a mixed breed
+                  </Typography>
+                </Pressable>
+                <Pressable
+                  onPress={() => {
+                    setShowFreeText(true);
+                    setShowManualSelector(false);
+                  }}
+                >
+                  <Typography variant="caption" color="secondary" className="text-center mt-xs">
+                    Type your own breed
+                  </Typography>
+                </Pressable>
+              </Animated.View>
+            )}
+
+            {/* ─── Free text breed entry ─── */}
+            {showFreeText && !isMixedBreed && (
+              <Animated.View
+                entering={FadeInDown.duration(300)}
+                className="mt-lg w-full gap-sm"
+              >
+                <Typography variant="body-sm-medium" color="secondary">
+                  Enter your dog's breed:
+                </Typography>
+                <View className="flex-row gap-sm items-center">
+                  <TextInput
+                    className="flex-1 bg-surface border border-border rounded-sm px-base h-[48px] text-body font-brand-regular text-text-primary"
+                    placeholder="e.g. Cavapoo, Bernedoodle..."
+                    placeholderTextColor="#9CA3AF"
+                    value={freeTextBreed}
+                    onChangeText={setFreeTextBreed}
+                    autoCapitalize="words"
+                    autoCorrect={false}
+                    returnKeyType="done"
+                    onSubmitEditing={() => {
+                      if (freeTextBreed.trim()) {
+                        confirmBreed(freeTextBreed.trim());
+                        setShowFreeText(false);
+                      }
+                    }}
+                  />
+                  <Pressable
+                    onPress={() => {
+                      if (freeTextBreed.trim()) {
+                        confirmBreed(freeTextBreed.trim());
+                        setShowFreeText(false);
+                      }
+                    }}
+                    className="bg-primary rounded-sm h-[48px] px-lg items-center justify-center"
+                  >
+                    <Typography variant="body-sm-medium" color="inverse">
+                      Set
+                    </Typography>
+                  </Pressable>
+                </View>
+                <Pressable
+                  onPress={() => {
+                    setShowFreeText(false);
+                    setFreeTextBreed("");
+                  }}
+                >
+                  <Typography variant="caption" color="secondary" className="text-center">
+                    ← Back to breed list
+                  </Typography>
+                </Pressable>
+              </Animated.View>
+            )}
+
             {/* ─── Searchable breed selector (low / manual / user clicked change) ─── */}
-            {showManualSelector && !isMixedBreed && !notSure && (
+            {showManualSelector && !isMixedBreed && !notSure && !showFreeText && (
               <Animated.View
                 entering={FadeInDown.duration(300)}
                 className="mt-lg w-full gap-sm"

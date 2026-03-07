@@ -263,28 +263,26 @@ export default function MedicationsScreen() {
               <Typography variant="caption" color="secondary" className="mb-xs">
                 Frequency
               </Typography>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-base">
-                <View className="flex-row gap-sm">
-                  {FREQUENCIES.map((f) => (
-                    <Pressable
-                      key={f.key}
-                      onPress={() => setFrequency(f.key)}
-                      className={`px-md py-sm rounded-full ${
-                        frequency === f.key
-                          ? "bg-primary"
-                          : "bg-surface border border-border"
-                      }`}
+              <View className="flex-row flex-wrap gap-sm mb-base">
+                {FREQUENCIES.map((f) => (
+                  <Pressable
+                    key={f.key}
+                    onPress={() => setFrequency(f.key)}
+                    className={`px-md py-sm rounded-full ${
+                      frequency === f.key
+                        ? "bg-primary"
+                        : "bg-surface border border-border"
+                    }`}
+                  >
+                    <Typography
+                      variant="caption"
+                      color={frequency === f.key ? "inverse" : "secondary"}
                     >
-                      <Typography
-                        variant="caption"
-                        color={frequency === f.key ? "inverse" : "secondary"}
-                      >
-                        {f.label}
-                      </Typography>
-                    </Pressable>
-                  ))}
-                </View>
-              </ScrollView>
+                      {f.label}
+                    </Typography>
+                  </Pressable>
+                ))}
+              </View>
 
               {/* Reminder */}
               <ReminderPicker
