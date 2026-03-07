@@ -15,6 +15,7 @@ import * as ImagePicker from "expo-image-picker";
 import { Button, Typography } from "@/components/ui";
 import { useOnboardingStore } from "@/stores/onboardingStore";
 import { detectBreed, type BreedPrediction } from "@/lib/breedDetect";
+import { BreedScanAnimation, ScanOverlay } from "@/components/onboarding/BreedScanAnimation";
 import BREEDS_JSON from "@/data/breeds.json";
 
 /**
@@ -379,7 +380,7 @@ export default function PhotoScreen() {
   // Determine the Buddy speech text
   const getBuddySpeech = (): string => {
     if (detection.status === "detecting") {
-      return `Analyzing ${puppyName}'s photo... 🔍`;
+      return `Hold tight, working my magic on ${puppyName}... ✨`;
     }
     if (detection.status === "high") {
       return `${detection.breed}! What a beauty! ✨`;
@@ -456,16 +457,17 @@ export default function PhotoScreen() {
 
                     if (uri) {
                       // Filled slot — show photo with remove button
+                      const isDetecting = detection.status === "detecting";
                       return (
                         <View key={idx} style={{ alignItems: "center" }}>
-                          <Pressable onPress={() => pickImage(idx)}>
+                          <Pressable onPress={() => pickImage(idx)} disabled={isDetecting}>
                             <View
                               className="rounded-lg overflow-hidden"
                               style={{
                                 width: 100,
                                 height: 100,
                                 borderWidth: 2,
-                                borderColor: "#FF6B5C",
+                                borderColor: isDetecting ? "transparent" : "#FF6B5C",
                                 borderRadius: 12,
                               }}
                             >
@@ -474,28 +476,31 @@ export default function PhotoScreen() {
                                 style={{ width: 100, height: 100 }}
                                 contentFit="cover"
                               />
+                              {isDetecting && <ScanOverlay size={100} />}
                             </View>
                           </Pressable>
-                          <Pressable
-                            onPress={() => removePhoto(idx)}
-                            style={{
-                              position: "absolute",
-                              top: -6,
-                              right: -6,
-                              backgroundColor: "#FF6B5C",
-                              width: 22,
-                              height: 22,
-                              borderRadius: 11,
-                              alignItems: "center",
-                              justifyContent: "center",
-                            }}
-                          >
-                            <Typography
-                              style={{ color: "#fff", fontSize: 12, lineHeight: 14, fontWeight: "700" }}
+                          {!isDetecting && (
+                            <Pressable
+                              onPress={() => removePhoto(idx)}
+                              style={{
+                                position: "absolute",
+                                top: -6,
+                                right: -6,
+                                backgroundColor: "#FF6B5C",
+                                width: 22,
+                                height: 22,
+                                borderRadius: 11,
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
                             >
-                              ✕
-                            </Typography>
-                          </Pressable>
+                              <Typography
+                                style={{ color: "#fff", fontSize: 12, lineHeight: 14, fontWeight: "700" }}
+                              >
+                                ✕
+                              </Typography>
+                            </Pressable>
+                          )}
                           <Typography variant="caption" color="secondary" className="mt-xs text-center">
                             {guide.label}
                           </Typography>
@@ -578,14 +583,9 @@ export default function PhotoScreen() {
             {/* ─── Detection result states ─── */}
 
             {detection.status === "detecting" && (
-              <Animated.View
-                entering={FadeIn.duration(300)}
-                className="mt-lg items-center"
-              >
-                <Typography variant="body-sm" color="secondary">
-                  Detecting breed... 🔍
-                </Typography>
-              </Animated.View>
+              <View className="mt-lg w-full">
+                <BreedScanAnimation dogName={puppyName} photoSize={100} />
+              </View>
             )}
 
             {/* DIFFERENT DOGS — validation error */}
