@@ -125,7 +125,7 @@ function PlanScreenContent() {
           <Card className="flex-1 items-center py-sm">
             <Typography variant="h3">{totalXp}</Typography>
             <Typography variant="caption" color="secondary">
-              XP
+              Points
             </Typography>
           </Card>
           <Card className="flex-1 items-center py-sm">
@@ -356,16 +356,13 @@ function FullPlanView({
         let locked = false;
         let lockLabel = "";
 
-        if (devOverride) {
-          // Dev override: everything unlocked
+        if (devOverride || isAnnual) {
+          // Dev override or Annual: everything unlocked
           locked = false;
         } else if (!isPremium) {
           // Free: only Week 1
           locked = week.weekNumber > 1;
-          lockLabel = "Unlock with Premium";
-        } else if (isAnnual) {
-          // Annual: all weeks browsable
-          locked = false;
+          lockLabel = "Upgrade to Annual for full access";
         } else {
           // Monthly (default premium): sequential unlock
           // A week is unlocked if it's the current week, completed, or
@@ -378,7 +375,8 @@ function FullPlanView({
             week.weekNumber > plan.currentWeek &&
             week.status !== "completed" &&
             !prevCompleted;
-          lockLabel = "Complete previous week first";
+          const prevWeekNum = week.weekNumber - 1;
+          lockLabel = `Complete Week ${prevWeekNum} to unlock`;
         }
 
         if (!isPremium && locked && week.weekNumber === 2) {

@@ -208,7 +208,7 @@ function HomeScreenContent() {
                 <Typography className="text-[16px]">⭐️</Typography>
                 <Typography variant="body-sm-medium">Level {gam.level}</Typography>
                 <Typography variant="caption" color="secondary">·</Typography>
-                <Typography variant="body-sm" color="secondary">{gam.totalXp} XP</Typography>
+                <Typography variant="body-sm" color="secondary">{gam.totalXp} pts</Typography>
               </View>
               <View className="flex-row items-center gap-sm">
                 <Typography className="text-[16px]">🔥</Typography>
@@ -268,7 +268,7 @@ function HomeScreenContent() {
               <View className="flex-row gap-md mb-sm">
                 <Card className="flex-1 items-center py-sm bg-accent-light border-accent/20">
                   <Typography variant="h3">{gam.totalXp}</Typography>
-                  <Typography variant="caption" color="secondary">Total XP</Typography>
+                  <Typography variant="caption" color="secondary">Paw Points</Typography>
                 </Card>
                 <Card className="flex-1 items-center py-sm bg-success-light border-success/20">
                   <Typography variant="h3">{gam.goodBoyScore}</Typography>

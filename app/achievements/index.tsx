@@ -90,11 +90,11 @@ export default function AchievementsScreen() {
             {totalXp.toLocaleString()}
           </Typography>
           <Typography variant="caption" color="secondary" style={{ marginTop: 2 }}>
-            Total XP
+            Paw Points
           </Typography>
         </View>
         <View style={styles.statItem}>
-          <Typography variant="h3">Lv.{levelInfo.level}</Typography>
+          <Typography variant="h3">{levelInfo.title}</Typography>
           <Typography variant="caption" color="secondary" style={{ marginTop: 2 }}>
             {levelInfo.title}
           </Typography>

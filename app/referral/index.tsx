@@ -19,8 +19,8 @@ import { COLORS, RADIUS, SHADOWS } from '@/constants/theme';
 
 /** Reward tiers (PRD-08 §2) */
 const REWARD_TIERS = [
-  { action: 'Friend installs PupPal', referrer: '50 XP', referee: ', ', emoji: '📲' },
-  { action: 'Friend starts trial', referrer: '100 XP', referee: '+1 free msg/day', emoji: '🎯' },
+  { action: 'Friend installs PupPal', referrer: '50 Paw Points', referee: ', ', emoji: '📲' },
+  { action: 'Friend starts trial', referrer: '100 Paw Points', referee: '+1 free msg/day', emoji: '🎯' },
   { action: 'Friend goes Premium', referrer: '1 free month', referee: ', ', emoji: '⭐' },
 ];
 
@@ -228,7 +228,7 @@ export default function ReferralScreen() {
             {[
               { value: totalSharesSent, label: 'Invites Sent', emoji: '📤' },
               { value: totalReferrals, label: 'Friends Joined', emoji: '👥' },
-              { value: totalXpFromReferrals, label: 'XP Earned', emoji: '⭐' },
+              { value: totalXpFromReferrals, label: 'Points Earned', emoji: '⭐' },
             ].map((stat, i) => (
               <Card key={i} style={{ flex: 1, alignItems: 'center', paddingVertical: 16 }}>
                 <Typography style={{ fontSize: 20 }}>{stat.emoji}</Typography>

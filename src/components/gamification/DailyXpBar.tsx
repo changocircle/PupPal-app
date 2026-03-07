@@ -70,7 +70,7 @@ export function DailyXpBar({
       {/* Label */}
       <View className="flex-row items-center justify-between mb-[4px]">
         <Typography variant="caption" color="secondary">
-          Daily XP
+          Today's Training
         </Typography>
         <Typography variant="caption" color={isComplete ? undefined : "secondary"}>
           {isComplete ? (

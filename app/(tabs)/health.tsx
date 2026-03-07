@@ -150,7 +150,7 @@ function HealthScreenContent() {
   const handleLogDose = useCallback(
     (med: { id: string }) => {
       logMedicationDose(med.id, dogId);
-      Alert.alert("Logged!", "Dose recorded successfully. +3 XP 🎉");
+      Alert.alert("Logged!", "Dose recorded successfully. +3 points 🎉");
     },
     [logMedicationDose, dogId]
   );

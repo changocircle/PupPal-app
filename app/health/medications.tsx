@@ -113,7 +113,7 @@ export default function MedicationsScreen() {
   const handleLogDose = useCallback(
     (med: Medication) => {
       logMedicationDose(med.id, dogId);
-      Alert.alert("Logged!", `${med.name} dose recorded. +3 XP 🎉`);
+      Alert.alert("Logged!", `${med.name} dose recorded. +3 points 🎉`);
     },
     [logMedicationDose, dogId]
   );

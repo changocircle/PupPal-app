@@ -113,9 +113,10 @@ export function useSubscription() {
   const willRenew = isPremium && !isCancelled;
 
   // Plan type detection (for week unlock logic)
+  // Dev override behaves like annual so all content is testable
   const productId = user?.subscription_product_id ?? null;
-  const isAnnual = isPremium && productId === PRODUCTS.ANNUAL;
-  const isMonthly = isPremium && productId === PRODUCTS.MONTHLY;
+  const isAnnual = isPremium && (devPremiumOverride || productId === PRODUCTS.ANNUAL);
+  const isMonthly = isPremium && !devPremiumOverride && productId === PRODUCTS.MONTHLY;
   const isLifetime = isPremium && productId === PRODUCTS.LIFETIME;
 
   return {

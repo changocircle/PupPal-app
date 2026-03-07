@@ -116,7 +116,7 @@ export default function VetVisitsScreen() {
     }
 
     resetForm();
-    Alert.alert("Logged! 🏥", `Vet visit recorded.${followUp && reminder !== "none" ? " Follow-up reminder set! 🔔" : ""} +5 XP 🎉`);
+    Alert.alert("Logged! 🏥", `Vet visit recorded.${followUp && reminder !== "none" ? " Follow-up reminder set! 🔔" : ""} +5 points 🎉`);
   }, [
     visitType,
     reason,

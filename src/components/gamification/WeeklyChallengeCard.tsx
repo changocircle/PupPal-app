@@ -47,7 +47,7 @@ export function WeeklyChallengeCard({
 
         <Badge
           variant={completed ? "success" : "accent"}
-          label={completed ? "Done!" : `${xpReward} XP`}
+          label={completed ? "Done!" : `${xpReward} pts`}
         />
       </View>
 

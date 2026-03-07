@@ -297,7 +297,7 @@ export default function TrickDetailScreen() {
                   {progressionDesc}
                 </Typography>
                 <Typography variant="caption" color="secondary" className="mt-xs">
-                  +{levelMeta.xp} XP on completion
+                  +{levelMeta.xp} points on completion
                 </Typography>
               </Card>
             </Animated.View>
@@ -503,7 +503,7 @@ export default function TrickDetailScreen() {
             </View>
           ) : (
             <Button
-              label={`✅ Mark ${TRICK_LEVEL_META[activeLevel].label} Complete (+${levelMeta.xp} XP)`}
+              label={`✅ Mark ${TRICK_LEVEL_META[activeLevel].label} Complete (+${levelMeta.xp} points)`}
               variant="primary"
               onPress={handleCompleteLevel}
             />

@@ -139,7 +139,7 @@ export function ExerciseCard({
           <Typography variant="caption" color="secondary">
             {exercise.time_minutes} min
             {isCompleted && planExercise.xpEarned
-              ? ` • +${planExercise.xpEarned} XP`
+              ? ` • +${planExercise.xpEarned} points`
               : ""}
           </Typography>
         </View>

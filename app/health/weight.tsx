@@ -89,7 +89,7 @@ export default function WeightScreen() {
     setSelectedDate(new Date());
     setNotesInput("");
     setShowForm(false);
-    Alert.alert("Logged! ⚖️", `${val} ${unit} recorded. +5 XP 🎉`);
+    Alert.alert("Logged! ⚖️", `${val} ${unit} recorded. +5 points 🎉`);
   }, [weightInput, unit, selectedDate, notesInput, dogId, currentAgeWeeks, addWeightEntry, setPreferredUnit]);
 
   return (

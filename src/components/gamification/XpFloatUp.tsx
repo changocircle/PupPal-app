@@ -62,7 +62,7 @@ export function XpFloatUp({ amount, visible, onComplete }: XpFloatUpProps) {
         style,
       ]}
     >
-      +{amount} XP
+      +{amount} points
     </Animated.Text>
   );
 }

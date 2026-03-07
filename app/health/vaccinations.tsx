@@ -93,7 +93,7 @@ export default function VaccinationsScreen() {
             text: "Complete ✅",
             onPress: () => {
               completeVaccination(vax.id, {});
-              Alert.alert("Logged!", `${vax.vaccineName} recorded. +5 XP 🎉`);
+              Alert.alert("Logged!", `${vax.vaccineName} recorded. +5 points 🎉`);
             },
           },
         ]

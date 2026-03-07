@@ -250,7 +250,7 @@ function ProfileScreenContent() {
               </View>
               <View className="items-end">
                 <Typography variant="caption" color="secondary">
-                  Total XP
+                  Paw Points
                 </Typography>
                 <Typography variant="h2">{totalXp}</Typography>
               </View>
@@ -261,7 +261,7 @@ function ProfileScreenContent() {
               color="tertiary"
               className="mt-xs text-center"
             >
-              {currentLevelXp} / {currentLevelMax} XP to Level{" "}
+              {currentLevelXp} / {currentLevelMax} points to Level{" "}
               {currentLevel + 1}
             </Typography>
           </Card>

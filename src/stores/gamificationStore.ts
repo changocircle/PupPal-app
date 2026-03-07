@@ -230,7 +230,7 @@ export const useGamificationStore = create<GamificationState>()(
           source,
           sourceId: sourceId ?? null,
           earnedAt: new Date().toISOString(),
-          label: label ?? `+${amount} XP`,
+          label: label ?? `+${amount} points`,
         };
 
         const newTotal = state.totalXp + amount;
@@ -387,7 +387,7 @@ export const useGamificationStore = create<GamificationState>()(
           achievement.xpBonus,
           "achievement",
           `achievement-${achievement.slug}`,
-          `+${achievement.xpBonus} XP`
+          `+${achievement.xpBonus} points`
         );
       },
 

@@ -194,7 +194,7 @@ export default function AddEntryScreen() {
 
     Alert.alert(
       isPhoto ? "📸 Memory Saved!" : "📝 Note Saved!",
-      `Added to ${dogName}'s journal. +10 XP 🎉`,
+      `Added to ${dogName}'s journal. +10 points 🎉`,
       [{ text: "OK", onPress: () => router.back() }]
     );
   }, [mode, caption, noteText, photos, entryDate, dogId, dob, dogName, addManualEntry, earnXp, router]);
