@@ -4,23 +4,23 @@
 
 ---
 
-## Mobile Framework: React Native + Expo SDK 52
+## Mobile Framework: React Native 0.81.5 + Expo SDK 54
 
 ### Why Not Swift/SwiftUI (iOS Native)?
 SwiftUI would give the absolute best iOS performance and access to latest Apple APIs. But: no Android path without full rewrite, Claude Code generates significantly better TypeScript than Swift, and the third-party SDK ecosystem (RevenueCat, Superwall, OneSignal, PostHog) has more mature React Native integrations than pure Swift packages. For a solo dev using AI-assisted coding, TypeScript wins on velocity.
 
 ### Why Not Flutter?
-Flutter has great performance and a beautiful widget system. But: Dart is a less common language that Claude Code handles less reliably than TypeScript, the RevenueCat and Superwall SDKs have less mature Flutter support, and the JavaScript/TypeScript ecosystem for web-adjacent tools (Vercel AI SDK, TanStack Query, Zustand) doesn't exist in Dart. You'd be rebuilding abstractions that already exist in the RN ecosystem.
+Flutter has great performance and a beautiful widget system. But: Dart is a less common language that Claude Code handles less reliably than TypeScript, the RevenueCat and Superwall SDKs have less mature Flutter support, and the JavaScript/TypeScript ecosystem for web-adjacent tools (TanStack Query, Zustand, Supabase JS) doesn't exist in Dart. You'd be rebuilding abstractions that already exist in the RN ecosystem.
 
 ### Why Expo Specifically?
-Expo SDK 52+ is not the "training wheels" Expo from 2020. It's now the recommended way to build React Native apps even by the React Native team. What Expo gives you: EAS Build (cloud builds without local Xcode), EAS Submit (automated store submission), EAS Update (OTA JS updates without App Store review), Expo Router (file-based navigation), Expo Image (optimized image loading with caching), Expo Camera/ImagePicker (photo upload), Expo Notifications (local notifications), and Expo SecureStore (secure token storage). All of this would take weeks to configure manually in bare React Native.
+Expo SDK 54 is not the "training wheels" Expo from 2020. It's now the recommended way to build React Native apps even by the React Native team. What Expo gives you: EAS Build (cloud builds without local Xcode), EAS Submit (automated store submission), EAS Update (OTA JS updates without App Store review), Expo Router (file-based navigation), Expo Image (optimized image loading with caching), Expo Camera/ImagePicker (photo upload), Expo Notifications (local notifications), and Expo SecureStore (secure token storage). All of this would take weeks to configure manually in bare React Native.
 
 ### Managed vs Bare Workflow
 Start with managed workflow. Only eject if you hit a native module that Expo doesn't support (unlikely for PupPal's feature set). RevenueCat, Superwall, OneSignal all have Expo config plugins that work in managed workflow.
 
 ---
 
-## Routing: Expo Router v4
+## Routing: Expo Router v6
 
 File-based routing modeled after Next.js. Routes map directly to files in the `app/` directory. This means:
 - Navigation structure is visible in the file tree
@@ -110,12 +110,17 @@ CREATE POLICY "Users insert own dogs" ON dogs
 ```
 
 ### Edge Functions for Compute
-Heavy logic runs in Edge Functions, not client-side:
-- `chat`: Proxies to Claude Sonnet 4.6 API with system prompt injection. Streams response back to client. Never exposes API key to client.
+Heavy logic runs in Edge Functions, not client-side. Three are deployed, the rest are planned:
+
+**Deployed (all use ANTHROPIC_API_KEY with claude-sonnet-4-6):**
+- `buddy-chat`: AI chat proxy. Receives system prompt + message history from client, calls Anthropic API, returns full response + dynamic suggested prompts. max_tokens 200, 50-word system prompt prefix, 400-char post-truncation, 20 req/min rate limit.
+- `breed-detect`: AI breed identification using Claude Sonnet 4.6 vision. 1-3 photos with chain-of-thought prompt (7-step feature analysis). Same-dog validation for multi-photo. max_tokens 800, 30s timeout. **No rate limiting yet (add before launch).**
+- `vaccine-extract`: AI vet record parsing. Up to 5 photos. Extracts vaccine names, dates, dose numbers. Fuzzy matching against core + non-core templates. max_tokens 1500, 10 req/min rate limit.
+
+**Planned (not yet deployed):**
 - `generate-plan`: Takes dog profile, runs plan generation algorithm, writes plan to database.
 - `calculate-score`: Takes dog_id, recalculates Good Boy Score from all exercise completions.
 - `check-achievements`: Takes user_id + event, evaluates all achievement triggers, inserts any new unlocks.
-- `breed-detect`: Proxies photo to Google Cloud Vision, returns breed classification.
 - `streak-cron`: Scheduled function (runs at multiple times to cover all timezones), evaluates streaks.
 - `export-health`: Generates PDF health record from dog's health data.
 
@@ -124,29 +129,48 @@ Supabase Pro plan ($25/month) handles up to ~100K users easily. Beyond that: Sup
 
 ---
 
-## AI Chat: Vercel AI SDK + Claude Sonnet 4.6
+## AI: Anthropic API (Claude Sonnet 4.6)
 
-### Why Vercel AI SDK?
-The Vercel AI SDK is the most modern way to build AI chat interfaces. It provides:
-- **Provider-agnostic**: Same code works with Claude, Anthropic Claude, OpenAI, Mistral, etc. Swap provider by changing one import.
-- **Streaming built-in**: SSE streaming with React hooks (`useChat`) that handle token-by-token rendering.
-- **React Native compatible**: Works with the `fetch`-based approach in React Native.
-- **Tool calling support**: If you want Buddy to take actions (log exercise, check score) in the future.
+### Why Anthropic?
+Claude Sonnet 4.6 provides the best balance of quality, speed, and cost for PupPal's needs. All three AI features (chat, breed detection, vaccine extraction) use the same provider and model, which simplifies infrastructure: one API key, one billing relationship, one set of rate limits to manage.
 
-### Provider Abstraction
-```ts
-// Switch from Claude to Claude by changing one line:
-import { createClaude } from '@ai-sdk/claude';     // primary
-// import { createAnthropic } from '@ai-sdk/anthropic'; // backup
+### Architecture
+All AI calls go through Supabase Edge Functions. The client never touches the ANTHROPIC_API_KEY.
 
-const model = createClaude('claude-k2.5');
+```
+Client → Supabase Edge Function → Anthropic API → Edge Function → Client
 ```
 
-### Chat Architecture
-Client sends message → Edge Function receives → Edge Function constructs system prompt by fetching dog context, conversation summaries, and plan status from Supabase → Edge Function calls Claude with full context → Claude streams response → Edge Function streams to client via SSE → Client renders tokens progressively → Edge Function stores message + response in database after stream completes.
+**Chat flow:**
+1. Client builds system prompt with dog context (breed, age, challenges, training plan, today's exercises)
+2. Client calls `buddy-chat` Edge Function with system prompt + message history
+3. Edge Function calls Anthropic API (claude-sonnet-4-6, max_tokens 200)
+4. Edge Function generates dynamic suggested prompts via lightweight second Sonnet call
+5. Edge Function returns full response + suggestions to client
+6. Client simulates word-by-word streaming for natural typing feel (not real SSE)
 
-### Cost Management
-Claude Sonnet 4.6 is chosen for cost efficiency. At scale: monitor cost per message (target <$0.01), set up alerts if cost spikes, keep provider abstraction so you can switch. Run 1% of traffic through Claude or GPT quarterly to compare quality.
+**Breed detection flow:**
+1. Client sends 1-3 base64 photos to `breed-detect` Edge Function
+2. Edge Function uses chain-of-thought prompt with 7-step feature analysis
+3. Multi-photo mode cross-references angles and validates same dog
+4. Returns breed, confidence, reasoning (reasoning logged server-side only)
+
+**Vaccine extraction flow:**
+1. Client sends up to 5 vet record photos to `vaccine-extract` Edge Function
+2. Edge Function extracts vaccine names, dates, dose numbers
+3. Client fuzzy-matches against core + non-core vaccine templates
+
+### Cost Estimates (Anthropic Sonnet 4.6 pricing)
+| Scale | Monthly Users | Est. Messages/Month | Est. Cost |
+|-------|--------------|---------------------|-----------|
+| Early | 1K | 30K | ~$30-60 |
+| 10K | 10K | 300K | ~$300-600 |
+| 100K | 100K | 3M | ~$3,000-6,000 |
+| 1M | 1M | 30M | Negotiate volume pricing |
+
+Target cost per message: <$0.002 (input ~200 tokens, output ~150 tokens).
+Breed detection is heavier (~$0.01/call due to image tokens) but infrequent (once per dog).
+Monitor with Anthropic dashboard. Alert if cost per message >$0.005.
 
 ---
 
@@ -212,19 +236,13 @@ Each category is independently toggleable by the user in settings.
 
 ---
 
-## Animations: React Native Reanimated 3 + Moti
+## Animations: React Native Reanimated 4
 
 ### Why Reanimated?
 Reanimated runs animations on the native UI thread, not the JS thread. This means 60fps animations even during heavy JS computation. Critical for: XP counter float-up animation during API call, confetti on achievement unlock while saving to database, smooth scroll in chat while streaming AI response, onboarding screen transitions.
 
-### Why Moti?
-Moti is a declarative animation API built on top of Reanimated. Instead of writing imperative animation code, you describe target states:
-```tsx
-<MotiView from={{ opacity: 0, translateY: 20 }} animate={{ opacity: 1, translateY: 0 }}>
-  <BuddyBubble text="Hey there!" />
-</MotiView>
-```
-This makes Claude Code's job much easier — declarative animations are simpler to generate than imperative Animated.Value sequences.
+### Why Not Moti?
+**Moti is BANNED in PupPal.** Moti caused peer dependency conflicts with Expo SDK 54 and Reanimated 4. All animations use Reanimated 4 directly with `useAnimatedStyle`, `withTiming`, and `withSpring`. Exercise completion animations use clean 200ms fades only, no spring or bounce effects.
 
 ---
 
@@ -309,13 +327,13 @@ Sequential numbered migrations in `supabase/migrations/`. Each migration is idem
 - Supabase free/pro tier handles this easily
 - Single Postgres instance is fine
 - Edge Functions handle burst with cold starts < 200ms
-- Claude API costs: ~$50-100/month at this scale
+- Anthropic API costs: ~$300-600/month at this scale (chat + breed detect + vaccine extract)
 
 ### 100K Users
 - Supabase Pro ($25/month) with larger instance
 - Add database indexes on hot queries (user_id + created_at patterns)
 - Consider read replicas for analytics queries
-- Claude costs: ~$500-1000/month
+- Anthropic costs: ~$3,000-6,000/month
 - RevenueCat and OneSignal costs scale linearly
 
 ### 1M Users
@@ -323,5 +341,5 @@ Sequential numbered migrations in `supabase/migrations/`. Each migration is idem
 - Database partitioning for chat_messages and xp_events tables
 - CDN for exercise content (move from DB to static content)
 - Multi-region Edge Functions
-- Negotiate volume pricing with AI provider
-- Consider dedicated AI inference (self-hosted model)
+- Negotiate volume pricing with Anthropic
+- Consider Haiku/smaller model for lightweight tasks (suggested prompts, summaries)
