@@ -12,6 +12,7 @@ import {
 } from "@/components/health";
 import { useHealthStore } from "@/stores/healthStore";
 import { useDogStore } from "@/stores/dogStore";
+import { DogSwitcherButton } from "@/components/dog/DogSwitcherButton";
 import { useTrainingStore } from "@/stores/trainingStore";
 import { useOnboardingStore } from "@/stores/onboardingStore";
 import { useSubscription } from "@/hooks/useSubscription";
@@ -163,7 +164,10 @@ function HealthScreenContent() {
           entering={FadeInDown.duration(400)}
           className="px-xl pt-3xl mb-lg"
         >
-          <Typography variant="h1">{dogName}'s Health</Typography>
+          <View className="flex-row items-center justify-between mb-xs">
+            <Typography variant="h1">{dogName}'s Health</Typography>
+            <DogSwitcherButton />
+          </View>
           <Typography variant="body" color="secondary">
             Vaccinations, meds, weight & more
           </Typography>

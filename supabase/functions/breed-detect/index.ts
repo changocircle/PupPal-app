@@ -120,15 +120,34 @@ const CORS_HEADERS = {
 /** Timeout for the Anthropic API call */
 const ANTHROPIC_TIMEOUT_MS = 15_000;
 
-const BREED_PROMPT = `You are a professional dog breed identification expert. Analyze this photo and identify the dog breed.
+const BREED_PROMPT = `You are an expert veterinary breed identification specialist with 20+ years of experience. Your task is to identify the dog breed from this photo with high accuracy.
 
-Consider the following physical characteristics:
-- Body size and proportions
-- Coat type, length, and texture
-- Face and muzzle shape
-- Ear type (floppy, erect, semi-erect)
-- Coloring and markings
-- Tail shape and carriage
+CRITICAL: Examine each physical feature methodically before deciding:
+
+1. COAT — What is the length? (short / medium / long / wire / curly / double)
+   What is the texture? (silky, flowing, coarse, dense undercoat?)
+   Is it smooth or feathered on the legs/tail/ears?
+   Example: Golden Retrievers have LONG, flowing, silky coats with heavy feathering on legs and tail. German Shepherds have MEDIUM-length dense double coats that lie flat. These are very different.
+
+2. EARS — Are they floppy/pendant, erect/pricked, semi-erect, or rose-shaped?
+   Size relative to head? Position (high-set or low-set)?
+   Example: Golden Retrievers have medium floppy ears set just above eye level. German Shepherds have large, triangular, fully erect ears. This is a KEY differentiator.
+
+3. HEAD & MUZZLE — Is the skull broad or narrow? Muzzle length and shape?
+   Stop (forehead-to-muzzle transition) — pronounced or gradual?
+   Lip shape — tight or loose? Any jowls?
+
+4. BODY — Overall build: stocky, athletic, lean, heavy-boned?
+   Chest depth and width? Back line — level, sloping, or roached?
+   Example: German Shepherds have a distinctive sloping topline. Golden Retrievers have a level back.
+
+5. SIZE & PROPORTIONS — Estimate weight range. Height at shoulder.
+   Length-to-height ratio. Leg length relative to body.
+
+6. COLORING & MARKINGS — Base color, patterns, saddle markings, masks, points.
+   Example: Golden Retrievers are solid gold/cream/dark golden. German Shepherds typically have black saddle with tan points.
+
+7. TAIL — Length, shape (straight, curved, sickle, plumed), carriage.
 
 Return your answer as a JSON object with exactly this format:
 {
@@ -143,6 +162,9 @@ Rules:
 - Return exactly 3 breed guesses, ranked by confidence (highest first).
 - Confidence values must be integers 0-100 and should sum to roughly 100.
 - Use standard AKC or common breed names (e.g. "Golden Retriever", not "Golden").
+- Compare against all 200+ AKC recognized breeds before deciding.
+- If you are not at least 60% confident in your top pick, keep the confidence value LOW.
+- Do NOT be overconfident. A 90%+ confidence means you are absolutely certain.
 - If the image is not a dog or you cannot identify the breed, return confidences below 30 for all.
 - If it looks like a mixed breed, list the most likely component breeds.
 - Return ONLY the JSON object, no other text.`;
@@ -354,7 +376,7 @@ serve(async (req: Request): Promise<Response> => {
       rawLabels?: string[];
     } = { breeds };
 
-    if (topConfidence < 60) {
+    if (topConfidence < 50) {
       result.lowConfidence = true;
     }
 

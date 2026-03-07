@@ -10,6 +10,26 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { Dog } from "@/types/database";
+import { useHealthStore } from "./healthStore";
+import { useTrainingStore } from "./trainingStore";
+import { useGamificationStore } from "./gamificationStore";
+import { useChatStore } from "./chatStore";
+import { useJournalStore } from "./journalStore";
+
+/**
+ * Rehydrate all per-dog stores from AsyncStorage after dog switch.
+ * Zustand persist doesn't auto-detect external AsyncStorage changes,
+ * so we must tell each store to re-read its persisted state.
+ */
+async function rehydratePerDogStores(): Promise<void> {
+  await Promise.all([
+    useHealthStore.persist.rehydrate(),
+    useTrainingStore.persist.rehydrate(),
+    useGamificationStore.persist.rehydrate(),
+    useChatStore.persist.rehydrate(),
+    useJournalStore.persist.rehydrate(),
+  ]);
+}
 
 // ──────────────────────────────────────────────
 // Per-Dog Store Keys, used to save/restore per-dog data on switch
@@ -229,8 +249,11 @@ export const useDogStore = create<DogState>()(
             await savePerDogData(activeDogId);
           }
 
-          // Load target dog's state
+          // Load target dog's state from AsyncStorage
           await loadPerDogData(dogId);
+
+          // Rehydrate in-memory Zustand stores from the swapped AsyncStorage data
+          await rehydratePerDogStores();
 
           // Update active dog
           set((state) => ({

@@ -6,6 +6,7 @@ import { useRouter } from "expo-router";
 import { Typography, Card, Badge, ProgressBar, Button, ErrorBoundary, ProfileSkeleton } from "@/components/ui";
 import { useGamificationStore } from "@/stores/gamificationStore";
 import { useDogStore } from "@/stores/dogStore";
+import { DogSwitcherButton } from "@/components/dog/DogSwitcherButton";
 import { useTrainingStore } from "@/stores/trainingStore";
 import { useOnboardingStore } from "@/stores/onboardingStore";
 import { useSettingsStore } from "@/stores/settingsStore";
@@ -163,7 +164,10 @@ function ProfileScreenContent() {
           entering={FadeInDown.duration(400)}
           className="px-xl pt-3xl mb-lg"
         >
-          <Typography variant="h1">Profile</Typography>
+          <View className="flex-row items-center justify-between">
+            <Typography variant="h1">Profile</Typography>
+            <DogSwitcherButton />
+          </View>
         </Animated.View>
 
         {/* ── User Profile Card ── */}
