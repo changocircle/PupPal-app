@@ -51,6 +51,7 @@ type DetectionState =
       suggestions: BreedPrediction[];
     }
   | { status: "low"; suggestions: BreedPrediction[] }
+  | { status: "different_dogs"; message: string }
   | { status: "manual" };
 
 // ─── Searchable Breed Dropdown ───
@@ -221,6 +222,15 @@ export default function PhotoScreen() {
         return;
       }
 
+      // Handle different dogs validation
+      if (result.differentDogs) {
+        setDetection({
+          status: "different_dogs",
+          message: result.errorMessage ?? "These look like different dogs!",
+        });
+        return;
+      }
+
       if (result.lowConfidence || result.confidence < 50) {
         // Low confidence → show selector with message
         setDetection({
@@ -276,8 +286,10 @@ export default function PhotoScreen() {
       setPhotoUris(next);
 
       // Side effects outside of setState to avoid render-during-update
+      // Front face (index 0) is the profile photo
       updateData({
         photoUri: validUris[0] ?? uri,
+        allPhotoUris: validUris,
         breed: undefined,
         breedConfidence: undefined,
         breedDetected: false,
@@ -297,10 +309,10 @@ export default function PhotoScreen() {
 
     // Side effects outside of setState
     if (next.length === 0) {
-      updateData({ photoUri: null, breed: undefined, breedDetected: false });
+      updateData({ photoUri: null, allPhotoUris: [], breed: undefined, breedDetected: false });
       setDetection({ status: "idle" });
     } else {
-      updateData({ photoUri: next[0] });
+      updateData({ photoUri: next[0], allPhotoUris: next });
       runDetection(next);
     }
   };
@@ -377,6 +389,9 @@ export default function PhotoScreen() {
     }
     if (detection.status === "low") {
       return `I couldn't get a clear read — what breed is ${puppyName}?`;
+    }
+    if (detection.status === "different_dogs") {
+      return `Hmm, these look like different pups! Upload photos of just ${puppyName} so I can get the breed right. 🐾`;
     }
     if (detection.status === "manual") {
       return `What breed is ${puppyName}?`;
@@ -550,12 +565,12 @@ export default function PhotoScreen() {
               {/* Hint text */}
               {photoUris.length > 0 && photoUris.length < MAX_PHOTOS && detection.status !== "detecting" && (
                 <Typography variant="caption" color="secondary" className="text-center mt-sm">
-                  Add more angles for better accuracy
+                  Upload {MAX_PHOTOS - photoUris.length} more {MAX_PHOTOS - photoUris.length === 1 ? "photo" : "photos"} of {puppyName} for the most accurate breed detection
                 </Typography>
               )}
-              {photoUris.length > 1 && detection.status !== "detecting" && (
+              {photoUris.length > 1 && detection.status !== "detecting" && detection.status !== "different_dogs" && (
                 <Typography variant="caption" color="secondary" className="text-center mt-xs" style={{ opacity: 0.6 }}>
-                  {photoUris.length} photos will be cross-referenced
+                  {photoUris.length} photos of {puppyName} will be cross-referenced
                 </Typography>
               )}
             </Animated.View>
@@ -570,6 +585,23 @@ export default function PhotoScreen() {
                 <Typography variant="body-sm" color="secondary">
                   Detecting breed... 🔍
                 </Typography>
+              </Animated.View>
+            )}
+
+            {/* DIFFERENT DOGS — validation error */}
+            {detection.status === "different_dogs" && (
+              <Animated.View
+                entering={FadeInDown.duration(300)}
+                className="mt-lg items-center w-full px-lg"
+              >
+                <View className="rounded-md px-lg py-md mb-sm w-full" style={{ backgroundColor: "#FDEDED" }}>
+                  <Typography variant="body-sm-medium" className="text-center" style={{ color: "#EF6461" }}>
+                    These photos look like different dogs
+                  </Typography>
+                  <Typography variant="caption" color="secondary" className="text-center mt-xs">
+                    Replace one or more photos so they're all of {puppyName}
+                  </Typography>
+                </View>
               </Animated.View>
             )}
 

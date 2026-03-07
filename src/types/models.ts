@@ -9,6 +9,8 @@ import type { Dog, User } from "./database";
 export interface OnboardingData {
   puppyName: string;
   photoUri: string | null;
+  /** All uploaded photo URIs (up to 3) for storage */
+  allPhotoUris: string[];
   breed: string | null;
   breedConfidence: number | null;
   breedDetected: boolean;
