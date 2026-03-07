@@ -33,9 +33,11 @@ Freemium subscription via App Store/Google Play. 3-day free trial -> $39.99/year
 - **Edge Functions**: Deno/TypeScript (breed detection, future: AI proxy, plan generation, cron jobs)
 
 ### AI
-- **Chat Provider**: Kimi K2.5 (primary --- cost efficiency)
-  - **IMPORTANT**: Kimi K2.5 only accepts `temperature: 1`. Any other value returns 400.
-- **Streaming**: Vercel AI SDK (provider-agnostic, swap with config change)
+- **Chat Provider**: Claude Sonnet 4.6 (`claude-sonnet-4-6-20250514`) via Supabase Edge Function
+  - API key (`ANTHROPIC_API_KEY`) is a server-side Edge Function secret --- never in client code
+  - Edge Function: `supabase/functions/buddy-chat/index.ts` proxies to Anthropic Messages API
+  - `max_tokens: 1024`, rate limited (20 req/min/IP), content moderation built in
+  - Client calls Edge Function via Supabase URL + anon key (no streaming, word-by-word rendering client-side)
 - **Breed Detection**: Google Cloud Vision API via Supabase Edge Function (fallback: manual breed selector)
 
 ### Payments & Monetization
@@ -159,7 +161,7 @@ puppal/
 |   |   +-- supabase.ts               <- Supabase client (AsyncStorage session)
 |   +-- lib/
 |   |   +-- achievementChecker.ts      <- Achievement trigger evaluation
-|   |   +-- aiProvider.ts             <- Kimi K2.5 chat (temperature: 1)
+|   |   +-- aiProvider.ts             <- Claude Sonnet 4.6 via buddy-chat Edge Function
 |   |   +-- breedDetect.ts            <- Client-side breed detection service
 |   |   +-- buddyPrompt.ts            <- Buddy system prompt builder
 |   |   +-- gateThrottle.ts           <- Paywall frequency limiter
@@ -300,10 +302,11 @@ from `src/lib/resetStores.ts`. It's already wired into:
 during app mount. Don't rely on `useAuthStore` being populated before
 `onAuthStateChange` fires.
 
-### 4. Kimi K2.5 Temperature
+### 4. AI Chat via Edge Function
 
-The only valid temperature value is `1`. Set in `src/lib/aiProvider.ts:47`.
-Any other value causes a 400 error from the API.
+Chat uses Claude Sonnet 4.6 via the `buddy-chat` Supabase Edge Function.
+The client (`src/lib/aiProvider.ts`) calls the Edge Function — never Anthropic directly.
+`ANTHROPIC_API_KEY` is a server-side secret only.
 
 ### 5. `trickStore.packProgress` is a Record, Not Array
 
