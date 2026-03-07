@@ -14,6 +14,7 @@ import { useSubscription } from "@/hooks/useSubscription";
 import { useHydration } from "@/hooks/useHydration";
 import { LEVEL_DEFINITIONS } from "@/types/gamification";
 import { DogAvatar } from "@/components/dog";
+import { getDogAge } from "@/lib/dogAge";
 
 /**
  * Profile & Settings Tab, PRD-04 (gamification) + PRD-14 (settings)
@@ -64,7 +65,11 @@ function ProfileScreenContent() {
   const dogName =
     dog?.name ?? plan?.dogName ?? (onboardingData.puppyName || "Your Pup");
   const breed = dog?.breed ?? plan?.breed ?? onboardingData.breed ?? "Puppy";
-  const ageMonths = onboardingData.ageMonths;
+  const dogAge = dog
+    ? getDogAge(dog.date_of_birth, dog.age_months_at_creation, dog.created_at)
+    : onboardingData.ageMonths
+      ? { label: `${onboardingData.ageMonths} months`, estimated: true }
+      : null;
 
   // FIX-04: Separate scalar selectors (no inline object creation)
   const totalXp = useGamificationStore((s) => s.totalXp);
@@ -219,7 +224,7 @@ function ProfileScreenContent() {
                 <Typography variant="h3">{dogName}</Typography>
                 <Typography variant="body-sm" color="secondary">
                   {breed}
-                  {ageMonths ? ` · ~${ageMonths} months` : ""}
+                  {dogAge ? ` · ${dogAge.estimated ? '~' : ''}${dogAge.label}` : ""}
                 </Typography>
               </View>
               <Typography color="tertiary">→</Typography>
