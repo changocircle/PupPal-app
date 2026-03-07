@@ -267,41 +267,42 @@ export default function PhotoScreen() {
 
     if (!result.canceled && result.assets[0]) {
       const uri = result.assets[0].uri;
+      const idx = slotIndex ?? photoUris.length;
+      const next = [...photoUris];
+      next[idx] = uri;
+      const validUris = next.filter(Boolean);
 
-      setPhotoUris((prev) => {
-        const next = [...prev];
-        const idx = slotIndex ?? prev.length;
-        next[idx] = uri;
-        // Save the first photo as the canonical photoUri in onboarding store
-        updateData({
-          photoUri: next[0] ?? uri,
-          breed: undefined,
-          breedConfidence: undefined,
-          breedDetected: false,
-          breedMix1: null,
-          breedMix2: null,
-        });
-        // Auto-detect when first photo is added or when replacing
-        runDetection(next.filter(Boolean));
-        return next;
+      // Update local state first (pure state update, no side effects)
+      setPhotoUris(next);
+
+      // Side effects outside of setState to avoid render-during-update
+      updateData({
+        photoUri: validUris[0] ?? uri,
+        breed: undefined,
+        breedConfidence: undefined,
+        breedDetected: false,
+        breedMix1: null,
+        breedMix2: null,
       });
+      runDetection(validUris);
     }
   };
 
   /** Remove a photo from the given slot */
   const removePhoto = (index: number) => {
-    setPhotoUris((prev) => {
-      const next = prev.filter((_, i) => i !== index);
-      if (next.length === 0) {
-        updateData({ photoUri: null, breed: undefined, breedDetected: false });
-        setDetection({ status: "idle" });
-      } else {
-        updateData({ photoUri: next[0] });
-        // Re-detect with remaining photos
-        runDetection(next);
-      }
-      return next;
-    });
+    const next = photoUris.filter((_, i) => i !== index);
+
+    // Update local state first
+    setPhotoUris(next);
+
+    // Side effects outside of setState
+    if (next.length === 0) {
+      updateData({ photoUri: null, breed: undefined, breedDetected: false });
+      setDetection({ status: "idle" });
+    } else {
+      updateData({ photoUri: next[0] });
+      runDetection(next);
+    }
   };
 
   const confirmBreed = (breed: string) => {

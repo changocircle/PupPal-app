@@ -51,9 +51,11 @@ function HealthScreenContent() {
   );
   const plan = useTrainingStore((s) => s.plan);
   const onboardingData = useOnboardingStore((s) => s.data);
+  const isSwitching = useDogStore((s) => s.isSwitching);
   const dogName = dog?.name ?? plan?.dogName ?? (onboardingData.puppyName || "Your Pup");
   const breed = dog?.breed ?? plan?.breed ?? onboardingData.breed ?? null;
-  const ageMonths = onboardingData.ageMonths ?? 3;
+  // Use active dog's age, fall back to onboarding data for first dog
+  const ageMonths = dog?.age_months_at_creation ?? dog?.age_months ?? onboardingData.ageMonths ?? 3;
   const ageWeeks = ageMonths * 4;
 
   // Health store - individual selectors for reactivity
@@ -75,28 +77,29 @@ function HealthScreenContent() {
   // Derive a dogId (use plan dogName as key for now)
   const dogId = dog?.id ?? plan?.dogName ?? "default-dog";
 
-  // Auto-init vaccinations & milestones if not done
+  // Auto-init vaccinations & milestones for the ACTIVE dog.
+  // Skipped during dog switches — the per-dog store swap loads existing data.
   useEffect(() => {
-    if (!vaccinationsInitialized) {
-      const dob = new Date();
-      dob.setDate(dob.getDate() - ageWeeks * 7);
-      initVaccinations({
-        dogId,
-        dateOfBirth: dob,
-        ageWeeks,
-        breed,
-        registrationDate: new Date().toISOString().split("T")[0],
-      });
-    }
-  }, [vaccinationsInitialized, dogId, breed, ageWeeks]);
+    if (isSwitching) return;
+    if (vaccinationsInitialized) return;
+    const dob = new Date();
+    dob.setDate(dob.getDate() - ageWeeks * 7);
+    initVaccinations({
+      dogId,
+      dateOfBirth: dob,
+      ageWeeks,
+      breed,
+      registrationDate: new Date().toISOString().split("T")[0],
+    });
+  }, [vaccinationsInitialized, dogId, breed, ageWeeks, isSwitching]);
 
   useEffect(() => {
-    if (!milestonesInitialized) {
-      const dob = new Date();
-      dob.setDate(dob.getDate() - ageWeeks * 7);
-      initMilestones(dogId, dob);
-    }
-  }, [milestonesInitialized, dogId, ageWeeks]);
+    if (isSwitching) return;
+    if (milestonesInitialized) return;
+    const dob = new Date();
+    dob.setDate(dob.getDate() - ageWeeks * 7);
+    initMilestones(dogId, dob);
+  }, [milestonesInitialized, dogId, ageWeeks, isSwitching]);
 
   // Data - include raw state arrays in deps so useMemo recomputes
   // when data changes (e.g., after adding a weight entry and navigating back)

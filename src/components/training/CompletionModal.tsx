@@ -8,8 +8,7 @@ import { Modal, Pressable, View } from "react-native";
 import Animated, {
   FadeIn,
   FadeOut,
-  ZoomIn,
-  SlideInUp,
+  FadeInDown,
 } from "react-native-reanimated";
 import { Typography, Button } from "@/components/ui";
 
@@ -51,12 +50,12 @@ export function CompletionModal({
         className="flex-1 bg-black/50 items-center justify-center px-xl"
       >
         <Animated.View
-          entering={ZoomIn.springify().damping(12)}
+          entering={FadeIn.duration(200)}
           className="bg-surface rounded-3xl p-3xl w-full max-w-[340px] items-center"
         >
           {/* Celebration emoji */}
           <Animated.Text
-            entering={ZoomIn.delay(200).springify()}
+            entering={FadeIn.delay(100).duration(200)}
             className="text-[56px] mb-base"
           >
             🎉
@@ -77,7 +76,7 @@ export function CompletionModal({
 
           {/* XP earned */}
           <Animated.View
-            entering={SlideInUp.delay(300).springify()}
+            entering={FadeInDown.delay(150).duration(200)}
             className="bg-accent-light rounded-2xl px-xl py-base mb-lg w-full items-center"
           >
             <Typography variant="h3" style={{ color: "#F5A623" }}>
