@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useCallback } from "react";
-import { View, ScrollView, Pressable, TextInput, Alert } from "react-native";
+import { View, ScrollView, Pressable, TextInput, Alert, KeyboardAvoidingView, Platform } from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { useRouter } from "expo-router";
@@ -53,7 +54,8 @@ export default function WeightScreen() {
   const [showForm, setShowForm] = useState(false);
   const [weightInput, setWeightInput] = useState("");
   const [unit, setUnit] = useState<WeightUnit>(preferredUnit);
-  const [dateInput, setDateInput] = useState(""); // YYYY-MM-DD, empty = today
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const [notesInput, setNotesInput] = useState("");
 
   const currentAgeWeeks = useMemo(() => {
@@ -62,8 +64,6 @@ export default function WeightScreen() {
     return ageWeeks + Math.floor((Date.now() - planDate) / (7 * 86_400_000));
   }, [ageWeeks, plan]);
 
-  // Format today's date as YYYY-MM-DD for placeholder
-  const todayStr = useMemo(() => new Date().toISOString().split("T")[0]!, []);
 
   const handleSave = useCallback(() => {
     const val = parseFloat(weightInput);
@@ -72,20 +72,8 @@ export default function WeightScreen() {
       return;
     }
 
-    // Validate date if provided
-    let measuredAt: string | undefined;
-    if (dateInput.trim()) {
-      const parsed = new Date(dateInput.trim());
-      if (isNaN(parsed.getTime())) {
-        Alert.alert("Invalid Date", "Please use YYYY-MM-DD format (e.g. 2025-03-01).");
-        return;
-      }
-      if (parsed > new Date()) {
-        Alert.alert("Invalid Date", "Date cannot be in the future.");
-        return;
-      }
-      measuredAt = dateInput.trim();
-    }
+    // Use selected date
+    const measuredAt = selectedDate.toISOString().split("T")[0]!;
 
     addWeightEntry({
       dogId,
@@ -98,18 +86,23 @@ export default function WeightScreen() {
 
     setPreferredUnit(unit);
     setWeightInput("");
-    setDateInput("");
+    setSelectedDate(new Date());
     setNotesInput("");
     setShowForm(false);
     Alert.alert("Logged! ⚖️", `${val} ${unit} recorded. +5 XP 🎉`);
-  }, [weightInput, unit, dateInput, notesInput, dogId, currentAgeWeeks, addWeightEntry, setPreferredUnit]);
+  }, [weightInput, unit, selectedDate, notesInput, dogId, currentAgeWeeks, addWeightEntry, setPreferredUnit]);
 
   return (
     <SafeAreaView className="flex-1 bg-background">
+      <KeyboardAvoidingView
+        className="flex-1"
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
       <ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 100 }}
+        keyboardShouldPersistTaps="handled"
       >
         {/* Header */}
         <Pressable
@@ -240,18 +233,41 @@ export default function WeightScreen() {
               {/* Date picker */}
               <View className="mb-base">
                 <Typography variant="caption" color="secondary" className="mb-xs">
-                  Date (defaults to today)
+                  Date
                 </Typography>
-                <TextInput
-                  value={dateInput}
-                  onChangeText={setDateInput}
-                  placeholder={todayStr}
-                  className="bg-surface border border-border rounded-xl px-base py-md text-[14px]"
-                  style={{ fontFamily: "PlusJakartaSans-Regular" }}
-                  placeholderTextColor="#9CA3AF"
-                  keyboardType="numbers-and-punctuation"
-                  maxLength={10}
-                />
+                {Platform.OS === "ios" ? (
+                  <DateTimePicker
+                    value={selectedDate}
+                    mode="date"
+                    display="compact"
+                    maximumDate={new Date()}
+                    onChange={(_, date) => date && setSelectedDate(date)}
+                    accentColor="#FF6B5C"
+                  />
+                ) : (
+                  <>
+                    <Pressable
+                      onPress={() => setShowDatePicker(true)}
+                      className="bg-surface border border-border rounded-xl px-base py-md"
+                    >
+                      <Typography variant="body-sm">
+                        {selectedDate.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+                      </Typography>
+                    </Pressable>
+                    {showDatePicker && (
+                      <DateTimePicker
+                        value={selectedDate}
+                        mode="date"
+                        display="default"
+                        maximumDate={new Date()}
+                        onChange={(_, date) => {
+                          setShowDatePicker(false);
+                          if (date) setSelectedDate(date);
+                        }}
+                      />
+                    )}
+                  </>
+                )}
               </View>
 
               {/* Notes */}
@@ -361,6 +377,7 @@ export default function WeightScreen() {
           </Animated.View>
         )}
       </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

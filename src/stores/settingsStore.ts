@@ -9,6 +9,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { WeightUnit } from "@/types/health";
 
 export type TemperatureUnit = "F" | "C";
+export type AppLanguage = "en" | "es" | "fr" | "de" | "pt";
 
 interface SettingsState {
   // Profile
@@ -24,6 +25,7 @@ interface SettingsState {
   trainingReminderTime: string; // "HH:MM" format
   healthRemindersEnabled: boolean;
   dailyTipEnabled: boolean;
+  language: AppLanguage;
 
   /** Dev-only: force premium ON for testing (persisted) */
   devPremiumOverride: boolean;
@@ -39,6 +41,7 @@ interface SettingsState {
   setTrainingReminderTime: (time: string) => void;
   setHealthRemindersEnabled: (enabled: boolean) => void;
   setDailyTipEnabled: (enabled: boolean) => void;
+  setLanguage: (lang: AppLanguage) => void;
 
   /** Toggle dev premium override (5-tap easter egg on profile) */
   toggleDevPremium: () => void;
@@ -61,6 +64,7 @@ export const useSettingsStore = create<SettingsState>()(
       trainingReminderTime: "09:00",
       healthRemindersEnabled: true,
       dailyTipEnabled: true,
+      language: "en",
       devPremiumOverride: false,
 
       setUserName: (name) => set({ userName: name }),
@@ -77,6 +81,7 @@ export const useSettingsStore = create<SettingsState>()(
       setHealthRemindersEnabled: (enabled) =>
         set({ healthRemindersEnabled: enabled }),
       setDailyTipEnabled: (enabled) => set({ dailyTipEnabled: enabled }),
+      setLanguage: (lang) => set({ language: lang }),
 
       toggleDevPremium: () =>
         set((state) => ({ devPremiumOverride: !state.devPremiumOverride })),
@@ -93,6 +98,7 @@ export const useSettingsStore = create<SettingsState>()(
           trainingReminderTime: "09:00",
           healthRemindersEnabled: true,
           dailyTipEnabled: true,
+          language: "en" as const,
           devPremiumOverride: false,
         });
       },

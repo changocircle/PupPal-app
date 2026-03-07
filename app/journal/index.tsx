@@ -50,7 +50,7 @@ export default function JournalScreen() {
         : journalEntries.filter((e) => e.type === filter);
     const groups: Record<string, typeof filtered> = {};
     for (const entry of filtered) {
-      const key = entry.date.slice(0, 7); // "YYYY-MM"
+      const key = entry.date?.slice(0, 7) ?? "unknown"; // "YYYY-MM"
       if (!groups[key]) groups[key] = [];
       groups[key].push(entry);
     }
@@ -208,7 +208,7 @@ export default function JournalScreen() {
           <View className="px-xl">
             {monthGroups.map((group, gi) => (
               <Animated.View
-                key={`${group.year}-${group.month}`}
+                key={group.month}
                 entering={FadeInDown.duration(350).delay(100 + gi * 40)}
               >
                 {/* Month header */}

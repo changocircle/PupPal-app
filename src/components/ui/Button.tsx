@@ -113,7 +113,13 @@ export function Button({
             />
           ) : (
             <>
-              {leftIcon ?? null}
+              {leftIcon != null ? (
+                typeof leftIcon === "string" ? (
+                  <Typography className="text-[14px]">{leftIcon}</Typography>
+                ) : (
+                  leftIcon
+                )
+              ) : null}
               <Typography
                 variant={size === "sm" ? "body-sm-medium" : "body-medium"}
                 color={variant === "primary" ? "inverse" : variant === "ghost" ? "accent" : "primary"}
@@ -121,7 +127,13 @@ export function Button({
               >
                 {label}
               </Typography>
-              {rightIcon ?? null}
+              {rightIcon != null ? (
+                typeof rightIcon === "string" ? (
+                  <Typography className="text-[14px]">{rightIcon}</Typography>
+                ) : (
+                  rightIcon
+                )
+              ) : null}
             </>
           )}
         </Animated.View>

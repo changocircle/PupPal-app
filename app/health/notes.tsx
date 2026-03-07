@@ -5,6 +5,8 @@ import {
   Pressable,
   TextInput,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
@@ -133,10 +135,15 @@ export default function HealthNotesScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-background">
+      <KeyboardAvoidingView
+        className="flex-1"
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
       <ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 100 }}
+        keyboardShouldPersistTaps="handled"
       >
         {/* Header */}
         <Pressable
@@ -152,19 +159,22 @@ export default function HealthNotesScreen() {
           entering={FadeInDown.duration(400)}
           className="px-xl mb-lg"
         >
-          <View className="flex-row items-center justify-between">
-            <View>
+          <View className="flex-row items-center justify-between gap-sm">
+            <View className="flex-1 flex-shrink">
               <Typography variant="h1">📝 Health Notes</Typography>
-              <Typography variant="body" color="secondary">
+              <Typography variant="body" color="secondary" numberOfLines={1}>
                 Track observations & concerns
               </Typography>
             </View>
-            <Button
-              label="+ Note"
-              variant="primary"
-              size="sm"
-              onPress={() => setShowForm(true)}
-            />
+            <View className="flex-shrink-0">
+              <Button
+                label="+ Note"
+                variant="primary"
+                size="sm"
+                fullWidth={false}
+                onPress={() => setShowForm(true)}
+              />
+            </View>
           </View>
         </Animated.View>
 
@@ -396,6 +406,7 @@ export default function HealthNotesScreen() {
           )}
         </Animated.View>
       </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

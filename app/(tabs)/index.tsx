@@ -103,6 +103,12 @@ function HomeScreenContent() {
     return sum + (e.status !== "completed" ? 5 : 0);
   }, 0);
 
+  // First session = no exercises ever completed
+  const isFirstSession = useMemo(() => {
+    const store = useTrainingStore.getState();
+    return store.completions.length === 0;
+  }, [completedToday]);
+
   return (
     <SafeAreaView className="flex-1 bg-background">
       <ScrollView className="flex-1 px-xl" showsVerticalScrollIndicator={false}>
@@ -120,24 +126,66 @@ function HomeScreenContent() {
           <Typography variant="h1">{dogName}'s Training</Typography>
         </Animated.View>
 
-        {/* ── Gamification Row (replaces old stats row) ── */}
-        <Animated.View
-          entering={FadeInDown.duration(400).delay(80)}
-          className="mb-lg"
-        >
-          <GamificationRow
-            streak={gam.currentStreak}
-            dailyXp={gam.dailyXp}
-            dailyXpTarget={gam.dailyXpTarget}
-            goodBoyScore={gam.goodBoyScore}
-            level={gam.level}
-            levelTitle={gam.levelTitle}
-            totalXp={gam.totalXp}
-          />
-        </Animated.View>
+        {/* ── First Session Welcome from Buddy ── */}
+        {isFirstSession && (
+          <Animated.View
+            entering={FadeInDown.duration(500).delay(80)}
+            className="mb-lg"
+          >
+            <Card className="flex-row items-start gap-md bg-primary-extralight border border-primary/20">
+              <View className="w-[48px] h-[48px] rounded-full bg-primary-light items-center justify-center">
+                <Typography className="text-[28px]">🐕</Typography>
+              </View>
+              <View className="flex-1">
+                <Typography variant="body-medium" className="mb-xs">
+                  Hey! I'm Buddy 👋
+                </Typography>
+                <Typography variant="body-sm" color="secondary">
+                  I've got a personalised training plan ready for {dogName}. Tap your first exercise below to get started — it only takes 5 minutes!
+                </Typography>
+              </View>
+            </Card>
+          </Animated.View>
+        )}
 
-        {/* ── Weekly Challenge ── */}
-        {gam.activeChallenge && !gam.activeChallenge.completed && (
+        {/* ── Gamification Row (compact on first session) ── */}
+        {isFirstSession ? (
+          <Animated.View
+            entering={FadeInDown.duration(400).delay(100)}
+            className="mb-lg"
+          >
+            <View className="flex-row items-center justify-between bg-surface rounded-xl px-lg py-md border border-border">
+              <View className="flex-row items-center gap-sm">
+                <Typography className="text-[16px]">⭐️</Typography>
+                <Typography variant="body-sm-medium">Level {gam.level}</Typography>
+                <Typography variant="caption" color="secondary">·</Typography>
+                <Typography variant="body-sm" color="secondary">{gam.totalXp} XP</Typography>
+              </View>
+              <View className="flex-row items-center gap-sm">
+                <Typography className="text-[16px]">🔥</Typography>
+                <Typography variant="body-sm-medium">{gam.currentStreak}</Typography>
+              </View>
+            </View>
+          </Animated.View>
+        ) : (
+          <Animated.View
+            entering={FadeInDown.duration(400).delay(80)}
+            className="mb-lg"
+          >
+            <GamificationRow
+              streak={gam.currentStreak}
+              dailyXp={gam.dailyXp}
+              dailyXpTarget={gam.dailyXpTarget}
+              goodBoyScore={gam.goodBoyScore}
+              level={gam.level}
+              levelTitle={gam.levelTitle}
+              totalXp={gam.totalXp}
+            />
+          </Animated.View>
+        )}
+
+        {/* ── Weekly Challenge (hidden on first session) ── */}
+        {!isFirstSession && gam.activeChallenge && !gam.activeChallenge.completed && (
           <Animated.View
             entering={FadeInDown.duration(400).delay(120)}
             className="mb-lg"
@@ -329,53 +377,57 @@ function HomeScreenContent() {
           )}
         </Animated.View>
 
-        {/* ── Achievements Shortcut ── */}
-        <Animated.View
-          entering={FadeInDown.duration(400).delay(280)}
-          className="mb-lg"
-        >
-          <Pressable
-            onPress={() => router.push("/achievements")}
+        {/* ── Achievements Shortcut (hidden on first session) ── */}
+        {!isFirstSession && (
+          <Animated.View
+            entering={FadeInDown.duration(400).delay(280)}
+            className="mb-lg"
           >
-            <Card className="flex-row items-center justify-between">
-              <View className="flex-row items-center gap-md">
-                <Typography className="text-[24px]">🏅</Typography>
-                <View>
-                  <Typography variant="body-medium">Achievements</Typography>
-                  <Typography variant="caption" color="secondary">
-                    {gam.unlockedCount} of {gam.totalAchievements} unlocked
-                  </Typography>
+            <Pressable
+              onPress={() => router.push("/achievements")}
+            >
+              <Card className="flex-row items-center justify-between">
+                <View className="flex-row items-center gap-md">
+                  <Typography className="text-[24px]">🏅</Typography>
+                  <View>
+                    <Typography variant="body-medium">Achievements</Typography>
+                    <Typography variant="caption" color="secondary">
+                      {gam.unlockedCount} of {gam.totalAchievements} unlocked
+                    </Typography>
+                  </View>
                 </View>
-              </View>
-              <Typography variant="body" color="tertiary">
-                →
-              </Typography>
-            </Card>
-          </Pressable>
-        </Animated.View>
+                <Typography variant="body" color="tertiary">
+                  →
+                </Typography>
+              </Card>
+            </Pressable>
+          </Animated.View>
+        )}
 
-        {/* ── Trick Library Shortcut ── */}
-        <Animated.View
-          entering={FadeInDown.duration(400).delay(300)}
-          className="mb-lg"
-        >
-          <Pressable onPress={() => router.push("/tricks")}>
-            <Card className="flex-row items-center justify-between">
-              <View className="flex-row items-center gap-md">
-                <Typography className="text-[24px]">🎪</Typography>
-                <View>
-                  <Typography variant="body-medium">Trick Library</Typography>
-                  <Typography variant="caption" color="secondary">
-                    Teach {dogName} fun tricks
-                  </Typography>
+        {/* ── Trick Library Shortcut (hidden on first session) ── */}
+        {!isFirstSession && (
+          <Animated.View
+            entering={FadeInDown.duration(400).delay(300)}
+            className="mb-lg"
+          >
+            <Pressable onPress={() => router.push("/tricks")}>
+              <Card className="flex-row items-center justify-between">
+                <View className="flex-row items-center gap-md">
+                  <Typography className="text-[24px]">🎪</Typography>
+                  <View>
+                    <Typography variant="body-medium">Trick Library</Typography>
+                    <Typography variant="caption" color="secondary">
+                      Teach {dogName} fun tricks
+                    </Typography>
+                  </View>
                 </View>
-              </View>
-              <Typography variant="body" color="tertiary">
-                →
-              </Typography>
-            </Card>
-          </Pressable>
-        </Animated.View>
+                <Typography variant="body" color="tertiary">
+                  →
+                </Typography>
+              </Card>
+            </Pressable>
+          </Animated.View>
+        )}
 
         {/* ── Done for the day / Buddy tip ── */}
         {allDoneToday && (

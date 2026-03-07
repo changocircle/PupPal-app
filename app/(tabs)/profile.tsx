@@ -309,9 +309,30 @@ function ProfileScreenContent() {
           </Pressable>
         </Animated.View>
 
+        {/* ── Manage Dogs ── */}
+        <Animated.View
+          entering={FadeInDown.duration(400).delay(260)}
+          className="px-xl mb-lg"
+        >
+          <Pressable onPress={() => router.push("/add-dog")}>
+            <Card className="flex-row items-center gap-md">
+              <Typography className="text-[32px]">🐾</Typography>
+              <View className="flex-1">
+                <Typography variant="body-medium">
+                  Manage Dogs
+                </Typography>
+                <Typography variant="caption" color="secondary">
+                  Add another dog or switch between profiles
+                </Typography>
+              </View>
+              <Typography color="tertiary">→</Typography>
+            </Card>
+          </Pressable>
+        </Animated.View>
+
         {/* ── Breed Encyclopedia ── */}
         <Animated.View
-          entering={FadeInDown.duration(400).delay(270)}
+          entering={FadeInDown.duration(400).delay(290)}
           className="px-xl mb-lg"
         >
           <Pressable onPress={() => router.push("/breeds")}>
