@@ -69,7 +69,7 @@ puppal/
 +-- CLAUDE.md                          <- You are here
 +-- docs/
 |   +-- PupPal-Build-Playbook.md       <- Step-by-step dev guide
-|   +-- PRD-01 through PRD-15          <- Feature specs (see PRD Reference)
+|   +-- PRD-01 through PRD-22          <- Feature specs (see PRD Reference)
 |   +-- TECH-STACK.md                  <- Tech decisions
 |   +-- DESIGN-SYSTEM.md              <- Visual design, components, wireframes
 +-- app/                               <- Expo Router file-based routes
@@ -403,6 +403,17 @@ Display: 36/ExtraBold, h1: 30/Bold, h2: 24/Bold, h3: 20/SemiBold, body: 16/Regul
 | 12 | Breed Encyclopedia | PRD-12 | 51 breed profiles, browser, content linking |
 | 15 | Community | PRD-15 | Feed, posts, comments, moderation (post-launch) |
 
+### Growth & Operations (v2+)
+| # | Feature | PRD | Key Deliverables |
+|---|---------|-----|-----------------|
+| 16 | Landing Page | PRD-16 | Sales page, conversion optimization, social proof |
+| 17 | Localization | PRD-17 | Multi-language support, i18n framework, translation pipeline |
+| 18 | Email Retention | PRD-18 | Lifecycle sequences, re-engagement, churn prevention |
+| 19 | Kennel/Breeder Partnerships | PRD-19 | Partner program, onboarding bundles, co-branding |
+| 20 | Admin Dashboard | PRD-20 | Internal analytics, user management, content moderation |
+| 21 | Trusted Partners & Affiliates | PRD-21 | Curated recommendations, affiliate tracking, revenue share |
+| 22 | Multi-Dog Pricing | PRD-22 | Pack plans, per-dog discounts, family billing |
+
 ---
 
 ## Feature Status
@@ -573,6 +584,7 @@ ONESIGNAL_APP_ID=                   # Push notifications (not wired)
 13. **Paywall triggers** --- 9 trigger events defined in PRD-06. Wire Superwall at each gate point.
 14. **Share cards** include referral link (PRD-08). Every shareable moment is marketing.
 15. **Community (PRD-15) is post-launch** --- do not build until user base supports it. Feature-flagged.
+16. **PRDs 16-22 are growth/operations features** --- landing page, localization, email retention, partnerships, admin dashboard, affiliates, multi-dog pricing. Not in current sprint.
 16. **Zustand selectors must return stable references** --- see Critical Patterns #1 above.
 17. **All AI uses Claude Sonnet 4.6 via Edge Functions** --- see Critical Patterns #4 above. Kimi K2.5 is fully removed from the app.
 18. **Use resetAllStores() for any sign-out or fresh start** --- never reset stores individually.
