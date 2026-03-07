@@ -23,7 +23,7 @@ Buddy is not a generic chatbot. Buddy is a dog training expert who:
 
 **Why this is the killer feature**: GoodPup charges $34/week for scheduled video calls with a trainer. In-person training is $50-$125/session. PupPal gives you an always-available mentor for $3.33/month. The value proposition is undeniable IF the chat feels genuinely helpful and personalized.
 
-**AI Provider**: Claude Sonnet 4.6 (selected for cost efficiency at scale). Architecture should allow swapping providers without changing the user experience.
+**AI Provider**: Anthropic API (Claude Sonnet 4.6) via `buddy-chat` Supabase Edge Function. Model: `claude-sonnet-4-6`. ANTHROPIC_API_KEY stored as Edge Function secret. Same provider also powers breed detection and vaccine extraction.
 
 ### Success Metrics
 
@@ -473,16 +473,17 @@ User sends message
   → Client sends to PupPal backend
     → Backend fetches DogContext, ConversationContext, UserContext
     → Backend constructs system prompt with dynamic context
-    → Backend sends to Claude Sonnet 4.6:
+    → buddy-chat Edge Function sends to Anthropic API (claude-sonnet-4-6):
         system: [full prompt with context]
         messages: [history, max 20]
         new message (text + optional image)
-    → Claude streams response via SSE
-    → Backend streams to client
-  → Client renders streaming text
+        max_tokens: 200
+    → Anthropic returns full response (not streamed)
+    → Edge Function generates dynamic suggested prompts (lightweight second Sonnet call)
+    → Edge Function returns response + suggestions to client
+  → Client simulates word-by-word streaming for natural typing feel
   → Client removes typing indicator
-  → Backend stores message + response
-  → Backend updates token tracking
+  → Client stores message locally (Supabase sync planned)
 ```
 
 ### API Endpoints
@@ -509,20 +510,18 @@ DELETE /api/chat/sessions/{id}
 ### AI Provider Abstraction
 
 ```
-AIProvider interface {
-  sendMessage(
-    systemPrompt: string,
-    messages: array of {role, content},
-    options: { model, max_tokens, temperature, stream }
-  ) → Stream<string> | string
-}
+Current implementation (not an abstraction layer --- direct Anthropic calls):
 
-ClaudeProvider implements AIProvider      // primary
-AnthropicProvider implements AIProvider // backup
-OpenAIProvider implements AIProvider    // backup
+Client (aiProvider.ts)
+  → POST to buddy-chat Edge Function
+  → Edge Function calls Anthropic API directly (fetch to api.anthropic.com/v1/messages)
+  → Returns { content, suggestedPrompts, usage, model }
+
+No provider abstraction exists in code. If switching providers in the future,
+update the Edge Function's fetch target and request format. Client code unchanged.
 ```
 
-**Why**: Claude Sonnet 4.6 chosen for cost. AI pricing/quality changes fast. Must swap providers in hours, not weeks. Periodically test 1% traffic through alternatives, compare quality ratings.
+**Current provider**: Anthropic (Claude Sonnet 4.6). Single provider for all AI features (chat, breed detection, vaccine extraction). If Anthropic has extended downtime, swap the Edge Function to call OpenAI as a fallback.
 
 ### Rate Limiting
 
@@ -708,13 +707,13 @@ chat_error — {error_type, retry_attempted, succeeded}
 ## 17. Open Questions
 
 1. Voice input: v1 or defer to v2?
-2. Claude Sonnet 4.6 multimodal: Does it support images? If not, separate vision model needed.
-3. Summarization model: Same as chat or cheaper/faster model?
+2. ~~Claude Sonnet 4.6 multimodal~~ **RESOLVED**: Claude Sonnet 4.6 supports vision natively. Already used for breed-detect (1-3 photos) and vaccine-extract (up to 5 photos). Photo input in chat can use the same approach.
+3. Summarization model: Same as chat or cheaper/faster model? (Consider Haiku for summaries to reduce cost.)
 4. Buddy avatar: Static or animated in chat?
 5. Proactive notifications: How many per day before annoying? (Start 1/day max?)
 6. Chat export: Full conversations or just individual messages?
-7. Multi-language: Claude's non-English quality? Language-specific prompts needed?
-8. Breed knowledge: Structured database injected in prompt, or rely on AI training data?
+7. ~~Multi-language: Claude's non-English quality?~~ **RESOLVED**: Claude Sonnet 4.6 handles multiple languages well. Language selection UI exists with "coming soon" toast for non-English.
+8. ~~Breed knowledge~~ **RESOLVED**: Structured data injected in prompt. System prompt includes breed, age, challenges, training plan exercises (resolved from 164-exercise library), and current plan status.
 
 ---
 
@@ -722,13 +721,13 @@ chat_error — {error_type, retry_attempted, succeeded}
 
 | Dependency | Purpose | Fallback |
 |------------|---------|----------|
-| Claude Sonnet 4.6 API | Primary AI | Anthropic or OpenAI |
-| SSE / WebSocket | Streaming | Non-streaming (worse UX) |
-| Image storage (S3/R2) | Photo storage | Local device only |
+| Anthropic API (Claude Sonnet 4.6) | Primary AI via buddy-chat Edge Function | OpenAI as backup provider (swap Edge Function) |
+| Supabase Edge Functions | AI proxy, holds API key server-side | N/A (required) |
+| Image storage (Supabase Storage) | Photo storage | Local device only (AsyncStorage) |
 | Summary generation | Cross-session memory | No cross-session memory |
-| Analytics SDK | Tracking | Server-side logging |
-| Push notifications | Proactive messages | In-app only |
-| RevenueCat | Premium gating | Direct subscription check |
+| Analytics SDK (PostHog) | Tracking | Server-side logging |
+| Push notifications (OneSignal) | Proactive messages | In-app only (not wired yet) |
+| RevenueCat | Premium gating | Direct subscription check (not wired yet) |
 
 ---
 

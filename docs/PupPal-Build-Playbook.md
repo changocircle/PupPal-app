@@ -17,8 +17,7 @@
 - [ ] **Superwall** --- account needed for paywall A/B testing
 - [x] **PostHog** --- analytics instrumented
 - [x] **OneSignal** --- SDK integrated (delivery not connected)
-- [x] **Anthropic** --- API key for AI chat (standard Anthropic settings)
-- [x] **Google Cloud** --- Vision API for breed detection
+- [x] **Anthropic** --- API key for all AI features (chat, breed detect, vaccine extract). Key stored as Supabase Edge Function secret.
 - [x] **Expo** --- EAS account for builds
 - [x] **Sentry** --- error tracking set up
 
@@ -77,14 +76,14 @@
 
 ### What Was Built
 - Chat UI with streaming, Buddy avatars, typing indicator
-- Claude Sonnet 4.6 integration via Vercel AI SDK
+- Claude Sonnet 4.6 integration via buddy-chat Supabase Edge Function
 - Context injection (dog profile, plan, completions)
 - 3 messages/day free limit with counter
 - Buddy personality system prompt
 
 ### Key Files
 - `app/(tabs)/chat.tsx` --- chat screen
-- `src/lib/aiProvider.ts` --- Claude Sonnet 4.6 client (**temperature: 1 only**)
+- `src/lib/aiProvider.ts` --- Claude Sonnet 4.6 client (calls buddy-chat Edge Function)
 - `src/lib/buddyPrompt.ts` --- system prompt builder
 - `src/stores/chatStore.ts` --- conversation state
 - `src/hooks/useChat.ts` --- chat hook
@@ -188,7 +187,7 @@ This is set in `aiProvider.ts:47`.
 - Needs: Supabase Realtime backend, moderation Edge Function
 
 #### Breed Detection
-- Google Cloud Vision Edge Function (`supabase/functions/breed-detect/index.ts`)
+- Claude Sonnet 4.6 vision Edge Function (`supabase/functions/breed-detect/index.ts`)
 - Client service with 3s timeout, silent fallback (`src/lib/breedDetect.ts`)
 - Wired into `app/(onboarding)/photo.tsx`
 - PRD-01 confidence logic: >70% auto-fill, 40-70% suggest, <40% options, fail -> manual
@@ -356,7 +355,7 @@ isPremium = subscription_status === 'active' || subscription_status === 'trial'
 4. **Point to specific PRDs.** "Read docs/PRD-03 and build X." Don't dump all PRDs.
 5. **Commit after each working feature.** Descriptive messages. You can always roll back.
 6. **Zustand selectors MUST return stable references.** See CLAUDE.md Critical Patterns #1.
-7. **Claude Sonnet 4.6 temperature MUST be 1.** See CLAUDE.md Critical Patterns #4.
+7. **All AI uses Claude Sonnet 4.6 via Edge Functions.** See CLAUDE.md Critical Patterns #4.
 8. **Use resetAllStores() for any sign-out.** Never reset stores individually.
 9. **URLs are puppal.dog.** Not puppal.app.
 10. **Animations are not optional.** They make PupPal feel premium.

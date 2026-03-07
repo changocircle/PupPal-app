@@ -17,26 +17,30 @@ Freemium subscription via App Store/Google Play. 3-day free trial -> $39.99/year
 ## Tech Stack
 
 ### Mobile App
-- **Framework**: React Native + Expo SDK 54 (managed workflow)
+- **Framework**: React Native 0.81.5 + Expo SDK 54 (managed workflow)
 - **Routing**: Expo Router v6 (file-based routing)
-- **Language**: TypeScript (strict mode)
+- **Language**: TypeScript 5.3 (strict mode)
+- **React**: 19.1.0
 - **Styling**: NativeWind v4 (Tailwind CSS for React Native)
 - **State**: Zustand v5 (client state with AsyncStorage persistence) + TanStack Query v5 (server state/caching)
 - **Forms**: React Hook Form + Zod validation
-- **Animations**: React Native Reanimated 4 + Moti
+- **Animations**: React Native Reanimated 4 (Moti is BANNED)
 
 ### Backend
 - **Platform**: Supabase (hosted Postgres + Auth + Storage + Edge Functions + Realtime)
 - **Database**: PostgreSQL via Supabase
 - **Auth**: Supabase Auth (Apple Sign-In, Google Sign-In)
 - **Storage**: Supabase Storage (dog photos, vet records, journal photos)
-- **Edge Functions**: Deno/TypeScript (breed detection, future: AI proxy, plan generation, cron jobs)
+- **Edge Functions**: Deno/TypeScript (3 deployed: buddy-chat, breed-detect, vaccine-extract)
 
 ### AI
-- **Chat Provider**: Kimi K2.5 (primary --- cost efficiency)
-  - **IMPORTANT**: Kimi K2.5 only accepts `temperature: 1`. Any other value returns 400.
-- **Streaming**: Vercel AI SDK (provider-agnostic, swap with config change)
-- **Breed Detection**: Google Cloud Vision API via Supabase Edge Function (fallback: manual breed selector)
+- **Provider**: Anthropic API (Claude Sonnet 4.6) via Supabase Edge Functions
+  - **Model**: `claude-sonnet-4-6` (NOT `claude-sonnet-4-6-20250514`)
+  - **ANTHROPIC_API_KEY** stored as Supabase Edge Function secret, never in client
+- **Chat**: `buddy-chat` Edge Function, max_tokens 200, 50-word system prompt prefix, 400-char post-truncation, 20 req/min rate limit
+- **Breed Detection**: `breed-detect` Edge Function using Claude Sonnet 4.6 vision (1-3 photos, chain-of-thought). No rate limiting yet (add before launch).
+- **Vaccine Extraction**: `vaccine-extract` Edge Function (up to 5 photos), 10 req/min rate limit
+- **Streaming**: Client-side word-by-word simulation from full Edge Function response (not SSE). Vercel AI SDK removed.
 
 ### Payments & Monetization
 - **Subscriptions**: RevenueCat (Apple/Google IAP)
@@ -159,7 +163,7 @@ puppal/
 |   |   +-- supabase.ts               <- Supabase client (AsyncStorage session)
 |   +-- lib/
 |   |   +-- achievementChecker.ts      <- Achievement trigger evaluation
-|   |   +-- aiProvider.ts             <- Kimi K2.5 chat (temperature: 1)
+|   |   +-- aiProvider.ts             <- Claude Sonnet 4.6 via buddy-chat Edge Function
 |   |   +-- breedDetect.ts            <- Client-side breed detection service
 |   |   +-- buddyPrompt.ts            <- Buddy system prompt builder
 |   |   +-- gateThrottle.ts           <- Paywall frequency limiter
@@ -184,7 +188,9 @@ puppal/
 |   +-- migrations/
 |   |   +-- 001_users_and_dogs.sql
 |   +-- functions/
-|       +-- breed-detect/index.ts      <- Google Vision breed detection
+|       +-- buddy-chat/index.ts        <- AI chat proxy (Claude Sonnet 4.6)
+|       +-- breed-detect/index.ts      <- AI breed detection (Claude Sonnet 4.6 vision)
+|       +-- vaccine-extract/index.ts   <- AI vet record parsing (Claude Sonnet 4.6 vision)
 +-- assets/                            <- buddy/, icons/, achievements/, splash/
 ```
 
@@ -300,10 +306,13 @@ from `src/lib/resetStores.ts`. It's already wired into:
 during app mount. Don't rely on `useAuthStore` being populated before
 `onAuthStateChange` fires.
 
-### 4. Kimi K2.5 Temperature
+### 4. AI Provider Architecture
 
-The only valid temperature value is `1`. Set in `src/lib/aiProvider.ts:47`.
-Any other value causes a 400 error from the API.
+All AI features use Claude Sonnet 4.6 via Supabase Edge Functions. The client calls
+`streamChatCompletion()` in `src/lib/aiProvider.ts`, which hits the `buddy-chat`
+Edge Function. The Edge Function holds the ANTHROPIC_API_KEY, calls the Anthropic API,
+and returns the full response. The client simulates word-by-word streaming for a
+natural typing feel. There is no direct API call from the client to Anthropic.
 
 ### 5. `trickStore.packProgress` is a Record, Not Array
 
@@ -399,10 +408,10 @@ Display: 36/ExtraBold, h1: 30/Bold, h2: 24/Bold, h3: 20/SemiBold, body: 16/Regul
 ## Feature Status
 
 ### Built & Working (Free Tier)
-- Onboarding flow (8 screens with breed detection via Google Vision)
+- Onboarding flow (8 screens with breed detection via Claude Sonnet 4.6 vision)
 - Home screen with today's training plan
 - Exercise detail + completion with XP/animations
-- Buddy AI Chat (Kimi K2.5 streaming, 3 msg/day free limit)
+- Buddy AI Chat (Claude Sonnet 4.6 streaming, 3 msg/day free limit)
 - Training Plan view (Week 1 free, Week 2-12 gated)
 - Gamification (XP, streaks, levels, 52 achievements, GBS gauge)
 - Health dashboard with 5 sub-screens (vaccinations, weight, medications, milestones, vet visits, notes)
@@ -476,7 +485,7 @@ All core UI and data stores built. See git history for details.
 ### Remaining Work (Pre-Launch)
 - [ ] Connect RevenueCat for real IAP
 - [ ] Connect OneSignal for real push delivery
-- [ ] Wire remaining Supabase Edge Functions (chat proxy, plan generation, etc.)
+- [ ] Wire remaining Supabase Edge Functions (plan generation, streak cron, etc.)
 - [ ] Connect community to Supabase Realtime
 - [ ] Add plan adaptation engine
 - [ ] Add health PDF export
@@ -489,30 +498,43 @@ All core UI and data stores built. See git history for details.
 
 ## Current Sprint
 
-> **Pre-TestFlight QA + Device Testing**
+> **Chat Quality + Documentation Audit**
 
-**Status**: QA audit complete, 4 PRs merged, breed detection + store reset built
-**Active branch**: `fix/device-test-blockers` (PR #4 open)
-**Next**: Commit breed detection + store reset + doc updates, then TestFlight
+**Status**: 29 PRs merged. Chat migrated from Kimi K2.5 to Claude Sonnet 4.6 (PR #15). Buddy system prompt rewritten with training context injection, dynamic suggested prompts, and exercise name resolution (PRs #27-29). Dog profile Supabase sync live (PR #25). Breed scan animation added (PR #26). Documentation audit in progress to remove all stale Kimi/GCV references.
+**Next**: Supabase data sync (training plans, chat history, health records), then TestFlight.
 
 ---
 
 ## Environment Variables
 
+### Client-side (in .env, bundled into app)
 ```
 EXPO_PUBLIC_SUPABASE_URL=
 EXPO_PUBLIC_SUPABASE_ANON_KEY=
-SUPABASE_SERVICE_ROLE_KEY=          # Edge Functions only
-KIMI_API_KEY=                       # Edge Functions only (aiProvider.ts)
-REVENUECAT_APPLE_API_KEY=
-REVENUECAT_GOOGLE_API_KEY=
-SUPERWALL_API_KEY=
-ONESIGNAL_APP_ID=
 EXPO_PUBLIC_POSTHOG_API_KEY=
 EXPO_PUBLIC_POSTHOG_HOST=
-GOOGLE_CLOUD_VISION_KEY=            # Edge Functions only (breed-detect)
 SENTRY_DSN=
 ```
+
+### Server-side (Supabase Edge Function secrets, set in Dashboard)
+```
+ANTHROPIC_API_KEY=                  # Used by buddy-chat, breed-detect, vaccine-extract (Claude Sonnet 4.6)
+SUPABASE_SERVICE_ROLE_KEY=          # Auto-set by Supabase
+```
+
+### Not yet configured (pending integration)
+```
+REVENUECAT_APPLE_API_KEY=           # Apple IAP (not wired)
+REVENUECAT_GOOGLE_API_KEY=          # Google IAP (not wired)
+SUPERWALL_API_KEY=                  # Paywall A/B testing (not wired)
+ONESIGNAL_APP_ID=                   # Push notifications (not wired)
+```
+
+### 4 API keys required for production
+1. **ANTHROPIC_API_KEY** - powers all 3 edge functions (chat, breed detect, vaccine extract)
+2. **SUPABASE keys** - EXPO_PUBLIC_SUPABASE_URL + EXPO_PUBLIC_SUPABASE_ANON_KEY
+3. **POSTHOG_API_KEY** - product analytics
+4. **SENTRY_DSN** - error tracking
 
 ---
 
@@ -524,13 +546,13 @@ SENTRY_DSN=
 | Backend | Supabase | Auth, DB, storage, edge functions, realtime on Day 1 |
 | State | Zustand + TanStack Query | Client vs server state separation, offline persistence |
 | Styling | NativeWind v4 | Tailwind for RN |
-| AI chat | Vercel AI SDK + Kimi K2.5 | Provider-agnostic streaming, cost efficient |
+| AI chat | Anthropic API (Claude Sonnet 4.6) via Edge Function | Best quality, unified provider for chat + vision |
 | Analytics | PostHog | Feature flags built-in, session replay |
 | Routing | Expo Router v6 | File-based, type-safe, deep links built-in |
 | Push | OneSignal | Segmentation, automation, in-app messaging |
 | Animations | Reanimated 4 | Native thread 60fps, declarative API |
 | Payments | RevenueCat + Superwall | IAP abstraction + remote paywall A/B testing |
-| Breed detection | Google Cloud Vision | LABEL_DETECTION + WEB_DETECTION, 3s timeout, silent fallback |
+| Breed detection | Claude Sonnet 4.6 vision | Chain-of-thought prompt, 1-3 photos, same-dog validation |
 
 ---
 
@@ -552,6 +574,6 @@ SENTRY_DSN=
 14. **Share cards** include referral link (PRD-08). Every shareable moment is marketing.
 15. **Community (PRD-15) is post-launch** --- do not build until user base supports it. Feature-flagged.
 16. **Zustand selectors must return stable references** --- see Critical Patterns #1 above.
-17. **Kimi K2.5 temperature must be 1** --- see Critical Patterns #4 above.
+17. **All AI uses Claude Sonnet 4.6 via Edge Functions** --- see Critical Patterns #4 above. Kimi K2.5 is fully removed from the app.
 18. **Use resetAllStores() for any sign-out or fresh start** --- never reset stores individually.
 19. **URLs are puppal.dog** --- not puppal.app. Support: support@puppal.dog.
