@@ -4,6 +4,7 @@ import { View } from "react-native";
 import { Typography } from "@/components/ui";
 import { COLORS } from "@/constants/theme";
 import { useDogSync } from "@/hooks/useDogSync";
+import { useTrainingSync } from "@/hooks/useTrainingSync";
 
 /**
  * Main Tab Navigation Layout
@@ -22,8 +23,9 @@ function TabIcon({ emoji, focused }: { emoji: string; focused: boolean }) {
 }
 
 export default function TabLayout() {
-  // Initialize dog profile sync (runs when user is authenticated)
+  // Initialize sync layers (run when user is authenticated)
   useDogSync();
+  useTrainingSync();
 
   return (
     <Tabs

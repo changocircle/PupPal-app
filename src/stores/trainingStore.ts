@@ -3,7 +3,9 @@
  * PRD-03: manages plan state, exercise completion, day/week progression.
  *
  * Local-first: all state in Zustand + AsyncStorage.
- * Supabase sync will be wired up later.
+ * Sync-aware: exposes _syncMeta and _mergeTraining for the sync layer.
+ * The sync layer (trainingSync.ts) subscribes via useTrainingSync hook,
+ * NOT via imports in this file (avoids circular deps).
  */
 
 import { create } from "zustand";
@@ -20,6 +22,24 @@ import type {
 import { generateTrainingPlan } from "@/lib/planGenerator";
 
 // ──────────────────────────────────────────────
+// Sync Metadata (transient, not persisted)
+// ──────────────────────────────────────────────
+
+export type TrainingSyncStatus = "idle" | "syncing" | "error";
+
+export interface TrainingSyncMeta {
+  status: TrainingSyncStatus;
+  lastSyncedAt: string | null;
+  pendingCount: number;
+}
+
+const DEFAULT_SYNC_META: TrainingSyncMeta = {
+  status: "idle",
+  lastSyncedAt: null,
+  pendingCount: 0,
+};
+
+// ──────────────────────────────────────────────
 // Types
 // ──────────────────────────────────────────────
 
@@ -34,10 +54,13 @@ interface TrainingState {
   streak: number;
   /** Last completion date (ISO string, for streak calc) */
   lastCompletionDate: string | null;
+  /** Sync metadata (transient, not persisted to AsyncStorage) */
+  _syncMeta: TrainingSyncMeta;
 
   // ─── Actions ───
   /** Generate a new plan from onboarding data */
   generatePlan: (input: {
+    dogId: string;
     dogName: string;
     breed: string | null;
     ageWeeks: number;
@@ -80,6 +103,24 @@ interface TrainingState {
 
   /** Reset plan (for testing / re-onboarding) */
   resetPlan: () => void;
+
+  // ── Sync-layer actions (prefixed with _ to indicate internal use) ──
+
+  /** Update sync metadata (called by trainingSync.ts) */
+  _setSyncMeta: (updates: Partial<TrainingSyncMeta>) => void;
+
+  /**
+   * Merge training data from sync.
+   * Replaces plan, completions, and gamification state.
+   * Called by trainingSync.ts during pull phase.
+   */
+  _mergeTraining: (data: {
+    plan: TrainingPlan | null;
+    completions: ExerciseCompletion[];
+    totalXp: number;
+    streak: number;
+    lastCompletionDate: string | null;
+  }) => void;
 }
 
 // ──────────────────────────────────────────────
@@ -94,6 +135,7 @@ export const useTrainingStore = create<TrainingState>()(
       totalXp: 0,
       streak: 0,
       lastCompletionDate: null,
+      _syncMeta: { ...DEFAULT_SYNC_META },
 
       generatePlan: (input) => {
         const plan = generateTrainingPlan(input);
@@ -447,10 +489,35 @@ export const useTrainingStore = create<TrainingState>()(
           lastCompletionDate: null,
         });
       },
+
+      // ── Sync Actions ──
+
+      _setSyncMeta: (updates) =>
+        set((state) => ({
+          _syncMeta: { ...state._syncMeta, ...updates },
+        })),
+
+      _mergeTraining: (data) => {
+        set({
+          plan: data.plan,
+          completions: data.completions,
+          totalXp: data.totalXp,
+          streak: data.streak,
+          lastCompletionDate: data.lastCompletionDate,
+        });
+      },
     }),
     {
       name: "puppal-training",
       storage: createJSONStorage(() => AsyncStorage),
+      partialize: (state) => ({
+        plan: state.plan,
+        completions: state.completions,
+        totalXp: state.totalXp,
+        streak: state.streak,
+        lastCompletionDate: state.lastCompletionDate,
+        // _syncMeta is NOT persisted (resets to defaults on restart)
+      }),
     }
   )
 );

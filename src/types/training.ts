@@ -95,6 +95,7 @@ export interface PlanWeek {
 
 export interface TrainingPlan {
   id: string;
+  dogId: string;
   dogName: string;
   breed: string | null;
   generatedAt: string;
