@@ -34,7 +34,7 @@ export function resetAllStores(): void {
   clearHealthSyncData().catch(() => {});
 
   // Reset every other persisted store
-  useChatStore.getState().clearConversation();
+  useChatStore.getState().resetChat();
   useGamificationStore.getState().resetGamification();
   useHealthStore.getState().resetHealth();
   useJournalStore.getState().resetJournal();

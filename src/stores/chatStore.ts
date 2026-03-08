@@ -68,6 +68,7 @@ interface ChatState {
   finishStreaming: (messageId: string) => void;
   setFeedback: (messageId: string, feedback: MessageFeedback) => void;
   clearConversation: () => void;
+  resetChat: () => void;
 
   // Free tier
   canSendMessage: (isPremium: boolean) => boolean;
@@ -253,6 +254,19 @@ export const useChatStore = create<ChatState>()(
         set({ messages: [], currentSessionId: null });
       },
 
+      resetChat: () => {
+        useChatStore.setState({
+          currentSessionId: null,
+          messages: [],
+          sessions: [],
+          conversationSummaries: [],
+          richSummaries: [],
+          dailyCount: null,
+          isStreaming: false,
+          streamingMessageId: null,
+        });
+      },
+
       // ── Free tier ──
 
       canSendMessage: (isPremium: boolean) => {
@@ -436,16 +450,13 @@ export const useChatStore = create<ChatState>()(
           state?.dailyCount &&
           state.dailyCount.messagesLimit !== FREE_MESSAGE_LIMIT
         ) {
-          const corrected = Math.min(
-            state.dailyCount.messagesSent,
-            FREE_MESSAGE_LIMIT,
-          );
+          const messagesSent = 0; // stale limit means stale count data too — reset to fresh
           // Use setState to actually commit the correction to the store
           useChatStore.setState({
             dailyCount: {
               ...state.dailyCount,
               messagesLimit: FREE_MESSAGE_LIMIT,
-              messagesSent: corrected,
+              messagesSent,
             },
           });
         }

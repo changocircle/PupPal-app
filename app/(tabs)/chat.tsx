@@ -17,6 +17,8 @@ import { DogSwitcherButton } from "@/components/dog/DogSwitcherButton";
 import { useOnboardingStore } from "@/stores/onboardingStore";
 import { useSubscription } from "@/hooks/useSubscription";
 import { useHydration } from "@/hooks/useHydration";
+import { useChatStore } from "@/stores/chatStore";
+import { FREE_MESSAGE_LIMIT } from "@/types/chat";
 import type { ChatMessage } from "@/types/chat";
 
 /**
@@ -73,6 +75,17 @@ function ChatScreenContent() {
 
   const isLimitHit = !isPremium && remainingMessages <= 0;
   const hasMessages = messages.length > 0;
+
+  // Debug logging on first render to diagnose counter issues
+  const dailyCount = useChatStore((s) => s.dailyCount);
+  useEffect(() => {
+    if (__DEV__) {
+      console.log(
+        `[ChatDebug] messagesSent: ${dailyCount?.messagesSent ?? 0}, FREE_MESSAGE_LIMIT: ${FREE_MESSAGE_LIMIT}, remaining: ${remainingMessages}, dailyCount: ${JSON.stringify(dailyCount)}`
+      );
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
