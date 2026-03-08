@@ -12,6 +12,8 @@ export type MessageFeedback = "positive" | "negative" | "none";
 export interface ChatMessage {
   id: string;
   sessionId: string;
+  /** dog_id this message belongs to. Optional for backward compat with local-only messages. */
+  dogId?: string;
   role: MessageRole;
   content: string;
   photoUrl?: string;
@@ -41,7 +43,8 @@ export interface ChatSession {
 // ── Conversation Summary (cross-session memory) ──
 export interface ConversationSummary {
   id: string;
-  sessionId: string;
+  /** session_id this summary was generated from. Optional for summaries pre-sync. */
+  sessionId?: string;
   summaryText: string;
   keyTopics: string[];
   adviceGiven: string[];
