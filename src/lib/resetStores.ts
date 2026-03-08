@@ -19,6 +19,7 @@ import { useTrickStore } from "@/stores/trickStore";
 import { clearSyncData } from "@/services/dogSync";
 import { clearTrainingSyncData } from "@/services/trainingSync";
 import { clearChatSyncData } from "@/services/chatSync";
+import { clearGamificationSyncData } from "@/services/gamificationSync";
 
 export function resetAllStores(): void {
   // Reset dog store first, it also cleans up per-dog AsyncStorage keys
@@ -28,6 +29,7 @@ export function resetAllStores(): void {
   clearSyncData().catch(() => {});
   clearTrainingSyncData().catch(() => {});
   clearChatSyncData().catch(() => {});
+  clearGamificationSyncData().catch(() => {});
 
   // Reset every other persisted store
   useChatStore.getState().clearConversation();
