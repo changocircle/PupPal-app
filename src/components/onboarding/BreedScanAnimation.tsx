@@ -45,7 +45,7 @@ export type BuddyMode = "thinking" | "excited" | "teaching";
 
 const BUDDY_IMAGES: Record<BuddyMode, any> = {
   thinking: require('../../../assets/buddy/buddy-thinking.png'),
-  excited: require('../../../assets/buddy/buddy-excited.png'),
+  excited:  require('../../../assets/buddy/buddy-celebrating.png'),
   teaching: require('../../../assets/buddy/buddy-teaching.png'),
 };
 

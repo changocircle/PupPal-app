@@ -7,17 +7,22 @@ export type BuddyMood =
   | 'excited'
   | 'teaching'
   | 'celebrating'
-  | 'concerned'
-  | 'greeting';
+  | 'empathetic'
+  | 'proud'
+  | 'sleeping'
+  | 'waving';
 
 const BUDDY_ASSETS: Record<BuddyMood, any> = {
-  happy: require('../../../assets/buddy/buddy-happy.png'),
-  thinking: require('../../../assets/buddy/buddy-thinking.png'),
-  excited: require('../../../assets/buddy/buddy-excited.png'),
-  teaching: require('../../../assets/buddy/buddy-teaching.png'),
+  happy:       require('../../../assets/buddy/buddy-main.png'),
+  waving:      require('../../../assets/buddy/buddy-waving.png'),
+  thinking:    require('../../../assets/buddy/buddy-thinking.png'),
   celebrating: require('../../../assets/buddy/buddy-celebrating.png'),
-  concerned: require('../../../assets/buddy/buddy-concerned.png'),
-  greeting: require('../../../assets/buddy/buddy-greeting.png'),
+  empathetic:  require('../../../assets/buddy/buddy-empathetic.png'),
+  proud:       require('../../../assets/buddy/buddy-proud.png'),
+  teaching:    require('../../../assets/buddy/buddy-teaching.png'),
+  sleeping:    require('../../../assets/buddy/buddy-sleeping.png'),
+  // 'excited' maps to celebrating for high-energy moments
+  excited:     require('../../../assets/buddy/buddy-waving.png'),
 };
 
 export function BuddyAvatar({

@@ -254,7 +254,7 @@ function EmptyState({
       >
         {/* Buddy avatar */}
         <View className="w-[100px] h-[100px] rounded-full bg-primary-light items-center justify-center mb-lg">
-          <BuddyAvatar mood="greeting" size={100} />
+          <BuddyAvatar mood="waving" size={100} />
         </View>
 
         <Typography variant="h2" className="text-center mb-sm">

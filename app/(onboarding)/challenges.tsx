@@ -54,7 +54,7 @@ export default function ChallengesScreen() {
       <View className="flex-1 px-xl">
         <View className="pt-3xl items-center mb-lg">
           <View className="w-[80px] h-[80px] rounded-full bg-primary-light items-center justify-center mb-base">
-            <BuddyAvatar mood="greeting" size={80} />
+            <BuddyAvatar mood="waving" size={80} />
           </View>
           <View className="bg-surface rounded-lg p-lg shadow-card">
             <Typography variant="body-lg" className="text-center">

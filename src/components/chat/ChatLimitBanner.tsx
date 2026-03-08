@@ -33,7 +33,7 @@ export function ChatLimitBanner({
         className="px-xl mb-base"
       >
         <Card className="bg-accent-light border border-accent/30 items-center py-lg">
-          <BuddyAvatar mood="concerned" size={32} />
+          <BuddyAvatar mood="empathetic" size={32} />
           <Typography
             variant="body-medium"
             className="text-center mb-xs"
