@@ -20,6 +20,12 @@ import type {
   ExerciseStatus,
 } from "@/types/training";
 import { generateTrainingPlan } from "@/lib/planGenerator";
+import {
+  adaptPlanForRating,
+  adaptPlanForWeekCompletion,
+  type AdaptationEvent,
+} from "@/lib/planAdaptation";
+import { getAllExercises } from "@/data/exerciseData";
 
 // ──────────────────────────────────────────────
 // Sync Metadata (transient, not persisted)
@@ -54,6 +60,10 @@ interface TrainingState {
   streak: number;
   /** Last completion date (ISO string, for streak calc) */
   lastCompletionDate: string | null;
+  /** Log of all plan adaptation events (persisted) */
+  adaptationLog: AdaptationEvent[];
+  /** ISO date (YYYY-MM-DD) of last adaptation, null if never adapted (persisted) */
+  lastAdaptedAt: string | null;
   /** Sync metadata (transient, not persisted to AsyncStorage) */
   _syncMeta: TrainingSyncMeta;
 
@@ -104,6 +114,12 @@ interface TrainingState {
   /** Reset plan (for testing / re-onboarding) */
   resetPlan: () => void;
 
+  /**
+   * Assess week completion and adapt the next week accordingly.
+   * Called automatically from advanceDay when transitioning to a new week.
+   */
+  assessWeekCompletion: (weekNumber: number) => void;
+
   // ── Sync-layer actions (prefixed with _ to indicate internal use) ──
 
   /** Update sync metadata (called by trainingSync.ts) */
@@ -135,6 +151,8 @@ export const useTrainingStore = create<TrainingState>()(
       totalXp: 0,
       streak: 0,
       lastCompletionDate: null,
+      adaptationLog: [],
+      lastAdaptedAt: null,
       _syncMeta: { ...DEFAULT_SYNC_META },
 
       generatePlan: (input) => {
@@ -314,6 +332,13 @@ export const useTrainingStore = create<TrainingState>()(
             });
             return;
           }
+
+          // Week completed — run adaptation assessment before advancing
+          // We call this after set() so the completed week state is visible
+          // Note: assessWeekCompletion reads from get() so we schedule it after state update
+          const completingWeek = plan.currentWeek;
+          // We'll trigger it at the end of this action after the state is updated
+          setTimeout(() => get().assessWeekCompletion(completingWeek), 0);
         }
 
         // Update week statuses and make next day's exercises available
@@ -378,36 +403,53 @@ export const useTrainingStore = create<TrainingState>()(
       },
 
       rateExercise: (planExerciseId, rating) => {
-        const { plan } = get();
+        const { plan, adaptationLog } = get();
         if (!plan) return;
 
-        const updatedWeeks = plan.weeks.map((week) => ({
+        // 1. Persist the rating on the plan exercise + completion record
+        const ratedWeeks = plan.weeks.map((week) => ({
           ...week,
           days: week.days.map((day) => ({
             ...day,
             exercises: day.exercises.map((ex) =>
-              ex.id === planExerciseId
-                ? { ...ex, userRating: rating }
-                : ex
+              ex.id === planExerciseId ? { ...ex, userRating: rating } : ex
             ),
           })),
         }));
 
-        // Also update the matching completion record
         const updatedCompletions = get().completions.map((c) =>
-          c.planExerciseId === planExerciseId
-            ? { ...c, rating }
-            : c
+          c.planExerciseId === planExerciseId ? { ...c, rating } : c
         );
 
-        set({
-          plan: { ...plan, weeks: updatedWeeks },
-          completions: updatedCompletions,
-        });
+        const ratedPlan: TrainingPlan = { ...plan, weeks: ratedWeeks };
 
-        // PRD-03: low rating (1-2 stars) auto-reschedules for practice
+        // 2. PRD-03: low rating (1-2 stars) auto-reschedules for practice
+        //    (separate mechanism from adaptation — reschedules the same exercise)
         if (rating <= 2) {
+          // Apply reschedule on ratedPlan so we don't lose the rating update
+          set({ plan: ratedPlan, completions: updatedCompletions });
           get().rescheduleForPractice(planExerciseId);
+        } else {
+          set({ plan: ratedPlan, completions: updatedCompletions });
+        }
+
+        // 3. Adaptation engine — injects easier/harder variant as appropriate
+        const currentPlan = get().plan!;
+        const { updatedPlan, event } = adaptPlanForRating(
+          currentPlan,
+          planExerciseId,
+          rating,
+          getAllExercises(),
+          adaptationLog
+        );
+
+        if (event) {
+          const today = new Date().toISOString().split("T")[0];
+          set({
+            plan: { ...updatedPlan, lastAdaptedAt: today },
+            adaptationLog: [...adaptationLog, event],
+            lastAdaptedAt: today,
+          });
         }
       },
 
@@ -480,6 +522,27 @@ export const useTrainingStore = create<TrainingState>()(
         set({ plan: { ...plan, weeks: updatedWeeks } });
       },
 
+      assessWeekCompletion: (weekNumber) => {
+        const { plan, adaptationLog } = get();
+        if (!plan) return;
+
+        const { updatedPlan, event } = adaptPlanForWeekCompletion(
+          plan,
+          weekNumber,
+          getAllExercises(),
+          adaptationLog
+        );
+
+        if (event) {
+          const today = new Date().toISOString().split("T")[0];
+          set({
+            plan: { ...updatedPlan, lastAdaptedAt: today },
+            adaptationLog: [...adaptationLog, event],
+            lastAdaptedAt: today,
+          });
+        }
+      },
+
       resetPlan: () => {
         set({
           plan: null,
@@ -487,6 +550,8 @@ export const useTrainingStore = create<TrainingState>()(
           totalXp: 0,
           streak: 0,
           lastCompletionDate: null,
+          adaptationLog: [],
+          lastAdaptedAt: null,
         });
       },
 
@@ -516,6 +581,8 @@ export const useTrainingStore = create<TrainingState>()(
         totalXp: state.totalXp,
         streak: state.streak,
         lastCompletionDate: state.lastCompletionDate,
+        adaptationLog: state.adaptationLog,
+        lastAdaptedAt: state.lastAdaptedAt,
         // _syncMeta is NOT persisted (resets to defaults on restart)
       }),
     }
