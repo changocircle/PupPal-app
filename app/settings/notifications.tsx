@@ -205,6 +205,7 @@ export default function NotificationSettingsScreen() {
         </Animated.View>
 
         {/* Category toggles */}
+        {/* SET-02: NOTE: OneSignal not yet connected - preferences saved locally only */}
         <Animated.View entering={FadeInDown.duration(300).delay(200)}>
           <Typography variant="h3" style={{ marginBottom: 12 }}>
             Categories
