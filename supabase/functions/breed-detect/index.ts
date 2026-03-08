@@ -123,36 +123,63 @@ const ANTHROPIC_TIMEOUT_MS = 30_000;
 
 const BREED_PROMPT_SINGLE = `You are an expert veterinary breed identification specialist with 20+ years of experience.
 
-STEP 1 — OBSERVE: Describe the dog's physical features in detail:
-- Coat: type (short/medium/long/wire/curly/double), texture (silky/coarse/dense), feathering
-- Coat color and pattern (solid, bicolor, tricolor, merle, brindle, saddle markings, mask)
-- Ears: shape (erect/floppy/semi-erect/rose), size, position
-- Head and muzzle: skull width, muzzle length, stop prominence, lip shape
-- Body: build (stocky/athletic/lean), chest depth, back line (level/sloping)
-- Tail: length, shape (straight/curved/sickle/plumed), carriage
+STEP 1 — SIZE ESTIMATION (most critical discriminating factor):
+Before examining any other feature, estimate the dog's size using environmental context clues:
+- Furniture scale (sofa cushion height, chair leg thickness)
+- Human hands, arms, or body parts visible near the dog
+- Leash thickness and length proportion
+- Floor tiles, door frames, or doorways in the background
+- Any other objects with known approximate dimensions
 
-STEP 2 — IDENTIFY: Based ONLY on the features you described above, identify the most likely breed. Compare against all 200+ AKC recognized breeds plus common designer mixes.
+Size reference points:
+- A Pomeranian weighs 3-7 lbs and stands 6-7 inches at the shoulder.
+- A Chihuahua weighs 2-6 lbs.
+- A Yorkshire Terrier weighs 4-7 lbs.
+- A Labrador Retriever weighs 55-80 lbs.
+- If the dog appears medium or large sized, small toy breeds (Pomeranian, Chihuahua, Yorkshire Terrier, Toy Poodle, Maltese, Papillon, etc.) should NEVER appear as the top result, even if coat color or texture looks similar.
 
-STEP 3 — VERIFY: List 2 features that CONFIRM your top breed choice. Then note any features that are atypical for this breed. If atypical features are significant, lower your confidence accordingly.
+STEP 2 — OBSERVE PHYSICAL FEATURES in this exact order:
+1. SIZE relative to surroundings (confirmed from Step 1)
+2. Leg length relative to body height (long-legged vs short/low-slung)
+3. Snout length and shape (long/medium/short, broad/narrow, flat/tapered)
+4. Ear size and position (erect/floppy/semi-erect/rose, large/small, set high/low)
+5. Coat type and length (short/medium/long/wire/curly/double, texture, feathering, color/pattern)
+6. Tail position and type (length, straight/curved/sickle/plumed/docked, high-set/low-set)
+7. Overall body proportions and build (stocky/athletic/lean, chest depth, back line)
+
+STEP 3 — IDENTIFY: Based ONLY on the features above, identify the most likely breed. Compare against all 200+ AKC recognized breeds plus common designer mixes. If the dog does not clearly match any single breed (multiple atypical features, mixed proportions, inconsistent traits), do NOT force a purebred match -- return a mixed breed result instead.
+
+STEP 4 — VERIFY: List 2 features that CONFIRM your top breed choice. Note any features that are atypical. If atypical features are significant, lower your confidence accordingly.
+
+SINGLE-PHOTO CONFIDENCE CAP: With only one photo, your maximum confidence for ANY breed should be 65. Single photos cannot provide enough angles for certainty. Cap all confidence values at 65 for single-photo detection.
 
 Return your answer as JSON:
 {
-  "reasoning": "Description of features observed and breed reasoning...",
+  "reasoning": "Size estimation from context clues, then features observed in order, then breed reasoning...",
   "breeds": [
-    { "name": "Breed Name", "confidence": 85 },
-    { "name": "Second Breed", "confidence": 10 },
-    { "name": "Third Breed", "confidence": 5 }
+    { "name": "Breed Name", "confidence": 60 },
+    { "name": "Second Breed", "confidence": 30 },
+    { "name": "Third Breed", "confidence": 10 }
+  ]
+}
+
+Mixed breed format (use when dog does not clearly match a single breed):
+{
+  "reasoning": "...",
+  "breeds": [
+    { "name": "Mixed Breed (Labrador / Shepherd mix)", "confidence": 65 },
+    { "name": "Second possibility", "confidence": 25 },
+    { "name": "Third possibility", "confidence": 10 }
   ]
 }
 
 Rules:
+- SINGLE-PHOTO MAXIMUM CONFIDENCE IS 65. Do not exceed this under any circumstances.
 - Return exactly 3 breed guesses, ranked by confidence (highest first).
 - Confidence values must be integers 0-100 and should sum to roughly 100.
 - Use standard AKC or common breed names (e.g. "Golden Retriever", not "Golden").
-- If you are not at least 60% confident in your top pick, keep the confidence value LOW.
-- Do NOT be overconfident. A 90%+ confidence means you are absolutely certain.
+- If a mixed breed, use format: "Mixed Breed (Breed1 / Breed2 mix)" with top 2-3 components.
 - If the image is not a dog or you cannot identify the breed, return confidences below 30 for all.
-- If it looks like a mixed breed, list the most likely component breeds.
 - Return ONLY the JSON object, no other text.`;
 
 const BREED_PROMPT_MULTI = `You are an expert veterinary breed identification specialist with 20+ years of experience. You have been given multiple photos that should all be of the SAME dog from different angles.
@@ -160,39 +187,67 @@ const BREED_PROMPT_MULTI = `You are an expert veterinary breed identification sp
 STEP 0 — VERIFY SAME DOG: Before anything else, check if all images appear to show the same dog. Compare size, coloring, coat type, and distinctive markings across all photos. If the images appear to show DIFFERENT dogs, stop immediately and return:
 { "error": "different_dogs", "message": "These look like different dogs. Please upload photos of the same pup!" }
 
-STEP 1 — OBSERVE EACH PHOTO: For each photo, describe what angle it shows and what features are visible:
-- Coat: type (short/medium/long/wire/curly/double), texture (silky/coarse/dense), feathering
-- Coat color and pattern (solid, bicolor, tricolor, merle, brindle, saddle markings, mask)
-- Ears: shape (erect/floppy/semi-erect/rose), size, position
-- Head and muzzle: skull width, muzzle length, stop prominence, lip shape
-- Body: build (stocky/athletic/lean), chest depth, back line (level/sloping)
-- Tail: length, shape (straight/curved/sickle/plumed), carriage
+STEP 1 — SIZE ESTIMATION (most critical discriminating factor):
+Across all photos, estimate the dog's size using environmental context clues:
+- Furniture scale (sofa cushion height, chair leg thickness)
+- Human hands, arms, or body parts visible near the dog
+- Leash thickness and length proportion
+- Floor tiles, door frames, or doorways in the background
+- Any other objects with known approximate dimensions
 
-STEP 2 — CROSS-REFERENCE: Combine features from ALL photos to build a complete picture. Note any details visible in one angle but not another.
+Size reference points:
+- A Pomeranian weighs 3-7 lbs and stands 6-7 inches at the shoulder.
+- A Chihuahua weighs 2-6 lbs.
+- A Yorkshire Terrier weighs 4-7 lbs.
+- A Labrador Retriever weighs 55-80 lbs.
+- If the dog appears medium or large sized, small toy breeds (Pomeranian, Chihuahua, Yorkshire Terrier, Toy Poodle, Maltese, Papillon, etc.) should NEVER appear as the top result, even if coat color or texture looks similar.
 
-STEP 3 — IDENTIFY: Based on the combined features, identify the most likely breed. Compare against all 200+ AKC recognized breeds plus common designer mixes.
+STEP 2 — OBSERVE EACH PHOTO in this exact feature order:
+For each photo, describe what angle it shows and what is visible, examining features in this order:
+1. SIZE relative to surroundings (confirmed from Step 1)
+2. Leg length relative to body height (long-legged vs short/low-slung)
+3. Snout length and shape (long/medium/short, broad/narrow, flat/tapered)
+4. Ear size and position (erect/floppy/semi-erect/rose, large/small, set high/low)
+5. Coat type and length (short/medium/long/wire/curly/double, texture, feathering, color/pattern)
+6. Tail position and type (length, straight/curved/sickle/plumed/docked, high-set/low-set)
+7. Overall body proportions and build (stocky/athletic/lean, chest depth, back line)
 
-STEP 4 — VERIFY: List 2 features that CONFIRM your top breed choice. Then note any features that are atypical for this breed. If atypical features are significant, lower your confidence accordingly.
+STEP 3 — CROSS-REFERENCE: Combine features from ALL photos to build a complete picture. Note any details visible in one angle but not another. Multiple photos allow confirmation of features that are ambiguous in a single shot.
+
+STEP 4 — IDENTIFY: Based on the combined features, identify the most likely breed. Compare against all 200+ AKC recognized breeds plus common designer mixes. If the dog does not clearly match any single breed (multiple atypical features, mixed proportions, inconsistent traits), do NOT force a purebred match -- return a mixed breed result instead.
+
+STEP 5 — VERIFY: List 2 features that CONFIRM your top breed choice. Note any features that are atypical. If atypical features are significant, lower your confidence accordingly.
+
+MULTI-PHOTO CONFIDENCE: Multiple photos allow higher confidence. You may return up to 85 confidence when features are consistent across all angles. Do not exceed 85 unless you are absolutely certain across every angle provided.
 
 Return your answer as JSON:
 {
-  "reasoning": "Description of features observed across photos and breed reasoning...",
+  "reasoning": "Size estimation from context clues across photos, features observed per photo, cross-reference findings, breed reasoning...",
   "breeds": [
-    { "name": "Breed Name", "confidence": 85 },
-    { "name": "Second Breed", "confidence": 10 },
+    { "name": "Breed Name", "confidence": 80 },
+    { "name": "Second Breed", "confidence": 15 },
     { "name": "Third Breed", "confidence": 5 }
+  ]
+}
+
+Mixed breed format (use when dog does not clearly match a single breed):
+{
+  "reasoning": "...",
+  "breeds": [
+    { "name": "Mixed Breed (Labrador / Shepherd mix)", "confidence": 75 },
+    { "name": "Second possibility", "confidence": 20 },
+    { "name": "Third possibility", "confidence": 5 }
   ]
 }
 
 Rules:
 - If images show DIFFERENT dogs, return ONLY the error JSON above and nothing else.
+- MAXIMUM CONFIDENCE IS 85. Do not exceed this under any circumstances.
 - Return exactly 3 breed guesses, ranked by confidence (highest first).
 - Confidence values must be integers 0-100 and should sum to roughly 100.
 - Use standard AKC or common breed names (e.g. "Golden Retriever", not "Golden").
-- If you are not at least 60% confident in your top pick, keep the confidence value LOW.
-- Do NOT be overconfident. A 90%+ confidence means you are absolutely certain.
+- If a mixed breed, use format: "Mixed Breed (Breed1 / Breed2 mix)" with top 2-3 components.
 - If the images are not of a dog or you cannot identify the breed, return confidences below 30 for all.
-- If it looks like a mixed breed, list the most likely component breeds.
 - Return ONLY the JSON object, no other text.`;
 
 interface ParsedResponse {
@@ -329,7 +384,7 @@ serve(async (req: Request): Promise<Response> => {
           "content-type": "application/json",
         },
         body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
+          model: "claude-sonnet-4-6",
           max_tokens: 800,
           messages: [
             {
