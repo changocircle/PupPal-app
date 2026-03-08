@@ -16,7 +16,7 @@
 -- ============================================================
 CREATE TABLE public.vaccinations (
   id TEXT PRIMARY KEY,
-  user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES public.user_profiles(id) ON DELETE CASCADE,
   dog_id TEXT NOT NULL,
 
   vaccine_name TEXT NOT NULL,
@@ -44,7 +44,7 @@ CREATE INDEX idx_vaccinations_dog_id ON public.vaccinations(dog_id);
 -- ============================================================
 CREATE TABLE public.weight_logs (
   id TEXT PRIMARY KEY,
-  user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES public.user_profiles(id) ON DELETE CASCADE,
   dog_id TEXT NOT NULL,
 
   weight_value NUMERIC(6,2) NOT NULL,
@@ -70,7 +70,7 @@ CREATE INDEX idx_weight_logs_measured_at ON public.weight_logs(measured_at);
 -- ============================================================
 CREATE TABLE public.medications (
   id TEXT PRIMARY KEY,
-  user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES public.user_profiles(id) ON DELETE CASCADE,
   dog_id TEXT NOT NULL,
 
   name TEXT NOT NULL,
@@ -96,7 +96,7 @@ CREATE INDEX idx_medications_dog_id ON public.medications(dog_id);
 -- ============================================================
 CREATE TABLE public.medication_events (
   id TEXT PRIMARY KEY,
-  user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES public.user_profiles(id) ON DELETE CASCADE,
   dog_id TEXT NOT NULL,
   medication_id TEXT NOT NULL,
 
@@ -117,7 +117,7 @@ CREATE INDEX idx_medication_events_medication_id ON public.medication_events(med
 -- ============================================================
 CREATE TABLE public.vet_visits (
   id TEXT PRIMARY KEY,
-  user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES public.user_profiles(id) ON DELETE CASCADE,
   dog_id TEXT NOT NULL,
 
   visit_type TEXT NOT NULL,
@@ -147,7 +147,7 @@ CREATE INDEX idx_vet_visits_visit_date ON public.vet_visits(visit_date);
 -- ============================================================
 CREATE TABLE public.vet_contacts (
   id TEXT PRIMARY KEY,
-  user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES public.user_profiles(id) ON DELETE CASCADE,
 
   clinic_name TEXT NOT NULL,
   vet_name TEXT,
@@ -169,7 +169,7 @@ CREATE INDEX idx_vet_contacts_user_id ON public.vet_contacts(user_id);
 -- ============================================================
 CREATE TABLE public.milestones (
   id TEXT PRIMARY KEY,
-  user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES public.user_profiles(id) ON DELETE CASCADE,
   dog_id TEXT NOT NULL,
 
   milestone_id TEXT NOT NULL,
@@ -193,7 +193,7 @@ CREATE INDEX idx_milestones_dog_id ON public.milestones(dog_id);
 -- ============================================================
 CREATE TABLE public.health_notes (
   id TEXT PRIMARY KEY,
-  user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES public.user_profiles(id) ON DELETE CASCADE,
   dog_id TEXT NOT NULL,
 
   content TEXT NOT NULL,
