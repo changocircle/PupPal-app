@@ -424,7 +424,9 @@ export const useChatStore = create<ChatState>()(
         // _syncMeta is NOT persisted (resets to defaults on restart)
       }),
       // Correct any stale messagesLimit persisted from a previous dev build
-      // (e.g. 50 from when FREE_MESSAGE_LIMIT was __DEV__ ? 50 : 3)
+      // (e.g. 50 from when FREE_MESSAGE_LIMIT was __DEV__ ? 50 : 3).
+      // Must call useChatStore.setState() — direct mutation of `state` arg
+      // in Zustand v5 persist does not update the store.
       onRehydrateStorage: () => (state) => {
         if (
           state?.dailyCount &&
@@ -434,11 +436,14 @@ export const useChatStore = create<ChatState>()(
             state.dailyCount.messagesSent,
             FREE_MESSAGE_LIMIT,
           );
-          state.dailyCount = {
-            ...state.dailyCount,
-            messagesLimit: FREE_MESSAGE_LIMIT,
-            messagesSent: corrected,
-          };
+          // Use setState to actually commit the correction to the store
+          useChatStore.setState({
+            dailyCount: {
+              ...state.dailyCount,
+              messagesLimit: FREE_MESSAGE_LIMIT,
+              messagesSent: corrected,
+            },
+          });
         }
       },
     }

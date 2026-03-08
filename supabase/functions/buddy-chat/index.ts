@@ -18,7 +18,7 @@ import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
 
 const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY") ?? "";
 const MODEL = "claude-sonnet-4-6";
-const DEFAULT_MAX_TOKENS = 2048;
+const DEFAULT_MAX_TOKENS = 175;
 const ANTHROPIC_VERSION = "2023-06-01";
 
 // ── CORS headers (allow Expo/React Native clients) ──
