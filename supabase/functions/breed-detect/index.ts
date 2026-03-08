@@ -140,6 +140,79 @@ const CORS_HEADERS = {
 /** Timeout for the Anthropic API call (generous for multi-image + reasoning) */
 const ANTHROPIC_TIMEOUT_MS = 30_000;
 
+// ── Hybrid classifier support ──
+
+interface ClassifierPrediction {
+  breed: string;
+  confidence: number;
+}
+
+function buildHybridPromptSingle(predictions: ClassifierPrediction[]): string {
+  const predList = predictions.map((p, i) => `${i + 1}. ${p.breed} - ${p.confidence}%`).join("\n");
+  return `You are an expert veterinary breed identification specialist with 20+ years of experience.
+
+A fast image classifier analyzed this photo and identified these top possibilities:
+${predList}
+
+Validate, refine, and reason about these predictions using your own visual analysis.
+
+STEP 1 - SIZE ESTIMATION: Estimate size from environmental clues (furniture, hands, doorways). Small toy breeds should NEVER be top result if the dog appears medium or large.
+
+STEP 2 - PHYSICAL FEATURES: size, leg length, snout, ears, coat, tail, body proportions.
+
+STEP 3 - VALIDATE CLASSIFIER: Do predictions match what you see? Confirm or override based on size, coat, face shape, proportions. If inconsistent traits suggest a mix, determine the breeds.
+
+STEP 4 - FINAL DETERMINATION:
+
+SINGLE-PHOTO CONFIDENCE CAP: Maximum confidence is 65. Do not exceed.
+
+Return JSON only:
+{
+  "reasoning": "Classifier suggested X. Visual analysis confirms/overrides because...",
+  "breeds": [
+    { "name": "Breed Name", "confidence": 60 },
+    { "name": "Second Breed", "confidence": 30 },
+    { "name": "Third Breed", "confidence": 10 }
+  ]
+}
+
+Mixed breed: { "name": "Mixed Breed (Lab / Shepherd mix)", "confidence": 65 }
+
+Rules: exactly 3 breeds, confidence integers 0-100 summing to ~100, max 65, standard AKC names, JSON only.`;
+}
+
+function buildHybridPromptMulti(predictions: ClassifierPrediction[]): string {
+  const predList = predictions.map((p, i) => `${i + 1}. ${p.breed} - ${p.confidence}%`).join("\n");
+  return `You are an expert veterinary breed identification specialist with 20+ years of experience. Multiple photos of the SAME dog from different angles.
+
+A fast image classifier identified these top possibilities:
+${predList}
+
+Validate and refine using visual analysis across all photos.
+
+STEP 0 - VERIFY SAME DOG: If images show different dogs, return ONLY:
+{ "error": "different_dogs", "message": "These look like different dogs. Please upload photos of the same pup!" }
+
+STEP 1 - SIZE ESTIMATION across all photos.
+STEP 2 - OBSERVE EACH PHOTO: size, snout, ears, coat, tail, proportions.
+STEP 3 - CROSS-REFERENCE features from all angles.
+STEP 4 - VALIDATE CLASSIFIER: Confirm or override predictions. Multiple angles allow higher confidence.
+
+MULTI-PHOTO CONFIDENCE: Up to 85 when features are consistent across all angles.
+
+Return JSON only:
+{
+  "reasoning": "...",
+  "breeds": [
+    { "name": "Breed Name", "confidence": 80 },
+    { "name": "Second Breed", "confidence": 15 },
+    { "name": "Third Breed", "confidence": 5 }
+  ]
+}
+
+Rules: if different dogs, return error JSON only. Max confidence 85. Exactly 3 breeds. JSON only.`;
+}
+
 const BREED_PROMPT_SINGLE = `You are an expert veterinary breed identification specialist with 20+ years of experience.
 
 STEP 1 — SIZE ESTIMATION (most critical discriminating factor):
@@ -412,7 +485,20 @@ serve(async (req: Request): Promise<Response> => {
       );
     }
 
-    // Build image content blocks for Claude (1–3 images)
+    // Optional: classifier predictions from breed-classify (hybrid mode)
+    const classifierPredictions: ClassifierPrediction[] | null =
+      Array.isArray(body.classifierPredictions) && body.classifierPredictions.length > 0
+        ? (body.classifierPredictions as ClassifierPrediction[]).slice(0, 3)
+        : null;
+
+    const hasClassifierData = classifierPredictions !== null && classifierPredictions.length > 0;
+    if (hasClassifierData) {
+      console.log("[breed-detect] Hybrid mode:", classifierPredictions!.map((p) => `${p.breed} (${p.confidence}%)`).join(", "));
+    } else {
+      console.log("[breed-detect] Standard mode: full Sonnet analysis");
+    }
+
+    // Build image content blocks for Claude (1 to 3 images)
     const imageBlocks = imageList.map((img) => {
       const base64Data = img.replace(/^data:image\/\w+;base64,/, "");
       return {
@@ -425,8 +511,17 @@ serve(async (req: Request): Promise<Response> => {
       };
     });
 
-    // Choose prompt based on single vs multi-photo
-    const prompt = imageList.length > 1 ? BREED_PROMPT_MULTI : BREED_PROMPT_SINGLE;
+    // Choose prompt: hybrid (with classifier output) or standard (Sonnet-only)
+    let prompt: string;
+    if (hasClassifierData && imageList.length > 1) {
+      prompt = buildHybridPromptMulti(classifierPredictions!);
+    } else if (hasClassifierData) {
+      prompt = buildHybridPromptSingle(classifierPredictions!);
+    } else if (imageList.length > 1) {
+      prompt = BREED_PROMPT_MULTI;
+    } else {
+      prompt = BREED_PROMPT_SINGLE;
+    }
 
     // Call Anthropic Claude API with vision
     const controller = new AbortController();

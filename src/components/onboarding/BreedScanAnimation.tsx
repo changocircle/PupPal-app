@@ -198,30 +198,28 @@ function PulsingBorder({ size }: { size: number }) {
 
 interface CyclingTextProps {
   dogName: string;
+  stage?: "classifying" | "confirming";
 }
 
-function CyclingText({ dogName }: CyclingTextProps) {
+function CyclingText({ dogName, stage }: CyclingTextProps) {
   const name = dogName && dogName !== "your pup" ? dogName : null;
 
-  const messages = name
-    ? [
-        `Analyzing ${name}'s features...`,
-        "Checking ear shape...",
-        "Examining coat pattern...",
-        "Comparing with 51 breeds...",
-        "Looking at facial structure...",
-        "Checking paw size...",
-        `Almost there, ${name}...`,
-      ]
-    : [
-        "Analyzing your pup's features...",
-        "Checking ear shape...",
-        "Examining coat pattern...",
-        "Comparing with 51 breeds...",
-        "Looking at facial structure...",
-        "Checking paw size...",
-        "Almost there...",
-      ];
+  const classifyingMessages = name
+    ? [`Scanning ${name}'s breed...`, "Checking ear shape...", "Examining coat pattern...", "Comparing with 120 breeds...", "Looking at facial structure..."]
+    : ["Scanning breed...", "Checking ear shape...", "Examining coat pattern...", "Comparing with 120 breeds...", "Looking at facial structure..."];
+
+  const confirmingMessages = name
+    ? [`Confirming ${name}'s breed with AI...`, "Analyzing size and proportions...", "Cross-referencing features...", `Almost there, ${name}...`]
+    : ["Confirming breed with AI...", "Analyzing size and proportions...", "Cross-referencing features...", "Almost there..."];
+
+  const generalMessages = name
+    ? [`Analyzing ${name}'s features...`, "Checking ear shape...", "Examining coat pattern...", "Comparing with 120 breeds...", "Looking at facial structure...", "Checking paw size...", `Almost there, ${name}...`]
+    : ["Analyzing your pup's features...", "Checking ear shape...", "Examining coat pattern...", "Comparing with 120 breeds...", "Looking at facial structure...", "Checking paw size...", "Almost there..."];
+
+  const messages =
+    stage === "classifying" ? classifyingMessages
+    : stage === "confirming" ? confirmingMessages
+    : generalMessages;
 
   const [index, setIndex] = useState(0);
 
@@ -230,9 +228,8 @@ function CyclingText({ dogName }: CyclingTextProps) {
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % messages.length);
     }, TEXT_CYCLE_MS);
-
     return () => clearInterval(interval);
-  }, [messages.length]);
+  }, [messages.length, stage]);
 
   return (
     <View style={{ height: 24, justifyContent: "center", alignItems: "center" }}>
@@ -373,10 +370,10 @@ function ScanProgressBar() {
 // --- Main Export ---
 
 interface BreedScanAnimationProps {
-  /** The dog's name for personalized text */
   dogName: string;
-  /** Width/height of the photo being scanned */
   photoSize: number;
+  /** Hybrid detection stage: 'classifying' (HuggingFace) or 'confirming' (Sonnet) */
+  stage?: "classifying" | "confirming";
 }
 
 /**
@@ -390,7 +387,7 @@ interface BreedScanAnimationProps {
  *     <BreedScanAnimation dogName={puppyName} photoSize={100} />
  *   )}
  */
-export function BreedScanAnimation({ dogName, photoSize }: BreedScanAnimationProps) {
+export function BreedScanAnimation({ dogName, photoSize, stage }: BreedScanAnimationProps) {
   return (
     <Animated.View
       entering={FadeIn.duration(300)}
@@ -398,7 +395,7 @@ export function BreedScanAnimation({ dogName, photoSize }: BreedScanAnimationPro
       style={{ alignItems: "center", gap: 16 }}
     >
       {/* Cycling status text */}
-      <CyclingText dogName={dogName} />
+      <CyclingText dogName={dogName} stage={stage} />
 
       {/* Indeterminate progress bar */}
       <View style={{ width: "100%", paddingHorizontal: 8 }}>

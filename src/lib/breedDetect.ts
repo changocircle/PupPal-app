@@ -1,10 +1,12 @@
 /**
- * Client-side breed detection service.
+ * Client-side breed detection service — Hybrid Mode
  *
- * Calls the Supabase breed-detect Edge Function with 1–3 base64-encoded images.
- * Supports multi-photo for cross-referencing features across angles.
- * The Edge Function uses Claude (Anthropic) vision for breed identification.
- * Returns the top breed predictions or null on failure/timeout.
+ * Two-step flow:
+ *   1. breed-classify (HuggingFace ViT, fast ~2s) — top 3 breed candidates
+ *   2. breed-detect (Sonnet reasoning) — validates classifier output visually
+ *
+ * Falls back to standard Sonnet-only analysis if classifier fails.
+ * Supports multi-photo (1-3 images) for cross-referencing features.
  *
  * PRD-01 Screen 3: Photo Upload + Breed Detection
  */
@@ -14,7 +16,7 @@ import * as ImageManipulator from "expo-image-manipulator";
 const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL ?? "";
 const SUPABASE_ANON_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? "";
 
-/** Timeout for breed detection API call (generous for multi-image + reasoning) */
+const CLASSIFY_TIMEOUT_MS = 15_000;
 const DETECT_TIMEOUT_MS = 35_000;
 
 export interface BreedPrediction {
@@ -22,164 +24,157 @@ export interface BreedPrediction {
   confidence: number;
 }
 
-export interface BreedDetectResult {
-  /** Highest-confidence breed */
-  topBreed: string;
-  /** Confidence 0-100 */
+export interface ClassifierPrediction {
+  breed: string;
   confidence: number;
-  /** Top 3 predictions */
+}
+
+export interface BreedDetectResult {
+  topBreed: string;
+  confidence: number;
   suggestions: BreedPrediction[];
-  /** True when the top breed confidence is below 50% — UI should ask user to confirm */
+  /** True when confidence is below 50% — UI should prompt user to confirm */
   lowConfidence: boolean;
-  /** Number of photos that were analysed */
   photoCount: number;
   /** Set when multi-photo validation detects different dogs */
   differentDogs?: boolean;
-  /** Server error message (e.g. different dogs warning) */
   errorMessage?: string;
+  /** True when HuggingFace classifier was used in step 1 */
+  hybridMode?: boolean;
 }
 
-/**
- * Read a local image URI to base64, compressing first to reduce payload size.
- * Target: < 200KB base64 output (~150KB compressed image).
- */
 async function readImageBase64(uri: string): Promise<string | null> {
   try {
-    // Compress image to reduce base64 payload size (target < 200KB encoded)
     const compressed = await ImageManipulator.manipulateAsync(
       uri,
-      [{ resize: { width: 800 } }], // resize to max 800px wide, preserve aspect ratio
+      [{ resize: { width: 800 } }],
       { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG, base64: true },
     );
-
     const base64 = compressed.base64;
     if (!base64 || base64.length < 100) return null;
-
-    console.log(`[BreedDetect] Compressed image: ${Math.round(base64.length / 1024)}KB base64`);
+    console.log(`[BreedDetect] Compressed: ${Math.round(base64.length / 1024)}KB`);
     return base64;
   } catch (err: any) {
-    console.error("[BreedDetect] Compression failed, falling back to raw:", err?.message);
-    // Fallback: try reading raw file
-    try {
-      const { File: ExpoFile } = await import("expo-file-system");
-      const file = new ExpoFile(uri);
-      const base64 = await file.base64();
-      if (!base64 || base64.length < 100) return null;
-      return base64;
-    } catch {
-      return null;
-    }
+    console.error("[BreedDetect] Compression failed:", err?.message);
+    return null;
   }
 }
 
-/**
- * Detect breed from one or more photo URIs.
- * For best results, provide front view, side view, and full body shot.
- *
- * @param imageUris - 1 to 3 local image URIs
- * @returns BreedDetectResult or null (timeout / error / no breeds found)
- */
-export async function detectBreed(
-  imageUris: string | string[],
+async function runClassifier(
+  imageBase64: string,
+  authToken: string,
+): Promise<ClassifierPrediction[] | null> {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), CLASSIFY_TIMEOUT_MS);
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/breed-classify`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+        apikey: SUPABASE_ANON_KEY,
+      },
+      body: JSON.stringify({ imageBase64 }),
+      signal: controller.signal,
+    });
+    clearTimeout(timeout);
+    if (!res.ok) { console.warn(`[BreedDetect] Classifier HTTP ${res.status}`); return null; }
+    const data = await res.json();
+    if (!data.classifierAvailable || !Array.isArray(data.predictions) || data.predictions.length === 0) {
+      console.log("[BreedDetect] Classifier unavailable, using standard mode");
+      return null;
+    }
+    console.log("[BreedDetect] Classifier:", data.predictions.map((p: ClassifierPrediction) => `${p.breed} (${p.confidence}%)`).join(", "));
+    return data.predictions as ClassifierPrediction[];
+  } catch (err: any) {
+    console.warn("[BreedDetect] Classifier error (non-fatal):", err?.name === "AbortError" ? "timeout" : err?.message);
+    return null;
+  }
+}
+
+async function runSonnetDetect(
+  images: string[],
+  classifierPredictions: ClassifierPrediction[] | null,
+  authToken: string,
 ): Promise<BreedDetectResult | null> {
   try {
-    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-      console.warn(
-        "[BreedDetect] Missing credentials. SUPABASE_URL:",
-        SUPABASE_URL ? "set" : "EMPTY",
-        "ANON_KEY:",
-        SUPABASE_ANON_KEY ? `set (${SUPABASE_ANON_KEY.substring(0, 10)}...)` : "EMPTY",
-      );
-      return null;
-    }
-
-    // Normalise to array
-    const uris = Array.isArray(imageUris) ? imageUris.slice(0, 3) : [imageUris];
-
-    console.log(`[BreedDetect] Starting detection for ${uris.length} photo(s)`);
-    console.log("[BreedDetect] Endpoint:", `${SUPABASE_URL}/functions/v1/breed-detect`);
-
-    // Read all images to base64 in parallel
-    const base64Results = await Promise.all(uris.map(readImageBase64));
-    const images = base64Results.filter((b): b is string => b !== null);
-
-    if (images.length === 0) {
-      console.warn("[BreedDetect] No valid images to send");
-      return null;
-    }
-
-    console.log(`[BreedDetect] Sending ${images.length} image(s), total base64 length: ${images.reduce((s, b) => s + b.length, 0)}`);
-
-    // Race the fetch against a timeout
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), DETECT_TIMEOUT_MS);
-
-    const res = await fetch(
-      `${SUPABASE_URL}/functions/v1/breed-detect`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-          apikey: SUPABASE_ANON_KEY,
-        },
-        body: JSON.stringify({ images }),
-        signal: controller.signal,
+    const requestBody: Record<string, unknown> = { images };
+    if (classifierPredictions && classifierPredictions.length > 0) {
+      requestBody.classifierPredictions = classifierPredictions;
+    }
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/breed-detect`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+        apikey: SUPABASE_ANON_KEY,
       },
-    );
-
+      body: JSON.stringify(requestBody),
+      signal: controller.signal,
+    });
     clearTimeout(timeout);
-
     if (!res.ok) {
-      const errBody = await res.text().catch(() => "");
-      console.warn(
-        `[BreedDetect] HTTP ${res.status}: ${errBody.substring(0, 200)}`,
-      );
+      console.warn(`[BreedDetect] Sonnet HTTP ${res.status}`);
       return null;
     }
-
     const data = await res.json();
-    console.log("[BreedDetect] Response data:", JSON.stringify(data).substring(0, 300));
-
-    // Handle different_dogs validation error
     if (data.error === "different_dogs") {
-      console.warn("[BreedDetect] Different dogs detected:", data.message);
       return {
-        topBreed: "",
-        confidence: 0,
-        suggestions: [],
-        lowConfidence: true,
-        photoCount: images.length,
-        differentDogs: true,
+        topBreed: "", confidence: 0, suggestions: [], lowConfidence: true,
+        photoCount: images.length, differentDogs: true,
         errorMessage: data.message ?? "These look like different dogs. Please upload photos of the same pup!",
+        hybridMode: classifierPredictions !== null,
       };
     }
-
-    if (data.error) {
-      console.warn("[BreedDetect] Server error:", data.error);
-    }
-
     const breeds: BreedPrediction[] = data.breeds ?? [];
-
-    if (breeds.length === 0) {
-      console.log("[BreedDetect] No breeds returned");
-      return null;
-    }
-
+    if (breeds.length === 0) { console.log("[BreedDetect] No breeds from Sonnet"); return null; }
     return {
       topBreed: breeds[0]!.name,
       confidence: breeds[0]!.confidence,
       suggestions: breeds,
       lowConfidence: data.lowConfidence === true,
       photoCount: data.photoCount ?? images.length,
+      hybridMode: classifierPredictions !== null,
     };
   } catch (err: any) {
-    // AbortError = timeout, anything else = network/parse error
-    if (err?.name === "AbortError") {
-      console.warn("[BreedDetect] Timed out after", DETECT_TIMEOUT_MS, "ms");
-    } else {
-      console.error("[BreedDetect] Error:", err?.message ?? err);
+    console.warn("[BreedDetect] Sonnet error:", err?.name === "AbortError" ? "timeout" : err?.message);
+    return null;
+  }
+}
+
+/**
+ * Detect breed using hybrid pipeline: classifier first, then Sonnet reasoning.
+ *
+ * @param imageUris - 1 to 3 local image URIs
+ * @param onProgress - optional callback: "classifying" -> "confirming"
+ */
+export async function detectBreed(
+  imageUris: string | string[],
+  onProgress?: (stage: "classifying" | "confirming") => void,
+): Promise<BreedDetectResult | null> {
+  try {
+    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+      console.warn("[BreedDetect] Missing Supabase credentials");
+      return null;
     }
+    const uris = Array.isArray(imageUris) ? imageUris.slice(0, 3) : [imageUris];
+    const base64Results = await Promise.all(uris.map(readImageBase64));
+    const images = base64Results.filter((b): b is string => b !== null);
+    if (images.length === 0) { console.warn("[BreedDetect] No valid images"); return null; }
+
+    const authToken = SUPABASE_ANON_KEY;
+
+    // Step 1: Fast HuggingFace classifier
+    onProgress?.("classifying");
+    const classifierPredictions = await runClassifier(images[0]!, authToken);
+
+    // Step 2: Sonnet validation + reasoning
+    onProgress?.("confirming");
+    return await runSonnetDetect(images, classifierPredictions, authToken);
+  } catch (err: any) {
+    console.error("[BreedDetect] Unexpected error:", err?.message ?? err);
     return null;
   }
 }
