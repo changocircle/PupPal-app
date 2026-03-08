@@ -15,27 +15,32 @@ import * as ImagePicker from "expo-image-picker";
 import { Button, Typography } from "@/components/ui";
 import { useOnboardingStore } from "@/stores/onboardingStore";
 import { detectBreed, type BreedPrediction } from "@/lib/breedDetect";
-import { BreedScanAnimation, ScanOverlay } from "@/components/onboarding/BreedScanAnimation";
+import {
+  BreedScanAnimation,
+  BuddyExpression,
+  ScanOverlay,
+} from "@/components/onboarding/BreedScanAnimation";
 import BREEDS_JSON from "@/data/breeds.json";
 
 /**
  * Screen 3: Photo Upload + Breed Detection
  * PRD-01 Section 3, Screen 3
  *
+ * Eye flow: photos -> result -> actions (spec change)
+ *
  * Confidence thresholds:
- *   >80%  → auto-fill breed with Buddy reaction
- *   50-80 → show suggestion with confirm/change
- *   <50%  → "I couldn't get a clear read" + searchable breed selector
+ *   >70%  → high: "Cowboy looks like a Pomeranian!" (no emoji, bold, confident)
+ *   40-70 → medium: "Looks like a Pomeranian?" (question mark in wording only)
+ *   <40%  → low: offer alternatives, no confused emoji
  *   fail  → "What breed is [Name]?" + searchable breed selector
  *
  * Special options:
- *   "Mixed Breed" → shows two breed selectors for the mix
- *   "I'm not sure" → continues with a general plan (breed = null)
+ *   "Mixed Breed" -> shows two breed selectors for the mix
+ *   "I'm not sure" -> continues with a general plan (breed = null)
  */
 
-// ─── Breed list from breeds.json + special options ───
+// --- Breed list from breeds.json + special options ---
 const BREED_NAMES: string[] = BREEDS_JSON.map((b: { name: string }) => b.name);
-// Ensure "Mixed Breed" is in the list (it's in breeds.json, but just in case)
 if (!BREED_NAMES.includes("Mixed Breed")) {
   BREED_NAMES.push("Mixed Breed");
 }
@@ -55,7 +60,19 @@ type DetectionState =
   | { status: "different_dogs"; message: string }
   | { status: "manual" };
 
-// ─── Searchable Breed Dropdown ───
+// --- Confidence badge helper ---
+
+function getConfidenceBadge(confidence: number): { label: string; bg: string; text: string } {
+  if (confidence > 70) {
+    return { label: "High match", bg: "#E8F5EE", text: "#2D7A4F" };
+  }
+  if (confidence >= 40) {
+    return { label: "Best guess", bg: "#FFF6E5", text: "#B07A00" };
+  }
+  return { label: "Possible match", bg: "#EBF3FA", text: "#3A6EA8" };
+}
+
+// --- Searchable Breed Dropdown ---
 function BreedSearchDropdown({
   label,
   placeholder,
@@ -183,7 +200,7 @@ const PHOTO_GUIDES = [
 
 const MAX_PHOTOS = 3;
 
-// ─── Main Screen ───
+// --- Main Screen ---
 export default function PhotoScreen() {
   const router = useRouter();
   const { data, updateData } = useOnboardingStore();
@@ -213,11 +230,11 @@ export default function PhotoScreen() {
       setShowFreeText(false);
       setFreeTextBreed("");
 
-      // Send all photos (1–3) for cross-referencing
+      // Send all photos (1-3) for cross-referencing
       const result = await detectBreed(uris);
 
       if (!result) {
-        // Timeout, error, or no breeds found → show selector
+        // Timeout, error, or no breeds found -> show selector
         setDetection({ status: "manual" });
         setShowManualSelector(true);
         return;
@@ -232,8 +249,8 @@ export default function PhotoScreen() {
         return;
       }
 
-      if (result.lowConfidence || result.confidence < 50) {
-        // Low confidence → show selector with message
+      if (result.lowConfidence || result.confidence < 40) {
+        // Low confidence -> show selector with alternatives
         setDetection({
           status: "low",
           suggestions: result.suggestions,
@@ -242,8 +259,8 @@ export default function PhotoScreen() {
         return;
       }
 
-      if (result.confidence > 80) {
-        // High confidence → auto-fill
+      if (result.confidence > 70) {
+        // High confidence -> auto-fill
         updateData({
           breed: result.topBreed,
           breedConfidence: result.confidence,
@@ -255,7 +272,7 @@ export default function PhotoScreen() {
           confidence: result.confidence,
         });
       } else {
-        // Medium confidence → suggest with confirm/change
+        // Medium confidence (40-70) -> suggest with confirm/change
         setDetection({
           status: "medium",
           breed: result.topBreed,
@@ -335,7 +352,7 @@ export default function PhotoScreen() {
 
   const handleBreedSelect = (breed: string) => {
     if (breed === SPECIAL_OPTION) {
-      // "I'm not sure" → continue with general plan
+      // "I'm not sure" -> continue with general plan
       setNotSure(true);
       setIsMixedBreed(false);
       setShowManualSelector(false);
@@ -354,7 +371,6 @@ export default function PhotoScreen() {
 
   const handleMixBreed1 = (breed: string) => {
     if (breed === SPECIAL_OPTION) {
-      // If they're not sure about one of the mix, just use Mixed Breed
       updateData({ breedMix1: null });
       return;
     }
@@ -377,28 +393,25 @@ export default function PhotoScreen() {
     router.push("/(onboarding)/age");
   };
 
-  // Determine the Buddy speech text
+  // Buddy speech bubble text (top of screen, context-setting only)
   const getBuddySpeech = (): string => {
     if (detection.status === "detecting") {
-      return `Hold tight, working my magic on ${puppyName}... ✨`;
+      return `Hold tight, working my magic on ${puppyName}...`;
     }
-    if (detection.status === "high") {
-      return `${detection.breed}! What a beauty! ✨`;
-    }
-    if (detection.status === "medium") {
-      return `Looks like a ${detection.breed}? 🤔`;
+    if (detection.status === "high" || detection.status === "medium") {
+      return `Got it! Here's what I found for ${puppyName}`;
     }
     if (detection.status === "low") {
-      return `I couldn't get a clear read — what breed is ${puppyName}?`;
+      return `I couldn't get a clear read -- what breed is ${puppyName}?`;
     }
     if (detection.status === "different_dogs") {
-      return `Hmm, these look like different pups! Upload photos of just ${puppyName} so I can get the breed right. 🐾`;
+      return `Hmm, these look like different pups! Upload photos of just ${puppyName} so I can get the breed right.`;
     }
     if (detection.status === "manual") {
       return `What breed is ${puppyName}?`;
     }
     if (notSure) {
-      return `No worries! We'll make a great plan for ${puppyName} either way! 🐾`;
+      return `No worries! We'll make a great plan for ${puppyName} either way!`;
     }
     if (isMixedBreed) {
       return `A mix! What breeds make up ${puppyName}?`;
@@ -424,12 +437,11 @@ export default function PhotoScreen() {
           keyboardShouldPersistTaps="handled"
         >
           <View className="pt-3xl items-center">
-            {/* Buddy avatar */}
+            {/* Buddy avatar + speech bubble -- context setter at top */}
             <View className="w-[80px] h-[80px] rounded-full bg-primary-light items-center justify-center mb-base">
               <Typography className="text-[40px]">🐕</Typography>
             </View>
 
-            {/* Buddy speech bubble */}
             <View className="bg-surface rounded-lg p-lg shadow-card mb-2xl w-full">
               <Typography variant="body-lg" className="text-center">
                 {getBuddySpeech()}
@@ -437,9 +449,9 @@ export default function PhotoScreen() {
             </View>
 
             {/* Multi-photo upload area */}
-            <Animated.View entering={FadeIn.duration(300)}>
+            <Animated.View entering={FadeIn.duration(200)}>
               {photoUris.length === 0 ? (
-                /* No photos yet — single large upload target */
+                /* No photos yet -- single large upload target */
                 <Pressable onPress={() => pickImage(0)}>
                   <View className="w-[200px] h-[200px] rounded-xl bg-surface border-2 border-dashed border-border items-center justify-center">
                     <Typography className="text-[48px]">📸</Typography>
@@ -449,14 +461,14 @@ export default function PhotoScreen() {
                   </View>
                 </Pressable>
               ) : (
-                /* Photo thumbnail row — up to 3 slots */
+                /* Photo thumbnail row -- up to 3 slots */
                 <View className="flex-row gap-sm justify-center">
                   {PHOTO_GUIDES.map((guide, idx) => {
                     const uri = photoUris[idx];
                     const isNextEmpty = idx === photoUris.length && idx < MAX_PHOTOS;
 
                     if (uri) {
-                      // Filled slot — show photo with remove button
+                      // Filled slot -- show photo with remove button
                       const isDetecting = detection.status === "detecting";
                       return (
                         <View key={idx} style={{ alignItems: "center" }}>
@@ -497,7 +509,7 @@ export default function PhotoScreen() {
                               <Typography
                                 style={{ color: "#fff", fontSize: 12, lineHeight: 14, fontWeight: "700" }}
                               >
-                                ✕
+                                x
                               </Typography>
                             </Pressable>
                           )}
@@ -509,7 +521,7 @@ export default function PhotoScreen() {
                     }
 
                     if (isNextEmpty) {
-                      // Next empty slot — show add button with silhouette guide
+                      // Next empty slot -- show add button with silhouette guide
                       return (
                         <Pressable key={idx} onPress={() => pickImage(idx)}>
                           <View style={{ alignItems: "center" }}>
@@ -539,7 +551,7 @@ export default function PhotoScreen() {
                       );
                     }
 
-                    // Future empty slot — show faded guide only
+                    // Future empty slot -- show faded guide only
                     return (
                       <View key={idx} style={{ alignItems: "center", opacity: 0.3 }}>
                         <View
@@ -580,18 +592,19 @@ export default function PhotoScreen() {
               )}
             </Animated.View>
 
-            {/* ─── Detection result states ─── */}
+            {/* --- Detection states (all BELOW the photos per spec) --- */}
 
+            {/* SCANNING state */}
             {detection.status === "detecting" && (
               <View className="mt-lg w-full">
                 <BreedScanAnimation dogName={puppyName} photoSize={100} />
               </View>
             )}
 
-            {/* DIFFERENT DOGS — validation error */}
+            {/* DIFFERENT DOGS -- validation error */}
             {detection.status === "different_dogs" && (
               <Animated.View
-                entering={FadeInDown.duration(300)}
+                entering={FadeInDown.duration(200)}
                 className="mt-lg items-center w-full px-lg"
               >
                 <View className="rounded-md px-lg py-md mb-sm w-full" style={{ backgroundColor: "#FDEDED" }}>
@@ -605,20 +618,45 @@ export default function PhotoScreen() {
               </Animated.View>
             )}
 
-            {/* HIGH confidence — confirmed breed */}
+            {/* HIGH confidence result -- celebratory layout */}
             {detection.status === "high" && !isMixedBreed && !showManualSelector && (
               <Animated.View
-                entering={FadeInDown.duration(300)}
-                className="mt-lg items-center w-full px-lg"
+                entering={FadeInDown.duration(200)}
+                className="mt-lg items-center w-full"
               >
-                <View className="bg-accent-light rounded-md px-lg py-sm mb-xs">
-                  <Typography variant="body-medium" className="text-center">
-                    {detection.breed} detected! ✨
-                  </Typography>
-                </View>
-                <Typography variant="caption" color="secondary">
-                  {detection.confidence}% confidence
+                {/* Buddy excited expression */}
+                <BuddyExpression mode="excited" size={48} />
+
+                {/* Main result -- bold, no emoji, confident */}
+                <Typography
+                  variant="h2"
+                  className="text-center mt-base"
+                  style={{ fontWeight: "700" }}
+                >
+                  {puppyName !== "your pup"
+                    ? `${puppyName} looks like a ${detection.breed}!`
+                    : `Looks like a ${detection.breed}!`}
                 </Typography>
+
+                {/* Confidence badge */}
+                {(() => {
+                  const badge = getConfidenceBadge(detection.confidence);
+                  return (
+                    <View
+                      className="mt-xs px-base py-xs rounded-full"
+                      style={{ backgroundColor: badge.bg }}
+                    >
+                      <Typography
+                        variant="body-sm-medium"
+                        style={{ color: badge.text }}
+                      >
+                        {badge.label}
+                      </Typography>
+                    </View>
+                  );
+                })()}
+
+                {/* Change breed option */}
                 <Pressable
                   onPress={showSelectorSection}
                   className="mt-base bg-surface border border-border rounded-md px-xl py-md"
@@ -630,13 +668,69 @@ export default function PhotoScreen() {
               </Animated.View>
             )}
 
-            {/* MEDIUM confidence — suggestion with confirm/change */}
+            {/* MEDIUM confidence -- question in wording, no emoji */}
             {detection.status === "medium" && !showManualSelector && (
               <Animated.View
-                entering={FadeInDown.duration(300)}
+                entering={FadeInDown.duration(200)}
                 className="mt-lg items-center gap-sm w-full"
               >
-                <View className="flex-row gap-sm w-full px-lg">
+                {/* Buddy excited expression (slightly celebrating) */}
+                <BuddyExpression mode="excited" size={48} />
+
+                {/* Result with question mark in wording only */}
+                <Typography
+                  variant="h2"
+                  className="text-center mt-base"
+                  style={{ fontWeight: "700" }}
+                >
+                  {puppyName !== "your pup"
+                    ? `${puppyName} looks like a ${detection.breed}?`
+                    : `Looks like a ${detection.breed}?`}
+                </Typography>
+
+                {/* Confidence badge */}
+                {(() => {
+                  const badge = getConfidenceBadge(detection.confidence);
+                  return (
+                    <View
+                      className="px-base py-xs rounded-full"
+                      style={{ backgroundColor: badge.bg }}
+                    >
+                      <Typography
+                        variant="body-sm-medium"
+                        style={{ color: badge.text }}
+                      >
+                        {badge.label}
+                      </Typography>
+                    </View>
+                  );
+                })()}
+
+                {/* Also possible alternatives */}
+                {detection.suggestions.length > 1 && (
+                  <View className="items-center mt-xs">
+                    <Typography variant="caption" color="secondary" className="mb-xs">
+                      Also possible:
+                    </Typography>
+                    {detection.suggestions.slice(1, 3).map((s) => (
+                      <Pressable
+                        key={s.name}
+                        onPress={() => confirmBreed(s.name)}
+                      >
+                        <Typography
+                          variant="body-sm"
+                          color="accent"
+                          className="mt-xxs"
+                        >
+                          {s.name} ({s.confidence}%)
+                        </Typography>
+                      </Pressable>
+                    ))}
+                  </View>
+                )}
+
+                {/* Yes / Change breed buttons */}
+                <View className="flex-row gap-sm w-full px-lg mt-sm">
                   <View className="flex-1">
                     <Button
                       label="Yes!"
@@ -654,34 +748,26 @@ export default function PhotoScreen() {
                     />
                   </View>
                 </View>
-                {detection.suggestions.length > 1 && (
-                  <View className="mt-xs items-center">
-                    <Typography variant="caption" color="secondary">
-                      Also possible:
-                    </Typography>
-                    {detection.suggestions.slice(1).map((s) => (
-                      <Pressable
-                        key={s.name}
-                        onPress={() => confirmBreed(s.name)}
-                      >
-                        <Typography
-                          variant="body-sm"
-                          color="accent"
-                          className="mt-xxs"
-                        >
-                          {s.name} ({s.confidence}%)
-                        </Typography>
-                      </Pressable>
-                    ))}
-                  </View>
-                )}
               </Animated.View>
             )}
 
-            {/* ─── Mixed Breed + Free Text links (visible after any detection) ─── */}
+            {/* LOW confidence -- alternatives, Buddy teaching mode */}
+            {detection.status === "low" && !showManualSelector && (
+              <Animated.View
+                entering={FadeInDown.duration(200)}
+                className="mt-lg items-center w-full"
+              >
+                <BuddyExpression mode="teaching" size={48} />
+                <Typography variant="body-medium" className="text-center mt-base" color="secondary">
+                  I couldn't get a clear read. Here are my best guesses for {puppyName}:
+                </Typography>
+              </Animated.View>
+            )}
+
+            {/* --- Mixed Breed + Free Text links (visible after any detection) --- */}
             {photoUris.length > 0 && detection.status !== "idle" && detection.status !== "detecting" && !isMixedBreed && !notSure && !showFreeText && (
               <Animated.View
-                entering={FadeInDown.duration(300).delay(200)}
+                entering={FadeInDown.duration(200).delay(150)}
                 className="mt-base w-full items-center gap-xs"
               >
                 <Pressable
@@ -694,7 +780,7 @@ export default function PhotoScreen() {
                   className="bg-surface border border-border rounded-md px-xl py-sm"
                 >
                   <Typography variant="body-sm-medium" color="accent" className="text-center">
-                    🐾 My dog is a mixed breed
+                    My dog is a mixed breed
                   </Typography>
                 </Pressable>
                 <Pressable
@@ -710,10 +796,10 @@ export default function PhotoScreen() {
               </Animated.View>
             )}
 
-            {/* ─── Free text breed entry ─── */}
+            {/* --- Free text breed entry --- */}
             {showFreeText && !isMixedBreed && (
               <Animated.View
-                entering={FadeInDown.duration(300)}
+                entering={FadeInDown.duration(200)}
                 className="mt-lg w-full gap-sm"
               >
                 <Typography variant="body-sm-medium" color="secondary">
@@ -757,19 +843,26 @@ export default function PhotoScreen() {
                   }}
                 >
                   <Typography variant="caption" color="secondary" className="text-center">
-                    ← Back to breed list
+                    Back to breed list
                   </Typography>
                 </Pressable>
               </Animated.View>
             )}
 
-            {/* ─── Searchable breed selector (low / manual / user clicked change) ─── */}
+            {/* --- Searchable breed selector (low / manual / user clicked change) --- */}
             {showManualSelector && !isMixedBreed && !notSure && !showFreeText && (
               <Animated.View
-                entering={FadeInDown.duration(300)}
+                entering={FadeInDown.duration(200)}
                 className="mt-lg w-full gap-sm"
               >
-                {/* Show low-confidence suggestions as quick-pick buttons */}
+                {/* Buddy teaching expression when showing alternatives */}
+                {detection.status === "low" && (
+                  <View className="items-center mb-sm">
+                    <BuddyExpression mode="teaching" size={48} />
+                  </View>
+                )}
+
+                {/* Low-confidence suggestions as quick-pick buttons */}
                 {detection.status === "low" &&
                   detection.suggestions.length > 0 && (
                     <View className="gap-xs mb-sm">
@@ -805,10 +898,10 @@ export default function PhotoScreen() {
               </Animated.View>
             )}
 
-            {/* ─── Mixed breed — two selectors ─── */}
+            {/* --- Mixed breed -- two selectors --- */}
             {isMixedBreed && (
               <Animated.View
-                entering={FadeInDown.duration(300)}
+                entering={FadeInDown.duration(200)}
                 className="mt-lg w-full gap-base"
               >
                 <View className="bg-accent-light rounded-md px-lg py-sm">
@@ -816,7 +909,7 @@ export default function PhotoScreen() {
                     variant="body-medium"
                     className="text-center"
                   >
-                    Mixed Breed 🐾
+                    Mixed Breed
                   </Typography>
                 </View>
 
@@ -858,10 +951,10 @@ export default function PhotoScreen() {
               </Animated.View>
             )}
 
-            {/* ─── "I'm not sure" confirmation ─── */}
+            {/* --- "I'm not sure" confirmation --- */}
             {notSure && (
               <Animated.View
-                entering={FadeInDown.duration(300)}
+                entering={FadeInDown.duration(200)}
                 className="mt-lg items-center gap-sm"
               >
                 <View className="bg-surface rounded-md px-lg py-sm border border-border">
@@ -891,12 +984,12 @@ export default function PhotoScreen() {
               detection.status !== "medium" &&
               !showManualSelector && (
                 <Animated.View
-                  entering={FadeInDown.duration(300)}
+                  entering={FadeInDown.duration(200)}
                   className="mt-lg items-center w-full px-lg"
                 >
                   <View className="bg-accent-light rounded-md px-lg py-sm">
                     <Typography variant="body-medium">
-                      {data.breed} ✨
+                      {data.breed}
                     </Typography>
                   </View>
                   <Pressable
@@ -912,7 +1005,7 @@ export default function PhotoScreen() {
           </View>
         </ScrollView>
 
-        {/* Bottom actions — fixed at bottom */}
+        {/* Bottom actions -- fixed at bottom */}
         <View className="px-xl pb-3xl gap-sm bg-background">
           <Button
             label="Continue"
