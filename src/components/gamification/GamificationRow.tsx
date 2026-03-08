@@ -23,6 +23,8 @@ interface GamificationRowProps {
   dailyXp: number;
   dailyXpTarget: number;
   goodBoyScore: number;
+  /** HOME-01: delta vs yesterday score. Null/undefined means no prior session — show '--' */
+  gbsDelta?: number | null;
   level: number;
   levelTitle: string;
   totalXp: number;
@@ -33,10 +35,20 @@ export function GamificationRow({
   dailyXp,
   dailyXpTarget,
   goodBoyScore,
+  gbsDelta,
   level,
   levelTitle,
   totalXp,
 }: GamificationRowProps) {
+  // HOME-01: safe delta label - show '--' when no prior session data exists
+  const deltaLabel =
+    gbsDelta == null
+      ? '--'
+      : gbsDelta > 0
+        ? `+${gbsDelta}`
+        : gbsDelta < 0
+          ? `${gbsDelta}`
+          : '--';
   return (
     <View className="bg-surface rounded-2xl p-base" style={{
       shadowColor: "#1B2333",
@@ -98,7 +110,7 @@ export function GamificationRow({
               Good Boy Score
             </Typography>
             <Typography variant="caption" color="tertiary">
-              {goodBoyScore}/100
+              {goodBoyScore}/100 ({deltaLabel} vs yesterday)
             </Typography>
           </View>
         </Pressable>
