@@ -7,6 +7,7 @@ import { useDogSync } from "@/hooks/useDogSync";
 import { useTrainingSync } from "@/hooks/useTrainingSync";
 import { useChatSync } from "@/hooks/useChatSync";
 import { useGamificationSync } from "@/hooks/useGamificationSync";
+import { useHealthSync } from "@/hooks/useHealthSync";
 
 /**
  * Main Tab Navigation Layout
@@ -30,6 +31,7 @@ export default function TabLayout() {
   useTrainingSync();
   useChatSync();
   useGamificationSync();
+  useHealthSync();
 
   return (
     <Tabs
