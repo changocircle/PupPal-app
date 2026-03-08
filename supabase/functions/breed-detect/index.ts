@@ -13,6 +13,24 @@
 
 import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
 
+// ── Rate limiting (per-IP, resets on cold start) ──
+const rateLimitMap = new Map<string, { count: number; windowStart: number }>();
+const RATE_LIMIT_WINDOW_MS = 60_000; // 1 minute
+const RATE_LIMIT_MAX = 10; // 10 requests per minute per IP (vision + multi-photo is heavy)
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(ip);
+
+  if (!entry || now - entry.windowStart > RATE_LIMIT_WINDOW_MS) {
+    rateLimitMap.set(ip, { count: 1, windowStart: now });
+    return false;
+  }
+
+  entry.count++;
+  return entry.count > RATE_LIMIT_MAX;
+}
+
 // ─── Known dog breeds (AKC + common mixes) ───
 
 const DOG_BREEDS: string[] = [
@@ -316,6 +334,23 @@ serve(async (req: Request): Promise<Response> => {
   // Handle CORS preflight
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: CORS_HEADERS });
+  }
+
+  // ── Rate limiting ──
+  const clientIP =
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  if (isRateLimited(clientIP)) {
+    return new Response(
+      JSON.stringify({ breeds: [], error: "Rate limit exceeded. Try again in a minute." }),
+      {
+        status: 429,
+        headers: {
+          ...CORS_HEADERS,
+          "Content-Type": "application/json",
+          "Retry-After": "60",
+        },
+      },
+    );
   }
 
   try {
