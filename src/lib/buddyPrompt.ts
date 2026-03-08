@@ -5,7 +5,7 @@
  * Based on buddy-system-prompt.md.
  */
 
-import type { DogContext, HouseholdDog } from "@/types/chat";
+import type { DogContext, HouseholdDog, ConversationSummary } from "@/types/chat";
 import { getDevelopmentalStage } from "@/types/chat";
 
 // ── Main system prompt (static sections) ──
@@ -148,24 +148,70 @@ CRITICAL RULES:
 }
 
 // ── Build conversation context block ──
-function buildConversationContextBlock(summaries?: string[]): string {
-  if (!summaries || summaries.length === 0) {
-    return "This is the user's first conversation with Buddy. Welcome them warmly and reference their dog's profile.";
+// Overload 1: rich structured summaries (preferred)
+// Overload 2: legacy plain-string summaries (backward compat)
+export function buildConversationContextBlock(
+  richSummaries?: ConversationSummary[],
+  plainSummaries?: string[],
+): string {
+  // Rich summaries take priority
+  if (richSummaries && richSummaries.length > 0) {
+    const sessionBlocks = richSummaries.map((s, i) => {
+      const date = s.createdAt
+        ? new Date(s.createdAt).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          })
+        : "earlier";
+
+      const topicsLine =
+        s.keyTopics.length > 0 ? `Topics: ${s.keyTopics.join(", ")}` : null;
+      const adviceLine =
+        s.adviceGiven.length > 0 ? `Advice given: ${s.adviceGiven.join("; ")}` : null;
+      const followUpLine =
+        s.followUpNeeded.length > 0
+          ? `Follow-up needed: ${s.followUpNeeded.join("; ")}`
+          : null;
+
+      const lines = [
+        `Session ${i + 1} (${date}):`,
+        topicsLine,
+        adviceLine,
+        followUpLine,
+      ]
+        .filter(Boolean)
+        .join("\n");
+
+      return lines;
+    });
+
+    return `PREVIOUS CONVERSATIONS (last ${richSummaries.length} session${richSummaries.length === 1 ? "" : "s"}):
+
+${sessionBlocks.join("\n\n")}
+
+Reference these naturally. For example: "Last time we talked about X, how's that going?" Only reference when it adds value to the current conversation.`;
   }
 
-  return `Previous conversation summaries:
-${summaries.map((s, i) => `Session ${i + 1}: ${s}`).join("\n")}
+  // Fall back to plain string summaries
+  if (plainSummaries && plainSummaries.length > 0) {
+    return `Previous conversation summaries:
+${plainSummaries.map((s, i) => `Session ${i + 1}: ${s}`).join("\n")}
 
 Reference previous conversations naturally when relevant. Don't force references. Only reference them when they add value.`;
+  }
+
+  return "This is the user's first conversation with Buddy. Welcome them warmly and reference their dog's profile.";
 }
 
 // ── Main prompt builder ──
 export function buildSystemPrompt(
   dogContext: DogContext,
-  conversationSummaries?: string[]
+  conversationSummaries?: string[],
+  richSummaries?: ConversationSummary[],
 ): string {
   const dogBlock = buildDogContextBlock(dogContext);
-  const convBlock = buildConversationContextBlock(conversationSummaries);
+  const convBlock = buildConversationContextBlock(richSummaries, conversationSummaries);
 
   return `${BUDDY_IDENTITY}
 

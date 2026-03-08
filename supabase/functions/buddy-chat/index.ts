@@ -68,6 +68,21 @@ interface ChatRequest {
   dogName?: string;
 }
 
+interface SummarizeRequest {
+  action: "summarize";
+  messages: Array<{ role: "user" | "assistant"; content: string }>;
+  dogName?: string;
+}
+
+/** Schema the summarise action must return as JSON */
+interface SummarySchema {
+  summaryText: string;
+  keyTopics: string[];
+  adviceGiven: string[];
+  followUpNeeded: string[];
+  emotionalTone: string;
+}
+
 interface AnthropicResponse {
   id: string;
   type: string;
@@ -123,8 +138,14 @@ serve(async (req: Request) => {
 
   try {
     // ── Parse request ──
-    const body: ChatRequest = await req.json();
-    const { systemPrompt, messages, maxTokens = DEFAULT_MAX_TOKENS, dogName } = body;
+    const body: ChatRequest & Partial<SummarizeRequest> = await req.json();
+
+    // ── Summarize action (lightweight, non-streaming) ──
+    if (body.action === "summarize") {
+      return await handleSummarize(body as SummarizeRequest);
+    }
+
+    const { systemPrompt, messages, maxTokens = DEFAULT_MAX_TOKENS, dogName } = body as ChatRequest;
 
     if (!systemPrompt || !messages || !Array.isArray(messages)) {
       return new Response(
@@ -364,6 +385,117 @@ Return: ["${nameStr} pulls hard", "Gets distracted by other dogs", "Lunges at th
     );
   }
 });
+
+// ──────────────────────────────────────────────
+// Summarize action handler
+// ──────────────────────────────────────────────
+
+async function handleSummarize(req: SummarizeRequest): Promise<Response> {
+  const { messages, dogName = "the dog" } = req;
+
+  // Fail-safe wrapper: always return 200 with { summary: null } on any error
+  try {
+    if (!messages || !Array.isArray(messages) || messages.length < 3) {
+      console.log("[buddy-chat/summarize] Skipping — insufficient messages");
+      return new Response(JSON.stringify({ summary: null }), {
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const SUMMARIZE_SYSTEM = `You are summarizing a dog training chat session for ${dogName}. Output ONLY valid JSON matching this exact schema, no markdown, no explanation:
+{ "summaryText": string, "keyTopics": string[], "adviceGiven": string[], "followUpNeeded": string[], "emotionalTone": string }
+
+Rules:
+- summaryText: 1-2 sentence plain-English summary of what was discussed
+- keyTopics: array of 1-4 short topic strings (e.g. "leash pulling", "crate training")
+- adviceGiven: array of 1-4 short strings describing advice or techniques recommended
+- followUpNeeded: array of 0-3 short strings for things to check on next time (can be empty [])
+- emotionalTone: one of "positive", "neutral", "frustrated", "concerned", "celebratory"`;
+
+    const sanitized = sanitizeMessages(messages);
+    if (sanitized.length === 0) {
+      return new Response(JSON.stringify({ summary: null }), {
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    console.log(
+      `[buddy-chat/summarize] Summarizing ${sanitized.length} messages for "${dogName}"`,
+    );
+
+    const anthropicResponse = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": ANTHROPIC_API_KEY,
+        "anthropic-version": ANTHROPIC_VERSION,
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: 500,
+        system: SUMMARIZE_SYSTEM,
+        messages: sanitized,
+      }),
+    });
+
+    if (!anthropicResponse.ok) {
+      const errText = await anthropicResponse.text().catch(() => "");
+      console.warn(
+        `[buddy-chat/summarize] Anthropic error ${anthropicResponse.status}: ${errText.slice(0, 300)}`,
+      );
+      return new Response(JSON.stringify({ summary: null }), {
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const data = await anthropicResponse.json();
+    const rawText: string =
+      data.content?.filter((b: { type: string }) => b.type === "text")
+        .map((b: { text: string }) => b.text)
+        .join("") ?? "";
+
+    // Parse JSON from response (be tolerant of stray whitespace)
+    const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      console.warn("[buddy-chat/summarize] Could not extract JSON from response:", rawText.slice(0, 200));
+      return new Response(JSON.stringify({ summary: null }), {
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const parsed: SummarySchema = JSON.parse(jsonMatch[0]);
+
+    // Validate and normalise fields
+    const summary: SummarySchema = {
+      summaryText: typeof parsed.summaryText === "string" ? parsed.summaryText : "",
+      keyTopics: Array.isArray(parsed.keyTopics) ? parsed.keyTopics : [],
+      adviceGiven: Array.isArray(parsed.adviceGiven) ? parsed.adviceGiven : [],
+      followUpNeeded: Array.isArray(parsed.followUpNeeded) ? parsed.followUpNeeded : [],
+      emotionalTone: typeof parsed.emotionalTone === "string" ? parsed.emotionalTone : "neutral",
+    };
+
+    console.log(
+      `[buddy-chat/summarize] Done. tone=${summary.emotionalTone}, topics=${summary.keyTopics.join(", ")}`,
+    );
+
+    return new Response(JSON.stringify({ summary }), {
+      status: 200,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  } catch (err) {
+    const errMsg = err instanceof Error ? err.message : String(err);
+    console.warn("[buddy-chat/summarize] Unhandled error:", errMsg);
+    // Never let summarization crash the function
+    return new Response(JSON.stringify({ summary: null }), {
+      status: 200,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+}
 
 /**
  * Sanitize messages for Anthropic API:

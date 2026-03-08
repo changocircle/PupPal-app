@@ -8,7 +8,7 @@
  * When not configured → falls back to smart mock responses for development.
  */
 
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useChatStore } from "@/stores/chatStore";
 import { useTrainingStore } from "@/stores/trainingStore";
 import { useDogStore } from "@/stores/dogStore";
@@ -24,6 +24,7 @@ import {
   isAIProviderAvailable,
   streamChatCompletion,
 } from "@/lib/aiProvider";
+import { generateSessionSummary } from "@/services/conversationSummarizer";
 import type { AIMessage } from "@/lib/aiProvider";
 import type { DogContext, BuddyExpression, ChatMessage } from "@/types/chat";
 import { MAX_MESSAGES_IN_CONTEXT } from "@/types/chat";
@@ -76,9 +77,14 @@ export function useChat(): UseChatReturn {
   const incrementDailyCount = useChatStore((s) => s.incrementDailyCount);
   const clearConversation = useChatStore((s) => s.clearConversation);
   const getRecentSummaries = useChatStore((s) => s.getRecentSummaries);
+  const addRichSummary = useChatStore((s) => s.addRichSummary);
+  const addConversationSummary = useChatStore((s) => s.addConversationSummary);
+  const getRecentRichSummaries = useChatStore((s) => s.getRecentRichSummaries);
   const isSessionExpired = useChatStore((s) => s.isSessionExpired);
 
   const buddyExpressionRef = useRef<BuddyExpression>("happy");
+  // Track the previous activeDogId so we can detect a dog switch
+  const prevActiveDogIdRef = useRef<string | null | undefined>(activeDogId);
 
   // Build dog context for system prompt
   const dogName = dog?.name ?? onboarding.puppyName ?? "Your Pup";
@@ -202,6 +208,27 @@ export function useChat(): UseChatReturn {
   const remainingMessages = getRemainingMessages(isPremium);
   const isLiveAI = isAIProviderAvailable();
 
+  // ── Dog-switch: reload rich summaries for the newly active dog ──
+  useEffect(() => {
+    if (prevActiveDogIdRef.current !== activeDogId) {
+      prevActiveDogIdRef.current = activeDogId;
+      if (activeDogId) {
+        // Prefetch the new dog's summaries so they are ready when the
+        // system prompt is next built. getRecentRichSummaries is a selector
+        // (no side effects) — calling it here is just for logging visibility.
+        const dogSummaries = getRecentRichSummaries(activeDogId, 5);
+        console.log(
+          `[useChat] Dog switched to ${activeDogId} — ${dogSummaries.length} rich summaries available`,
+        );
+      }
+    }
+  }, [activeDogId, getRecentRichSummaries]);
+
+  // Rich summaries for the active dog (used to build system prompt)
+  const richSummaries = activeDogId
+    ? getRecentRichSummaries(activeDogId, 5)
+    : [];
+
   // Current session messages
   const sessionMessages = currentSessionId
     ? messages.filter((m) => m.sessionId === currentSessionId)
@@ -243,10 +270,18 @@ export function useChat(): UseChatReturn {
         incrementDailyCount();
       }
 
-      // Build system prompt with full dog context
+      // Build system prompt with full dog context + conversation memory
+      // Prefer rich structured summaries; fall back to plain strings if none exist
+      const currentRichSummaries = activeDogId
+        ? getRecentRichSummaries(activeDogId, 5)
+        : [];
+      const plainSummaries = currentRichSummaries.length === 0
+        ? getRecentSummaries(3)
+        : [];
       const systemPrompt = buildSystemPrompt(
         dogContext,
-        getRecentSummaries(3)
+        plainSummaries,
+        currentRichSummaries.length > 0 ? currentRichSummaries : undefined,
       );
 
       // Get recent messages for context window (last 20)
@@ -286,6 +321,40 @@ export function useChat(): UseChatReturn {
           // ── Mock fallback ──
           await sendToMockAI(assistantMsg.id, dogName, content);
         }
+
+        // ── Summarize every 10th message (fire-and-forget) ──
+        const allSessionMsgs = useChatStore
+          .getState()
+          .messages.filter(
+            (m) => m.sessionId === sessionId && m.role !== "system",
+          );
+        if (allSessionMsgs.length > 0 && allSessionMsgs.length % 10 === 0) {
+          const snapSessionId = sessionId;
+          const snapMessages = [...allSessionMsgs];
+          const snapDogId = activeDogId ?? "local";
+          generateSessionSummary(snapSessionId, snapMessages, dogName, snapDogId)
+            .then((summary) => {
+              if (summary) {
+                const { addRichSummary: addRich, addConversationSummary: addPlain } =
+                  useChatStore.getState();
+                // Avoid duplicates by sessionId
+                const existing = useChatStore.getState().richSummaries;
+                const isDuplicate = existing.some(
+                  (s) => s.sessionId === summary.sessionId,
+                );
+                if (!isDuplicate) {
+                  addRich(summary);
+                  addPlain(summary.summaryText);
+                  console.log(
+                    `[useChat] Mid-session summary stored (${allSessionMsgs.length} messages)`,
+                  );
+                }
+              }
+            })
+            .catch((err) => {
+              console.warn("[useChat] Mid-session summarization failed:", err);
+            });
+        }
       } catch (error) {
         const errorMsg =
           error instanceof Error ? error.message : "Unknown error";
@@ -297,7 +366,7 @@ export function useChat(): UseChatReturn {
         finishStreaming(assistantMsg.id);
       }
     },
-    [isStreaming, isPremium, currentSessionId, dogContext, dogName]
+    [isStreaming, isPremium, currentSessionId, dogContext, dogName, activeDogId]
   );
 
   const sendSuggestedPrompt = useCallback(
@@ -308,9 +377,42 @@ export function useChat(): UseChatReturn {
   );
 
   const startNewSession = useCallback(() => {
+    // ── Summarize the ending session (fire-and-forget) ──
+    const endingSessionId = currentSessionId;
+    if (endingSessionId) {
+      const endingMessages = useChatStore
+        .getState()
+        .messages.filter(
+          (m) => m.sessionId === endingSessionId && m.role !== "system",
+        );
+      const endingDogId = activeDogId ?? "local";
+      const endingDogName = dogName;
+
+      generateSessionSummary(endingSessionId, endingMessages, endingDogName, endingDogId)
+        .then((summary) => {
+          if (summary) {
+            const { addRichSummary: addRich, addConversationSummary: addPlain, richSummaries } =
+              useChatStore.getState();
+            const isDuplicate = richSummaries.some(
+              (s) => s.sessionId === summary.sessionId,
+            );
+            if (!isDuplicate) {
+              addRich(summary);
+              addPlain(summary.summaryText);
+              console.log(
+                `[useChat] End-of-session summary stored for session ${endingSessionId}`,
+              );
+            }
+          }
+        })
+        .catch((err) => {
+          console.warn("[useChat] End-of-session summarization failed:", err);
+        });
+    }
+
     startSession(dog?.id ?? "local");
     setDynamicSuggestions([]); // Reset to static prompts for new session
-  }, [dog?.id]);
+  }, [dog?.id, currentSessionId, activeDogId, dogName]);
 
   const setFeedback = useCallback(
     (messageId: string, feedback: "positive" | "negative") => {
