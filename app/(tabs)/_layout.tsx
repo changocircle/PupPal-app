@@ -6,6 +6,7 @@ import { COLORS } from "@/constants/theme";
 import { useDogSync } from "@/hooks/useDogSync";
 import { useTrainingSync } from "@/hooks/useTrainingSync";
 import { useChatSync } from "@/hooks/useChatSync";
+import { useGamificationSync } from "@/hooks/useGamificationSync";
 
 /**
  * Main Tab Navigation Layout
@@ -28,6 +29,7 @@ export default function TabLayout() {
   useDogSync();
   useTrainingSync();
   useChatSync();
+  useGamificationSync();
 
   return (
     <Tabs

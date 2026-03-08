@@ -4,6 +4,10 @@
  *
  * Local-first: all state persisted via AsyncStorage.
  * Reads exercise data from trainingStore for GBS/achievement calculations.
+ *
+ * Sync-aware: exposes _syncMeta and _mergeGamification for the sync layer.
+ * The sync layer (gamificationSync.ts) is bridged via useGamificationSync hook
+ * to avoid circular dependencies.
  */
 
 import { create } from "zustand";
@@ -26,6 +30,24 @@ import {
   STREAK_MILESTONES,
 } from "@/types/gamification";
 import type { Achievement } from "@/types/gamification";
+
+// ──────────────────────────────────────────────
+// Sync Metadata (transient, not persisted)
+// ──────────────────────────────────────────────
+
+export type GamificationSyncStatus = "idle" | "syncing" | "error";
+
+export interface GamificationSyncMeta {
+  status: GamificationSyncStatus;
+  lastSyncedAt: string | null;
+  pendingCount: number;
+}
+
+const DEFAULT_SYNC_META: GamificationSyncMeta = {
+  status: "idle",
+  lastSyncedAt: null,
+  pendingCount: 0,
+};
 
 // ──────────────────────────────────────────────
 // State Shape
@@ -141,6 +163,31 @@ interface GamificationState {
 
   /** Reset (for testing) */
   resetGamification: () => void;
+
+  // ── Sync-layer actions (prefixed with _ to indicate internal use) ──
+
+  _syncMeta: GamificationSyncMeta;
+  _setSyncMeta: (updates: Partial<GamificationSyncMeta>) => void;
+
+  /**
+   * Merge gamification data from sync.
+   * Called by gamificationSync.ts during pull phase.
+   * XP and streak values use max-wins logic to never lose progress.
+   */
+  _mergeGamification: (data: {
+    totalXp: number;
+    currentStreak: number;
+    longestStreak: number;
+    lastActiveDate: string | null;
+    totalActiveDays: number;
+    goodBoyScore: number;
+    gbsDimensions: GbsDimensions;
+    gbsLastCalculated: string | null;
+    xpEvents: XpEvent[];
+    unlockedAchievements: UnlockedAchievement[];
+    achievementProgress: AchievementProgress[];
+    activeChallenge: UserChallenge | null;
+  }) => void;
 }
 
 // ──────────────────────────────────────────────
@@ -205,6 +252,7 @@ export const useGamificationStore = create<GamificationState>()(
       pendingCelebrations: [],
       activeChallenge: null,
       pendingLevelUp: null,
+      _syncMeta: { ...DEFAULT_SYNC_META },
 
       // ── XP ──
       earnXp: (amount, source, sourceId, label) => {
@@ -500,6 +548,121 @@ export const useGamificationStore = create<GamificationState>()(
         );
       },
 
+      // ── Sync-layer ──
+
+      _setSyncMeta: (updates) =>
+        set((state) => ({
+          _syncMeta: { ...state._syncMeta, ...updates },
+        })),
+
+      _mergeGamification: (data) => {
+        const state = get();
+
+        // XP: max-wins so we never lose progress
+        const newTotalXp = Math.max(state.totalXp, data.totalXp);
+        const levelDef = computeLevel(newTotalXp);
+
+        // Streak: max-wins for counts to prevent rollback
+        const newCurrentStreak = Math.max(
+          state.streak.currentStreak,
+          data.currentStreak
+        );
+        const newLongestStreak = Math.max(
+          state.streak.longestStreak,
+          data.longestStreak
+        );
+        const newTotalActiveDays = Math.max(
+          state.streak.totalActiveDays,
+          data.totalActiveDays
+        );
+
+        // Last active date: pick the more recent one
+        const localLastActive = state.streak.lastActiveDate;
+        const remoteLastActive = data.lastActiveDate;
+        let newLastActiveDate = localLastActive;
+        if (remoteLastActive && (!localLastActive || remoteLastActive > localLastActive)) {
+          newLastActiveDate = remoteLastActive;
+        }
+
+        // GBS: most recent calculated wins
+        let newGbs = state.goodBoyScore;
+        let newGbsDimensions = state.gbsDimensions;
+        let newGbsLastCalculated = state.gbsLastCalculated;
+        if (
+          data.gbsLastCalculated &&
+          (!state.gbsLastCalculated || data.gbsLastCalculated > state.gbsLastCalculated)
+        ) {
+          newGbs = data.goodBoyScore;
+          newGbsDimensions = data.gbsDimensions;
+          newGbsLastCalculated = data.gbsLastCalculated;
+        }
+
+        // XP events: merge by id, keep last 200
+        const localEventIds = new Set(state.xpEvents.map((e) => e.id));
+        const newEvents = [...state.xpEvents];
+        for (const e of data.xpEvents) {
+          if (!localEventIds.has(e.id)) {
+            newEvents.push(e);
+          }
+        }
+        newEvents.sort(
+          (a, b) => new Date(a.earnedAt).getTime() - new Date(b.earnedAt).getTime()
+        );
+        const mergedEvents = newEvents.slice(-200);
+
+        // Achievements: merge by slug (local wins for pending celebrations)
+        const localSlugs = new Set(state.unlockedAchievements.map((a) => a.slug));
+        const mergedAchievements = [...state.unlockedAchievements];
+        for (const a of data.unlockedAchievements) {
+          if (!localSlugs.has(a.slug)) {
+            mergedAchievements.push(a);
+          }
+        }
+
+        // Achievement progress: remote wins if current is higher
+        const localProgressMap = new Map(
+          state.achievementProgress.map((p) => [p.slug, p])
+        );
+        const mergedProgress = [...state.achievementProgress];
+        for (const remote of data.achievementProgress) {
+          const local = localProgressMap.get(remote.slug);
+          if (!local) {
+            mergedProgress.push(remote);
+          } else if (remote.current > local.current) {
+            const idx = mergedProgress.findIndex((p) => p.slug === remote.slug);
+            if (idx >= 0) {
+              mergedProgress[idx] = remote;
+            }
+          }
+        }
+
+        // Active challenge: local wins if active, otherwise take remote
+        const mergedChallenge =
+          state.activeChallenge?.status === "active"
+            ? state.activeChallenge
+            : (data.activeChallenge ?? state.activeChallenge);
+
+        set({
+          totalXp: newTotalXp,
+          currentLevel: levelDef.level,
+          currentLevelTitle: levelDef.title,
+          streak: {
+            ...state.streak,
+            currentStreak: newCurrentStreak,
+            longestStreak: newLongestStreak,
+            lastActiveDate: newLastActiveDate,
+            totalActiveDays: newTotalActiveDays,
+          },
+          goodBoyScore: newGbs,
+          gbsDimensions: newGbsDimensions,
+          gbsLastCalculated: newGbsLastCalculated,
+          xpEvents: mergedEvents,
+          unlockedAchievements: mergedAchievements,
+          achievementProgress: mergedProgress,
+          activeChallenge: mergedChallenge,
+        });
+      },
+
       resetGamification: () => {
         set({
           totalXp: 0,
@@ -529,6 +692,24 @@ export const useGamificationStore = create<GamificationState>()(
     {
       name: "puppal-gamification",
       storage: createJSONStorage(() => AsyncStorage),
+      partialize: (state) => ({
+        totalXp: state.totalXp,
+        dailyXp: state.dailyXp,
+        dailyXpDate: state.dailyXpDate,
+        xpEvents: state.xpEvents,
+        currentLevel: state.currentLevel,
+        currentLevelTitle: state.currentLevelTitle,
+        goodBoyScore: state.goodBoyScore,
+        gbsDimensions: state.gbsDimensions,
+        gbsLastCalculated: state.gbsLastCalculated,
+        streak: state.streak,
+        unlockedAchievements: state.unlockedAchievements,
+        achievementProgress: state.achievementProgress,
+        pendingCelebrations: state.pendingCelebrations,
+        activeChallenge: state.activeChallenge,
+        pendingLevelUp: state.pendingLevelUp,
+        // _syncMeta is NOT persisted (resets to defaults on restart)
+      }),
     }
   )
 );
