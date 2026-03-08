@@ -90,6 +90,10 @@ export default function PackDetailScreen() {
     ? (packProgress.tricksCompleted / pack.total_tricks)
     : 0;
 
+  // Premium users can view and interact with all tricks regardless of
+  // progression-based pack lock. The progression gate only restricts free users.
+  const isPackAccessible = isPremium || packProgress.unlocked;
+
   return (
     <SafeAreaView className="flex-1 bg-background">
       <ScrollView
@@ -116,7 +120,7 @@ export default function PackDetailScreen() {
             <Typography style={{ fontSize: 40 }}>{pack.icon}</Typography>
             <View className="flex-1">
               <Typography variant="h1">{pack.name}</Typography>
-              {!packProgress.unlocked && (
+              {!isPackAccessible && (
                 <Badge variant="warning" label="🔒 Locked" size="sm" />
               )}
             </View>
@@ -125,7 +129,7 @@ export default function PackDetailScreen() {
             {pack.description}
           </Typography>
 
-          {packProgress.unlocked && (
+          {isPackAccessible && (
             <View>
               <View className="flex-row items-center justify-between mb-xs">
                 <Typography variant="caption" color="secondary">
@@ -144,7 +148,7 @@ export default function PackDetailScreen() {
             </View>
           )}
 
-          {!packProgress.unlocked && (
+          {!isPackAccessible && (
             <Card className="bg-warning-light border-warning/20 mt-sm">
               <Typography variant="body-sm" className="text-center">
                 {pack.unlock_condition === 'plan_week'

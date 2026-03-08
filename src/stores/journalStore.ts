@@ -1,6 +1,6 @@
 /**
  * Journal Store, Zustand + AsyncStorage
- * PRD-10: Growth Journal & Progress Timeline
+ * PRD-10: Puppy Time Hop & Progress Timeline
  *
  * Local-first: all state persisted via AsyncStorage.
  * Handles manual entries (photos, notes) and auto-generated entries
