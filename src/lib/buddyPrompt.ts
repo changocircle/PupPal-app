@@ -36,6 +36,7 @@ const RESPONSE_RULES = `HARD RULES:
 - Keep ALL responses under 200 words. Mobile users read on small screens.
 - Never use em dashes. Use commas, periods, or line breaks instead.
 - ALWAYS use the dog's name at least once.
+- Keep responses concise for mobile. When referencing a specific exercise, give a 2-3 sentence summary and tell the user to check their Plan tab for the full walkthrough. Never reproduce the entire exercise walkthrough in chat.
 
 Response style:
 1. Lead with empathy BEFORE advice. Acknowledge the feeling first.
@@ -49,10 +50,16 @@ Response style:
 
 Response length:
 - Simple question: 2-3 sentences
-- Training technique: 2-3 short paragraphs with steps
+- Training technique: 2-3 short paragraphs MAX — overview only, never step-by-step walkthroughs
 - Behavioral issue: 3-4 short paragraphs max
 - Celebration: 1-2 sentences
-- Medical redirect: 2-3 sentences, clear and direct`;
+- Medical redirect: 2-3 sentences, clear and direct
+
+EXERCISE REFERENCES:
+When a user asks about a specific exercise or technique from their training plan:
+- Give a 2-3 sentence overview of what the exercise is and why it works
+- Tell the user: "Check your Plan tab for the full step-by-step walkthrough"
+- Never reproduce the full exercise instructions inline in chat`;
 
 const SAFETY_BOUNDARIES = `MEDICAL ESCALATION:
 You NEVER diagnose medical conditions. You NEVER recommend specific medications or dosages.
@@ -150,9 +157,11 @@ CRITICAL RULES:
 // ── Build conversation context block ──
 // Overload 1: rich structured summaries (preferred)
 // Overload 2: legacy plain-string summaries (backward compat)
+// isReturningUser: true if the user has had at least one prior session (even if no summaries exist yet)
 export function buildConversationContextBlock(
   richSummaries?: ConversationSummary[],
   plainSummaries?: string[],
+  isReturningUser?: boolean,
 ): string {
   // Rich summaries take priority
   if (richSummaries && richSummaries.length > 0) {
@@ -201,7 +210,15 @@ ${plainSummaries.map((s, i) => `Session ${i + 1}: ${s}`).join("\n")}
 Reference previous conversations naturally when relevant. Don't force references. Only reference them when they add value.`;
   }
 
-  return "This is the user's first conversation with Buddy. Welcome them warmly and reference their dog's profile.";
+  // Only use the first-session welcome on the literal first session.
+  // If the user has had prior sessions but no summaries yet (e.g. sessions shorter
+  // than the 10-message summarization threshold), greet them as a returning user
+  // rather than re-running the welcome intro every time.
+  if (isReturningUser) {
+    return "This is a returning user. Do NOT say 'welcome' or introduce yourself as if this is the first time. Greet them naturally and get straight into helping. Reference their dog's profile and recent context where relevant.";
+  }
+
+  return "This is the user's very first conversation with Buddy. Welcome them warmly and reference their dog's profile.";
 }
 
 // ── Main prompt builder ──
@@ -209,9 +226,10 @@ export function buildSystemPrompt(
   dogContext: DogContext,
   conversationSummaries?: string[],
   richSummaries?: ConversationSummary[],
+  isReturningUser?: boolean,
 ): string {
   const dogBlock = buildDogContextBlock(dogContext);
-  const convBlock = buildConversationContextBlock(richSummaries, conversationSummaries);
+  const convBlock = buildConversationContextBlock(richSummaries, conversationSummaries, isReturningUser);
 
   return `${BUDDY_IDENTITY}
 
