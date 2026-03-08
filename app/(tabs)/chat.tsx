@@ -35,7 +35,8 @@ import type { ChatMessage } from "@/types/chat";
  */
 
 export default function ChatScreen() {
-  const hydrated = useHydration(useDogStore, useOnboardingStore);
+  // CHAT-01: include useChatStore so stale-limit rehydration runs before render
+  const hydrated = useHydration(useDogStore, useOnboardingStore, useChatStore);
 
   if (!hydrated) {
     return <ChatSkeleton />;
@@ -252,9 +253,11 @@ function EmptyState({
         entering={FadeInDown.duration(500)}
         className="items-center"
       >
-        {/* Buddy avatar */}
+        {/* Buddy avatar — CHAT-05: wrapped in ErrorBoundary to prevent waving-mood flash/crash */}
         <View className="w-[100px] h-[100px] rounded-full bg-primary-light items-center justify-center mb-lg">
-          <BuddyAvatar mood="waving" size={100} />
+          <ErrorBoundary screen="BuddyAvatar">
+            <BuddyAvatar mood="waving" size={100} />
+          </ErrorBoundary>
         </View>
 
         <Typography variant="h2" className="text-center mb-sm">

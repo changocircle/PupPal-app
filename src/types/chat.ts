@@ -30,6 +30,8 @@ export type EscalationType = "medical" | "behavioral" | "emotional" | "none";
 export interface ChatSession {
   id: string;
   dogId: string;
+  /** CHAT-02: Supabase user ID — used to scope sessions per account */
+  userId?: string;
   startedAt: string;
   endedAt?: string;
   messageCount: number;
