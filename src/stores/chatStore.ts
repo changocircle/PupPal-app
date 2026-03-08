@@ -423,6 +423,24 @@ export const useChatStore = create<ChatState>()(
         dailyCount: state.dailyCount,
         // _syncMeta is NOT persisted (resets to defaults on restart)
       }),
+      // Correct any stale messagesLimit persisted from a previous dev build
+      // (e.g. 50 from when FREE_MESSAGE_LIMIT was __DEV__ ? 50 : 3)
+      onRehydrateStorage: () => (state) => {
+        if (
+          state?.dailyCount &&
+          state.dailyCount.messagesLimit !== FREE_MESSAGE_LIMIT
+        ) {
+          const corrected = Math.min(
+            state.dailyCount.messagesSent,
+            FREE_MESSAGE_LIMIT,
+          );
+          state.dailyCount = {
+            ...state.dailyCount,
+            messagesLimit: FREE_MESSAGE_LIMIT,
+            messagesSent: corrected,
+          };
+        }
+      },
     }
   )
 );
