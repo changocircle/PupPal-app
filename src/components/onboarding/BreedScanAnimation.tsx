@@ -57,7 +57,7 @@ export function BuddyExpression({ mode, size = 48 }: BuddyExpressionProps) {
         : "#EBF3FA";
 
   const emoji =
-    mode === "excited" ? "🎉" : mode === "thinking" ? "🔍" : "📖";
+    mode === "excited" ? "🐶" : mode === "thinking" ? "🐕" : "🐾";
 
   const scale = useSharedValue(1);
 
