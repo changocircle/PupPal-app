@@ -11,12 +11,15 @@
  */
 
 import Constants from 'expo-constants';
+import * as Sentry from '@sentry/react-native';
 
 // PostHog config (add keys when ready)
 const POSTHOG_API_KEY = Constants.expoConfig?.extra?.EXPO_PUBLIC_POSTHOG_KEY ?? '';
 const POSTHOG_HOST = Constants.expoConfig?.extra?.EXPO_PUBLIC_POSTHOG_HOST ?? 'https://us.i.posthog.com';
 
-// Sentry config
+// Sentry config — DSN is injected via app.config.js from EXPO_PUBLIC_SENTRY_DSN env var.
+// Set the secret in EAS: eas secret:create --name EXPO_PUBLIC_SENTRY_DSN --value <dsn>
+// Set locally: add EXPO_PUBLIC_SENTRY_DSN=<dsn> to your .env file (see .env.example).
 const SENTRY_DSN = Constants.expoConfig?.extra?.EXPO_PUBLIC_SENTRY_DSN ?? '';
 
 const IS_DEV = __DEV__;
@@ -54,8 +57,14 @@ class AnalyticsService {
 
       // Sentry initialization
       if (SENTRY_DSN) {
-        // In production:
-        // Sentry.init({ dsn: SENTRY_DSN, environment: IS_DEV ? 'development' : 'production' });
+        Sentry.init({
+          dsn: SENTRY_DSN,
+          environment: IS_DEV ? 'development' : 'production',
+          // Capture 100% of transactions in dev, 20% in production to manage quota
+          tracesSampleRate: IS_DEV ? 1.0 : 0.2,
+          // Do not send PII automatically
+          sendDefaultPii: false,
+        });
         if (IS_DEV) console.log('[Analytics] Sentry ready');
       }
 
@@ -78,7 +87,7 @@ class AnalyticsService {
 
     // In production:
     // posthog.identify(userId, properties);
-    // Sentry.setUser({ id: userId });
+    if (SENTRY_DSN) Sentry.setUser({ id: userId });
   }
 
   /**
@@ -118,7 +127,7 @@ class AnalyticsService {
 
     // In production:
     // posthog.reset();
-    // Sentry.setUser(null);
+    if (SENTRY_DSN) Sentry.setUser(null);
   }
 
   /**
@@ -129,8 +138,7 @@ class AnalyticsService {
       console.error('[Analytics] Error:', error.message, context);
     }
 
-    // In production:
-    // Sentry.captureException(error, { extra: context });
+    if (SENTRY_DSN) Sentry.captureException(error, { extra: context });
   }
 
   /**
