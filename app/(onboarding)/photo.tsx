@@ -64,12 +64,12 @@ type DetectionState =
 
 function getConfidenceBadge(confidence: number): { label: string; bg: string; text: string } {
   if (confidence > 70) {
-    return { label: "High match", bg: "#E8F5EE", text: "#2D7A4F" };
+    return { label: "High match", bg: "#5CB882", text: "#FFFFFF" };
   }
   if (confidence >= 40) {
-    return { label: "Best guess", bg: "#FFF6E5", text: "#B07A00" };
+    return { label: "Best guess", bg: "#FFB547", text: "#1B2333" };
   }
-  return { label: "Possible match", bg: "#EBF3FA", text: "#3A6EA8" };
+  return { label: "Possible match", bg: "#F0EBE6", text: "#6B7280" };
 }
 
 // --- Searchable Breed Dropdown ---
