@@ -16,7 +16,7 @@
 -- ============================================================
 CREATE TABLE public.xp_events (
   id TEXT PRIMARY KEY,
-  user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES public.user_profiles(id) ON DELETE CASCADE,
   dog_id TEXT NOT NULL,
 
   amount INTEGER NOT NULL,
@@ -39,7 +39,7 @@ CREATE INDEX idx_xp_events_earned_at ON public.xp_events(earned_at);
 -- ============================================================
 CREATE TABLE public.gamification_summaries (
   id TEXT PRIMARY KEY,
-  user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES public.user_profiles(id) ON DELETE CASCADE,
   dog_id TEXT NOT NULL,
 
   -- XP totals
@@ -83,7 +83,7 @@ CREATE INDEX idx_gamification_summaries_dog_id ON public.gamification_summaries(
 -- ============================================================
 CREATE TABLE public.unlocked_achievements (
   id TEXT PRIMARY KEY,
-  user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES public.user_profiles(id) ON DELETE CASCADE,
   dog_id TEXT NOT NULL,
 
   slug TEXT NOT NULL,
@@ -107,7 +107,7 @@ CREATE INDEX idx_unlocked_achievements_slug ON public.unlocked_achievements(slug
 -- ============================================================
 CREATE TABLE public.achievement_progress (
   id TEXT PRIMARY KEY,
-  user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES public.user_profiles(id) ON DELETE CASCADE,
   dog_id TEXT NOT NULL,
 
   slug TEXT NOT NULL,
