@@ -60,16 +60,36 @@ type DetectionState =
   | { status: "different_dogs"; message: string }
   | { status: "manual" };
 
-// --- Confidence badge helper ---
+// --- Confidence badge ---
 
-function getConfidenceBadge(confidence: number): { label: string; bg: string; text: string } {
-  if (confidence > 70) {
-    return { label: "High match", bg: "#5CB882", text: "#FFFFFF" };
-  }
-  if (confidence >= 40) {
-    return { label: "Best guess", bg: "#FFB547", text: "#1B2333" };
-  }
-  return { label: "Possible match", bg: "#F0EBE6", text: "#6B7280" };
+function ConfidenceBadge({ confidence, photoCount }: { confidence: number; photoCount: number }) {
+  // Per spec: only multi-photo (2-3) can show "High match"
+  // Single photo is capped at 65 by the edge function, so >70 only happens with multiple photos
+  const isHigh = confidence > 70;
+  const isMedium = confidence >= 40 && confidence <= 70;
+
+  const label = isHigh ? "High match" : isMedium ? "Best guess" : "Possible match";
+  const bg = isHigh ? "#5CB882" : isMedium ? "#FFB547" : "#F0EBE6";
+  const textColor = isHigh ? "#FFFFFF" : isMedium ? "#1B2333" : "#6B7280";
+
+  return (
+    <View
+      style={{
+        marginTop: 12,
+        paddingHorizontal: 16,
+        paddingVertical: 6,
+        borderRadius: 9999,
+        backgroundColor: bg,
+      }}
+    >
+      <Typography
+        variant="body-sm-medium"
+        style={{ color: textColor }}
+      >
+        {label}
+      </Typography>
+    </View>
+  );
 }
 
 // --- Searchable Breed Dropdown ---
@@ -438,8 +458,16 @@ export default function PhotoScreen() {
         >
           <View className="pt-3xl items-center">
             {/* Buddy avatar + speech bubble -- context setter at top */}
-            <View className="w-[80px] h-[80px] rounded-full bg-primary-light items-center justify-center mb-base">
-              <Typography className="text-[40px]">🐕</Typography>
+            <View className="mb-base">
+              {detection.status === "detecting" ? (
+                <BuddyExpression mode="thinking" size={80} />
+              ) : detection.status === "high" || detection.status === "medium" ? (
+                <BuddyExpression mode="excited" size={80} />
+              ) : detection.status === "low" || detection.status === "manual" || detection.status === "different_dogs" ? (
+                <BuddyExpression mode="teaching" size={80} />
+              ) : (
+                <BuddyExpression mode="thinking" size={80} />
+              )}
             </View>
 
             <View className="bg-surface rounded-lg p-lg shadow-card mb-2xl w-full">
@@ -596,7 +624,7 @@ export default function PhotoScreen() {
 
             {/* SCANNING state */}
             {detection.status === "detecting" && (
-              <View className="mt-lg w-full">
+              <View className="mt-2xl w-full">
                 <BreedScanAnimation dogName={puppyName} photoSize={100} />
               </View>
             )}
@@ -605,7 +633,7 @@ export default function PhotoScreen() {
             {detection.status === "different_dogs" && (
               <Animated.View
                 entering={FadeInDown.duration(200)}
-                className="mt-lg items-center w-full px-lg"
+                className="mt-2xl items-center w-full px-lg"
               >
                 <View className="rounded-md px-lg py-md mb-sm w-full" style={{ backgroundColor: "#FDEDED" }}>
                   <Typography variant="body-sm-medium" className="text-center" style={{ color: "#EF6461" }}>
@@ -618,53 +646,43 @@ export default function PhotoScreen() {
               </Animated.View>
             )}
 
-            {/* HIGH confidence result -- celebratory layout */}
+            {/* HIGH confidence result -- reveal moment */}
             {detection.status === "high" && !isMixedBreed && !showManualSelector && (
               <Animated.View
                 entering={FadeInDown.duration(200)}
-                className="mt-lg items-center w-full"
+                style={{ marginTop: 32, alignItems: "center", width: "100%" }}
               >
-                {/* Buddy excited expression */}
-                <BuddyExpression mode="excited" size={48} />
-
-                {/* Main result -- bold, no emoji, confident */}
-                <Typography
-                  variant="h2"
-                  className="text-center mt-base"
-                  style={{ fontWeight: "700" }}
+                {/* Result card -- the magic moment */}
+                <Animated.View
+                  entering={FadeInDown.duration(200).delay(100)}
+                  style={{
+                    width: "100%",
+                    backgroundColor: "#FFFAF7",
+                    borderRadius: 16,
+                    padding: 24,
+                    marginTop: 16,
+                    shadowColor: "#1B2333",
+                    shadowOffset: { width: 0, height: 4 },
+                    shadowOpacity: 0.08,
+                    shadowRadius: 12,
+                    elevation: 3,
+                    alignItems: "center",
+                    gap: 20,
+                  }}
                 >
-                  {puppyName !== "your pup"
-                    ? `${puppyName} looks like a ${detection.breed}!`
-                    : `Looks like a ${detection.breed}!`}
-                </Typography>
-
-                {/* Confidence badge */}
-                {(() => {
-                  const badge = getConfidenceBadge(detection.confidence);
-                  return (
-                    <View
-                      className="mt-xs px-base py-xs rounded-full"
-                      style={{ backgroundColor: badge.bg }}
-                    >
-                      <Typography
-                        variant="body-sm-medium"
-                        style={{ color: badge.text }}
-                      >
-                        {badge.label}
-                      </Typography>
-                    </View>
-                  );
-                })()}
-
-                {/* Change breed option */}
-                <Pressable
-                  onPress={showSelectorSection}
-                  className="mt-base bg-surface border border-border rounded-md px-xl py-md"
-                >
-                  <Typography variant="body-sm-medium" color="accent" className="text-center">
-                    Change breed
+                  <Typography
+                    variant="h2"
+                    className="text-center"
+                    style={{ fontWeight: "700", color: "#1B2333" }}
+                  >
+                    {puppyName !== "your pup"
+                      ? `${puppyName} looks like a ${detection.breed}!`
+                      : `Looks like a ${detection.breed}!`}
                   </Typography>
-                </Pressable>
+
+                  {/* Confidence badge */}
+                  <ConfidenceBadge confidence={detection.confidence} photoCount={photoUris.length} />
+                </Animated.View>
               </Animated.View>
             )}
 
@@ -672,10 +690,10 @@ export default function PhotoScreen() {
             {detection.status === "medium" && !showManualSelector && (
               <Animated.View
                 entering={FadeInDown.duration(200)}
-                className="mt-lg items-center gap-sm w-full"
+                style={{ marginTop: 32, alignItems: "center", gap: 8, width: "100%" }}
               >
                 {/* Buddy excited expression (slightly celebrating) */}
-                <BuddyExpression mode="excited" size={48} />
+                <BuddyExpression mode="excited" size={80} />
 
                 {/* Result with question mark in wording only */}
                 <Typography
@@ -689,22 +707,7 @@ export default function PhotoScreen() {
                 </Typography>
 
                 {/* Confidence badge */}
-                {(() => {
-                  const badge = getConfidenceBadge(detection.confidence);
-                  return (
-                    <View
-                      className="px-base py-xs rounded-full"
-                      style={{ backgroundColor: badge.bg }}
-                    >
-                      <Typography
-                        variant="body-sm-medium"
-                        style={{ color: badge.text }}
-                      >
-                        {badge.label}
-                      </Typography>
-                    </View>
-                  );
-                })()}
+                <ConfidenceBadge confidence={detection.confidence} photoCount={photoUris.length} />
 
                 {/* Also possible alternatives */}
                 {detection.suggestions.length > 1 && (
@@ -755,7 +758,7 @@ export default function PhotoScreen() {
             {detection.status === "low" && !showManualSelector && (
               <Animated.View
                 entering={FadeInDown.duration(200)}
-                className="mt-lg items-center w-full"
+                className="mt-2xl items-center w-full"
               >
                 <BuddyExpression mode="teaching" size={48} />
                 <Typography variant="body-medium" className="text-center mt-base" color="secondary">
@@ -764,12 +767,20 @@ export default function PhotoScreen() {
               </Animated.View>
             )}
 
-            {/* --- Mixed Breed + Free Text links (visible after any detection) --- */}
+            {/* Secondary actions -- grouped text links */}
             {photoUris.length > 0 && detection.status !== "idle" && detection.status !== "detecting" && !isMixedBreed && !notSure && !showFreeText && (
               <Animated.View
-                entering={FadeInDown.duration(200).delay(150)}
-                className="mt-base w-full items-center gap-xs"
+                entering={FadeInDown.duration(200).delay(200)}
+                style={{ marginTop: 24, width: "100%", alignItems: "center", gap: 4 }}
               >
+                <Pressable
+                  onPress={showSelectorSection}
+                  style={{ paddingVertical: 10, paddingHorizontal: 16 }}
+                >
+                  <Typography variant="body-sm-medium" color="accent" style={{ textAlign: "center" }}>
+                    That's not right, change breed
+                  </Typography>
+                </Pressable>
                 <Pressable
                   onPress={() => {
                     setIsMixedBreed(true);
@@ -777,19 +788,17 @@ export default function PhotoScreen() {
                     setShowFreeText(false);
                     updateData({ breed: "Mixed Breed", breedDetected: true, breedMix1: null, breedMix2: null });
                   }}
-                  className="bg-surface border border-border rounded-md px-xl py-sm"
+                  style={{ paddingVertical: 8, paddingHorizontal: 16 }}
                 >
-                  <Typography variant="body-sm-medium" color="accent" className="text-center">
+                  <Typography variant="body-sm" color="secondary" style={{ textAlign: "center" }}>
                     My dog is a mixed breed
                   </Typography>
                 </Pressable>
                 <Pressable
-                  onPress={() => {
-                    setShowFreeText(true);
-                    setShowManualSelector(false);
-                  }}
+                  onPress={() => { setShowFreeText(true); setShowManualSelector(false); }}
+                  style={{ paddingVertical: 8, paddingHorizontal: 16 }}
                 >
-                  <Typography variant="caption" color="secondary" className="text-center mt-xs">
+                  <Typography variant="caption" color="secondary" style={{ textAlign: "center" }}>
                     Type your own breed
                   </Typography>
                 </Pressable>
