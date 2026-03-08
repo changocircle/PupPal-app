@@ -9,7 +9,7 @@ import React from "react";
 import { View } from "react-native";
 import { useRouter } from "expo-router";
 import Animated, { FadeIn } from "react-native-reanimated";
-import { Typography, Button, Card } from "@/components/ui";
+import { Typography, Button, Card, BuddyImage } from "@/components/ui";
 
 interface ChatLimitBannerProps {
   remaining: number;
@@ -32,7 +32,7 @@ export function ChatLimitBanner({
         className="px-xl mb-base"
       >
         <Card className="bg-accent-light border border-accent/30 items-center py-lg">
-          <Typography className="text-[32px] mb-sm">🐕</Typography>
+          <BuddyImage expression="empathetic" size={64} containerStyle={{ marginBottom: 8 }} />
           <Typography
             variant="body-medium"
             className="text-center mb-xs"

@@ -1,8 +1,8 @@
 import React, { useRef, useCallback, useEffect, useMemo } from "react";
-import { View, Text, FlatList, KeyboardAvoidingView, Platform } from "react-native";
+import { View, FlatList, KeyboardAvoidingView, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
-import { Typography, ErrorBoundary, ChatSkeleton } from "@/components/ui";
+import { Typography, ErrorBoundary, ChatSkeleton, BuddyImage } from "@/components/ui";
 import {
   MessageBubble,
   TypingIndicator,
@@ -120,8 +120,8 @@ function ChatScreenContent() {
           entering={FadeIn.duration(300)}
           className="flex-row items-center px-xl py-sm border-b border-border bg-surface"
         >
-          <View className="w-[36px] h-[36px] rounded-full bg-primary-light items-center justify-center mr-sm">
-            <Text style={{ fontSize: 20, lineHeight: 28 }}>🐶</Text>
+          <View className="w-[36px] h-[36px] rounded-full overflow-hidden mr-sm">
+            <BuddyImage expression="happy" size={36} />
           </View>
           <View className="flex-1">
             <Typography variant="body-medium">Buddy</Typography>
@@ -239,9 +239,7 @@ function EmptyState({
         className="items-center"
       >
         {/* Buddy avatar */}
-        <View className="w-[100px] h-[100px] rounded-full bg-primary-light items-center justify-center mb-lg">
-          <Text style={{ fontSize: 52, lineHeight: 64 }}>🐶</Text>
-        </View>
+        <BuddyImage expression="waving" size={100} containerStyle={{ marginBottom: 24 }} />
 
         <Typography variant="h2" className="text-center mb-sm">
           Hey there! 👋

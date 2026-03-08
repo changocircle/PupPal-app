@@ -12,7 +12,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
 import { Image } from "expo-image";
 import * as ImagePicker from "expo-image-picker";
-import { Button, Typography } from "@/components/ui";
+import { Button, Typography, BuddyImage } from "@/components/ui";
 import { useOnboardingStore } from "@/stores/onboardingStore";
 import { detectBreed, type BreedPrediction } from "@/lib/breedDetect";
 import {
@@ -438,9 +438,7 @@ export default function PhotoScreen() {
         >
           <View className="pt-3xl items-center">
             {/* Buddy avatar + speech bubble -- context setter at top */}
-            <View className="w-[80px] h-[80px] rounded-full bg-primary-light items-center justify-center mb-base">
-              <Typography className="text-[40px]">🐕</Typography>
-            </View>
+            <BuddyImage expression="thinking" size={80} containerStyle={{ marginBottom: 16 }} />
 
             <View className="bg-surface rounded-lg p-lg shadow-card mb-2xl w-full">
               <Typography variant="body-lg" className="text-center">

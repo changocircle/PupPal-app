@@ -5,6 +5,8 @@
  * Import: import { Button, Card, Typography } from "@/components/ui";
  */
 
+export { BuddyImage } from "./BuddyImage";
+export type { BuddyExpression } from "./BuddyImage";
 export { Button } from "./Button";
 export { Card } from "./Card";
 export { Typography } from "./Typography";

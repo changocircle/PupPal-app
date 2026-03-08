@@ -8,7 +8,7 @@
 import React from "react";
 import { View, Text, Pressable } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
-import { Typography } from "@/components/ui";
+import { Typography, BuddyImage } from "@/components/ui";
 import { MarkdownText } from "./MarkdownText";
 import type { ChatMessage } from "@/types/chat";
 
@@ -33,8 +33,8 @@ export function MessageBubble({
     >
       {/* Buddy avatar */}
       {isAssistant && showAvatar && (
-        <View className="w-[32px] h-[32px] rounded-full bg-primary-light items-center justify-center mr-sm mt-[2px]">
-          <Text style={{ fontSize: 18, lineHeight: 24 }}>🐶</Text>
+        <View className="w-[32px] h-[32px] rounded-full overflow-hidden mr-sm mt-[2px]">
+          <BuddyImage expression="happy" size={32} />
         </View>
       )}
       {isAssistant && !showAvatar && <View className="w-[32px] mr-sm" />}

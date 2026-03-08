@@ -10,7 +10,7 @@ import React, { useMemo } from 'react';
 import { View, ScrollView, Pressable } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Typography, Badge } from '../../src/components/ui';
+import { Typography, Badge, BuddyImage } from '../../src/components/ui';
 import {
   RatingBar,
   ConditionCard,
@@ -44,9 +44,7 @@ export default function BreedDetailScreen() {
           alignItems: 'center',
         }}
       >
-        <Typography variant="body" style={{ fontSize: 48, marginBottom: 16 }}>
-          🐶
-        </Typography>
+        <BuddyImage expression="empathetic" size={80} containerStyle={{ marginBottom: 16 }} />
         <Typography variant="h3" style={{ marginBottom: 8 }}>
           Breed not found
         </Typography>
@@ -109,9 +107,7 @@ export default function BreedDetailScreen() {
             marginBottom: 16,
           }}
         >
-          <Typography variant="body" style={{ fontSize: 64, marginBottom: 12 }}>
-            🐶
-          </Typography>
+          <BuddyImage expression="happy" size={80} containerStyle={{ marginBottom: 12 }} />
           <Typography variant="h1" style={{ textAlign: 'center', marginBottom: 4 }}>
             {breed.name}
           </Typography>
