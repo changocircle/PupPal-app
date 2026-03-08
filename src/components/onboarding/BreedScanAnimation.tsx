@@ -55,40 +55,30 @@ interface BuddyExpressionProps {
 }
 
 export function BuddyExpression({ mode, size = 48 }: BuddyExpressionProps) {
-  const scale = useSharedValue(1);
+  // Gentle float — 4px bob at 1.8s period, no aggressive scale pulse.
+  const translateY = useSharedValue(0);
 
   useEffect(() => {
-    if (mode === "excited") {
-      scale.value = withRepeat(
-        withSequence(
-          withTiming(1.12, { duration: 300, easing: Easing.out(Easing.ease) }),
-          withTiming(1, { duration: 300, easing: Easing.in(Easing.ease) }),
-        ),
-        3,
-        false,
-      );
-    } else if (mode === "thinking") {
-      scale.value = withRepeat(
-        withSequence(
-          withTiming(1.05, { duration: 600, easing: Easing.inOut(Easing.ease) }),
-          withTiming(0.97, { duration: 600, easing: Easing.inOut(Easing.ease) }),
-        ),
-        -1,
-        false,
-      );
-    }
-  }, [mode]);
+    translateY.value = withRepeat(
+      withSequence(
+        withTiming(-4, { duration: 900, easing: Easing.inOut(Easing.ease) }),
+        withTiming(0,  { duration: 900, easing: Easing.inOut(Easing.ease) }),
+      ),
+      -1,
+      false,
+    );
+  }, []);
 
   const animStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
+    transform: [{ translateY: translateY.value }],
   }));
 
   return (
     <Animated.View style={animStyle}>
       <Image
         source={BUDDY_IMAGES[mode]}
-        style={{ width: size, height: size, borderRadius: size / 2 }}
-        resizeMode="cover"
+        style={{ width: size, height: size }}
+        resizeMode="contain"
       />
     </Animated.View>
   );
@@ -407,9 +397,6 @@ export function BreedScanAnimation({ dogName, photoSize }: BreedScanAnimationPro
       exiting={FadeOut.duration(200)}
       style={{ alignItems: "center", gap: 16 }}
     >
-      {/* Buddy thinking expression */}
-      <BuddyExpression mode="thinking" size={48} />
-
       {/* Cycling status text */}
       <CyclingText dogName={dogName} />
 

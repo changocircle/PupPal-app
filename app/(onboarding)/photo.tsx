@@ -692,9 +692,6 @@ export default function PhotoScreen() {
                 entering={FadeInDown.duration(200)}
                 style={{ marginTop: 32, alignItems: "center", gap: 8, width: "100%" }}
               >
-                {/* Buddy excited expression (slightly celebrating) */}
-                <BuddyExpression mode="excited" size={80} />
-
                 {/* Result with question mark in wording only */}
                 <Typography
                   variant="h2"
@@ -715,9 +712,9 @@ export default function PhotoScreen() {
                     <Typography variant="caption" color="secondary" className="mb-xs">
                       Also possible:
                     </Typography>
-                    {detection.suggestions.slice(1, 3).map((s) => (
+                    {detection.suggestions.slice(1, 3).map((s, si) => (
                       <Pressable
-                        key={s.name}
+                        key={`${s.name}-${si}`}
                         onPress={() => confirmBreed(s.name)}
                       >
                         <Typography
@@ -760,7 +757,6 @@ export default function PhotoScreen() {
                 entering={FadeInDown.duration(200)}
                 className="mt-2xl items-center w-full"
               >
-                <BuddyExpression mode="teaching" size={48} />
                 <Typography variant="body-medium" className="text-center mt-base" color="secondary">
                   I couldn't get a clear read. Here are my best guesses for {puppyName}:
                 </Typography>
@@ -864,13 +860,6 @@ export default function PhotoScreen() {
                 entering={FadeInDown.duration(200)}
                 className="mt-lg w-full gap-sm"
               >
-                {/* Buddy teaching expression when showing alternatives */}
-                {detection.status === "low" && (
-                  <View className="items-center mb-sm">
-                    <BuddyExpression mode="teaching" size={48} />
-                  </View>
-                )}
-
                 {/* Low-confidence suggestions as quick-pick buttons */}
                 {detection.status === "low" &&
                   detection.suggestions.length > 0 && (
@@ -883,9 +872,9 @@ export default function PhotoScreen() {
                         Best guesses:
                       </Typography>
                       <View className="flex-row flex-wrap justify-center gap-xs">
-                        {detection.suggestions.map((s) => (
+                        {detection.suggestions.map((s, si) => (
                           <Pressable
-                            key={s.name}
+                            key={`${s.name}-${si}`}
                             onPress={() => confirmBreed(s.name)}
                           >
                             <View className="bg-surface rounded-md px-base py-xs border border-border">
