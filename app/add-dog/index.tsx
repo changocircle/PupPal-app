@@ -218,6 +218,7 @@ export default function AddDogScreen() {
     // Generate training plan for new dog
     const ageWeeks = ageMonths ? ageMonths * 4.3 : 12;
     generatePlan({
+      dogId: newDogId,
       dogName: name.trim(),
       breed: breed.trim() || null,
       ageWeeks: Math.round(ageWeeks),

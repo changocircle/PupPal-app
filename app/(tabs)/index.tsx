@@ -136,6 +136,7 @@ function HomeScreenContent() {
     const ageWeeks = Math.round(ageMonths * 4.3);
 
     generatePlan({
+      dogId: dog?.id ?? activeDogId ?? "local",
       dogName: name,
       breed: dog?.breed ?? onboardingData.breed,
       ageWeeks,

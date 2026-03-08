@@ -205,6 +205,7 @@ function getXpForExercise(difficulty: number, isTrick: boolean): number {
 // ──────────────────────────────────────────────
 
 interface GeneratorInput {
+  dogId: string;
   dogName: string;
   breed: string | null;
   ageWeeks: number;
@@ -336,6 +337,7 @@ export function generateTrainingPlan(input: GeneratorInput): TrainingPlan {
 
   return {
     id: nanoid(12),
+    dogId: input.dogId,
     dogName: input.dogName,
     breed: input.breed,
     generatedAt: new Date().toISOString(),
