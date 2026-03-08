@@ -104,6 +104,8 @@ export interface TrainingPlan {
   totalWeeks: number;
   weeks: PlanWeek[];
   status: "active" | "completed" | "paused";
+  /** ISO date (YYYY-MM-DD) of the last plan adaptation, null if never adapted */
+  lastAdaptedAt?: string | null;
 }
 
 // ──────────────────────────────────────────────
