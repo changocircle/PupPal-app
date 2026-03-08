@@ -9,7 +9,7 @@
  * PRD-01 Screen 3: Photo Upload + Breed Detection
  */
 
-import { File as ExpoFile } from "expo-file-system";
+import * as ImageManipulator from "expo-image-manipulator";
 
 const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL ?? "";
 const SUPABASE_ANON_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? "";
@@ -40,17 +40,35 @@ export interface BreedDetectResult {
 }
 
 /**
- * Read a local image URI to base64.
+ * Read a local image URI to base64, compressing first to reduce payload size.
+ * Target: < 200KB base64 output (~150KB compressed image).
  */
 async function readImageBase64(uri: string): Promise<string | null> {
   try {
-    const file = new ExpoFile(uri);
-    const base64 = await file.base64();
+    // Compress image to reduce base64 payload size (target < 200KB encoded)
+    const compressed = await ImageManipulator.manipulateAsync(
+      uri,
+      [{ resize: { width: 800 } }], // resize to max 800px wide, preserve aspect ratio
+      { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG, base64: true },
+    );
+
+    const base64 = compressed.base64;
     if (!base64 || base64.length < 100) return null;
+
+    console.log(`[BreedDetect] Compressed image: ${Math.round(base64.length / 1024)}KB base64`);
     return base64;
   } catch (err: any) {
-    console.error("[BreedDetect] Failed to read image:", uri.substring(0, 40), err?.message);
-    return null;
+    console.error("[BreedDetect] Compression failed, falling back to raw:", err?.message);
+    // Fallback: try reading raw file
+    try {
+      const { File: ExpoFile } = await import("expo-file-system");
+      const file = new ExpoFile(uri);
+      const base64 = await file.base64();
+      if (!base64 || base64.length < 100) return null;
+      return base64;
+    } catch {
+      return null;
+    }
   }
 }
 
