@@ -278,10 +278,19 @@ export function useChat(): UseChatReturn {
       const plainSummaries = currentRichSummaries.length === 0
         ? getRecentSummaries(3)
         : [];
+      // A user is "returning" if they have at least one completed prior session
+      // (sessions persists across app restarts). This prevents Buddy from saying
+      // "Hey, welcome to PupPal!" on every session when summaries haven't fired yet
+      // (summaries only generate after 10 messages or on session end).
+      const completedSessions = useChatStore.getState().sessions.filter(
+        (s) => s.endedAt !== undefined,
+      );
+      const isReturningUser = completedSessions.length > 0;
       const systemPrompt = buildSystemPrompt(
         dogContext,
         plainSummaries,
         currentRichSummaries.length > 0 ? currentRichSummaries : undefined,
+        isReturningUser,
       );
 
       // Get recent messages for context window (last 20)
