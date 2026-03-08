@@ -5,6 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { Button, Typography, Input } from "@/components/ui";
 import { useOnboardingStore } from "@/stores/onboardingStore";
+import { BuddyAvatar } from "@/components/chat/BuddyAvatar";
 
 /**
  * Screen 2: Puppy's Name
@@ -43,7 +44,7 @@ export default function NameScreen() {
             className="items-center mb-2xl"
           >
             <View className="w-[80px] h-[80px] rounded-full bg-primary-light items-center justify-center mb-base">
-              <Typography className="text-[40px]">🐕</Typography>
+              <BuddyAvatar mood="waving" size={80} />
             </View>
             <View className="bg-surface rounded-lg p-lg shadow-card">
               <Typography variant="body-lg" className="text-center">

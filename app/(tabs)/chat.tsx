@@ -11,12 +11,15 @@ import {
   ChatLimitBanner,
   ChatOverflowMenu,
 } from "@/components/chat";
+import { BuddyAvatar } from "@/components/chat/BuddyAvatar";
 import { useChat } from "@/hooks/useChat";
 import { useDogStore } from "@/stores/dogStore";
 import { DogSwitcherButton } from "@/components/dog/DogSwitcherButton";
 import { useOnboardingStore } from "@/stores/onboardingStore";
 import { useSubscription } from "@/hooks/useSubscription";
 import { useHydration } from "@/hooks/useHydration";
+import { useChatStore } from "@/stores/chatStore";
+import { FREE_MESSAGE_LIMIT } from "@/types/chat";
 import type { ChatMessage } from "@/types/chat";
 
 /**
@@ -74,6 +77,17 @@ function ChatScreenContent() {
   const isLimitHit = !isPremium && remainingMessages <= 0;
   const hasMessages = messages.length > 0;
 
+  // Debug logging on first render to diagnose counter issues
+  const dailyCount = useChatStore((s) => s.dailyCount);
+  useEffect(() => {
+    if (__DEV__) {
+      console.log(
+        `[ChatDebug] messagesSent: ${dailyCount?.messagesSent ?? 0}, FREE_MESSAGE_LIMIT: ${FREE_MESSAGE_LIMIT}, remaining: ${remainingMessages}, dailyCount: ${JSON.stringify(dailyCount)}`
+      );
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     if (messages.length > 0) {
@@ -121,7 +135,7 @@ function ChatScreenContent() {
           className="flex-row items-center px-xl py-sm border-b border-border bg-surface"
         >
           <View className="w-[36px] h-[36px] rounded-full bg-primary-light items-center justify-center mr-sm">
-            <Text style={{ fontSize: 20, lineHeight: 28 }}>🐶</Text>
+            <BuddyAvatar mood="happy" size={36} />
           </View>
           <View className="flex-1">
             <Typography variant="body-medium">Buddy</Typography>
@@ -240,7 +254,7 @@ function EmptyState({
       >
         {/* Buddy avatar */}
         <View className="w-[100px] h-[100px] rounded-full bg-primary-light items-center justify-center mb-lg">
-          <Text style={{ fontSize: 52, lineHeight: 64 }}>🐶</Text>
+          <BuddyAvatar mood="waving" size={100} />
         </View>
 
         <Typography variant="h2" className="text-center mb-sm">
