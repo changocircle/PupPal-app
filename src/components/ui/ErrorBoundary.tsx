@@ -1,5 +1,6 @@
 import React, { Component, type ErrorInfo, type ReactNode } from "react";
 import { View, Pressable } from "react-native";
+import * as Sentry from "@sentry/react-native";
 import { Typography } from "./Typography";
 
 interface Props {
@@ -26,7 +27,12 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
-    // TODO: Wire to Sentry when SDK is installed
+    Sentry.captureException(error, {
+      extra: {
+        componentStack: info.componentStack,
+        screen: this.props.screen,
+      },
+    });
     if (__DEV__) {
       console.error(
         `[ErrorBoundary${this.props.screen ? ` @ ${this.props.screen}` : ""}]`,
