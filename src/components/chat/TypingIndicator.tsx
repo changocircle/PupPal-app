@@ -7,6 +7,7 @@
 
 import React, { useEffect, useState } from "react";
 import { View } from "react-native";
+import { BuddyAvatar } from "./BuddyAvatar";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -100,7 +101,7 @@ export function TypingIndicator() {
     >
       {/* Avatar */}
       <View className="w-[32px] h-[32px] rounded-full bg-primary-light items-center justify-center mr-sm mt-[2px]">
-        <Animated.Text style={{ fontSize: 18 }}>🐕</Animated.Text>
+        <BuddyAvatar mood="thinking" size={32} />
       </View>
 
       {/* Dots bubble + thinking text */}

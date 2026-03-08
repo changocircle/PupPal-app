@@ -12,7 +12,7 @@
  */
 
 import React, { useEffect, useState } from "react";
-import { View, Dimensions } from "react-native";
+import { View, Dimensions, Image } from "react-native";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -38,10 +38,16 @@ const TEXT_CYCLE_MS = 2200;
 // --- Buddy Expression Component ---
 
 /**
- * Buddy character display using styled emoji.
+ * Buddy character display using Image assets.
  * Three modes: thinking (scan), excited (high confidence result), teaching (alternatives).
  */
 export type BuddyMode = "thinking" | "excited" | "teaching";
+
+const BUDDY_IMAGES: Record<BuddyMode, any> = {
+  thinking: require('../../../assets/buddy/buddy-thinking.png'),
+  excited: require('../../../assets/buddy/buddy-excited.png'),
+  teaching: require('../../../assets/buddy/buddy-teaching.png'),
+};
 
 interface BuddyExpressionProps {
   mode: BuddyMode;
@@ -49,16 +55,6 @@ interface BuddyExpressionProps {
 }
 
 export function BuddyExpression({ mode, size = 48 }: BuddyExpressionProps) {
-  const bgColor =
-    mode === "excited"
-      ? "#FFF6E5"
-      : mode === "thinking"
-        ? "#FFF0EE"
-        : "#EBF3FA";
-
-  const emoji =
-    mode === "excited" ? "🐶" : mode === "thinking" ? "🐕" : "🐾";
-
   const scale = useSharedValue(1);
 
   useEffect(() => {
@@ -88,22 +84,12 @@ export function BuddyExpression({ mode, size = 48 }: BuddyExpressionProps) {
   }));
 
   return (
-    <Animated.View
-      style={[
-        animStyle,
-        {
-          width: size,
-          height: size,
-          borderRadius: size / 2,
-          backgroundColor: bgColor,
-          alignItems: "center",
-          justifyContent: "center",
-        },
-      ]}
-    >
-      <Typography style={{ fontSize: size * 0.5, lineHeight: size * 0.6 }}>
-        {emoji}
-      </Typography>
+    <Animated.View style={animStyle}>
+      <Image
+        source={BUDDY_IMAGES[mode]}
+        style={{ width: size, height: size, borderRadius: size / 2 }}
+        resizeMode="cover"
+      />
     </Animated.View>
   );
 }

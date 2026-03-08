@@ -11,6 +11,7 @@ import {
   ChatLimitBanner,
   ChatOverflowMenu,
 } from "@/components/chat";
+import { BuddyAvatar } from "@/components/chat/BuddyAvatar";
 import { useChat } from "@/hooks/useChat";
 import { useDogStore } from "@/stores/dogStore";
 import { DogSwitcherButton } from "@/components/dog/DogSwitcherButton";
@@ -134,7 +135,7 @@ function ChatScreenContent() {
           className="flex-row items-center px-xl py-sm border-b border-border bg-surface"
         >
           <View className="w-[36px] h-[36px] rounded-full bg-primary-light items-center justify-center mr-sm">
-            <Text style={{ fontSize: 20, lineHeight: 28 }}>🐶</Text>
+            <BuddyAvatar mood="happy" size={36} />
           </View>
           <View className="flex-1">
             <Typography variant="body-medium">Buddy</Typography>
@@ -253,7 +254,7 @@ function EmptyState({
       >
         {/* Buddy avatar */}
         <View className="w-[100px] h-[100px] rounded-full bg-primary-light items-center justify-center mb-lg">
-          <Text style={{ fontSize: 52, lineHeight: 64 }}>🐶</Text>
+          <BuddyAvatar mood="greeting" size={100} />
         </View>
 
         <Typography variant="h2" className="text-center mb-sm">
