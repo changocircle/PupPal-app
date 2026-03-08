@@ -25,6 +25,30 @@ export interface AIStreamCallbacks {
   onError: (error: Error) => void;
 }
 
+// ── Markdown stripper ──
+// Removes markdown formatting from AI responses so they display as plain text
+// in chat bubbles. The model is instructed not to use markdown, but this is a
+// safety net for any that slips through.
+function stripMarkdown(text: string): string {
+  return text
+    // Remove bold: **text** or __text__
+    .replace(/\*\*(.+?)\*\*/gs, "$1")
+    .replace(/__(.+?)__/gs, "$1")
+    // Remove italic: *text* or _text_ (single, not double)
+    .replace(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/gs, "$1")
+    .replace(/(?<!_)_(?!_)(.+?)(?<!_)_(?!_)/gs, "$1")
+    // Remove headers: # ## ###
+    .replace(/^#{1,6}\s+/gm, "")
+    // Remove bullet points: - item or * item (at line start)
+    .replace(/^[\-\*]\s+/gm, "")
+    // Remove numbered lists: 1. item
+    .replace(/^\d+\.\s+/gm, "")
+    // Collapse multiple newlines to a single space (chat is one flow)
+    .replace(/\n{2,}/g, " ")
+    .replace(/\n/g, " ")
+    .trim();
+}
+
 // ── Provider config ──
 
 interface ProviderConfig {
@@ -149,7 +173,7 @@ export async function streamChatCompletion(
     );
     console.log("[AI] Stop reason:", data.stop_reason);
 
-    const content: string = data.content ?? "";
+    const content: string = stripMarkdown(data.content ?? "");
 
     if (!content) {
       console.error("[AI] Empty response from Edge Function:", JSON.stringify(data).slice(0, 300));
