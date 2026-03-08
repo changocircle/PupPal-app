@@ -14,6 +14,7 @@ import {
   Alert,
 } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Typography } from "@/components/ui";
 import { ChatHistoryModal } from "./ChatHistoryModal";
 
@@ -24,6 +25,9 @@ interface ChatOverflowMenuProps {
 export function ChatOverflowMenu({ onNewConversation }: ChatOverflowMenuProps) {
   const [menuVisible, setMenuVisible] = useState(false);
   const [historyVisible, setHistoryVisible] = useState(false);
+  const insets = useSafeAreaInsets();
+  // Header height = safe area top + header padding (~44px for py-sm + icon)
+  const menuTopOffset = insets.top + 52;
 
   function handleNewConversation() {
     setMenuVisible(false);
@@ -74,8 +78,9 @@ export function ChatOverflowMenu({ onNewConversation }: ChatOverflowMenuProps) {
           <View className="flex-1">
             <Animated.View
               entering={FadeIn.duration(150)}
-              className="absolute top-[52px] right-[16px] bg-surface rounded-lg border border-border overflow-hidden"
+              className="absolute right-[16px] bg-surface rounded-lg border border-border overflow-hidden"
               style={{
+                top: menuTopOffset,
                 minWidth: 200,
                 shadowColor: "#1B2333",
                 shadowOffset: { width: 0, height: 4 },

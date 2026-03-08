@@ -70,7 +70,7 @@ export function JournalPreview() {
           <View className="flex-row items-center justify-between mb-sm">
             <View className="flex-row items-center gap-sm">
               <Typography className="text-[22px]">📖</Typography>
-              <Typography variant="h3">Growth Journal</Typography>
+              <Typography variant="h3">Puppy Time Hop</Typography>
             </View>
             <Typography variant="body-sm" style={{ color: "#FF6B5C" }}>
               View All →

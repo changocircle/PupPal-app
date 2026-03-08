@@ -346,6 +346,8 @@ function FullPlanView({
   getWeekProgress: (w: number) => number;
   dogName: string;
 }) {
+  const router = useRouter();
+
   return (
     <View className="gap-md">
       {plan.weeks.map((week, idx) => {
@@ -364,9 +366,8 @@ function FullPlanView({
           locked = week.weekNumber > 1;
           lockLabel = "Upgrade to Annual for full access";
         } else {
-          // Monthly (default premium): sequential unlock
-          // A week is unlocked if it's the current week, completed, or
-          // the previous week is completed
+          // Monthly premium: sequential unlock
+          // A week is locked if it's beyond current week and not yet completed
           const prevWeek = plan.weeks.find(
             (w) => w.weekNumber === week.weekNumber - 1
           );
@@ -379,6 +380,21 @@ function FullPlanView({
           lockLabel = `Complete Week ${prevWeekNum} to unlock`;
         }
 
+        // Navigate to the first exercise of the week, or paywall for free users
+        function handleWeekPress() {
+          if (!isPremium && locked) {
+            router.push("/paywall");
+            return;
+          }
+          // For premium/unlocked weeks: open the first exercise of the week
+          const firstExercise = week.days
+            .flatMap((d) => d.exercises)
+            .find((e) => e.exerciseId);
+          if (firstExercise) {
+            router.push(`/exercise/${firstExercise.exerciseId}`);
+          }
+        }
+
         if (!isPremium && locked && week.weekNumber === 2) {
           // Show premium gate after Week 1 for free users
           return (
@@ -389,7 +405,7 @@ function FullPlanView({
                 index={idx}
                 isCurrentWeek={isCurrentWeek}
                 locked={locked}
-                onPress={() => {}}
+                onPress={handleWeekPress}
               />
               <PremiumGate
                 feature="feature_gate_week2"
@@ -410,7 +426,7 @@ function FullPlanView({
             index={idx}
             isCurrentWeek={isCurrentWeek}
             locked={locked}
-            onPress={() => {}}
+            onPress={handleWeekPress}
           />
         );
       })}

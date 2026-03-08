@@ -297,7 +297,7 @@ function ProfileScreenContent() {
           </Pressable>
         </Animated.View>
 
-        {/* ── Growth Journal ── */}
+        {/* ── Puppy Time Hop ── */}
         <Animated.View
           entering={FadeInDown.duration(400).delay(255)}
           className="px-xl mb-lg"
@@ -307,7 +307,7 @@ function ProfileScreenContent() {
               <Typography className="text-[32px]">📓</Typography>
               <View className="flex-1">
                 <Typography variant="body-medium">
-                  Growth Journal
+                  Puppy Time Hop
                 </Typography>
                 <Typography variant="caption" color="secondary">
                   {dogName}'s timeline, milestones & photos

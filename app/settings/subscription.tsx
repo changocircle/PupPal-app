@@ -21,7 +21,7 @@ const FREE_LIMITS = [
   { feature: 'Buddy Chat', limit: '3 messages/day', emoji: '🤖' },
   { feature: 'Trick Library', limit: '1 free trick (Shake)', emoji: '🎯' },
   { feature: 'Health Tracker', limit: '2 upcoming events', emoji: '🏥' },
-  { feature: 'Growth Journal', limit: 'View-only timeline', emoji: '📓' },
+  { feature: 'Puppy Time Hop', limit: 'View-only timeline', emoji: '📓' },
   { feature: 'Dogs', limit: '1 dog profile', emoji: '🐾' },
 ];
 

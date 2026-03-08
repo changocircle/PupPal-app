@@ -265,7 +265,9 @@ export const useChatStore = create<ChatState>()(
           return true; // New day, reset
         }
 
-        return dailyCount.messagesSent < dailyCount.messagesLimit;
+        // Always use FREE_MESSAGE_LIMIT as the authoritative cap, guarding
+        // against stale persisted messagesLimit values (e.g. 0 from old builds)
+        return dailyCount.messagesSent < FREE_MESSAGE_LIMIT;
       },
 
       getRemainingMessages: (isPremium: boolean) => {
@@ -278,7 +280,9 @@ export const useChatStore = create<ChatState>()(
           return FREE_MESSAGE_LIMIT;
         }
 
-        return Math.max(0, dailyCount.messagesLimit - dailyCount.messagesSent);
+        // Always use FREE_MESSAGE_LIMIT as the authoritative cap, guarding
+        // against stale persisted messagesLimit values (e.g. 0 from old builds)
+        return Math.max(0, FREE_MESSAGE_LIMIT - dailyCount.messagesSent);
       },
 
       incrementDailyCount: () => {
