@@ -9,6 +9,7 @@ import {
   SuggestedPrompts,
   ChatInput,
   ChatLimitBanner,
+  ChatOverflowMenu,
 } from "@/components/chat";
 import { useChat } from "@/hooks/useChat";
 import { useDogStore } from "@/stores/dogStore";
@@ -68,6 +69,7 @@ function ChatScreenContent() {
     sendMessage,
     sendSuggestedPrompt,
     setFeedback,
+    clearChat,
   } = useChat();
 
   const isLimitHit = !isPremium && remainingMessages <= 0;
@@ -133,15 +135,17 @@ function ChatScreenContent() {
           </View>
           {/* Free tier counter — hidden for premium users */}
           {!isPremium && remainingMessages < Infinity && (
-            <View className="bg-primary-light px-sm py-xs rounded-full">
+            <View className="bg-primary-light px-sm py-xs rounded-full mr-sm">
               <Typography variant="caption" style={{ color: "#FF6B5C" }}>
                 {remainingMessages}/{FREE_MESSAGE_LIMIT} today
               </Typography>
             </View>
           )}
-          <View className="ml-sm">
+          <View className="mr-xs">
             <DogSwitcherButton />
           </View>
+          {/* Overflow menu: New conversation + Chat history */}
+          <ChatOverflowMenu onNewConversation={clearChat} />
         </Animated.View>
 
         {/* ── Messages ── */}
