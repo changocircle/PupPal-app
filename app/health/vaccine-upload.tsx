@@ -109,10 +109,17 @@ export default function VaccineUploadScreen() {
     try {
       const result = await extractVaccinesFromPhotos(photos);
 
-      if (!result || result.vaccines.length === 0) {
+      // HEALTH-02: handle empty or unreadable results with a friendly message
+      // HEALTH-02: treat result as unreadable if no vaccines or all have empty name+date
+      const hasNoMeaningfulData =
+        !result ||
+        result.vaccines.length === 0 ||
+        result.vaccines.every((v) => !v.name && !v.date);
+
+      if (hasNoMeaningfulData) {
         Alert.alert(
-          "No vaccines found",
-          result?.notes || "Couldn't read any vaccination data from the photos. Try a clearer photo, or enter vaccines manually.",
+          "Couldn't read this record",
+          "We couldn't read this record automatically. Please enter the details manually.",
           [
             { text: "Try Again", style: "cancel" },
             {

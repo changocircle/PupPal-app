@@ -12,6 +12,7 @@ import { useRouter } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Typography, Button, Card, Badge } from '@/components/ui';
 import { useSubscription } from '@/hooks/useSubscription';
+import { useAuthStore } from '@/stores/authStore';
 import { useDogStore } from '@/stores/dogStore';
 import { useOnboardingStore } from '@/stores/onboardingStore';
 import { COLORS, RADIUS } from '@/constants/theme';
@@ -38,6 +39,8 @@ const PREMIUM_FEATURES = [
 export default function SubscriptionScreen() {
   const router = useRouter();
   const { isPremium, isTrial, status, trialEndDate } = useSubscription();
+  // PROFILE-02: guard against null crash while auth is loading
+  const isAuthLoading = useAuthStore((s) => s.isLoading);
   // Individual selectors → stable refs, prevents render loops
   const activeDogId = useDogStore((s) => s.activeDogId);
   const dogs = useDogStore((s) => s.dogs);
@@ -71,6 +74,22 @@ export default function SubscriptionScreen() {
       params: { trigger: 'settings_upgrade', source: 'settings' },
     });
   };
+
+  // PROFILE-02: show placeholder while auth/subscription data loads to prevent null crash
+  if (isAuthLoading) {
+    return (
+      <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }}>
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+          <Typography variant="h3" style={{ textAlign: 'center', marginBottom: 8 }}>
+            ⭐ Premium features coming soon
+          </Typography>
+          <Typography variant="body" color="secondary" style={{ textAlign: 'center' }}>
+            Loading your subscription details...
+          </Typography>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }}>
