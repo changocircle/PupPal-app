@@ -189,20 +189,32 @@ export function useChat(): UseChatReturn {
   };
 
   // Debug log: training context being sent to system prompt
-  console.log(
-    "[useChat] Training context:",
-    JSON.stringify({
-      hasPlan: plan !== null,
-      currentWeek: plan?.currentWeek,
-      currentDay: plan?.currentDay,
-      todayExercises: todayExerciseNames.length,
-      todayExerciseNames: todayExerciseNames.map((e) => e.name),
-      completedMilestones: completedMilestones.length,
-      recentSessions: recentSessions.length,
-      totalXp,
-      streak,
-    }),
-  );
+  // Wrapped in useEffect so it only fires when context data actually changes,
+  // not on every render (fixes [useChat] Training context log spam).
+  useEffect(() => {
+    console.log(
+      "[useChat] Training context:",
+      JSON.stringify({
+        hasPlan: plan !== null,
+        currentWeek: plan?.currentWeek,
+        currentDay: plan?.currentDay,
+        todayExercises: todayExerciseNames.length,
+        todayExerciseNames: todayExerciseNames.map((e) => e.name),
+        completedMilestones: completedMilestones.length,
+        recentSessions: recentSessions.length,
+        totalXp,
+        streak,
+      }),
+    );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    plan,
+    todayExerciseNames,
+    completedMilestones,
+    recentSessions,
+    totalXp,
+    streak,
+  ]);
 
   const canSend = canSendMessage(isPremium) && !isStreaming;
   const remainingMessages = getRemainingMessages(isPremium);
