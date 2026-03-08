@@ -120,9 +120,8 @@ export interface DailyMessageCount {
 }
 
 // ── Constants ──
-// Production: 3 messages/day for free tier (PRD-02 §6)
-// Dev: 50 until RevenueCat + Superwall paywall is wired up in Phase 6
-export const FREE_MESSAGE_LIMIT = __DEV__ ? 50 : 3;
+// 3 messages/day for free tier (PRD-02 §6)
+export const FREE_MESSAGE_LIMIT = 3;
 export const MAX_MESSAGE_LENGTH = 2000;
 export const MAX_MESSAGES_IN_CONTEXT = 20;
 export const SESSION_TIMEOUT_MINUTES = 30;

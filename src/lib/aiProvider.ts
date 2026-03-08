@@ -106,7 +106,7 @@ export async function streamChatCompletion(
           role: m.role,
           content: m.content,
         })),
-        maxTokens: 2048,
+        maxTokens: 175,
         dogName: options?.dogName,
       }),
       signal: controller.signal,
