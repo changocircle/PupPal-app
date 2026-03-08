@@ -4,14 +4,14 @@
  *
  * Premium "magic moment" loading sequence during breed detection.
  * Three layers:
- *   1. Light sweep overlay on the photo (gradient shimmer left→right)
+ *   1. Light sweep overlay on the photo (gradient shimmer left->right)
  *   2. Cycling fun text messages below the photo
  *   3. Animated dot progress indicator
  *
  * Uses Reanimated 4 only (Moti is banned).
  */
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Dimensions } from "react-native";
 import Animated, {
   useSharedValue,
@@ -29,13 +29,86 @@ import { Typography } from "@/components/ui";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
-// ─── Config ───
+// --- Config ---
 
 const SWEEP_DURATION = 1500;
 const SWEEP_WIDTH = 80;
-const TEXT_CYCLE_MS = 2500;
+const TEXT_CYCLE_MS = 2200;
 
-// ─── Scan Overlay ───
+// --- Buddy Expression Component ---
+
+/**
+ * Buddy character display using styled emoji.
+ * Three modes: thinking (scan), excited (high confidence result), teaching (alternatives).
+ */
+export type BuddyMode = "thinking" | "excited" | "teaching";
+
+interface BuddyExpressionProps {
+  mode: BuddyMode;
+  size?: number;
+}
+
+export function BuddyExpression({ mode, size = 48 }: BuddyExpressionProps) {
+  const bgColor =
+    mode === "excited"
+      ? "#FFF6E5"
+      : mode === "thinking"
+        ? "#FFF0EE"
+        : "#EBF3FA";
+
+  const emoji =
+    mode === "excited" ? "🎉" : mode === "thinking" ? "🔍" : "📖";
+
+  const scale = useSharedValue(1);
+
+  useEffect(() => {
+    if (mode === "excited") {
+      scale.value = withRepeat(
+        withSequence(
+          withTiming(1.12, { duration: 300, easing: Easing.out(Easing.ease) }),
+          withTiming(1, { duration: 300, easing: Easing.in(Easing.ease) }),
+        ),
+        3,
+        false,
+      );
+    } else if (mode === "thinking") {
+      scale.value = withRepeat(
+        withSequence(
+          withTiming(1.05, { duration: 600, easing: Easing.inOut(Easing.ease) }),
+          withTiming(0.97, { duration: 600, easing: Easing.inOut(Easing.ease) }),
+        ),
+        -1,
+        false,
+      );
+    }
+  }, [mode]);
+
+  const animStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  return (
+    <Animated.View
+      style={[
+        animStyle,
+        {
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+          backgroundColor: bgColor,
+          alignItems: "center",
+          justifyContent: "center",
+        },
+      ]}
+    >
+      <Typography style={{ fontSize: size * 0.5, lineHeight: size * 0.6 }}>
+        {emoji}
+      </Typography>
+    </Animated.View>
+  );
+}
+
+// --- Scan Overlay ---
 
 /**
  * Translucent light sweep that slides left-to-right across the photo.
@@ -58,7 +131,7 @@ function ScanOverlay({ size }: { size: number }) {
     );
   }, [size]);
 
-  // Build 5 strips to simulate a gradient (edge→center→edge opacity)
+  // Build 5 strips to simulate a gradient (edge->center->edge opacity)
   const strips = [
     { offset: 0, opacity: 0.03, width: SWEEP_WIDTH * 0.2 },
     { offset: SWEEP_WIDTH * 0.2, opacity: 0.08, width: SWEEP_WIDTH * 0.2 },
@@ -145,23 +218,39 @@ function PulsingBorder({ size }: { size: number }) {
   );
 }
 
-// ─── Cycling Text ───
+// --- Cycling Text ---
 
 interface CyclingTextProps {
   dogName: string;
 }
 
 function CyclingText({ dogName }: CyclingTextProps) {
-  const messages = [
-    `Analyzing ${dogName}'s features...`,
-    "Checking ear shape and coat type...",
-    "Comparing with 200+ breeds...",
-    "Almost there...",
-  ];
+  const name = dogName && dogName !== "your pup" ? dogName : null;
+
+  const messages = name
+    ? [
+        `Analyzing ${name}'s features...`,
+        "Checking ear shape...",
+        "Examining coat pattern...",
+        "Comparing with 51 breeds...",
+        "Looking at facial structure...",
+        "Checking paw size...",
+        `Almost there, ${name}...`,
+      ]
+    : [
+        "Analyzing your pup's features...",
+        "Checking ear shape...",
+        "Examining coat pattern...",
+        "Comparing with 51 breeds...",
+        "Looking at facial structure...",
+        "Checking paw size...",
+        "Almost there...",
+      ];
 
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
+    setIndex(0);
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % messages.length);
     }, TEXT_CYCLE_MS);
@@ -185,7 +274,7 @@ function CyclingText({ dogName }: CyclingTextProps) {
   );
 }
 
-// ─── Progress Dots ───
+// --- Progress Dots ---
 
 /** Three animated dots that pulse in sequence, similar to the chat typing indicator */
 function ProgressDots() {
@@ -250,7 +339,7 @@ function AnimatedDot({ delay }: { delay: number }) {
   );
 }
 
-// ─── Scan Progress Bar ───
+// --- Scan Progress Bar ---
 
 /**
  * Indeterminate progress bar that sweeps back and forth.
@@ -271,7 +360,7 @@ function ScanProgressBar() {
   }, []);
 
   const barStyle = useAnimatedStyle(() => {
-    const trackWidth = SCREEN_WIDTH - 96; // Approximate: screen - 2x padding - margins
+    const trackWidth = SCREEN_WIDTH - 96;
     const fillWidth = trackWidth * 0.35;
     const maxTranslate = trackWidth - fillWidth;
 
@@ -305,7 +394,7 @@ function ScanProgressBar() {
   );
 }
 
-// ─── Main Export ───
+// --- Main Export ---
 
 interface BreedScanAnimationProps {
   /** The dog's name for personalized text */
@@ -332,6 +421,9 @@ export function BreedScanAnimation({ dogName, photoSize }: BreedScanAnimationPro
       exiting={FadeOut.duration(200)}
       style={{ alignItems: "center", gap: 16 }}
     >
+      {/* Buddy thinking expression */}
+      <BuddyExpression mode="thinking" size={48} />
+
       {/* Cycling status text */}
       <CyclingText dogName={dogName} />
 
