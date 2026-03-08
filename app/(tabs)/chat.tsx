@@ -18,7 +18,6 @@ import { useOnboardingStore } from "@/stores/onboardingStore";
 import { useSubscription } from "@/hooks/useSubscription";
 import { useHydration } from "@/hooks/useHydration";
 import type { ChatMessage } from "@/types/chat";
-import { FREE_MESSAGE_LIMIT } from "@/types/chat";
 
 /**
  * Buddy AI Chat Screen, PRD-02
@@ -69,7 +68,7 @@ function ChatScreenContent() {
     sendMessage,
     sendSuggestedPrompt,
     setFeedback,
-    clearChat,
+    startNewSession,
   } = useChat();
 
   const isLimitHit = !isPremium && remainingMessages <= 0;
@@ -133,11 +132,11 @@ function ChatScreenContent() {
               </Typography>
             </View>
           </View>
-          {/* Free tier counter — hidden for premium users */}
+          {/* Free tier counter — counts down from 3 to 0, hidden for premium */}
           {!isPremium && remainingMessages < Infinity && (
             <View className="bg-primary-light px-sm py-xs rounded-full mr-sm">
               <Typography variant="caption" style={{ color: "#FF6B5C" }}>
-                {remainingMessages}/{FREE_MESSAGE_LIMIT} today
+                {remainingMessages} left
               </Typography>
             </View>
           )}
@@ -145,7 +144,7 @@ function ChatScreenContent() {
             <DogSwitcherButton />
           </View>
           {/* Overflow menu: New conversation + Chat history */}
-          <ChatOverflowMenu onNewConversation={clearChat} />
+          <ChatOverflowMenu onNewConversation={startNewSession} />
         </Animated.View>
 
         {/* ── Messages ── */}

@@ -29,7 +29,7 @@ export function ChatOverflowMenu({ onNewConversation }: ChatOverflowMenuProps) {
     setMenuVisible(false);
     Alert.alert(
       "New Conversation",
-      "Start a fresh conversation? Your chat history will still be saved.",
+      "Start a new conversation? Your current chat will be saved to history.",
       [
         { text: "Cancel", style: "cancel" },
         {
