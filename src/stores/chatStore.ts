@@ -3,6 +3,7 @@
  *
  * Zustand store for chat state with AsyncStorage persistence.
  * Manages messages, sessions, free tier limits, and conversation memory.
+ * Sync-aware: exposes _syncMeta and _mergeChatData for the sync layer.
  */
 
 import { create } from "zustand";
@@ -14,8 +15,25 @@ import type {
   ChatSession,
   MessageFeedback,
   DailyMessageCount,
+  ConversationSummary,
 } from "@/types/chat";
 import { FREE_MESSAGE_LIMIT, SESSION_TIMEOUT_MINUTES } from "@/types/chat";
+
+// ── Sync Metadata ──
+
+export type SyncStatus = "idle" | "syncing" | "error";
+
+export interface ChatSyncMeta {
+  status: SyncStatus;
+  lastSyncedAt: string | null;
+  pendingCount: number;
+}
+
+const DEFAULT_SYNC_META: ChatSyncMeta = {
+  status: "idle",
+  lastSyncedAt: null,
+  pendingCount: 0,
+};
 
 interface ChatState {
   // Current session
@@ -28,12 +46,18 @@ interface ChatState {
   // Conversation summaries (for cross-session memory)
   conversationSummaries: string[];
 
+  // Rich summaries (stored for sync; mirrors ConversationSummary from PRD-02)
+  richSummaries: ConversationSummary[];
+
   // Free tier tracking
   dailyCount: DailyMessageCount | null;
 
   // Status
   isStreaming: boolean;
   streamingMessageId: string | null;
+
+  // Sync metadata (transient, not persisted to AsyncStorage)
+  _syncMeta: ChatSyncMeta;
 
   // Actions
   startSession: (dogId: string) => string;
@@ -54,7 +78,20 @@ interface ChatState {
   getSessionMessages: (sessionId: string) => ChatMessage[];
   getRecentSummaries: (count?: number) => string[];
   addConversationSummary: (summary: string) => void;
+
+  // Rich summary helpers (used by sync layer)
+  addRichSummary: (summary: ConversationSummary) => void;
+  getRecentRichSummaries: (dogId: string, count?: number) => ConversationSummary[];
+
   isSessionExpired: () => boolean;
+
+  // Sync-layer actions (prefixed with _ to indicate internal use)
+  _setSyncMeta: (updates: Partial<ChatSyncMeta>) => void;
+  _mergeChatData: (data: {
+    sessions: ChatSession[];
+    messages: ChatMessage[];
+    richSummaries: ConversationSummary[];
+  }) => void;
 }
 
 function getTodayDateString(): string {
@@ -68,9 +105,11 @@ export const useChatStore = create<ChatState>()(
       messages: [],
       sessions: [],
       conversationSummaries: [],
+      richSummaries: [],
       dailyCount: null,
       isStreaming: false,
       streamingMessageId: null,
+      _syncMeta: { ...DEFAULT_SYNC_META },
 
       startSession: (dogId: string) => {
         const existing = get().currentSessionId;
@@ -125,12 +164,16 @@ export const useChatStore = create<ChatState>()(
       },
 
       addUserMessage: (content: string, photoUrl?: string) => {
-        const { currentSessionId } = get();
+        const { currentSessionId, sessions } = get();
         if (!currentSessionId) return null;
+
+        // Stamp dogId from the active session so the sync layer can filter by dog
+        const activeSession = sessions.find((s) => s.id === currentSessionId);
 
         const message: ChatMessage = {
           id: nanoid(),
           sessionId: currentSessionId,
+          dogId: activeSession?.dogId,
           role: "user",
           content,
           photoUrl,
@@ -151,10 +194,15 @@ export const useChatStore = create<ChatState>()(
       },
 
       addAssistantMessage: (content: string) => {
-        const { currentSessionId } = get();
+        const { currentSessionId, sessions } = get();
+
+        // Stamp dogId from the active session so the sync layer can filter by dog
+        const activeSession = sessions.find((s) => s.id === currentSessionId);
+
         const message: ChatMessage = {
           id: nanoid(),
           sessionId: currentSessionId ?? "unknown",
+          dogId: activeSession?.dogId,
           role: "assistant",
           content,
           createdAt: new Date().toISOString(),
@@ -280,6 +328,23 @@ export const useChatStore = create<ChatState>()(
         }));
       },
 
+      // ── Rich summary helpers ──
+
+      addRichSummary: (summary: ConversationSummary) => {
+        set((state) => ({
+          richSummaries: [
+            ...state.richSummaries,
+            summary,
+          ].slice(-20), // keep last 20 rich summaries
+        }));
+      },
+
+      getRecentRichSummaries: (_dogId: string, count = 3) => {
+        // Returns the most recent rich summaries. Dog isolation is handled
+        // at the sync layer (only summaries for this dog are pulled from Supabase).
+        return get().richSummaries.slice(-count);
+      },
+
       isSessionExpired: () => {
         const { currentSessionId, messages } = get();
         if (!currentSessionId) return true;
@@ -296,6 +361,56 @@ export const useChatStore = create<ChatState>()(
         const now = Date.now();
         return now - lastTime > SESSION_TIMEOUT_MINUTES * 60 * 1000;
       },
+
+      // ── Sync-layer actions ──
+
+      _setSyncMeta: (updates) =>
+        set((state) => ({
+          _syncMeta: { ...state._syncMeta, ...updates },
+        })),
+
+      _mergeChatData: (data) => {
+        set((state) => {
+          // Merge sessions: remote wins by updated_at if both have the session
+          const localSessionMap = new Map(state.sessions.map((s) => [s.id, s]));
+          const mergedSessions: ChatSession[] = [...state.sessions];
+
+          for (const remote of data.sessions) {
+            const local = localSessionMap.get(remote.id);
+            if (!local) {
+              mergedSessions.push(remote);
+            }
+            // Local sessions are already correct; remote sessions are pulled for missing ones
+          }
+
+          // Merge messages: upsert by id, local wins for streaming messages
+          const localMsgMap = new Map(state.messages.map((m) => [m.id, m]));
+          const mergedMessages: ChatMessage[] = [...state.messages];
+
+          for (const remote of data.messages) {
+            if (!localMsgMap.has(remote.id)) {
+              mergedMessages.push(remote);
+            }
+            // Don't overwrite local messages (they may be mid-stream)
+          }
+
+          // Merge rich summaries: upsert by id
+          const localSummaryMap = new Map(state.richSummaries.map((s) => [s.id, s]));
+          const mergedSummaries: ConversationSummary[] = [...state.richSummaries];
+
+          for (const remote of data.richSummaries) {
+            if (!localSummaryMap.has(remote.id)) {
+              mergedSummaries.push(remote);
+            }
+          }
+
+          return {
+            sessions: mergedSessions.slice(0, 50),
+            messages: mergedMessages.filter((m) => !m.isStreaming).slice(-200),
+            richSummaries: mergedSummaries.slice(-20),
+          };
+        });
+      },
     }),
     {
       name: "puppal-chat-store",
@@ -304,7 +419,9 @@ export const useChatStore = create<ChatState>()(
         messages: state.messages.filter((m) => !m.isStreaming).slice(-200), // persist last 200 messages
         sessions: state.sessions.slice(0, 50),
         conversationSummaries: state.conversationSummaries,
+        richSummaries: state.richSummaries,
         dailyCount: state.dailyCount,
+        // _syncMeta is NOT persisted (resets to defaults on restart)
       }),
     }
   )

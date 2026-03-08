@@ -5,6 +5,7 @@ import { Typography } from "@/components/ui";
 import { COLORS } from "@/constants/theme";
 import { useDogSync } from "@/hooks/useDogSync";
 import { useTrainingSync } from "@/hooks/useTrainingSync";
+import { useChatSync } from "@/hooks/useChatSync";
 
 /**
  * Main Tab Navigation Layout
@@ -26,6 +27,7 @@ export default function TabLayout() {
   // Initialize sync layers (run when user is authenticated)
   useDogSync();
   useTrainingSync();
+  useChatSync();
 
   return (
     <Tabs
