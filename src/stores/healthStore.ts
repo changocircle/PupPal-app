@@ -75,6 +75,24 @@ const FREQUENCY_DAYS: Record<MedicationFrequency, number | null> = {
 };
 
 // ──────────────────────────────────────────────
+// Sync Meta
+// ──────────────────────────────────────────────
+
+export type HealthSyncStatus = "idle" | "syncing" | "error";
+
+export interface HealthSyncMeta {
+  status: HealthSyncStatus;
+  lastSyncedAt: string | null;
+  pendingCount: number;
+}
+
+const DEFAULT_SYNC_META: HealthSyncMeta = {
+  status: "idle",
+  lastSyncedAt: null,
+  pendingCount: 0,
+};
+
+// ──────────────────────────────────────────────
 // Store Interface
 // ──────────────────────────────────────────────
 
@@ -214,6 +232,10 @@ interface HealthState {
   /** Reset all health data (call on sign-out) */
   resetHealth: () => void;
 
+  // ─── Sync ───
+  _syncMeta: HealthSyncMeta;
+  _setSyncMeta: (updates: Partial<HealthSyncMeta>) => void;
+
   // Selectors
   getVaccinationsForDog: (dogId: string) => ScheduledVaccination[];
   getUpcomingEvents: (
@@ -255,6 +277,7 @@ export const useHealthStore = create<HealthState>()(
       userMilestones: [],
       milestonesInitialized: false,
       healthNotes: [],
+      _syncMeta: { ...DEFAULT_SYNC_META },
 
       // ═══════════════════════════════════════════
       // Vaccinations
@@ -631,6 +654,12 @@ export const useHealthStore = create<HealthState>()(
         });
       },
 
+      // ─── Sync ───
+      _setSyncMeta: (updates) =>
+        set((state) => ({
+          _syncMeta: { ...state._syncMeta, ...updates },
+        })),
+
       // ═══════════════════════════════════════════
       // Selectors
       // ═══════════════════════════════════════════
@@ -813,6 +842,14 @@ export const useHealthStore = create<HealthState>()(
     {
       name: "puppal-health",
       storage: createJSONStorage(() => AsyncStorage),
+      // _syncMeta is NOT persisted (resets to defaults on restart)
+      partialize: (state) => {
+        const { _syncMeta: _sm, _setSyncMeta: _ss, ...rest } = state as HealthState & {
+          _syncMeta: HealthSyncMeta;
+          _setSyncMeta: (u: Partial<HealthSyncMeta>) => void;
+        };
+        return rest;
+      },
     }
   )
 );
