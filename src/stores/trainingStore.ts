@@ -403,6 +403,8 @@ export const useTrainingStore = create<TrainingState>()(
       },
 
       rateExercise: (planExerciseId, rating) => {
+        // PLAN-02: log so plan adaptation can be verified in dev
+        console.log('[trainingStore/rateExercise] firing', { planExerciseId, rating });
         const { plan, adaptationLog } = get();
         if (!plan) return;
 
