@@ -221,6 +221,13 @@ function CyclingText({ dogName, stage }: CyclingTextProps) {
     : stage === "confirming" ? confirmingMessages
     : generalMessages;
 
+  const messages =
+    stage === "classifying"
+      ? classifyingMessages
+      : stage === "confirming"
+      ? confirmingMessages
+      : generalMessages;
+
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
