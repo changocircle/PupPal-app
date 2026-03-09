@@ -568,6 +568,7 @@ Everything needed to submit the moment Apple Developer approval comes through.
 - Parallel breed detection pipeline: classifier + Sonnet overlap, up to ~12s faster (a56380e)
 - Scan animation: no AI references, TEXT_CYCLE_MS 1600, updated copy (a56380e)
 - Upload prompt: two-state UX -- idle shows single box + "A clear front-facing photo works best", post-scan shows upsell "Want a more accurate result? Add 2 more photos" with Side profile + Full body slots below result card (b141440)
+- Medium confidence result: removed "Also possible" alternatives list. Flow is now: breed result -> confidence badge -> upsell boxes -> Yes! / Change breed (bc96284)
 - Custom challenges: "Something else?" on challenges screen, free text stored as customChallenges[], keyword-mapped to exercise categories in planGenerator (a56380e)
 - Update CLAUDE.md "Current Sprint" section to reflect v10 state
 
