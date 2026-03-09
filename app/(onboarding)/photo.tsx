@@ -93,26 +93,34 @@ function ConfidenceBadge({ confidence, photoCount }: { confidence: number; photo
 }
 
 // --- Searchable Breed Dropdown ---
+// onMixedBreed: called when user selects "Mixed breed" -- parent handles mix flow
+// Selecting a breed, mixed breed, or free-text all close the dropdown
 function BreedSearchDropdown({
   label,
   placeholder,
   onSelect,
   selectedBreed,
   excludeBreed,
+  onMixedBreed,
 }: {
   label?: string;
   placeholder?: string;
   onSelect: (breed: string) => void;
   selectedBreed: string | null;
   excludeBreed?: string | null;
+  onMixedBreed?: () => void;
 }) {
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [freeTextMode, setFreeTextMode] = useState(false);
+  const [freeTextValue, setFreeTextValue] = useState("");
   const inputRef = useRef<TextInput>(null);
+  const freeTextRef = useRef<TextInput>(null);
 
   const filteredBreeds = useMemo(() => {
     const q = query.toLowerCase().trim();
-    let list = BREED_NAMES.filter((b) => b !== excludeBreed);
+    // Exclude "Mixed Breed" from list -- it's a top-level option
+    let list = BREED_NAMES.filter((b) => b !== excludeBreed && b !== "Mixed Breed");
     if (q) {
       list = list.filter((b) => b.toLowerCase().includes(q));
     }
@@ -123,7 +131,28 @@ function BreedSearchDropdown({
     onSelect(breed);
     setQuery("");
     setIsOpen(false);
+    setFreeTextMode(false);
+    setFreeTextValue("");
     inputRef.current?.blur();
+  };
+
+  const handleMixedBreed = () => {
+    setQuery("");
+    setIsOpen(false);
+    setFreeTextMode(false);
+    inputRef.current?.blur();
+    onMixedBreed?.();
+  };
+
+  const handleFreeTextSubmit = () => {
+    const trimmed = freeTextValue.trim();
+    if (!trimmed) return;
+    onSelect(trimmed);
+    setQuery("");
+    setIsOpen(false);
+    setFreeTextMode(false);
+    setFreeTextValue("");
+    freeTextRef.current?.blur();
   };
 
   if (selectedBreed && !isOpen) {
@@ -137,6 +166,7 @@ function BreedSearchDropdown({
         <Pressable
           onPress={() => {
             setIsOpen(true);
+            setFreeTextMode(false);
             setQuery("");
           }}
           className="flex-row items-center justify-between bg-surface border border-primary rounded-sm px-base h-[48px]"
@@ -144,6 +174,54 @@ function BreedSearchDropdown({
           <Typography variant="body-medium">{selectedBreed}</Typography>
           <Typography variant="caption" color="accent">
             Change
+          </Typography>
+        </Pressable>
+      </View>
+    );
+  }
+
+  // Free-text entry mode -- shown inline when "Don't see your breed?" is tapped
+  if (freeTextMode) {
+    return (
+      <View className="w-full gap-sm">
+        {label && (
+          <Typography variant="body-sm-medium" color="secondary" className="mb-xs">
+            {label}
+          </Typography>
+        )}
+        <View className="flex-row gap-sm items-center">
+          <TextInput
+            ref={freeTextRef}
+            className="flex-1 bg-surface border border-border rounded-sm px-base h-[48px] text-body font-brand-regular text-text-primary"
+            placeholder="e.g. Cavapoo, Bernedoodle..."
+            placeholderTextColor="#9CA3AF"
+            value={freeTextValue}
+            onChangeText={setFreeTextValue}
+            autoCapitalize="words"
+            autoCorrect={false}
+            returnKeyType="done"
+            onSubmitEditing={handleFreeTextSubmit}
+            autoFocus
+          />
+          <Pressable
+            onPress={handleFreeTextSubmit}
+            className="bg-primary rounded-sm h-[48px] px-lg items-center justify-center"
+          >
+            <Typography variant="body-sm-medium" color="inverse">
+              Set
+            </Typography>
+          </Pressable>
+        </View>
+        <Pressable
+          onPress={() => {
+            setFreeTextMode(false);
+            setFreeTextValue("");
+            setIsOpen(true);
+            setTimeout(() => inputRef.current?.focus(), 50);
+          }}
+        >
+          <Typography variant="caption" color="secondary" className="text-center">
+            Back to breed list
           </Typography>
         </Pressable>
       </View>
@@ -174,7 +252,7 @@ function BreedSearchDropdown({
         />
         {isOpen && (
           <ScrollView
-            className="max-h-[200px] border-t border-border"
+            className="max-h-[240px] border-t border-border"
             keyboardShouldPersistTaps="handled"
           >
             {/* "I'm not sure" always at top */}
@@ -187,6 +265,18 @@ function BreedSearchDropdown({
               </Typography>
             </Pressable>
 
+            {/* Mixed breed always at top, before the list */}
+            {onMixedBreed && (
+              <Pressable
+                onPress={handleMixedBreed}
+                className="px-base py-sm border-b border-border bg-surface"
+              >
+                <Typography variant="body-sm" color="secondary">
+                  Mixed breed
+                </Typography>
+              </Pressable>
+            )}
+
             {filteredBreeds.map((breed) => (
               <Pressable
                 key={breed}
@@ -197,13 +287,19 @@ function BreedSearchDropdown({
               </Pressable>
             ))}
 
-            {filteredBreeds.length === 0 && (
-              <View className="px-base py-sm">
-                <Typography variant="body-sm" color="secondary">
-                  No breeds found
-                </Typography>
-              </View>
-            )}
+            {/* "Don't see your breed?" always at bottom */}
+            <Pressable
+              onPress={() => {
+                setIsOpen(false);
+                setFreeTextMode(true);
+                inputRef.current?.blur();
+              }}
+              className="px-base py-sm"
+            >
+              <Typography variant="body-sm" color="accent">
+                Don't see your breed? Type it in
+              </Typography>
+            </Pressable>
           </ScrollView>
         )}
       </View>
@@ -231,8 +327,6 @@ export default function PhotoScreen() {
   const [detectionStage, setDetectionStage] = useState<"classifying" | "confirming">("classifying");
   const [isMixedBreed, setIsMixedBreed] = useState(false);
   const [notSure, setNotSure] = useState(false);
-  const [showFreeText, setShowFreeText] = useState(false);
-  const [freeTextBreed, setFreeTextBreed] = useState("");
 
   /**
    * Hybrid detection stage for two-step progress UI.
@@ -255,8 +349,6 @@ export default function PhotoScreen() {
       setShowManualSelector(false);
       setIsMixedBreed(false);
       setNotSure(false);
-      setShowFreeText(false);
-      setFreeTextBreed("");
 
       // Hybrid two-step flow: classifier first, then Sonnet reasoning
       const result = await detectBreed(uris, (stage) => {
@@ -696,52 +788,6 @@ export default function PhotoScreen() {
 
                   {/* Confidence badge */}
                   <ConfidenceBadge confidence={detection.confidence} photoCount={photoUris.length} />
-
-                  {/* Upsell: add more photos for higher accuracy (only when just 1 photo) */}
-                  {photoUris.length === 1 && (
-                    <Animated.View
-                      entering={FadeInDown.duration(200).delay(200)}
-                      style={{ width: "100%", marginTop: 4 }}
-                    >
-                      <Typography
-                        variant="body-sm-medium"
-                        style={{ textAlign: "center", color: "#1B2333", marginBottom: 10 }}
-                      >
-                        Want a more accurate result? Add 2 more photos
-                      </Typography>
-                      <View style={{ flexDirection: "row", gap: 12, justifyContent: "center" }}>
-                        {[1, 2].map((idx) => (
-                          <Pressable key={idx} onPress={() => pickImage(idx)}>
-                            <View
-                              style={{
-                                width: 100,
-                                height: 100,
-                                borderRadius: 12,
-                                borderWidth: 2,
-                                borderStyle: "dashed",
-                                borderColor: "#D1C9C4",
-                                backgroundColor: "#F9F6F3",
-                                alignItems: "center",
-                                justifyContent: "center",
-                              }}
-                            >
-                              <Typography style={{ fontSize: 22, opacity: 0.5 }}>
-                                {PHOTO_GUIDES[idx].emoji}
-                              </Typography>
-                              <Typography style={{ fontSize: 18, marginTop: 2, opacity: 0.4 }}>+</Typography>
-                            </View>
-                            <Typography
-                              variant="caption"
-                              color="secondary"
-                              style={{ textAlign: "center", marginTop: 4 }}
-                            >
-                              {PHOTO_GUIDES[idx].label}
-                            </Typography>
-                          </Pressable>
-                        ))}
-                      </View>
-                    </Animated.View>
-                  )}
                 </Animated.View>
               </Animated.View>
             )}
@@ -765,52 +811,6 @@ export default function PhotoScreen() {
 
                 {/* Confidence badge */}
                 <ConfidenceBadge confidence={detection.confidence} photoCount={photoUris.length} />
-
-                {/* Upsell: add more photos for higher accuracy (only when just 1 photo) */}
-                {photoUris.length === 1 && (
-                  <Animated.View
-                    entering={FadeInDown.duration(200).delay(200)}
-                    style={{ width: "100%", marginTop: 4 }}
-                  >
-                    <Typography
-                      variant="body-sm-medium"
-                      style={{ textAlign: "center", color: "#1B2333", marginBottom: 10 }}
-                    >
-                      Want a more accurate result? Add 2 more photos
-                    </Typography>
-                    <View style={{ flexDirection: "row", gap: 12, justifyContent: "center" }}>
-                      {[1, 2].map((idx) => (
-                        <Pressable key={idx} onPress={() => pickImage(idx)}>
-                          <View
-                            style={{
-                              width: 100,
-                              height: 100,
-                              borderRadius: 12,
-                              borderWidth: 2,
-                              borderStyle: "dashed",
-                              borderColor: "#D1C9C4",
-                              backgroundColor: "#F9F6F3",
-                              alignItems: "center",
-                              justifyContent: "center",
-                            }}
-                          >
-                            <Typography style={{ fontSize: 22, opacity: 0.5 }}>
-                              {PHOTO_GUIDES[idx].emoji}
-                            </Typography>
-                            <Typography style={{ fontSize: 18, marginTop: 2, opacity: 0.4 }}>+</Typography>
-                          </View>
-                          <Typography
-                            variant="caption"
-                            color="secondary"
-                            style={{ textAlign: "center", marginTop: 4 }}
-                          >
-                            {PHOTO_GUIDES[idx].label}
-                          </Typography>
-                        </Pressable>
-                      ))}
-                    </View>
-                  </Animated.View>
-                )}
 
                 {/* Yes / Change breed buttons */}
                 <View className="flex-row gap-sm w-full px-lg mt-sm">
@@ -846,11 +846,11 @@ export default function PhotoScreen() {
               </Animated.View>
             )}
 
-            {/* Secondary actions -- grouped text links */}
-            {photoUris.length > 0 && detection.status !== "idle" && detection.status !== "detecting" && !isMixedBreed && !notSure && !showFreeText && (
+            {/* Secondary action -- change breed link (high confidence only, not shown when selector already open) */}
+            {photoUris.length > 0 && detection.status !== "idle" && detection.status !== "detecting" && !isMixedBreed && !notSure && !showManualSelector && (
               <Animated.View
                 entering={FadeInDown.duration(200).delay(200)}
-                style={{ marginTop: 24, width: "100%", alignItems: "center", gap: 4 }}
+                style={{ marginTop: 24, width: "100%", alignItems: "center" }}
               >
                 <Pressable
                   onPress={showSelectorSection}
@@ -860,85 +860,11 @@ export default function PhotoScreen() {
                     That's not right, change breed
                   </Typography>
                 </Pressable>
-                <Pressable
-                  onPress={() => {
-                    setIsMixedBreed(true);
-                    setShowManualSelector(false);
-                    setShowFreeText(false);
-                    updateData({ breed: "Mixed Breed", breedDetected: true, breedMix1: null, breedMix2: null });
-                  }}
-                  style={{ paddingVertical: 8, paddingHorizontal: 16 }}
-                >
-                  <Typography variant="body-sm" color="secondary" style={{ textAlign: "center" }}>
-                    My dog is a mixed breed
-                  </Typography>
-                </Pressable>
-                <Pressable
-                  onPress={() => { setShowFreeText(true); setShowManualSelector(false); }}
-                  style={{ paddingVertical: 8, paddingHorizontal: 16 }}
-                >
-                  <Typography variant="caption" color="secondary" style={{ textAlign: "center" }}>
-                    Type your own breed
-                  </Typography>
-                </Pressable>
-              </Animated.View>
-            )}
-
-            {/* --- Free text breed entry --- */}
-            {showFreeText && !isMixedBreed && (
-              <Animated.View
-                entering={FadeInDown.duration(200)}
-                className="mt-lg w-full gap-sm"
-              >
-                <Typography variant="body-sm-medium" color="secondary">
-                  Enter your dog's breed:
-                </Typography>
-                <View className="flex-row gap-sm items-center">
-                  <TextInput
-                    className="flex-1 bg-surface border border-border rounded-sm px-base h-[48px] text-body font-brand-regular text-text-primary"
-                    placeholder="e.g. Cavapoo, Bernedoodle..."
-                    placeholderTextColor="#9CA3AF"
-                    value={freeTextBreed}
-                    onChangeText={setFreeTextBreed}
-                    autoCapitalize="words"
-                    autoCorrect={false}
-                    returnKeyType="done"
-                    onSubmitEditing={() => {
-                      if (freeTextBreed.trim()) {
-                        confirmBreed(freeTextBreed.trim());
-                        setShowFreeText(false);
-                      }
-                    }}
-                  />
-                  <Pressable
-                    onPress={() => {
-                      if (freeTextBreed.trim()) {
-                        confirmBreed(freeTextBreed.trim());
-                        setShowFreeText(false);
-                      }
-                    }}
-                    className="bg-primary rounded-sm h-[48px] px-lg items-center justify-center"
-                  >
-                    <Typography variant="body-sm-medium" color="inverse">
-                      Set
-                    </Typography>
-                  </Pressable>
-                </View>
-                <Pressable
-                  onPress={() => {
-                    setShowFreeText(false);
-                    setFreeTextBreed("");
-                  }}
-                >
-                  <Typography variant="caption" color="secondary" className="text-center">
-                    Back to breed list
-                  </Typography>
-                </Pressable>
               </Animated.View>
             )}
 
             {/* --- Searchable breed selector (low / manual / user clicked change) --- */}
-            {showManualSelector && !isMixedBreed && !notSure && !showFreeText && (
+            {showManualSelector && !isMixedBreed && !notSure && (
               <Animated.View
                 entering={FadeInDown.duration(200)}
                 className="mt-lg w-full gap-sm"
@@ -975,6 +901,11 @@ export default function PhotoScreen() {
                   placeholder={`Search breeds for ${puppyName}...`}
                   onSelect={handleBreedSelect}
                   selectedBreed={null}
+                  onMixedBreed={() => {
+                    setIsMixedBreed(true);
+                    setShowManualSelector(false);
+                    updateData({ breed: "Mixed Breed", breedDetected: true, breedMix1: null, breedMix2: null });
+                  }}
                 />
               </Animated.View>
             )}
