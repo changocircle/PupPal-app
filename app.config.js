@@ -13,6 +13,10 @@
 
 module.exports = ({ config }) => ({
   ...config,
+  plugins: [
+    ...(config.plugins ?? []),
+    '@sentry/react-native',
+  ],
   extra: {
     ...config.extra,
     EXPO_PUBLIC_SENTRY_DSN: process.env.EXPO_PUBLIC_SENTRY_DSN ?? '',
