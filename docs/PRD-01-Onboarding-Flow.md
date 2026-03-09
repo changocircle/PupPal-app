@@ -617,7 +617,7 @@ Buddy is PupPal's AI mentor character — the face of the onboarding (and later,
 8. CTA appears: "Next"
 
 **Breed Detection Logic**:
-- Primary: AI image recognition (cloud API call — Google Cloud Vision, AWS Rekognition, or custom model)
+- Primary: HuggingFace ViT classifier + Claude Sonnet 4.6 vision (hybrid pipeline via breed-classify + breed-detect edge functions)
 - Confidence >70%: Show breed directly
 - Confidence 40-70%: Show "Looks like a [Breed]?" with confirm/change option
 - Confidence <40%: Show "What breed is [Name]?" with searchable dropdown
@@ -1142,7 +1142,7 @@ paywall_variant: string
 ## 12. Open Questions
 
 1. Buddy's visual design: Custom illustration or 3D character? Budget for character design?
-2. Breed detection provider: Custom model, Google Cloud Vision, or specialized pet breed API?
+2. Breed detection provider: RESOLVED — hybrid pipeline: breed-classify edge function (HuggingFace ViT, 120 breeds) + breed-detect edge function (Claude Sonnet 4.6 vision). Both deployed.
 3. Multi-language: English-only at launch? Localization timeline?
 4. Android timing: iOS first or simultaneous?
 5. COPPA compliance: Concerns for users under 13?
