@@ -18,6 +18,8 @@ import type {
   ConversationSummary,
 } from "@/types/chat";
 import { FREE_MESSAGE_LIMIT, SESSION_TIMEOUT_MINUTES } from "@/types/chat";
+// CHAT-02: import authStore to scope sessions by user
+import { useAuthStore } from "@/stores/authStore";
 
 // ── Sync Metadata ──
 
@@ -76,6 +78,8 @@ interface ChatState {
   incrementDailyCount: () => void;
 
   // Session helpers
+  /** CHAT-02: Returns only sessions belonging to the current user */
+  getUserSessions: () => ChatSession[];
   getSessionMessages: (sessionId: string) => ChatMessage[];
   getRecentSummaries: (count?: number) => string[];
   addConversationSummary: (summary: string) => void;
@@ -124,9 +128,12 @@ export const useChatStore = create<ChatState>()(
         }
 
         const sessionId = nanoid();
+        // CHAT-02: stamp userId so sessions are scoped per Supabase account
+        const currentUserId = useAuthStore.getState().user?.id ?? "local";
         const session: ChatSession = {
           id: sessionId,
           dogId,
+          userId: currentUserId,
           startedAt: new Date().toISOString(),
           messageCount: 0,
           sentiment: "neutral",
@@ -328,6 +335,14 @@ export const useChatStore = create<ChatState>()(
       },
 
       // ── Session helpers ──
+
+      getUserSessions: () => {
+        // CHAT-02: filter sessions to the current user to prevent cross-account history leaks
+        const currentUserId = useAuthStore.getState().user?.id ?? "local";
+        return get().sessions.filter(
+          (s) => (s.userId ?? "local") === currentUserId
+        );
+      },
 
       getSessionMessages: (sessionId: string) => {
         return get().messages.filter((m) => m.sessionId === sessionId);

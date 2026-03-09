@@ -168,6 +168,7 @@ serve(async (req: Request) => {
 
     // ── Summarize action (lightweight, non-streaming) ──
     if (body.action === "summarize") {
+      console.log("[buddy-chat/summarize] Summarize action received");
       return await handleSummarize(body as SummarizeRequest);
     }
 
