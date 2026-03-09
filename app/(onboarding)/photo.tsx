@@ -140,7 +140,10 @@ function ConfidenceBadge({
           shimmerStyle,
           {
             position: "absolute",
-            inset: 0,
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
             backgroundColor: "#FFD700",
             borderRadius: 9999,
           },
@@ -524,10 +527,10 @@ export default function PhotoScreen() {
       if (result.confidence > 70) {
         updateData({ breed: result.topBreed, breedConfidence: result.confidence, breedDetected: true });
         const next: DetectionState = { status: "high", breed: result.topBreed, confidence: result.confidence };
-        lastSuccessRef.current = next;
         if (isBackground) {
           // Check if confidence actually changed meaningfully before pulsing
           const prev = lastSuccessRef.current;
+          lastSuccessRef.current = next;
           setDetection((cur) => {
             if (
               (cur.status === "high" || cur.status === "medium") &&
@@ -543,6 +546,7 @@ export default function PhotoScreen() {
           setBadgePulse(true);
           setTimeout(() => setBadgePulse(false), 700);
         } else {
+          lastSuccessRef.current = next;
           setDetection(next);
           if (Platform.OS === "ios") {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
@@ -556,8 +560,8 @@ export default function PhotoScreen() {
           confidence: result.confidence,
           suggestions: result.suggestions,
         };
-        lastSuccessRef.current = next;
         if (isBackground) {
+          lastSuccessRef.current = next;
           setDetection((cur) => {
             if (
               (cur.status === "high" || cur.status === "medium") &&
@@ -573,6 +577,7 @@ export default function PhotoScreen() {
           setBadgePulse(true);
           setTimeout(() => setBadgePulse(false), 700);
         } else {
+          lastSuccessRef.current = next;
           setDetection(next);
           if (Platform.OS === "ios") {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
@@ -602,7 +607,9 @@ export default function PhotoScreen() {
       setIsMixedBreed(false);
       setNotSure(false);
 
-      // 15s hard timeout -> graceful fallback
+      // Hard timeout -- fallback to manual breed selection.
+      // Must be >= detectBreed's internal DETECT_TIMEOUT_MS (35s) to avoid racing it.
+      // Sonnet vision calls regularly take 15-25s; 38s gives plenty of headroom.
       const timeoutHandle = setTimeout(() => {
         if (isDetectingRef.current) {
           isDetectingRef.current = false;
@@ -610,7 +617,7 @@ export default function PhotoScreen() {
           setDetection({ status: "manual" });
           setShowManualSelector(true);
         }
-      }, 15_000);
+      }, 38_000);
 
       const result = await detectBreed(uris, (stage) => {
         setDetectionStage(stage);
