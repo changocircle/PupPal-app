@@ -45,6 +45,33 @@ Response: { content, model, usage, stop_reason, suggestedPrompts?: string[] }
 
 ---
 
+## breed-classify (PRD-01)
+
+**File:** `supabase/functions/breed-classify/index.ts`
+**Deploy:** `supabase functions deploy breed-classify --project-ref klttrrdyplsemqiudfvf`
+
+### Config
+- Model: HuggingFace ViT (`nickmuchi/vit-finetuned-dog-classifier`, 120 Stanford Dogs breeds)
+- Fallback model: `Falconsai/dog-breed-identification`
+- HF timeout: 15s
+- Returns top 3 predictions with confidence
+
+### Auth
+- JWT **optional** — verified if present, allowed if absent
+- Runs during onboarding before user is signed in — no auth token available
+- Rate limiting (10/min/IP) is the abuse protection
+
+### Rate Limiting
+- 10 req/min per IP (in-memory, resets on cold start)
+
+### Client Interface
+```
+POST: { imageBase64: string, mimeType?: string }
+Response: { predictions: [{ breed: string, confidence: number, rawLabel: string }] }
+```
+
+---
+
 ## breed-detect (PRD-01)
 
 **File:** `supabase/functions/breed-detect/index.ts`
@@ -55,7 +82,12 @@ Response: { content, model, usage, stop_reason, suggestedPrompts?: string[] }
 - max_tokens: 800
 - Anthropic timeout: 30s
 - Client timeout: 35s
-- NO rate limiting (should be added)
+- Rate limit: 10 req/min per IP
+
+### Auth
+- JWT **optional** — verified if present, allowed if absent
+- Runs during onboarding before user is signed in — no auth token available
+- Rate limiting (10/min/IP) is the abuse protection
 
 ### Multi-Photo Support
 - Accepts 1-3 base64 images
