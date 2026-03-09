@@ -6,6 +6,8 @@ import { useRouter } from 'expo-router';
 import { Typography, Card, Button } from '@/components/ui';
 import { useSettingsStore } from '@/stores/settingsStore';
 import { resetAllStores } from '@/lib/resetStores';
+// SET-01: sign out from Supabase on account deletion
+import { supabase } from '@/lib/supabase';
 
 /**
  * Data & Privacy Screen, PRD-14 §6
@@ -71,8 +73,10 @@ export default function DataPrivacyScreen() {
           style: 'destructive',
           onPress: () => {
             // In production: calls Edge Function to queue deletion
-            // Clear all local state
+            // Clear all local state and sign out from Supabase
             resetAllStores();
+            // SET-01: ensure Supabase session is invalidated on delete
+            supabase.auth.signOut().catch(() => {});
             Alert.alert(
               'Account Deleted',
               'Your account and all data have been queued for permanent deletion.',
