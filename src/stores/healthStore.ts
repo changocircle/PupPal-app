@@ -31,6 +31,9 @@ import type {
 } from "@/types/health";
 import { generateVaccinationSchedule } from "@/data/vaccinationSchedule";
 import { MILESTONE_TEMPLATES } from "@/data/milestones";
+// HEALTH-01: breed data for withinBreedRange calculation
+import { getBreedBySlug } from "@/data/breedData";
+import { useDogStore } from "@/stores/dogStore";
 
 // ──────────────────────────────────────────────
 // Helpers
@@ -73,6 +76,64 @@ const FREQUENCY_DAYS: Record<MedicationFrequency, number | null> = {
   as_needed: null,
   one_time: null,
 };
+
+// ──────────────────────────────────────────────
+// HEALTH-01: Breed range helper
+// ──────────────────────────────────────────────
+
+/**
+ * Compare a weight measurement against the dog's breed growth curve or adult
+ * weight range. Returns "underweight", "normal", or "overweight".
+ * Falls back to "normal" if breed data is unavailable.
+ */
+function computeWithinBreedRange(
+  dogId: string,
+  weightKg: number,
+  ageWeeks?: number
+): "underweight" | "normal" | "overweight" {
+  try {
+    const dog = useDogStore.getState().dogs.find((d) => d.id === dogId);
+    if (!dog?.breed) return "normal";
+
+    const breedProfile = getBreedBySlug(dog.breed);
+    if (!breedProfile) return "normal";
+
+    // Use growth curve if age is known and curve is available
+    if (ageWeeks !== undefined && breedProfile.growth_curve.length > 0) {
+      // Find closest growth curve point by weekNumber
+      const closest = breedProfile.growth_curve.reduce((prev, curr) =>
+        Math.abs(curr.weekNumber - ageWeeks) <
+        Math.abs(prev.weekNumber - ageWeeks)
+          ? curr
+          : prev
+      );
+      // growth_curve values are in lbs — convert to kg for comparison
+      const minKg = closest.femaleWeightLbs * 0.453592; // use female (smaller) as lower bound
+      const maxKg = closest.maleWeightLbs * 0.453592; // use male (larger) as upper bound
+      if (weightKg < minKg) return "underweight";
+      if (weightKg > maxKg) return "overweight";
+      return "normal";
+    }
+
+    // Fallback: adult weight range (average of male and female)
+    const minKg =
+      Math.min(
+        breedProfile.weight_range_male.min,
+        breedProfile.weight_range_female.min
+      ) * 0.453592;
+    const maxKg =
+      Math.max(
+        breedProfile.weight_range_male.max,
+        breedProfile.weight_range_female.max
+      ) * 0.453592;
+
+    if (weightKg < minKg) return "underweight";
+    if (weightKg > maxKg) return "overweight";
+    return "normal";
+  } catch {
+    return "normal";
+  }
+}
 
 // ──────────────────────────────────────────────
 // Sync Meta
@@ -450,7 +511,7 @@ export const useHealthStore = create<HealthState>()(
           measuredAt: data.measuredAt ?? todayISO(),
           notes: data.notes ?? null,
           ageAtMeasurementWeeks: data.ageWeeks,
-          withinBreedRange: "normal", // TODO: compare against breed curve
+          withinBreedRange: computeWithinBreedRange(data.dogId, weightKg, data.ageWeeks),
           loggedAt: nowISO(),
         };
 
@@ -548,6 +609,12 @@ export const useHealthStore = create<HealthState>()(
           endDate.setDate(
             endDate.getDate() + tmpl.typicalAgeWeeksEnd * 7
           );
+          // HEALTH-03: log DOB date calculation for debugging milestone timing
+          console.log("[milestones] DOB date calculation", {
+            dob: dateOfBirth,
+            milestone: tmpl.id,
+            expectedDate: startDate.toISOString().split("T")[0],
+          });
 
           const now = new Date();
           let status: MilestoneStatus = "upcoming";

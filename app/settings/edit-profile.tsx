@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { View, ScrollView, Pressable, TextInput, Alert } from "react-native";
+// PROFILE-01: photo upload placeholder
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { useRouter } from "expo-router";
@@ -54,7 +55,18 @@ export default function EditProfileScreen() {
           entering={FadeInDown.duration(400).delay(60)}
           className="px-xl mb-xl items-center"
         >
-          <Pressable className="w-[100px] h-[100px] rounded-full bg-primary-light items-center justify-center mb-sm">
+          <Pressable
+            className="w-[100px] h-[100px] rounded-full bg-primary-light items-center justify-center mb-sm"
+            onPress={() => {
+              // PROFILE-01: expo-image-picker + Supabase storage upload not yet wired.
+              // Show a graceful fallback until the upload feature is implemented.
+              Alert.alert(
+                "Coming Soon",
+                "Profile photo upload will be available in a future update.",
+                [{ text: "OK" }]
+              );
+            }}
+          >
             <Typography className="text-[40px]">👤</Typography>
           </Pressable>
           <Typography variant="body-sm" style={{ color: "#FF6B5C" }}>
