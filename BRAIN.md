@@ -942,3 +942,4 @@ PupPal is 41% cheaper than market average with the only AI-powered mentor + heal
 
 *End of Brain Dump v10. Generated March 8-9, 2026 after overnight session. 53 app PRs merged, 8 open. 3 lander PRs merged, 3 open.*
 - Photo screen full UX choreography (a1a4b80): minimum 3 scan cycles before reveal, haptic on result, 35+ breed-specific Buddy lines, 15s timeout with graceful fallback. Photos 2/3 are completely silent background scans -- confidence badge pulses on upgrade, breed crossfades on change, queued if photo 1 still scanning.
+- Bug fix (61c0099): 15s hard timeout in runInitialDetection was racing Sonnet (which takes 15-25s). Timeout fired first, set manual state, Sonnet result dropped. Fixed to 38s. Also fixed: inset:0 not valid in RN (use top/left/right/bottom), lastSuccessRef assignment order in applyResult.
