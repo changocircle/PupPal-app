@@ -812,29 +812,6 @@ export default function PhotoScreen() {
                   </Animated.View>
                 )}
 
-                {/* Also possible alternatives */}
-                {detection.suggestions.length > 1 && (
-                  <View className="items-center mt-xs">
-                    <Typography variant="caption" color="secondary" className="mb-xs">
-                      Also possible:
-                    </Typography>
-                    {detection.suggestions.slice(1, 3).map((s, si) => (
-                      <Pressable
-                        key={`${s.name}-${si}`}
-                        onPress={() => confirmBreed(s.name)}
-                      >
-                        <Typography
-                          variant="body-sm"
-                          color="accent"
-                          className="mt-xxs"
-                        >
-                          {s.name} ({s.confidence}%)
-                        </Typography>
-                      </Pressable>
-                    ))}
-                  </View>
-                )}
-
                 {/* Yes / Change breed buttons */}
                 <View className="flex-row gap-sm w-full px-lg mt-sm">
                   <View className="flex-1">
