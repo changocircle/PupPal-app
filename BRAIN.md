@@ -569,6 +569,7 @@ Everything needed to submit the moment Apple Developer approval comes through.
 - Scan animation: no AI references, TEXT_CYCLE_MS 1600, updated copy (a56380e)
 - Upload prompt: two-state UX -- idle shows single box + "A clear front-facing photo works best", post-scan shows upsell "Want a more accurate result? Add 2 more photos" with Side profile + Full body slots below result card (b141440)
 - Medium confidence result: removed "Also possible" alternatives list. Flow is now: breed result -> confidence badge -> upsell boxes -> Yes! / Change breed (bc96284)
+- Photo screen cleanup (4396b89): single slot pattern -- removed upsell dashed boxes below result. 3-slot top row is sole multi-photo prompt. Breed correction consolidated: removed standalone "My dog is a mixed breed" and "Type your own breed" links. BreedSearchDropdown now has "Mixed breed" at top + "Don't see your breed? Type it in" at bottom (free-text mode inside dropdown). Screen-level showFreeText/freeTextBreed state removed.
 - Custom challenges: "Something else?" on challenges screen, free text stored as customChallenges[], keyword-mapped to exercise categories in planGenerator (a56380e)
 - Update CLAUDE.md "Current Sprint" section to reflect v10 state
 
