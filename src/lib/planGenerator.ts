@@ -210,6 +210,7 @@ interface GeneratorInput {
   breed: string | null;
   ageWeeks: number;
   challenges: string[];
+  customChallenges?: string[];
   experience: "first_time" | "some_experience" | "experienced" | null;
 }
 
@@ -219,6 +220,16 @@ export function generateTrainingPlan(input: GeneratorInput): TrainingPlan {
 
   // Step 1: build category priority from challenges
   const categoryPriority = buildCategoryPriority(input.challenges);
+
+  // Step 1b: merge custom challenge categories (keyword heuristic) into priority list
+  if (input.customChallenges && input.customChallenges.length > 0) {
+    const customCategories = mapCustomChallengesToCategories(input.customChallenges);
+    for (const category of customCategories) {
+      if (!categoryPriority.includes(category)) {
+        categoryPriority.push(category);
+      }
+    }
+  }
 
   // Step 2: bucket exercises by category
   const byCategory = new Map<ExerciseCategory, Exercise[]>();
@@ -429,4 +440,48 @@ function makePlanExercise(
     userRating: null,
     xpEarned: null,
   };
+}
+
+// ──────────────────────────────────────────────
+// Custom challenge keyword mapper
+// Maps free-text custom challenges to ExerciseCategory via keyword heuristic.
+// NOTE: Future improvement — replace with async Sonnet call for richer mapping.
+// ──────────────────────────────────────────────
+
+function mapCustomChallengesToCategories(
+  customChallenges: string[]
+): ExerciseCategory[] {
+  const KEYWORD_MAP: Array<{ keywords: string[]; category: ExerciseCategory }> = [
+    { keywords: ["bark", "barking", "noise", "loud", "howl"], category: "impulse_control" },
+    { keywords: ["bite", "nip", "mouth", "teeth", "chew"], category: "bite_inhibition" },
+    { keywords: ["potty", "toilet", "pee", "poop", "accident", "house train"], category: "potty_training" },
+    { keywords: ["leash", "pull", "walk", "heel", "drag"], category: "leash_skills" },
+    { keywords: ["jump", "jumping", "leaping", "knocks"], category: "impulse_control" },
+    { keywords: ["crate", "cage", "alone", "separation", "anxiety", "whine", "cry"], category: "crate_training" },
+    { keywords: ["other dog", "reactive", "aggressive", "scared", "fear", "social", "terrified"], category: "socialization" },
+    { keywords: ["come", "recall", "run away", "escape", "ignore"], category: "basic_commands" },
+    { keywords: ["focus", "attention", "distracted", "won't listen", "training"], category: "basic_commands" },
+    { keywords: ["guard", "resource", "food", "possessive", "growl"], category: "impulse_control" },
+    { keywords: ["dig", "digging", "garden", "yard", "hole"], category: "impulse_control" },
+    { keywords: ["mailman", "stranger", "people", "afraid", "shy"], category: "socialization" },
+  ];
+
+  const matched = new Set<ExerciseCategory>();
+  const combinedText = customChallenges.join(" ").toLowerCase();
+
+  for (const { keywords, category } of KEYWORD_MAP) {
+    for (const keyword of keywords) {
+      if (combinedText.includes(keyword)) {
+        matched.add(category);
+        break; // Only count each rule once
+      }
+    }
+  }
+
+  // Default to basic_commands if no keywords matched
+  if (matched.size === 0) {
+    matched.add("basic_commands");
+  }
+
+  return [...matched];
 }

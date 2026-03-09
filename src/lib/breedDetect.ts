@@ -166,13 +166,25 @@ export async function detectBreed(
 
     const authToken = SUPABASE_ANON_KEY;
 
-    // Step 1: Fast HuggingFace classifier
+    // Start classifier immediately (typically ~2s)
     onProgress?.("classifying");
-    const classifierPredictions = await runClassifier(images[0]!, authToken);
+    const classifierPromise = runClassifier(images[0]!, authToken);
 
-    // Step 2: Sonnet validation + reasoning
+    // Give classifier a 3s head start — if it finishes first, pass predictions to Sonnet.
+    // If it's still running after 3s, start Sonnet without waiting (parallel overlap).
+    const classifierEarlyResult = await Promise.race([
+      classifierPromise,
+      new Promise<null>((resolve) => setTimeout(() => resolve(null), 3000)),
+    ]);
+
+    // Start Sonnet with whatever classifier result we have so far (may be null)
     onProgress?.("confirming");
-    return await runSonnetDetect(images, classifierPredictions, authToken);
+    const [, sonnetResult] = await Promise.all([
+      classifierPromise, // let classifier finish if still running (result already used above if fast)
+      runSonnetDetect(images, classifierEarlyResult, authToken),
+    ]);
+
+    return sonnetResult;
   } catch (err: any) {
     console.error("[BreedDetect] Unexpected error:", err?.message ?? err);
     return null;

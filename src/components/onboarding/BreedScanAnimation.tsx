@@ -33,7 +33,7 @@ const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 const SWEEP_DURATION = 1500;
 const SWEEP_WIDTH = 80;
-const TEXT_CYCLE_MS = 2200;
+const TEXT_CYCLE_MS = 1600;
 
 // --- Buddy Expression Component ---
 
@@ -205,16 +205,16 @@ function CyclingText({ dogName, stage }: CyclingTextProps) {
   const name = dogName && dogName !== "your pup" ? dogName : null;
 
   const classifyingMessages = name
-    ? [`Scanning ${name}'s breed...`, "Checking ear shape...", "Examining coat pattern...", "Comparing with 120 breeds...", "Looking at facial structure..."]
-    : ["Scanning breed...", "Checking ear shape...", "Examining coat pattern...", "Comparing with 120 breeds...", "Looking at facial structure..."];
+    ? [`Analyzing ${name}'s features...`, "Checking ear shape...", "Examining coat pattern...", "Looking at facial structure...", "Cross-referencing with 200+ breeds..."]
+    : ["Analyzing your pup's features...", "Checking ear shape...", "Examining coat pattern...", "Looking at facial structure...", "Cross-referencing with 200+ breeds..."];
 
   const confirmingMessages = name
-    ? [`Confirming ${name}'s breed with AI...`, "Analyzing size and proportions...", "Cross-referencing features...", `Almost there, ${name}...`]
-    : ["Confirming breed with AI...", "Analyzing size and proportions...", "Cross-referencing features...", "Almost there..."];
+    ? ["Checking body proportions...", "Examining coat texture...", "Looking at muzzle shape...", `Almost there, ${name}...`]
+    : ["Checking body proportions...", "Examining coat texture...", "Looking at muzzle shape...", "Almost there..."];
 
   const generalMessages = name
-    ? [`Analyzing ${name}'s features...`, "Checking ear shape...", "Examining coat pattern...", "Comparing with 120 breeds...", "Looking at facial structure...", "Checking paw size...", `Almost there, ${name}...`]
-    : ["Analyzing your pup's features...", "Checking ear shape...", "Examining coat pattern...", "Comparing with 120 breeds...", "Looking at facial structure...", "Checking paw size...", "Almost there..."];
+    ? [`Analyzing ${name}'s features...`, "Checking ear shape...", "Examining coat pattern...", "Cross-referencing with 200+ breeds...", "Looking at facial structure...", "Checking body proportions...", `Almost there, ${name}...`]
+    : ["Analyzing your pup's features...", "Checking ear shape...", "Examining coat pattern...", "Cross-referencing with 200+ breeds...", "Looking at facial structure...", "Checking body proportions...", "Almost there..."];
 
   const messages =
     stage === "classifying"

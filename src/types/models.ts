@@ -20,6 +20,7 @@ export interface OnboardingData {
   dateOfBirth: string | null;
   ageMonths: number | null;
   challenges: string[];
+  customChallenges?: string[];
   ownerExperience: "first_time" | "some_experience" | "experienced" | null;
 }
 

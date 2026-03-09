@@ -75,6 +75,7 @@ interface TrainingState {
     breed: string | null;
     ageWeeks: number;
     challenges: string[];
+    customChallenges?: string[];
     experience: "first_time" | "some_experience" | "experienced" | null;
   }) => void;
 

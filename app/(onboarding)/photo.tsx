@@ -490,14 +490,24 @@ export default function PhotoScreen() {
             <Animated.View entering={FadeIn.duration(200)}>
               {photoUris.length === 0 ? (
                 /* No photos yet -- single large upload target */
-                <Pressable onPress={() => pickImage(0)}>
-                  <View className="w-[200px] h-[200px] rounded-xl bg-surface border-2 border-dashed border-border items-center justify-center">
-                    <Typography className="text-[48px]">📸</Typography>
-                    <Typography variant="body-sm" color="secondary">
-                      Tap to upload
+                <>
+                  <View style={{ alignItems: "center", marginBottom: 16 }}>
+                    <Typography variant="body-sm-medium" style={{ textAlign: "center", color: "#1B2333" }}>
+                      Upload 3 photos for the best results
+                    </Typography>
+                    <Typography variant="caption" color="secondary" style={{ textAlign: "center", marginTop: 4 }}>
+                      Front face · Side profile · Full body
                     </Typography>
                   </View>
-                </Pressable>
+                  <Pressable onPress={() => pickImage(0)}>
+                    <View className="w-[200px] h-[200px] rounded-xl bg-surface border-2 border-dashed border-border items-center justify-center">
+                      <Typography className="text-[48px]">📸</Typography>
+                      <Typography variant="body-sm" color="secondary">
+                        Tap to upload
+                      </Typography>
+                    </View>
+                  </Pressable>
+                </>
               ) : (
                 /* Photo thumbnail row -- up to 3 slots */
                 <View className="flex-row gap-sm justify-center">

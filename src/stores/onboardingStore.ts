@@ -31,6 +31,7 @@ const INITIAL_DATA: OnboardingData = {
   dateOfBirth: null,
   ageMonths: null,
   challenges: [],
+  customChallenges: [],
   ownerExperience: null,
 };
 

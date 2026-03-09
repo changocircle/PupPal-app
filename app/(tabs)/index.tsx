@@ -141,6 +141,7 @@ function HomeScreenContent() {
       breed: dog?.breed ?? onboardingData.breed,
       ageWeeks,
       challenges: dog?.challenges ?? onboardingData.challenges,
+      customChallenges: onboardingData.customChallenges ?? [],
       experience: (dog?.owner_experience as any) ?? onboardingData.ownerExperience,
     });
   }, [plan, dog?.id, isSwitching]);
