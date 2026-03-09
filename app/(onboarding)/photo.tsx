@@ -239,7 +239,6 @@ export default function PhotoScreen() {
    * "classifying" = HuggingFace fast scan in progress
    * "confirming"  = Sonnet reasoning/validation in progress
    */
-  const [detectionStage, setDetectionStage] = useState<"classifying" | "confirming">("classifying");
 
   /** Array of up to 3 photo URIs for multi-angle breed detection */
   const [photoUris, setPhotoUris] = useState<string[]>(
