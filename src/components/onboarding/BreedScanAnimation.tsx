@@ -217,11 +217,6 @@ function CyclingText({ dogName, stage }: CyclingTextProps) {
     : ["Analyzing your pup's features...", "Checking ear shape...", "Examining coat pattern...", "Comparing with 120 breeds...", "Looking at facial structure...", "Checking paw size...", "Almost there..."];
 
   const messages =
-    stage === "classifying" ? classifyingMessages
-    : stage === "confirming" ? confirmingMessages
-    : generalMessages;
-
-  const messages =
     stage === "classifying"
       ? classifyingMessages
       : stage === "confirming"
