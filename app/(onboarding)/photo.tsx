@@ -233,6 +233,13 @@ export default function PhotoScreen() {
   const [showFreeText, setShowFreeText] = useState(false);
   const [freeTextBreed, setFreeTextBreed] = useState("");
 
+  /**
+   * Hybrid detection stage for two-step progress UI.
+   * "classifying" = HuggingFace fast scan in progress
+   * "confirming"  = Sonnet reasoning/validation in progress
+   */
+  const [detectionStage, setDetectionStage] = useState<"classifying" | "confirming">("classifying");
+
   /** Array of up to 3 photo URIs for multi-angle breed detection */
   const [photoUris, setPhotoUris] = useState<string[]>(
     data.photoUri ? [data.photoUri] : [],
@@ -244,14 +251,17 @@ export default function PhotoScreen() {
       if (uris.length === 0) return;
 
       setDetection({ status: "detecting" });
+      setDetectionStage("classifying");
       setShowManualSelector(false);
       setIsMixedBreed(false);
       setNotSure(false);
       setShowFreeText(false);
       setFreeTextBreed("");
 
-      // Send all photos (1-3) for cross-referencing
-      const result = await detectBreed(uris);
+      // Hybrid two-step flow: classifier first, then Sonnet reasoning
+      const result = await detectBreed(uris, (stage) => {
+        setDetectionStage(stage);
+      });
 
       if (!result) {
         // Timeout, error, or no breeds found -> show selector
