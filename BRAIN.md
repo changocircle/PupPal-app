@@ -567,7 +567,7 @@ Everything needed to submit the moment Apple Developer approval comes through.
 - BRAIN.md now lives in repo root. Updated after every significant change, not just end of session.
 - Parallel breed detection pipeline: classifier + Sonnet overlap, up to ~12s faster (a56380e)
 - Scan animation: no AI references, TEXT_CYCLE_MS 1600, updated copy (a56380e)
-- Upload prompt: "Upload 3 photos for the best results" + slot labels shown before first upload (a56380e)
+- Upload prompt: two-state UX -- idle shows single box + "A clear front-facing photo works best", post-scan shows upsell "Want a more accurate result? Add 2 more photos" with Side profile + Full body slots below result card (b141440)
 - Custom challenges: "Something else?" on challenges screen, free text stored as customChallenges[], keyword-mapped to exercise categories in planGenerator (a56380e)
 - Update CLAUDE.md "Current Sprint" section to reflect v10 state
 
