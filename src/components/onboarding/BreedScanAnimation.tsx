@@ -11,7 +11,7 @@
  * Uses Reanimated 4 only (Moti is banned).
  */
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { View, Dimensions, Image } from "react-native";
 import Animated, {
   useSharedValue,
@@ -24,6 +24,8 @@ import Animated, {
   FadeOut,
   Easing,
   LinearTransition,
+  useAnimatedProps,
+  runOnJS,
 } from "react-native-reanimated";
 import { Typography } from "@/components/ui";
 
@@ -34,6 +36,11 @@ const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const SWEEP_DURATION = 1500;
 const SWEEP_WIDTH = 80;
 const TEXT_CYCLE_MS = 1600;
+// Extra messages shown during long waits (after index 5+)
+const LONG_WAIT_MESSAGES = [
+  "Comparing with similar breeds...",
+  "Double-checking my notes...",
+];
 
 // --- Buddy Expression Component ---
 
@@ -55,7 +62,7 @@ interface BuddyExpressionProps {
 }
 
 export function BuddyExpression({ mode, size = 48 }: BuddyExpressionProps) {
-  // Gentle float — 4px bob at 1.8s period, no aggressive scale pulse.
+  // Gentle float -- 4px bob at 1.8s period, no aggressive scale pulse.
   const translateY = useSharedValue(0);
 
   useEffect(() => {
@@ -199,22 +206,76 @@ function PulsingBorder({ size }: { size: number }) {
 interface CyclingTextProps {
   dogName: string;
   stage?: "classifying" | "confirming";
+  /** Called each time the text cycles to a new message (for counting cycles) */
+  onCycle?: () => void;
 }
 
-function CyclingText({ dogName, stage }: CyclingTextProps) {
+function CyclingText({ dogName, stage, onCycle }: CyclingTextProps) {
   const name = dogName && dogName !== "your pup" ? dogName : null;
 
   const classifyingMessages = name
-    ? [`Analyzing ${name}'s features...`, "Checking ear shape...", "Examining coat pattern...", "Looking at facial structure...", "Cross-referencing with 200+ breeds..."]
-    : ["Analyzing your pup's features...", "Checking ear shape...", "Examining coat pattern...", "Looking at facial structure...", "Cross-referencing with 200+ breeds..."];
+    ? [
+        `Analyzing ${name}'s features...`,
+        "Checking ear shape...",
+        "Examining coat pattern...",
+        "Looking at facial structure...",
+        "Cross-referencing with 200+ breeds...",
+        "Comparing with similar breeds...",
+        "Double-checking my notes...",
+        `Almost there, ${name}...`,
+      ]
+    : [
+        "Analyzing your pup's features...",
+        "Checking ear shape...",
+        "Examining coat pattern...",
+        "Looking at facial structure...",
+        "Cross-referencing with 200+ breeds...",
+        "Comparing with similar breeds...",
+        "Double-checking my notes...",
+        "Almost there...",
+      ];
 
   const confirmingMessages = name
-    ? ["Checking body proportions...", "Examining coat texture...", "Looking at muzzle shape...", `Almost there, ${name}...`]
-    : ["Checking body proportions...", "Examining coat texture...", "Looking at muzzle shape...", "Almost there..."];
+    ? [
+        "Checking body proportions...",
+        "Examining coat texture...",
+        "Looking at muzzle shape...",
+        "Comparing with similar breeds...",
+        "Double-checking my notes...",
+        `Almost there, ${name}...`,
+      ]
+    : [
+        "Checking body proportions...",
+        "Examining coat texture...",
+        "Looking at muzzle shape...",
+        "Comparing with similar breeds...",
+        "Double-checking my notes...",
+        "Almost there...",
+      ];
 
   const generalMessages = name
-    ? [`Analyzing ${name}'s features...`, "Checking ear shape...", "Examining coat pattern...", "Cross-referencing with 200+ breeds...", "Looking at facial structure...", "Checking body proportions...", `Almost there, ${name}...`]
-    : ["Analyzing your pup's features...", "Checking ear shape...", "Examining coat pattern...", "Cross-referencing with 200+ breeds...", "Looking at facial structure...", "Checking body proportions...", "Almost there..."];
+    ? [
+        `Analyzing ${name}'s features...`,
+        "Checking ear shape...",
+        "Examining coat pattern...",
+        "Cross-referencing with 200+ breeds...",
+        "Looking at facial structure...",
+        "Checking body proportions...",
+        "Comparing with similar breeds...",
+        "Double-checking my notes...",
+        `Almost there, ${name}...`,
+      ]
+    : [
+        "Analyzing your pup's features...",
+        "Checking ear shape...",
+        "Examining coat pattern...",
+        "Cross-referencing with 200+ breeds...",
+        "Looking at facial structure...",
+        "Checking body proportions...",
+        "Comparing with similar breeds...",
+        "Double-checking my notes...",
+        "Almost there...",
+      ];
 
   const messages =
     stage === "classifying"
@@ -228,7 +289,11 @@ function CyclingText({ dogName, stage }: CyclingTextProps) {
   useEffect(() => {
     setIndex(0);
     const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % messages.length);
+      setIndex((prev) => {
+        const next = (prev + 1) % messages.length;
+        onCycle?.();
+        return next;
+      });
     }, TEXT_CYCLE_MS);
     return () => clearInterval(interval);
   }, [messages.length, stage]);
@@ -376,6 +441,8 @@ interface BreedScanAnimationProps {
   photoSize: number;
   /** Hybrid detection stage: 'classifying' (HuggingFace) or 'confirming' (Sonnet) */
   stage?: "classifying" | "confirming";
+  /** Called each time cycling text advances (for min-cycle counting) */
+  onCycle?: () => void;
 }
 
 /**
@@ -386,10 +453,10 @@ interface BreedScanAnimationProps {
  *
  * Usage:
  *   {detection.status === "detecting" && (
- *     <BreedScanAnimation dogName={puppyName} photoSize={100} />
+ *     <BreedScanAnimation dogName={puppyName} photoSize={100} onCycle={handleCycle} />
  *   )}
  */
-export function BreedScanAnimation({ dogName, photoSize, stage }: BreedScanAnimationProps) {
+export function BreedScanAnimation({ dogName, photoSize, stage, onCycle }: BreedScanAnimationProps) {
   return (
     <Animated.View
       entering={FadeIn.duration(300)}
@@ -397,7 +464,7 @@ export function BreedScanAnimation({ dogName, photoSize, stage }: BreedScanAnima
       style={{ alignItems: "center", gap: 16 }}
     >
       {/* Cycling status text */}
-      <CyclingText dogName={dogName} stage={stage} />
+      <CyclingText dogName={dogName} stage={stage} onCycle={onCycle} />
 
       {/* Indeterminate progress bar */}
       <View style={{ width: "100%", paddingHorizontal: 8 }}>

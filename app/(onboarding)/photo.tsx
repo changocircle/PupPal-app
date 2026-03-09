@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useRef } from "react";
+import React, { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import {
   View,
   Pressable,
@@ -9,9 +9,20 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
+import Animated, {
+  FadeIn,
+  FadeInDown,
+  FadeOut,
+  useSharedValue,
+  useAnimatedStyle,
+  withSequence,
+  withTiming,
+  withRepeat,
+  Easing,
+} from "react-native-reanimated";
 import { Image } from "expo-image";
 import * as ImagePicker from "expo-image-picker";
+import * as Haptics from "expo-haptics";
 import { Button, Typography } from "@/components/ui";
 import { useOnboardingStore } from "@/stores/onboardingStore";
 import { detectBreed, type BreedPrediction } from "@/lib/breedDetect";
@@ -62,7 +73,19 @@ type DetectionState =
 
 // --- Confidence badge ---
 
-function ConfidenceBadge({ confidence, photoCount }: { confidence: number; photoCount: number }) {
+/**
+ * Confidence badge with optional pulse+shimmer animation.
+ * `pulse` triggers when confidence silently upgrades (photos 2/3 background scan).
+ */
+function ConfidenceBadge({
+  confidence,
+  photoCount,
+  pulse = false,
+}: {
+  confidence: number;
+  photoCount: number;
+  pulse?: boolean;
+}) {
   // Per spec: only multi-photo (2-3) can show "High match"
   // Single photo is capped at 65 by the edge function, so >70 only happens with multiple photos
   const isHigh = confidence > 70;
@@ -72,23 +95,65 @@ function ConfidenceBadge({ confidence, photoCount }: { confidence: number; photo
   const bg = isHigh ? "#5CB882" : isMedium ? "#FFB547" : "#F0EBE6";
   const textColor = isHigh ? "#FFFFFF" : isMedium ? "#1B2333" : "#6B7280";
 
+  const scale = useSharedValue(1);
+  const shimmerOpacity = useSharedValue(0);
+
+  useEffect(() => {
+    if (!pulse) return;
+    // Scale pulse: 1 -> 1.18 -> 1
+    scale.value = withSequence(
+      withTiming(1.18, { duration: 200, easing: Easing.out(Easing.ease) }),
+      withTiming(1, { duration: 300, easing: Easing.inOut(Easing.ease) }),
+    );
+    // Gold shimmer flash
+    shimmerOpacity.value = withSequence(
+      withTiming(0.35, { duration: 150 }),
+      withTiming(0, { duration: 400 }),
+    );
+  }, [pulse, confidence]);
+
+  const badgeStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const shimmerStyle = useAnimatedStyle(() => ({
+    opacity: shimmerOpacity.value,
+  }));
+
   return (
-    <View
-      style={{
-        marginTop: 12,
-        paddingHorizontal: 16,
-        paddingVertical: 6,
-        borderRadius: 9999,
-        backgroundColor: bg,
-      }}
+    <Animated.View
+      style={[
+        badgeStyle,
+        {
+          marginTop: 12,
+          paddingHorizontal: 16,
+          paddingVertical: 6,
+          borderRadius: 9999,
+          backgroundColor: bg,
+          overflow: "hidden",
+        },
+      ]}
     >
+      {/* Gold shimmer overlay -- flashes on confidence upgrade */}
+      <Animated.View
+        style={[
+          shimmerStyle,
+          {
+            position: "absolute",
+            inset: 0,
+            backgroundColor: "#FFD700",
+            borderRadius: 9999,
+          },
+        ]}
+        pointerEvents="none"
+      />
       <Typography
         variant="body-sm-medium"
         style={{ color: textColor }}
       >
         {label}
       </Typography>
-    </View>
+    </Animated.View>
   );
 }
 
@@ -316,6 +381,70 @@ const PHOTO_GUIDES = [
 
 const MAX_PHOTOS = 3;
 
+// --- Breed-specific Buddy reveal lines ---
+// PRD-01 §655: "Buddy's breed-specific response should include one genuinely useful breed fact"
+
+const BREED_BUDDY_LINES: Record<string, string> = {
+  "Golden Retriever": "A Golden Retriever! Great choice -- they're incredibly smart but can be mouthy as puppies. We'll work on that!",
+  "Labrador Retriever": "A Lab! One of the most trainable breeds out there. They love to please, which makes our job easy.",
+  "French Bulldog": "A Frenchie! Super charming, but they have a stubborn streak. Short, fun sessions work best for them.",
+  "German Shepherd": "A German Shepherd! Highly intelligent and driven -- they need both mental and physical challenges to stay happy.",
+  "Poodle": "A Poodle! One of the smartest breeds alive. They pick up new skills incredibly fast -- you'll be amazed.",
+  "Miniature Poodle": "A Mini Poodle! All the brains of a Standard Poodle in a smaller package. Fast learner, big personality.",
+  "Toy Poodle": "A Toy Poodle! Don't let the size fool you -- they're razor sharp and absolutely love learning tricks.",
+  "Bulldog": "A Bulldog! Loveable, laid-back, and a little food-motivated. We'll use that to our advantage.",
+  "Beagle": "A Beagle! Fantastic nose, but a wandering mind. Scent-based games will keep them totally engaged.",
+  "Rottweiler": "A Rottweiler! Confident and loyal -- they respond best to calm, consistent training. Great dogs when guided well.",
+  "Yorkshire Terrier": "A Yorkie! Big personality, tiny body. They can be feisty, but with the right approach they're surprisingly trainable.",
+  "Dachshund": "A Dachshund! Independent and clever, they were bred to think for themselves. Patience pays off big with these guys.",
+  "Boxer": "A Boxer! Energetic and playful -- they stay puppy-like for years. Channel that energy and you'll have a brilliant dog.",
+  "Siberian Husky": "A Husky! Beautiful and smart, but famously independent. Consistent boundaries early on make a huge difference.",
+  "Australian Shepherd": "An Aussie! One of the most intelligent herding breeds. They need a job -- let's give them one.",
+  "Pomeranian": "A Pom! Full of personality and surprisingly trainable. They love showing off once they know what's expected.",
+  "Shih Tzu": "A Shih Tzu! Bred to be companions, so they're very people-focused. Short, positive sessions are their sweet spot.",
+  "Doberman Pinscher": "A Doberman! Athletic and highly intelligent -- one of the easiest large breeds to train when you're consistent.",
+  "Great Dane": "A Great Dane! Gentle giants. They mature slowly, so early socialisation is the single most important thing right now.",
+  "Chihuahua": "A Chihuahua! Fearless and incredibly smart for their size. Early confidence-building is key.",
+  "Havanese": "A Havanese! Happy, social, and eager to please. One of the easiest small breeds to train.",
+  "Maltese": "A Maltese! Gentle and sweet. They can be sensitive, so keep sessions upbeat and always end on a win.",
+  "Border Collie": "A Border Collie! Arguably the most intelligent dog breed. They need mental challenges every single day.",
+  "Corgi": "A Corgi! Smart, energetic, and a little bossy. They'll try to herd you -- we'll channel that instinct.",
+  "Pembroke Welsh Corgi": "A Pembroke Corgi! Smart, energetic, and a little bossy. They'll try to herd you -- we'll channel that instinct.",
+  "Bernese Mountain Dog": "A Berner! Big, gentle, and eager to please. They respond beautifully to calm, encouraging training.",
+  "Cavalier King Charles Spaniel": "A Cavalier! Sweet and gentle, they're born to be companions. They bond deeply and learn quickly.",
+  "Cocker Spaniel": "A Cocker Spaniel! Sensitive and smart -- they pick up on your energy, so keep sessions positive and relaxed.",
+  "Jack Russell Terrier": "A Jack Russell! Energetic and quick-witted. Short bursts of training keep them focused and out of mischief.",
+  "Samoyed": "A Samoyed! Friendly and clever, but they have a bit of an independent streak. Make training feel like play.",
+  "Shiba Inu": "A Shiba Inu! Ancient breed, bold personality. They respond to respect and consistency, not repetition.",
+  "Bichon Frise": "A Bichon! Cheerful and smart -- one of the great hypoallergenic companion breeds. They love to learn.",
+  "Goldendoodle": "A Goldendoodle! Gets the best of both worlds -- Golden loyalty and Poodle brains. Super easy to work with.",
+  "Labradoodle": "A Labradoodle! Friendly, smart, and social. They thrive on interaction and pick up new commands quickly.",
+  "Cockapoo": "A Cockapoo! Intelligent and affectionate. One of the most popular mixes for good reason -- very trainable.",
+  "Cavapoo": "A Cavapoo! Gentle, smart, and people-loving. They're natural students -- this is going to be fun.",
+  "Schnauzer": "A Schnauzer! Clever and spirited. They love having a challenge -- puzzle games and new tricks are their thing.",
+  "Miniature Schnauzer": "A Mini Schnauzer! Alert, smart, and surprisingly energetic for their size. Great at learning commands fast.",
+  "Whippet": "A Whippet! Elegant and sensitive -- they respond best to gentle encouragement, never harsh corrections.",
+  "Weimaraner": "A Weimaraner! Athletic and intelligent, but they get bored fast. Variety and challenge are essential.",
+  "Vizsla": "A Vizsla! Gentle, affectionate, and incredibly responsive. Often called the Velcro dog -- they want to be with you.",
+};
+
+const DEFAULT_BUDDY_REVEAL = (breed: string, name: string) =>
+  name !== "your pup"
+    ? `${name}'s a ${breed}! I know this breed well -- let's build a plan that fits them perfectly.`
+    : `A ${breed}! I know this breed well -- let's build a plan that fits them perfectly.`;
+
+function getBreedBuddyLine(breed: string, puppyName: string): string {
+  // Exact match first
+  if (BREED_BUDDY_LINES[breed]) return BREED_BUDDY_LINES[breed]!;
+  // Partial match for variants (e.g. "Standard Poodle" -> Poodle)
+  for (const [key, line] of Object.entries(BREED_BUDDY_LINES)) {
+    if (breed.toLowerCase().includes(key.toLowerCase()) || key.toLowerCase().includes(breed.toLowerCase())) {
+      return line;
+    }
+  }
+  return DEFAULT_BUDDY_REVEAL(breed, puppyName);
+}
+
 // --- Main Screen ---
 export default function PhotoScreen() {
   const router = useRouter();
@@ -327,24 +456,145 @@ export default function PhotoScreen() {
   const [detectionStage, setDetectionStage] = useState<"classifying" | "confirming">("classifying");
   const [isMixedBreed, setIsMixedBreed] = useState(false);
   const [notSure, setNotSure] = useState(false);
+
   // Tracks last successful detection so adding a 2nd/3rd photo never blanks the result on failure
   const lastSuccessRef = useRef<typeof detection | null>(null);
 
-  /**
-   * Hybrid detection stage for two-step progress UI.
-   * "classifying" = HuggingFace fast scan in progress
-   * "confirming"  = Sonnet reasoning/validation in progress
-   */
+  // Minimum cycle gate: API result is held until at least 3 text cycles have played (~4.8s)
+  // This prevents a "too-instant" result that feels cheap
+  const MIN_CYCLES = 3;
+  const cycleCountRef = useRef(0);
+  const pendingResultRef = useRef<(() => void) | null>(null);
+  const isDetectingRef = useRef(false);
+
+  // Queue for photo 2/3 added while photo 1 is still scanning
+  const pendingPhotoUrisRef = useRef<string[] | null>(null);
+  // Stable ref to runBackgroundDetection so runInitialDetection can call it without
+  // creating a circular dependency in useCallback deps
+  const runBackgroundDetectionRef = useRef<((uris: string[]) => void) | null>(null);
+
+  // Badge pulse: fires when background re-scan silently upgrades confidence
+  const [badgePulse, setBadgePulse] = useState(false);
 
   /** Array of up to 3 photo URIs for multi-angle breed detection */
   const [photoUris, setPhotoUris] = useState<string[]>(
     data.photoUri ? [data.photoUri] : [],
   );
   const puppyName = data.puppyName || "your pup";
+  const nameForDisplay = data.puppyName || null;
 
-  const runDetection = useCallback(
+  /**
+   * Called by BreedScanAnimation each time cycling text advances.
+   * Once MIN_CYCLES have passed, release any held result.
+   */
+  const handleCycle = useCallback(() => {
+    cycleCountRef.current += 1;
+    if (cycleCountRef.current >= MIN_CYCLES && pendingResultRef.current) {
+      const release = pendingResultRef.current;
+      pendingResultRef.current = null;
+      release();
+    }
+  }, []);
+
+  /**
+   * Apply a detection result to state (shared between initial and background paths).
+   * `isBackground` = true for photos 2/3 silent re-scans.
+   */
+  const applyResult = useCallback(
+    (result: NonNullable<Awaited<ReturnType<typeof detectBreed>>>, isBackground: boolean) => {
+      if (result.differentDogs) {
+        if (!isBackground) {
+          setDetection({
+            status: "different_dogs",
+            message: result.errorMessage ?? "These look like different dogs!",
+          });
+        }
+        // Background: ignore different_dogs (user may have valid pair, keep existing result)
+        return;
+      }
+
+      if (result.lowConfidence || result.confidence < 40) {
+        if (!isBackground) {
+          setDetection({ status: "low", suggestions: result.suggestions });
+          setShowManualSelector(true);
+        }
+        return;
+      }
+
+      if (result.confidence > 70) {
+        updateData({ breed: result.topBreed, breedConfidence: result.confidence, breedDetected: true });
+        const next: DetectionState = { status: "high", breed: result.topBreed, confidence: result.confidence };
+        lastSuccessRef.current = next;
+        if (isBackground) {
+          // Check if confidence actually changed meaningfully before pulsing
+          const prev = lastSuccessRef.current;
+          setDetection((cur) => {
+            if (
+              (cur.status === "high" || cur.status === "medium") &&
+              "confidence" in cur &&
+              Math.abs(cur.confidence - result.confidence) < 1 &&
+              "breed" in cur &&
+              cur.breed === result.topBreed
+            ) {
+              return cur; // no meaningful change
+            }
+            return next;
+          });
+          setBadgePulse(true);
+          setTimeout(() => setBadgePulse(false), 700);
+        } else {
+          setDetection(next);
+          if (Platform.OS === "ios") {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
+          }
+        }
+      } else {
+        // Medium confidence (40-70)
+        const next: DetectionState = {
+          status: "medium",
+          breed: result.topBreed,
+          confidence: result.confidence,
+          suggestions: result.suggestions,
+        };
+        lastSuccessRef.current = next;
+        if (isBackground) {
+          setDetection((cur) => {
+            if (
+              (cur.status === "high" || cur.status === "medium") &&
+              "confidence" in cur &&
+              Math.abs(cur.confidence - result.confidence) < 1 &&
+              "breed" in cur &&
+              cur.breed === result.topBreed
+            ) {
+              return cur;
+            }
+            return next;
+          });
+          setBadgePulse(true);
+          setTimeout(() => setBadgePulse(false), 700);
+        } else {
+          setDetection(next);
+          if (Platform.OS === "ios") {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
+          }
+        }
+      }
+    },
+    [updateData],
+  );
+
+  /**
+   * PHOTO 1 detection: full scan UX, minimum 3 cycles (~4.8s), haptic on reveal.
+   * After 8s: shows "Almost there..." (handled in CyclingText messages).
+   * After 15s: graceful fallback to manual selection.
+   */
+  const runInitialDetection = useCallback(
     async (uris: string[]) => {
       if (uris.length === 0) return;
+
+      isDetectingRef.current = true;
+      cycleCountRef.current = 0;
+      pendingResultRef.current = null;
 
       setDetection({ status: "detecting" });
       setDetectionStage("classifying");
@@ -352,71 +602,74 @@ export default function PhotoScreen() {
       setIsMixedBreed(false);
       setNotSure(false);
 
-      // Hybrid two-step flow: classifier first, then Sonnet reasoning
+      // 15s hard timeout -> graceful fallback
+      const timeoutHandle = setTimeout(() => {
+        if (isDetectingRef.current) {
+          isDetectingRef.current = false;
+          pendingResultRef.current = null;
+          setDetection({ status: "manual" });
+          setShowManualSelector(true);
+        }
+      }, 15_000);
+
       const result = await detectBreed(uris, (stage) => {
         setDetectionStage(stage);
       });
 
+      clearTimeout(timeoutHandle);
+
+      if (!isDetectingRef.current) return; // timed out already
+      isDetectingRef.current = false;
+
       if (!result) {
-        // Timeout, error, or no breeds found
-        // If we already had a successful result (e.g. adding photo 2/3), restore it
-        // so the breed result never disappears on a failed re-run
         if (lastSuccessRef.current) {
           setDetection(lastSuccessRef.current);
-          return;
+        } else {
+          setDetection({ status: "manual" });
+          setShowManualSelector(true);
         }
-        setDetection({ status: "manual" });
-        setShowManualSelector(true);
         return;
       }
 
-      // Handle different dogs validation
-      if (result.differentDogs) {
-        setDetection({
-          status: "different_dogs",
-          message: result.errorMessage ?? "These look like different dogs!",
-        });
-        return;
-      }
+      // Define the reveal function
+      const reveal = () => {
+        applyResult(result, false);
+        // Process any queued photo 2/3 as silent background scan
+        if (pendingPhotoUrisRef.current) {
+          const queued = pendingPhotoUrisRef.current;
+          pendingPhotoUrisRef.current = null;
+          runBackgroundDetectionRef.current?.(queued);
+        }
+      };
 
-      if (result.lowConfidence || result.confidence < 40) {
-        // Low confidence -> show selector with alternatives
-        setDetection({
-          status: "low",
-          suggestions: result.suggestions,
-        });
-        setShowManualSelector(true);
-        return;
-      }
-
-      if (result.confidence > 70) {
-        // High confidence -> auto-fill
-        updateData({
-          breed: result.topBreed,
-          breedConfidence: result.confidence,
-          breedDetected: true,
-        });
-        const highDetection = {
-          status: "high" as const,
-          breed: result.topBreed,
-          confidence: result.confidence,
-        };
-        lastSuccessRef.current = highDetection;
-        setDetection(highDetection);
+      // Hold reveal until MIN_CYCLES have passed
+      if (cycleCountRef.current >= MIN_CYCLES) {
+        reveal();
       } else {
-        // Medium confidence (40-70) -> suggest with confirm/change
-        const mediumDetection = {
-          status: "medium" as const,
-          breed: result.topBreed,
-          confidence: result.confidence,
-          suggestions: result.suggestions,
-        };
-        lastSuccessRef.current = mediumDetection;
-        setDetection(mediumDetection);
+        pendingResultRef.current = reveal;
       }
     },
-    [updateData],
+    [applyResult],
   );
+
+  /**
+   * PHOTOS 2+: completely silent background re-scan.
+   * No UI change while running. Updates confidence badge with pulse on success.
+   * Failure: keep existing result (lastSuccessRef already handles this).
+   */
+  const runBackgroundDetection = useCallback(
+    async (uris: string[]) => {
+      if (uris.length === 0) return;
+
+      const result = await detectBreed(uris, () => {});
+      if (!result) return; // keep existing result silently
+
+      applyResult(result, true);
+    },
+    [applyResult],
+  );
+  // Keep ref in sync so runInitialDetection can call it safely
+  runBackgroundDetectionRef.current = runBackgroundDetection;
 
   /** Pick/replace a photo at the given slot index */
   const pickImage = async (slotIndex?: number) => {
@@ -434,21 +687,32 @@ export default function PhotoScreen() {
       next[idx] = uri;
       const validUris = next.filter(Boolean);
 
-      // Update local state first (pure state update, no side effects)
       setPhotoUris(next);
 
-      // Side effects outside of setState to avoid render-during-update
-      // Front face (index 0) is the profile photo
-      updateData({
-        photoUri: validUris[0] ?? uri,
-        allPhotoUris: validUris,
-        breed: undefined,
-        breedConfidence: undefined,
-        breedDetected: false,
-        breedMix1: null,
-        breedMix2: null,
-      });
-      runDetection(validUris);
+      if (idx === 0) {
+        // Slot 0 (front face) -- always a full initial scan
+        updateData({
+          photoUri: uri,
+          allPhotoUris: validUris,
+          breed: undefined,
+          breedConfidence: undefined,
+          breedDetected: false,
+          breedMix1: null,
+          breedMix2: null,
+        });
+        runInitialDetection(validUris);
+      } else {
+        // Slots 1/2 (side profile / full body) -- silent background re-scan
+        // Photo slots in immediately, breed result stays exactly where it is
+        updateData({ photoUri: validUris[0]!, allPhotoUris: validUris });
+
+        if (isDetectingRef.current) {
+          // Photo 1 still scanning -- queue this for after it completes
+          pendingPhotoUrisRef.current = validUris;
+        } else {
+          runBackgroundDetection(validUris);
+        }
+      }
     }
   };
 
@@ -456,17 +720,19 @@ export default function PhotoScreen() {
   const removePhoto = (index: number) => {
     const next = photoUris.filter((_, i) => i !== index);
 
-    // Update local state first
     setPhotoUris(next);
 
-    // Side effects outside of setState
-    if (next.length === 0) {
+    if (index === 0) {
+      // Removing front face -- full reset
       updateData({ photoUri: null, allPhotoUris: [], breed: undefined, breedDetected: false });
       setDetection({ status: "idle" });
       lastSuccessRef.current = null;
+      isDetectingRef.current = false;
+      pendingResultRef.current = null;
+      pendingPhotoUrisRef.current = null;
     } else {
-      updateData({ photoUri: next[0], allPhotoUris: next });
-      runDetection(next);
+      // Removing a supplemental photo -- just update data, no UI change
+      updateData({ allPhotoUris: next });
     }
   };
 
@@ -531,27 +797,43 @@ export default function PhotoScreen() {
   // Buddy speech bubble text (top of screen, context-setting only)
   const getBuddySpeech = (): string => {
     if (detection.status === "detecting") {
-      return `Hold tight, working my magic on ${puppyName}...`;
+      return nameForDisplay
+        ? `Analyzing ${nameForDisplay}'s photo...`
+        : "Analyzing your pup's photo...";
     }
-    if (detection.status === "high" || detection.status === "medium") {
-      return `Got it! Here's what I found for ${puppyName}`;
+    if (detection.status === "high" && "breed" in detection) {
+      // Breed-specific reveal line -- the magic moment
+      return getBreedBuddyLine(detection.breed, puppyName);
+    }
+    if (detection.status === "medium" && "breed" in detection) {
+      return nameForDisplay
+        ? `${nameForDisplay} looks like a ${detection.breed} to me -- does that sound right?`
+        : `Looks like a ${detection.breed} to me -- does that sound right?`;
     }
     if (detection.status === "low") {
-      return `I couldn't get a clear read -- what breed is ${puppyName}?`;
+      return nameForDisplay
+        ? `I couldn't get a clear read on ${nameForDisplay} -- what breed is ${nameForDisplay}?`
+        : "I couldn't get a clear read -- what breed is your pup?";
     }
     if (detection.status === "different_dogs") {
-      return `Hmm, these look like different pups! Upload photos of just ${puppyName} so I can get the breed right.`;
+      return nameForDisplay
+        ? `Hmm, these look like different pups! Upload photos of just ${nameForDisplay} so I can get the breed right.`
+        : "Hmm, these look like different pups! Upload photos of just your dog so I can get the breed right.";
     }
     if (detection.status === "manual") {
-      return `What breed is ${puppyName}?`;
+      return nameForDisplay ? `What breed is ${nameForDisplay}?` : "What breed is your pup?";
     }
     if (notSure) {
-      return `No worries! We'll make a great plan for ${puppyName} either way!`;
+      return nameForDisplay
+        ? `No worries! We'll make a great plan for ${nameForDisplay} either way!`
+        : "No worries! We'll make a great plan either way!";
     }
     if (isMixedBreed) {
-      return `A mix! What breeds make up ${puppyName}?`;
+      return nameForDisplay ? `A mix! What breeds make up ${nameForDisplay}?` : "A mix! What breeds are in the mix?";
     }
-    return `Let's see that cute face! Upload a photo of ${puppyName}`;
+    return nameForDisplay
+      ? `Let's see ${nameForDisplay}'s face! Upload a photo so I can detect the breed.`
+      : "Let's see that cute face! Upload a photo so I can detect the breed.";
   };
 
   // Can continue if breed is confirmed, notSure, or mixed breed with at least one component
@@ -576,7 +858,11 @@ export default function PhotoScreen() {
             <View className="mb-base">
               {detection.status === "detecting" ? (
                 <BuddyExpression mode="thinking" size={80} />
-              ) : detection.status === "high" || detection.status === "medium" ? (
+              ) : detection.status === "high" ? (
+                <Animated.View entering={FadeIn.duration(400)}>
+                  <BuddyExpression mode="excited" size={80} />
+                </Animated.View>
+              ) : detection.status === "medium" ? (
                 <BuddyExpression mode="excited" size={80} />
               ) : detection.status === "low" || detection.status === "manual" || detection.status === "different_dogs" ? (
                 <BuddyExpression mode="teaching" size={80} />
@@ -621,17 +907,20 @@ export default function PhotoScreen() {
 
                     if (uri) {
                       // Filled slot -- show photo with remove button
+                      // ScanOverlay only on slot 0 (front face) during initial scan
+                      // Slots 1/2 never show scan UI -- background re-scan is invisible
+                      const isInitialScan = detection.status === "detecting" && idx === 0;
                       const isDetecting = detection.status === "detecting";
                       return (
                         <View key={idx} style={{ alignItems: "center" }}>
-                          <Pressable onPress={() => pickImage(idx)} disabled={isDetecting}>
+                          <Pressable onPress={() => pickImage(idx)} disabled={isInitialScan}>
                             <View
                               className="rounded-lg overflow-hidden"
                               style={{
                                 width: 100,
                                 height: 100,
                                 borderWidth: 2,
-                                borderColor: isDetecting ? "transparent" : "#FF6B5C",
+                                borderColor: isInitialScan ? "transparent" : "#FF6B5C",
                                 borderRadius: 12,
                               }}
                             >
@@ -640,10 +929,10 @@ export default function PhotoScreen() {
                                 style={{ width: 100, height: 100 }}
                                 contentFit="cover"
                               />
-                              {isDetecting && <ScanOverlay size={100} />}
+                              {isInitialScan && <ScanOverlay size={100} />}
                             </View>
                           </Pressable>
-                          {!isDetecting && (
+                          {!isInitialScan && (
                             <Pressable
                               onPress={() => removePhoto(idx)}
                               style={{
@@ -744,7 +1033,12 @@ export default function PhotoScreen() {
             {/* SCANNING state */}
             {detection.status === "detecting" && (
               <View className="mt-2xl w-full">
-                <BreedScanAnimation dogName={puppyName} photoSize={100} stage={detectionStage} />
+                <BreedScanAnimation
+                  dogName={puppyName}
+                  photoSize={100}
+                  stage={detectionStage}
+                  onCycle={handleCycle}
+                />
               </View>
             )}
 
@@ -768,12 +1062,12 @@ export default function PhotoScreen() {
             {/* HIGH confidence result -- reveal moment */}
             {detection.status === "high" && !isMixedBreed && !showManualSelector && (
               <Animated.View
-                entering={FadeInDown.duration(200)}
+                entering={FadeInDown.duration(350)}
                 style={{ marginTop: 32, alignItems: "center", width: "100%" }}
               >
                 {/* Result card -- the magic moment */}
                 <Animated.View
-                  entering={FadeInDown.duration(200).delay(100)}
+                  entering={FadeInDown.duration(300).delay(80)}
                   style={{
                     width: "100%",
                     backgroundColor: "#FFFAF7",
@@ -800,7 +1094,7 @@ export default function PhotoScreen() {
                   </Typography>
 
                   {/* Confidence badge */}
-                  <ConfidenceBadge confidence={detection.confidence} photoCount={photoUris.length} />
+                  <ConfidenceBadge confidence={detection.confidence} photoCount={photoUris.length} pulse={badgePulse} />
                 </Animated.View>
               </Animated.View>
             )}
@@ -823,7 +1117,7 @@ export default function PhotoScreen() {
                 </Typography>
 
                 {/* Confidence badge */}
-                <ConfidenceBadge confidence={detection.confidence} photoCount={photoUris.length} />
+                <ConfidenceBadge confidence={detection.confidence} photoCount={photoUris.length} pulse={badgePulse} />
 
                 {/* Yes / Change breed buttons */}
                 <View className="flex-row gap-sm w-full px-lg mt-sm">
