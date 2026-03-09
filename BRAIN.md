@@ -121,8 +121,8 @@ Full PDF with logo assets, Buddy 8 expressions, complete color/type/spacing syst
 
 ### AI Configuration (current, after overnight PRs)
 - **buddy-chat edge function:** `claude-sonnet-4-6`, `DEFAULT_MAX_TOKENS = 120`, rate limit 20/min/IP, JWT verified
-- **breed-detect edge function:** `claude-sonnet-4-6` vision, rate limit 10/min/IP, JWT verified
-- **breed-classify edge function (PR #55, deployed):** HuggingFace ViT classifier, rate limit 10/min/IP, JWT verified
+- **breed-detect edge function:** `claude-sonnet-4-6` vision, rate limit 10/min/IP, JWT optional (pre-auth onboarding) — commit 753d7f0
+- **breed-classify edge function (PR #55, deployed):** HuggingFace ViT classifier, rate limit 10/min/IP, JWT optional (pre-auth onboarding) — commit 753d7f0
 - **vaccine-extract edge function:** `claude-sonnet-4-6` vision
 - Model string: `claude-sonnet-4-6` (NOT `claude-sonnet-4-6-20250514`)
 - All AI calls go server-side through Edge Functions, ANTHROPIC_API_KEY never in client
@@ -239,12 +239,15 @@ See CLAUDE.md Critical Patterns section for detailed notes on:
 | Function | Purpose | Max Tokens | Rate Limit | JWT |
 |----------|---------|------------|------------|-----|
 | buddy-chat | AI chat + summarization | 120 (DEFAULT_MAX_TOKENS) | 20/min/IP | Yes (PR #52) |
-| breed-detect | Vision breed identification | 800 | 10/min/IP | Yes (PR #52) |
-| breed-classify | HuggingFace ViT classifier (hybrid step 1) | N/A | 10/min/IP | Yes (deployed) |
+| breed-detect | Vision breed identification | 800 | 10/min/IP | Optional (pre-auth) — 753d7f0 |
+| breed-classify | HuggingFace ViT classifier (hybrid step 1) | N/A | 10/min/IP | Optional (pre-auth) — 753d7f0 |
 | vaccine-extract | Vaccine record parsing | N/A | 10/min/IP | No |
 
 ### JWT Verification Status
-As of PR #52 (merged): JWT verification active on buddy-chat and breed-detect. Unauthenticated callers get 401.
+- **buddy-chat:** mandatory JWT (post-auth only, PR #52)
+- **breed-detect:** optional JWT — verified if present, allowed if absent (pre-auth onboarding, 753d7f0)
+- **breed-classify:** optional JWT — verified if present, allowed if absent (pre-auth onboarding, 753d7f0)
+- **vaccine-extract:** no JWT
 
 ### Supabase Secrets (set in Dashboard)
 ```
@@ -559,6 +562,9 @@ Everything needed to submit the moment Apple Developer approval comes through.
 - Merge PR #52 already done (JWT). Merge PRs #54-#61 (overnight work).
 - Sentry SDK installed (`@sentry/react-native`), plugin added to app.config.js (bc3cf7a)
 - breed-classify Supabase function deployed (PR #55 merged)
+- Bug fixes: duplicate `detectionStage` useState in photo.tsx (e3c4006), duplicate `messages` const in BreedScanAnimation.tsx (d4cdf3b) — merge artifacts causing launch crash
+- breed-classify + breed-detect JWT made optional for pre-auth onboarding (753d7f0)
+- BRAIN.md now lives in repo root. Updated after every significant change, not just end of session.
 - Update CLAUDE.md "Current Sprint" section to reflect v10 state
 
 ---
@@ -705,10 +711,9 @@ RESEND_API_KEY                       # Used by welcome email sequence
 - Supabase RLS: Row-level security on all tables
 - Edge Functions: Rate limiting on all functions (10-20/min/IP)
 - Content moderation: Basic keyword filter in buddy-chat
-- JWT verification: buddy-chat and breed-detect require Supabase-authenticated users (PR #52)
+- JWT verification: buddy-chat requires auth (PR #52). breed-detect + breed-classify: optional (pre-auth onboarding, 753d7f0)
 
 ### Still Needed Before Launch
-- Deploy JWT verification on breed-classify after PR #55 merge
 - Supabase RLS audit (confirm all tables have correct policies)
 - Rate limiting review (per-user not just per-IP)
 - Android keystore creation + update assetlinks.json SHA256 fingerprint
