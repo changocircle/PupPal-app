@@ -228,6 +228,7 @@ export default function PhotoScreen() {
     status: "idle",
   });
   const [showManualSelector, setShowManualSelector] = useState(false);
+  const [detectionStage, setDetectionStage] = useState<"classifying" | "confirming">("classifying");
   const [isMixedBreed, setIsMixedBreed] = useState(false);
   const [notSure, setNotSure] = useState(false);
   const [showFreeText, setShowFreeText] = useState(false);
@@ -635,7 +636,7 @@ export default function PhotoScreen() {
             {/* SCANNING state */}
             {detection.status === "detecting" && (
               <View className="mt-2xl w-full">
-                <BreedScanAnimation dogName={puppyName} photoSize={100} />
+                <BreedScanAnimation dogName={puppyName} photoSize={100} stage={detectionStage} />
               </View>
             )}
 

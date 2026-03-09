@@ -59,3 +59,57 @@ All PRDs and specs are in the `docs/` folder:
 | [PRD-13](./docs/PRD-13-Analytics-AB-Testing.md) | Analytics & A/B Testing |
 | [PRD-14](./docs/PRD-14-Settings.md) | Settings |
 | [PRD-15](./docs/PRD-15-Community.md) | Community (post-launch) |
+
+## Hybrid Breed Detection
+
+PupPal uses a two-step hybrid approach for accurate breed identification.
+
+### Flow
+
+```
+Photo -> breed-classify (HuggingFace ViT, ~2s)
+              |
+     Top 3 breed candidates
+              |
+        breed-detect (Claude Sonnet)
+              |
+  Validated breed result + reasoning
+```
+
+### Step 1: breed-classify Edge Function
+
+- Model: `nickmuchi/vit-finetuned-dog-classifier` (ViT fine-tuned on 120 Stanford Dogs breeds)
+- Fallback model: `Falconsai/dog-breed-identification`
+- Input: base64 image (primary photo only)
+- Output: top 3 predictions with confidence scores
+- Graceful degradation: returns empty predictions if unavailable
+
+### Step 2: breed-detect Edge Function (updated)
+
+- Model: `claude-sonnet-4-6`
+- Hybrid mode: Sonnet validates classifier output visually (size, coat, face, proportions)
+- Standard mode: Sonnet does full independent analysis (backward compatible)
+- Confidence caps: 65 for single photo, 85 for multi-photo
+
+### Client Progress (src/lib/breedDetect.ts)
+
+```
+detectBreed(uris, onProgress)
+  onProgress("classifying")  -> UI: "Scanning breed..." / "Comparing with 120 breeds..."
+  onProgress("confirming")   -> UI: "Confirming with AI..." / "Cross-referencing features..."
+  -> BreedDetectResult
+```
+
+### Required Secrets
+
+| Secret | Required | Notes |
+|--------|----------|-------|
+| `ANTHROPIC_API_KEY` | Yes | Claude Sonnet reasoning |
+| `HUGGINGFACE_API_KEY` | No | Free tier works without it |
+
+### Why HuggingFace API (Option B) vs TFLite (Option A)
+
+The app uses Expo managed workflow. `react-native-fast-tflite` requires a bare workflow
+with native build steps (Android/iOS) and is incompatible with Expo Go and managed builds.
+HuggingFace Inference API provides equivalent classifier capability as a server-side call,
+keeping the app dependency-free and Expo Go compatible.
