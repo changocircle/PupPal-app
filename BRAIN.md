@@ -121,8 +121,8 @@ Full PDF with logo assets, Buddy 8 expressions, complete color/type/spacing syst
 
 ### AI Configuration (current, after overnight PRs)
 - **buddy-chat edge function:** `claude-sonnet-4-6`, `DEFAULT_MAX_TOKENS = 120`, rate limit 20/min/IP, JWT verified
-- **breed-detect edge function:** `claude-sonnet-4-6` vision, rate limit 10/min/IP, JWT optional (pre-auth onboarding) — commit 753d7f0
-- **breed-classify edge function (PR #55, deployed):** HuggingFace ViT classifier, rate limit 10/min/IP, JWT optional (pre-auth onboarding) — commit 753d7f0
+- **breed-detect edge function:** `claude-sonnet-4-6` vision, rate limit 10/min/IP, no JWT (anon key not verifiable as user token)
+- **breed-classify edge function (PR #55, deployed):** HuggingFace ViT classifier, rate limit 10/min/IP, no JWT (anon key not verifiable as user token)
 - **vaccine-extract edge function:** `claude-sonnet-4-6` vision
 - Model string: `claude-sonnet-4-6` (NOT `claude-sonnet-4-6-20250514`)
 - All AI calls go server-side through Edge Functions, ANTHROPIC_API_KEY never in client
@@ -239,14 +239,14 @@ See CLAUDE.md Critical Patterns section for detailed notes on:
 | Function | Purpose | Max Tokens | Rate Limit | JWT |
 |----------|---------|------------|------------|-----|
 | buddy-chat | AI chat + summarization | 120 (DEFAULT_MAX_TOKENS) | 20/min/IP | Yes (PR #52) |
-| breed-detect | Vision breed identification | 800 | 10/min/IP | Optional (pre-auth) — 753d7f0 |
-| breed-classify | HuggingFace ViT classifier (hybrid step 1) | N/A | 10/min/IP | Optional (pre-auth) — 753d7f0 |
+| breed-detect | Vision breed identification | 800 | 10/min/IP | None — rate limit only |
+| breed-classify | HuggingFace ViT classifier (hybrid step 1) | N/A | 10/min/IP | None — rate limit only |
 | vaccine-extract | Vaccine record parsing | N/A | 10/min/IP | No |
 
 ### JWT Verification Status
 - **buddy-chat:** mandatory JWT (post-auth only, PR #52)
-- **breed-detect:** optional JWT — verified if present, allowed if absent (pre-auth onboarding, 753d7f0)
-- **breed-classify:** optional JWT — verified if present, allowed if absent (pre-auth onboarding, 753d7f0)
+- **breed-detect:** no JWT verification — rate limiting only (Supabase client sends anon key not user token)
+- **breed-classify:** no JWT verification — rate limiting only (Supabase client sends anon key not user token)
 - **vaccine-extract:** no JWT
 
 ### Supabase Secrets (set in Dashboard)
@@ -711,7 +711,7 @@ RESEND_API_KEY                       # Used by welcome email sequence
 - Supabase RLS: Row-level security on all tables
 - Edge Functions: Rate limiting on all functions (10-20/min/IP)
 - Content moderation: Basic keyword filter in buddy-chat
-- JWT verification: buddy-chat requires auth (PR #52). breed-detect + breed-classify: optional (pre-auth onboarding, 753d7f0)
+- JWT verification: buddy-chat requires auth (PR #52). breed-detect + breed-classify: no JWT (Supabase anon key is not a user token)
 
 ### Still Needed Before Launch
 - Supabase RLS audit (confirm all tables have correct policies)

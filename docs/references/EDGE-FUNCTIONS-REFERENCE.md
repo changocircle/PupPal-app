@@ -57,9 +57,8 @@ Response: { content, model, usage, stop_reason, suggestedPrompts?: string[] }
 - Returns top 3 predictions with confidence
 
 ### Auth
-- JWT **optional** — verified if present, allowed if absent
-- Runs during onboarding before user is signed in — no auth token available
-- Rate limiting (10/min/IP) is the abuse protection
+- No JWT verification. Supabase client always sends anon key as Bearer token, which is not a user JWT and would always fail verification.
+- Rate limiting (10/min/IP) is the abuse protection. Deploy with `--no-verify-jwt`.
 
 ### Rate Limiting
 - 10 req/min per IP (in-memory, resets on cold start)
@@ -85,9 +84,8 @@ Response: { predictions: [{ breed: string, confidence: number, rawLabel: string 
 - Rate limit: 10 req/min per IP
 
 ### Auth
-- JWT **optional** — verified if present, allowed if absent
-- Runs during onboarding before user is signed in — no auth token available
-- Rate limiting (10/min/IP) is the abuse protection
+- No JWT verification. Supabase client always sends anon key as Bearer token, which is not a user JWT and would always fail verification.
+- Rate limiting (10/min/IP) is the abuse protection. Deploy with `--no-verify-jwt`.
 
 ### Multi-Photo Support
 - Accepts 1-3 base64 images

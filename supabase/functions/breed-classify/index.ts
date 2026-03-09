@@ -10,7 +10,7 @@
  * Returns: { predictions: [{ breed: string, confidence: number }] }
  *
  * Rate limit: 10/min/IP
- * Auth: JWT optional — verified if present, allowed if absent (pre-auth onboarding)
+ * Auth: none — rate limiting only (10/min/IP). Runs pre-auth during onboarding.
  *
  * Required secrets:
  *   HUGGINGFACE_API_KEY  (optional — falls back to unauthenticated free tier)
@@ -103,27 +103,14 @@ serve(async (req: Request): Promise<Response> => {
     return new Response("ok", { headers: CORS_HEADERS });
   }
 
-  // ── JWT verification (optional) ──
-  // breed-classify runs during onboarding, before the user has signed in.
-  // JWT is verified if present, but absence is allowed — rate limiting (10/min/IP)
-  // is the abuse protection. buddy-chat enforces mandatory JWT (post-auth only).
-  const authHeader = req.headers.get("Authorization");
+  // ── No JWT verification ──
+  // breed-classify runs during onboarding before the user signs in.
+  // The Supabase client always sends Authorization: Bearer <anon_key> which
+  // is not a user token and would always fail verification.
+  // Rate limiting (10/min/IP) is the abuse protection layer.
+  // buddy-chat enforces mandatory JWT (post-auth only).
   const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
   const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
-
-  if (authHeader && authHeader.startsWith("Bearer ")) {
-    const token = authHeader.replace("Bearer ", "");
-    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-      global: { headers: { Authorization: `Bearer ${token}` } },
-    });
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-    if (authError || !user) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-        headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
-      });
-    }
-  }
 
   // ── Rate limiting ──
   const clientIP =
