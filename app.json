@@ -18,6 +18,7 @@
       "supportsTablet": false,
       "bundleIdentifier": "com.puppal.app",
       "buildNumber": "1",
+      "associatedDomains": ["applinks:puppal.dog"],
       "infoPlist": {
         "NSCameraUsageDescription": "PupPal uses your camera to take photos of your puppy for breed detection and your growth journal.",
         "NSPhotoLibraryUsageDescription": "PupPal needs access to your photos to upload puppy pictures for breed detection and your growth journal."
@@ -51,7 +52,69 @@
         "backgroundColor": "#FF6B5C"
       },
       "package": "com.puppal.app",
-      "versionCode": 1
+      "versionCode": 1,
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "puppal.dog",
+              "pathPrefix": "/referral"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        },
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "puppal.dog",
+              "pathPrefix": "/share"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        },
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "puppal.dog",
+              "pathPrefix": "/invite"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        },
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "puppal.dog",
+              "pathPrefix": "/reset-password"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        },
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "puppal.dog",
+              "path": "/open"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
     },
     "plugins": [
       "expo-router",

@@ -2,12 +2,14 @@
 import "react-native-get-random-values";
 import "../global.css";
 import React, { useEffect } from "react";
+import { Linking } from "react-native";
 import { Stack, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ErrorBoundary } from "@/components/ui";
 import { setupNotifications, addNotificationResponseListener } from "@/services/notifications";
 import { analytics } from "@/services/analytics";
+import { handleDeepLink, getInitialDeepLink } from "@/lib/deepLinks";
 import {
   useFonts,
   PlusJakartaSans_400Regular,
@@ -61,6 +63,24 @@ export default function RootLayout() {
     });
 
     return cleanup;
+  }, [router]);
+
+  // Deep link handler for Universal Links and Android App Links
+  useEffect(() => {
+    // Handle cold-start deep link (app opened via link while closed)
+    getInitialDeepLink().then((url) => {
+      if (url) {
+        // Small delay to ensure navigation stack is ready
+        setTimeout(() => handleDeepLink(url, router), 100);
+      }
+    });
+
+    // Handle warm deep links (app already open, link tapped)
+    const subscription = Linking.addEventListener("url", ({ url }) => {
+      handleDeepLink(url, router);
+    });
+
+    return () => subscription.remove();
   }, [router]);
 
   if (!fontsLoaded && !fontError) {
