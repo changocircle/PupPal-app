@@ -491,14 +491,6 @@ export default function PhotoScreen() {
               {photoUris.length === 0 ? (
                 /* No photos yet -- single large upload target */
                 <>
-                  <View style={{ alignItems: "center", marginBottom: 16 }}>
-                    <Typography variant="body-sm-medium" style={{ textAlign: "center", color: "#1B2333" }}>
-                      Upload 3 photos for the best results
-                    </Typography>
-                    <Typography variant="caption" color="secondary" style={{ textAlign: "center", marginTop: 4 }}>
-                      Front face · Side profile · Full body
-                    </Typography>
-                  </View>
                   <Pressable onPress={() => pickImage(0)}>
                     <View className="w-[200px] h-[200px] rounded-xl bg-surface border-2 border-dashed border-border items-center justify-center">
                       <Typography className="text-[48px]">📸</Typography>
@@ -507,6 +499,13 @@ export default function PhotoScreen() {
                       </Typography>
                     </View>
                   </Pressable>
+                  <Typography
+                    variant="caption"
+                    color="secondary"
+                    style={{ textAlign: "center", marginTop: 10 }}
+                  >
+                    A clear front-facing photo works best
+                  </Typography>
                 </>
               ) : (
                 /* Photo thumbnail row -- up to 3 slots */
@@ -627,12 +626,7 @@ export default function PhotoScreen() {
                 </View>
               )}
 
-              {/* Hint text */}
-              {photoUris.length > 0 && photoUris.length < MAX_PHOTOS && detection.status !== "detecting" && (
-                <Typography variant="caption" color="secondary" className="text-center mt-sm">
-                  Upload {MAX_PHOTOS - photoUris.length} more {MAX_PHOTOS - photoUris.length === 1 ? "photo" : "photos"} of {puppyName} for the most accurate breed detection
-                </Typography>
-              )}
+              {/* Multi-photo cross-reference note (only when 2+ photos, scan not in progress) */}
               {photoUris.length > 1 && detection.status !== "detecting" && detection.status !== "different_dogs" && (
                 <Typography variant="caption" color="secondary" className="text-center mt-xs" style={{ opacity: 0.6 }}>
                   {photoUris.length} photos of {puppyName} will be cross-referenced
@@ -702,6 +696,52 @@ export default function PhotoScreen() {
 
                   {/* Confidence badge */}
                   <ConfidenceBadge confidence={detection.confidence} photoCount={photoUris.length} />
+
+                  {/* Upsell: add more photos for higher accuracy (only when just 1 photo) */}
+                  {photoUris.length === 1 && (
+                    <Animated.View
+                      entering={FadeInDown.duration(200).delay(200)}
+                      style={{ width: "100%", marginTop: 4 }}
+                    >
+                      <Typography
+                        variant="body-sm-medium"
+                        style={{ textAlign: "center", color: "#1B2333", marginBottom: 10 }}
+                      >
+                        Want a more accurate result? Add 2 more photos
+                      </Typography>
+                      <View style={{ flexDirection: "row", gap: 12, justifyContent: "center" }}>
+                        {[1, 2].map((idx) => (
+                          <Pressable key={idx} onPress={() => pickImage(idx)}>
+                            <View
+                              style={{
+                                width: 100,
+                                height: 100,
+                                borderRadius: 12,
+                                borderWidth: 2,
+                                borderStyle: "dashed",
+                                borderColor: "#D1C9C4",
+                                backgroundColor: "#F9F6F3",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <Typography style={{ fontSize: 22, opacity: 0.5 }}>
+                                {PHOTO_GUIDES[idx].emoji}
+                              </Typography>
+                              <Typography style={{ fontSize: 18, marginTop: 2, opacity: 0.4 }}>+</Typography>
+                            </View>
+                            <Typography
+                              variant="caption"
+                              color="secondary"
+                              style={{ textAlign: "center", marginTop: 4 }}
+                            >
+                              {PHOTO_GUIDES[idx].label}
+                            </Typography>
+                          </Pressable>
+                        ))}
+                      </View>
+                    </Animated.View>
+                  )}
                 </Animated.View>
               </Animated.View>
             )}
@@ -725,6 +765,52 @@ export default function PhotoScreen() {
 
                 {/* Confidence badge */}
                 <ConfidenceBadge confidence={detection.confidence} photoCount={photoUris.length} />
+
+                {/* Upsell: add more photos for higher accuracy (only when just 1 photo) */}
+                {photoUris.length === 1 && (
+                  <Animated.View
+                    entering={FadeInDown.duration(200).delay(200)}
+                    style={{ width: "100%", marginTop: 4 }}
+                  >
+                    <Typography
+                      variant="body-sm-medium"
+                      style={{ textAlign: "center", color: "#1B2333", marginBottom: 10 }}
+                    >
+                      Want a more accurate result? Add 2 more photos
+                    </Typography>
+                    <View style={{ flexDirection: "row", gap: 12, justifyContent: "center" }}>
+                      {[1, 2].map((idx) => (
+                        <Pressable key={idx} onPress={() => pickImage(idx)}>
+                          <View
+                            style={{
+                              width: 100,
+                              height: 100,
+                              borderRadius: 12,
+                              borderWidth: 2,
+                              borderStyle: "dashed",
+                              borderColor: "#D1C9C4",
+                              backgroundColor: "#F9F6F3",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <Typography style={{ fontSize: 22, opacity: 0.5 }}>
+                              {PHOTO_GUIDES[idx].emoji}
+                            </Typography>
+                            <Typography style={{ fontSize: 18, marginTop: 2, opacity: 0.4 }}>+</Typography>
+                          </View>
+                          <Typography
+                            variant="caption"
+                            color="secondary"
+                            style={{ textAlign: "center", marginTop: 4 }}
+                          >
+                            {PHOTO_GUIDES[idx].label}
+                          </Typography>
+                        </Pressable>
+                      ))}
+                    </View>
+                  </Animated.View>
+                )}
 
                 {/* Also possible alternatives */}
                 {detection.suggestions.length > 1 && (
