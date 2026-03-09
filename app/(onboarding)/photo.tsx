@@ -327,6 +327,8 @@ export default function PhotoScreen() {
   const [detectionStage, setDetectionStage] = useState<"classifying" | "confirming">("classifying");
   const [isMixedBreed, setIsMixedBreed] = useState(false);
   const [notSure, setNotSure] = useState(false);
+  // Tracks last successful detection so adding a 2nd/3rd photo never blanks the result on failure
+  const lastSuccessRef = useRef<typeof detection | null>(null);
 
   /**
    * Hybrid detection stage for two-step progress UI.
@@ -356,7 +358,13 @@ export default function PhotoScreen() {
       });
 
       if (!result) {
-        // Timeout, error, or no breeds found -> show selector
+        // Timeout, error, or no breeds found
+        // If we already had a successful result (e.g. adding photo 2/3), restore it
+        // so the breed result never disappears on a failed re-run
+        if (lastSuccessRef.current) {
+          setDetection(lastSuccessRef.current);
+          return;
+        }
         setDetection({ status: "manual" });
         setShowManualSelector(true);
         return;
@@ -388,19 +396,23 @@ export default function PhotoScreen() {
           breedConfidence: result.confidence,
           breedDetected: true,
         });
-        setDetection({
-          status: "high",
+        const highDetection = {
+          status: "high" as const,
           breed: result.topBreed,
           confidence: result.confidence,
-        });
+        };
+        lastSuccessRef.current = highDetection;
+        setDetection(highDetection);
       } else {
         // Medium confidence (40-70) -> suggest with confirm/change
-        setDetection({
-          status: "medium",
+        const mediumDetection = {
+          status: "medium" as const,
           breed: result.topBreed,
           confidence: result.confidence,
           suggestions: result.suggestions,
-        });
+        };
+        lastSuccessRef.current = mediumDetection;
+        setDetection(mediumDetection);
       }
     },
     [updateData],
@@ -451,6 +463,7 @@ export default function PhotoScreen() {
     if (next.length === 0) {
       updateData({ photoUri: null, allPhotoUris: [], breed: undefined, breedDetected: false });
       setDetection({ status: "idle" });
+      lastSuccessRef.current = null;
     } else {
       updateData({ photoUri: next[0], allPhotoUris: next });
       runDetection(next);
