@@ -565,6 +565,10 @@ Everything needed to submit the moment Apple Developer approval comes through.
 - Bug fixes: duplicate `detectionStage` useState in photo.tsx (e3c4006), duplicate `messages` const in BreedScanAnimation.tsx (d4cdf3b) — merge artifacts causing launch crash
 - breed-classify + breed-detect JWT made optional for pre-auth onboarding (753d7f0)
 - BRAIN.md now lives in repo root. Updated after every significant change, not just end of session.
+- Parallel breed detection pipeline: classifier + Sonnet overlap, up to ~12s faster (a56380e)
+- Scan animation: no AI references, TEXT_CYCLE_MS 1600, updated copy (a56380e)
+- Upload prompt: "Upload 3 photos for the best results" + slot labels shown before first upload (a56380e)
+- Custom challenges: "Something else?" on challenges screen, free text stored as customChallenges[], keyword-mapped to exercise categories in planGenerator (a56380e)
 - Update CLAUDE.md "Current Sprint" section to reflect v10 state
 
 ---
